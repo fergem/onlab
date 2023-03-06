@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "PCH/kxZHhddfChYL5hPcaYdtUONoSvoqt3KYLmHJluI=",
+  "Source": "OnlabWebAPI",
+  "BasePath": "_content/OnlabWebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
