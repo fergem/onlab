@@ -48,6 +48,5 @@ namespace DataAccess
                .IsRequired(required: true)
                .IsUnicode(unicode: true);
         }
-
     }  
 }

@@ -1,16 +1,10 @@
-import {
-    Card,
-    Flex,
-    Heading,
-    useColorModeValue,
-    VStack,
-} from "@chakra-ui/react"
+import { Card, Flex } from "@chakra-ui/react"
 import HookForm from "../components/HookForm"
 
 export default function Login() {
-    const bg = useColorModeValue("#EAEFD3", "#505168")
-    const color = useColorModeValue("#505168", "#EAEFD3")
-    const borderColor = useColorModeValue("#B3C0A4", "#27233A")
+    const bg = "#EAEFD3"
+    const color = "#505168"
+    const borderColor = "#B3C0A4"
     return (
         <Flex
             px="40%"

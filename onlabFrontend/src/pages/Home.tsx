@@ -7,18 +7,15 @@ import {
     Flex,
     Heading,
     Image,
-    Stack,
     Text,
-    Button,
-    useColorModeValue,
 } from "@chakra-ui/react"
-import Navbar from "../../components/navbar/Navbar"
-import NavButton from "../../components/navbar/NavButton"
+import Navbar from "../components/navbar/Navbar"
+import NavButton from "../components/navbar/NavButton"
 
 export default function Home() {
-    const bg = useColorModeValue("#EAEFD3", "#505168")
-    const color = useColorModeValue("#505168", "#EAEFD3")
-    const borderColor = useColorModeValue("#B3C0A4", "#27233A")
+    const bg = "#EAEFD3"
+    const color = "#505168"
+    const borderColor = "#B3C0A4"
     return (
         <Flex
             px="20%"

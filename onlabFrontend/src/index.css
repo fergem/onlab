@@ -1,10 +1,10 @@
 html,
-body {
+body,.root {
     height: 100%;
     min-width: 100%;
 }
 
-body {
+body,.root {
     min-height: 100%;
     min-width: 100%;
 }

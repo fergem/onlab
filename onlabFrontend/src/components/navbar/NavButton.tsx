@@ -1,8 +1,8 @@
-import { Button, Link, useColorModeValue } from "@chakra-ui/react"
+import { Button, Link } from "@chakra-ui/react"
 import { Link as ReactRouterLink } from "react-router-dom"
 
 export default function NavButton({ name = "default", route = "/" }) {
-    const borderColor = useColorModeValue("#B3C0A4", "#27233A")
+    const borderColor = "#B3C0A4"
 
     return (
         <Link

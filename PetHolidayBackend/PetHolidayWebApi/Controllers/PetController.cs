@@ -37,7 +37,7 @@ namespace PetHolidayWebApi.Controllers
         public ActionResult<Pet> Insert([FromBody] Pet pet)
         {
             var created = petService.Insert(pet);
-            return CreatedAtAction(nameof(FindById), new { id = created.ID }, created);
+            return CreatedAtAction(nameof(FindById), new { petID = created.ID }, created);
         }
     }
 }

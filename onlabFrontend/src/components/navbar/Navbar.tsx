@@ -1,18 +1,9 @@
-import {
-    Flex,
-    Spacer,
-    Stack,
-    Image,
-    Box,
-    Icon,
-    useColorModeValue,
-} from "@chakra-ui/react"
-import ColorModeToggler from "./ColorModeToggler"
+import { Flex, Spacer, Icon } from "@chakra-ui/react"
 import NavButton from "./NavButton"
 
 function Navbar() {
-    const color = useColorModeValue("#505168", "#EAEFD3")
-    const bg = useColorModeValue("#EAEFD3", "#505168")
+    const color = "#505168"
+    const bg = "#EAEFD3"
     return (
         <Flex
             pos="sticky"
@@ -56,8 +47,6 @@ function Navbar() {
             <NavButton name="PetSitters" route="/petsitters" />
 
             <Spacer />
-
-            <ColorModeToggler />
             <NavButton name="Login" route="/login" />
         </Flex>
     )
