@@ -47,13 +47,7 @@ namespace DataAccess
                .HasMaxLength(50)
                .IsRequired(required: true)
                .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbPet>()
-            .HasData(new[]
-            {
-                new DbPet() {ID = 1, Name = "Vakarcs", Description = "Szép kutya", Species = "Kutya", Age = 7 },
-                new DbPet() {ID = 2, Name = "Cicó", Description = "Szép cica", Species = "Cica", Age = 6 },
-            });
         }
+
     }  
 }

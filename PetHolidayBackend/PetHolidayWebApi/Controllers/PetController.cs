@@ -9,20 +9,35 @@ namespace PetHolidayWebApi.Controllers
     [ApiController]
     public class PetController : ControllerBase
     {
-        private readonly IPetService petService;
+        private readonly PetService petService;
 
-        public PetController(IPetService _petService)
+        public PetController(PetService _petService)
         {
             petService = _petService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        public IEnumerable<Pet> List()
+        {
+            return petService.List();
+        }
+
+        [HttpGet("{petID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Pet> FindById(int petID)
+        public ActionResult<Pet> FindById([FromRoute]int petID)
         {
             var value = petService.FindById(petID);
-            return value != null ? Ok() : BadRequest("Houston, we have a problem!"); ;
+            return value != null ? Ok() : NotFound(); ;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<Pet> Insert([FromBody] Pet pet)
+        {
+            var created = petService.Insert(pet);
+            return CreatedAtAction(nameof(FindById), new { id = created.ID }, created);
         }
     }
 }

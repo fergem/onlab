@@ -9,7 +9,7 @@ namespace Domain.Repositories
 {
     public interface IPetRepository
     {
-        ICollection<Pet> GetAll();
+        IReadOnlyCollection<Pet> List();
         Pet FindById(int petID);
         Pet Insert(Pet pet);
         Pet Update(Pet pet);

@@ -22,33 +22,23 @@ namespace DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public ICollection<Pet> GetAll()
+        public IReadOnlyCollection<Pet> List()
         {
-            var q = from p in dbcontext.Pets
-                    select p;
-
-            var foundPets = q.ToList();
-            if (!foundPets.Any())
-            {
-                return null;
-            }
-
-            return (ICollection<Pet>)foundPets;
+            return dbcontext.Pets.Select(ToModel).ToList();
         }
 
         public Pet FindById(int petID)
         {
-            var q = from p in dbcontext.Pets
-                    where p.ID == petID
-                    select p;
-
-            var foundPet = q.ToList();
-            if(!foundPet.Any())
+            var q = from p in dbcontext.Pets 
+                           where p.ID == petID
+                           select p;
+            
+            var foundPet = q.FirstOrDefault();
+            if (foundPet.Equals(null))
             {
                 return null;
             }
-            
-            return ToModel(foundPet.First());
+            return ToModel(foundPet);
         }
 
         public Pet Insert(Pet pet)

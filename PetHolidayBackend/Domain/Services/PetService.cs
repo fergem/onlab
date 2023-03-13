@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Services
 {
-    public class PetService : IPetService
+    public class PetService
     {
         private readonly IPetRepository petRepository;
 
@@ -20,6 +20,15 @@ namespace Domain.Services
         public Pet FindById(int petID)
         {
             return petRepository.FindById(petID);
+        }
+
+        public Pet Insert(Pet pet)
+        {
+            return petRepository.Insert(pet);
+        }
+        public IReadOnlyCollection<Pet> List()
+        {
+            return petRepository.List();
         }
     }
 }
