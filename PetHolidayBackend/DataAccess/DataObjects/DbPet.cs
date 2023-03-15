@@ -19,5 +19,8 @@ namespace DataAccess.DataObjects
         public string? Species { get; set; }
 
         public int Age { get; set; }
+        
+        public string UserID { get; set; }
+        public virtual DbUser User { get; set; }
     }
 }
