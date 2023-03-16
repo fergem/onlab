@@ -20,7 +20,7 @@ namespace DataAccess.DataObjects
 
         public int Age { get; set; }
         
-        public string UserID { get; set; }
-        public virtual DbUser User { get; set; }
+        public string? UserID { get; set; }
+        public virtual DbUser? User { get; set; }
     }
 }
