@@ -22,10 +22,6 @@ namespace Domain.Services
             return await userRepository.List();
         }
 
-        public async Task<User> FindById(int userID)
-        {
-            return await userRepository.FindById(userID);
-        }
 
         public async Task<User> FindByName(string username)
         {

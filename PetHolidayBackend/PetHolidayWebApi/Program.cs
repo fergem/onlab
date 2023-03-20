@@ -13,11 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<PetHolidayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PetHolidayDbContext")));
+
 builder.Services.AddIdentityCore<DbUser>()
     .AddEntityFrameworkStores<PetHolidayDbContext>();
-builder.Services.AddTransient<DataSeeder>();
+
+//builder.Services.AddTransient<DataSeeder>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<PetService, PetService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserService, UserService>();
 
 var app = builder.Build();
 
@@ -26,9 +30,8 @@ using (var serviceScope = app.Services.CreateScope())
     var context = serviceScope.ServiceProvider.GetRequiredService<PetHolidayDbContext>();
     //context.Database.EnsureCreated();
     context.Database.Migrate();
-    var service = serviceScope.ServiceProvider.GetService<DataSeeder>();
-    service.Seed();
-    
+    //var service = serviceScope.ServiceProvider.GetService<DataSeeder>();
+    //service.Seed();
 }
 
 app.MapControllers();

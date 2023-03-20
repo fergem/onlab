@@ -18,12 +18,12 @@ namespace DataAccess.DataObjects
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
-        public byte[] Picture { get; set; }
+        public byte[]? Picture { get; set; }
 
-        public int OwnerProfileID { get; set; }
+        /*public int OwnerProfileID { get; set; }
         public virtual DbOwnerProfile? OwnerProfile { get; set; }
         public int PetSitterProfileID { get; set; }
-        public virtual DbPetSitterProfile? PetSitterProfile { get;  set; }
+        public virtual DbPetSitterProfile? PetSitterProfile { get;  set; }*/
 
         public virtual ICollection<DbPet> Pets { get; set; }
 

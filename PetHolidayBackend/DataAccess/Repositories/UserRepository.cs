@@ -18,11 +18,11 @@ namespace DataAccess.Repositories
         }
         public User ToModel(DbUser user)
         {
-            return new User(Int32.Parse(user.Id), user.FirstName, user.LastName, user.Age, user.Picture);
+            return new User(user.FirstName, user.LastName, user.Age, user.Picture);
         }
-        public Task<IReadOnlyCollection<User>> List()
+        public async Task<IReadOnlyCollection<User>> List()
         {
-            throw new NotImplementedException();
+            return dbcontext.Users.Select(ToModel).ToList();
         }
 
         public async Task<User> FindById(int userID)
@@ -41,7 +41,16 @@ namespace DataAccess.Repositories
 
         public async Task<User> FindByName(string username)
         {
-            throw new NotImplementedException();
+            var q = from p in dbcontext.Users
+                    where p.UserName == username
+                    select p;
+
+            var foundUser = q.FirstOrDefault();
+            if (foundUser.Equals(null))
+            {
+                return null;
+            }
+            return ToModel(foundUser);
         }
 
         public async Task<User> FindPetById(int petID)

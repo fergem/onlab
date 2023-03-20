@@ -67,11 +67,11 @@ namespace DataAccess
             modelBuilder.Entity<DbPetSitterProfile>()
                 .Property(s => s.AcquiredExperience);
 
-            modelBuilder.Entity<DbOwnerProfile>()
+            /*modelBuilder.Entity<DbOwnerProfile>()
                 .HasOne<DbUser>(s => s.User)
                 .WithOne(x => x.OwnerProfile)
                 .HasForeignKey<DbUser>(x => x.OwnerProfileID);
-
+            **/
             //modelBuilder.Entity<DbPetSitterProfile>()
             //    .HasOne<DbUser>(s => s.User)
             //    .WithOne(x => x.PetSitterProfile)
@@ -117,6 +117,48 @@ namespace DataAccess
                .Property(s => s.Description)
                .HasMaxLength(50)
                .IsUnicode(unicode: true);
+
+
+            //Data seeding
+            modelBuilder.Entity<DbUser>()
+                .HasData(
+                    new DbUser()
+                    {
+                        UserName = "kissjanos",
+                        FirstName = "Kiss",
+                        LastName = "Janos",
+                        Age = 23,
+                    },
+                    new DbUser()
+                    {
+                        UserName = "nagyfero",
+                        FirstName = "Nagy",
+                        LastName = "Feró",
+                        Age = 32,
+                    },
+                    new DbUser()
+                    {
+                        UserName = "viccelek",
+                        FirstName = "Vicc",
+                        LastName = "Elek",
+                        Age = 43,
+                    },
+                    new DbUser()
+                    {
+                        UserName = "makulatlan",
+                        FirstName = "Maku",
+                        LastName = "Látlan",
+                        Age = 17,
+                    }
+                );
+
+            modelBuilder.Entity<DbPet>()
+                .HasData(
+                    new DbPet() 
+                    { 
+                        ID = 1, Name = "Vakarcs", Description = "Szep kutya", Species = "Kutya", Age = 7 
+                    }
+                );
         }
     }  
 }

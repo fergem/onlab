@@ -3,8 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Pets from "./pages/Pets";
 import PetSitters from "./pages/PetSitters";
+import Jobs from "./pages/Jobs";
 
 function App() {
   const bg = "#EAEFD3";
@@ -19,8 +19,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/pets" element={<Pets />} />
-        <Route path="/petsitters" element={<PetSitters />} />
+        <Route path="/jobs" element={<Jobs />} />
+        {/* <Route path="/petsitters" element={<PetSitters />} /> */}
         <Route path="/login" element={<Login />} />
       </Routes>
     </VStack>

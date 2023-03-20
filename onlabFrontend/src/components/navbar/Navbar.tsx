@@ -1,9 +1,8 @@
 import { Flex, Spacer, Icon } from "@chakra-ui/react";
+import { bg, color } from "../../utility/Constants";
 import NavButton from "./NavButton";
 
 function Navbar() {
-  const color = "#505168";
-  const bg = "#EAEFD3";
   return (
     <Flex
       pos="sticky"
@@ -41,8 +40,8 @@ function Navbar() {
         </g>
       </Icon>
       <NavButton name="Home" route="/" />
-      <NavButton name="Pets" route="/pets" />
-      <NavButton name="PetSitters" route="/petsitters" />
+      <NavButton name="Jobs" route="/jobs" />
+      {/* <NavButton name="PetSitters" route="/petsitters" /> */}
 
       <Spacer />
       <NavButton name="Login" route="/login" />

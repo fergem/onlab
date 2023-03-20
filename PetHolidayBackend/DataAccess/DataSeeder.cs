@@ -9,24 +9,31 @@ namespace DataAccess
 {
     public class DataSeeder
     {
-        private readonly PetHolidayDbContext employeeDbContext;
+        private readonly PetHolidayDbContext petHolidayDbContext;
 
-        public DataSeeder(PetHolidayDbContext employeeDbContext)
+        public DataSeeder(PetHolidayDbContext petHolidayDbContext)
         {
-            this.employeeDbContext = employeeDbContext;
+            this.petHolidayDbContext = petHolidayDbContext;
         }
 
         public void Seed()
         {
-            if (!employeeDbContext.Pets.Any())
+            if (!petHolidayDbContext.Pets.Any() && !petHolidayDbContext.Users.Any())
             {
                 var pets = new List<DbPet>()
                 {
-                        new DbPet() { Name = "Vakarcs", Description = "Szep kutya", Species = "Kutya", Age = 7 }
+                        new DbPet() { Name = "Vakarcs", Description = "Szep kutya", Species = "Kutya", Age = 7, UserID = "1" }
                 };
 
-                employeeDbContext.Pets.AddRange(pets);
-                employeeDbContext.SaveChanges();
+                /*var users = new List<DbUser>()
+                {
+                    new DbUser() { Id = "b74ddd14-6340-4840-95c2-db12554843e5",
+                UserName = "Admin", FirstName = "Kiss", LastName = "Janos", Age = 23}
+                };*/
+
+                petHolidayDbContext.Pets.AddRange(pets);
+                //petHolidayDbContext.Users.AddRange(users);
+                petHolidayDbContext.SaveChanges();
             }
         }
     }

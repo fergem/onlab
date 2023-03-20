@@ -8,15 +8,15 @@ import {
   CardFooter,
   Button,
 } from "@chakra-ui/react";
-import Pet from "../models/Pet";
+import User from "../models/User";
 
 interface IProps {
-  pet: Pet;
+  user: User;
 }
 
-export const JobCard: React.FC<IProps> = ({ pet }) => {
+export const JobCard: React.FC<IProps> = ({ user }) => {
   return (
-    <Card direction="row">
+    <Card direction="row" my="2%">
       <Image
         objectFit="cover"
         maxW={{ base: "100%", sm: "200px" }}
@@ -26,16 +26,12 @@ export const JobCard: React.FC<IProps> = ({ pet }) => {
 
       <Stack>
         <CardBody>
-          <Heading size="md">{pet.name}</Heading>
+          <Heading size="md">
+            {user.firstName} {user.lastName} {user.age}
+          </Heading>
 
-          <Text py="2">{pet.description}</Text>
+          <Text py="2">{user.id}</Text>
         </CardBody>
-
-        <CardFooter>
-          <Button variant="solid" colorScheme="blue">
-            {pet.age}
-          </Button>
-        </CardFooter>
       </Stack>
     </Card>
   );

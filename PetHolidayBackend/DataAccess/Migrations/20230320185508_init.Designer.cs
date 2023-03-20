@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20230316120824_Init_DataObjects")]
-    partial class Init_DataObjects
+    [Migration("20230320185508_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,12 @@ namespace DataAccess.Migrations
                     b.Property<string>("RequiredExperience")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("OwnerProfiles", (string)null);
                 });
@@ -122,6 +127,16 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Pets", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Age = 7,
+                            Description = "Szep kutya",
+                            Name = "Vakarcs",
+                            Species = "Kutya"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.DataObjects.DbPetSitterProfile", b =>
@@ -142,7 +157,12 @@ namespace DataAccess.Migrations
                     b.Property<string>("MaxWage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("PetSitterProfiles", (string)null);
                 });
@@ -207,14 +227,8 @@ namespace DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("OwnerProfileID")
-                        .HasColumnType("int");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PetSitterProfileID")
-                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -223,7 +237,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<byte[]>("Picture")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -246,13 +259,69 @@ namespace DataAccess.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("OwnerProfileID")
-                        .IsUnique();
-
-                    b.HasIndex("PetSitterProfileID")
-                        .IsUnique();
-
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0ad6386c-1849-48c4-99ce-1ab7b956fe55",
+                            AccessFailedCount = 0,
+                            Age = 23,
+                            ConcurrencyStamp = "87cde174-ef38-49cb-bcec-18b85f2af6f6",
+                            EmailConfirmed = false,
+                            FirstName = "Kiss",
+                            LastName = "Janos",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a3103e27-45ab-4e02-94ac-4b0c958f925d",
+                            TwoFactorEnabled = false,
+                            UserName = "kissjanos"
+                        },
+                        new
+                        {
+                            Id = "db3c6156-f4cc-44da-b187-fe128413b896",
+                            AccessFailedCount = 0,
+                            Age = 32,
+                            ConcurrencyStamp = "9d035110-ebb9-480b-89cd-4ce59183db58",
+                            EmailConfirmed = false,
+                            FirstName = "Nagy",
+                            LastName = "Feró",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b86cf490-ec80-447f-86d4-1bf473a3ef03",
+                            TwoFactorEnabled = false,
+                            UserName = "nagyfero"
+                        },
+                        new
+                        {
+                            Id = "e864c390-95a4-435c-b34b-3349b6a261f7",
+                            AccessFailedCount = 0,
+                            Age = 43,
+                            ConcurrencyStamp = "fd7c2ee9-6fd3-4139-8eab-5cebf8f733dc",
+                            EmailConfirmed = false,
+                            FirstName = "Vicc",
+                            LastName = "Elek",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f75ca1d3-1ca9-4055-afd2-ac08fab966a7",
+                            TwoFactorEnabled = false,
+                            UserName = "viccelek"
+                        },
+                        new
+                        {
+                            Id = "68054422-3439-4cef-8ed6-b081067cc8e2",
+                            AccessFailedCount = 0,
+                            Age = 17,
+                            ConcurrencyStamp = "8b0fcf0e-adad-4fa1-a172-4699ad8a208e",
+                            EmailConfirmed = false,
+                            FirstName = "Maku",
+                            LastName = "Látlan",
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "8bcf2586-8f56-4c75-92ff-0c871334b7ca",
+                            TwoFactorEnabled = false,
+                            UserName = "makulatlan"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -411,6 +480,15 @@ namespace DataAccess.Migrations
                     b.Navigation("Status");
                 });
 
+            modelBuilder.Entity("DataAccess.DataObjects.DbOwnerProfile", b =>
+                {
+                    b.HasOne("DataAccess.DataObjects.DbUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DataAccess.DataObjects.DbPet", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "User")
@@ -420,23 +498,13 @@ namespace DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DataAccess.DataObjects.DbUser", b =>
+            modelBuilder.Entity("DataAccess.DataObjects.DbPetSitterProfile", b =>
                 {
-                    b.HasOne("DataAccess.DataObjects.DbOwnerProfile", "OwnerProfile")
-                        .WithOne("User")
-                        .HasForeignKey("DataAccess.DataObjects.DbUser", "OwnerProfileID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("DataAccess.DataObjects.DbUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
-                    b.HasOne("DataAccess.DataObjects.DbPetSitterProfile", "PetSitterProfile")
-                        .WithOne("User")
-                        .HasForeignKey("DataAccess.DataObjects.DbUser", "PetSitterProfileID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OwnerProfile");
-
-                    b.Navigation("PetSitterProfile");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -488,16 +556,6 @@ namespace DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DataAccess.DataObjects.DbOwnerProfile", b =>
-                {
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DataAccess.DataObjects.DbPetSitterProfile", b =>
-                {
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DataAccess.DataObjects.DbStatus", b =>
