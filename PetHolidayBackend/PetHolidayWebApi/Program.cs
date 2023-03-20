@@ -15,7 +15,6 @@ builder.Services.AddDbContext<PetHolidayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PetHolidayDbContext")));
 builder.Services.AddIdentityCore<DbUser>()
     .AddEntityFrameworkStores<PetHolidayDbContext>();
-
 builder.Services.AddTransient<DataSeeder>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<PetService, PetService>();

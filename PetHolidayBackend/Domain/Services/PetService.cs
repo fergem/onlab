@@ -17,18 +17,18 @@ namespace Domain.Services
             petRepository = _petRepository;
         }
 
-        public Pet FindById(int petID)
+        public async Task<Pet> FindById(int petID)
         {
-            return petRepository.FindById(petID);
+            return await petRepository.FindById(petID);
         }
 
-        public Pet Insert(Pet pet)
+        public async Task<Pet> Insert(Pet pet)
         {
-            return petRepository.Insert(pet);
+            return await petRepository.Insert(pet);
         }
-        public IReadOnlyCollection<Pet> List()
+        public async Task<IReadOnlyCollection<Pet>>  List()
         {
-            return petRepository.List();
+            return await petRepository.List();
         }
     }
 }

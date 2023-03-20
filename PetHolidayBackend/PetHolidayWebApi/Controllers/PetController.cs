@@ -17,26 +17,26 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Pet> List()
+        public async Task<IReadOnlyCollection<Pet>> List()
         {
-            return petService.List();
+            return await petService.List();
         }
 
         [HttpGet("{petID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Pet> FindById([FromRoute]int petID)
+        public async Task<ActionResult<Pet>> FindById([FromRoute]int petID)
         {
-            var value = petService.FindById(petID);
+            var value = await petService.FindById(petID);
             return value != null ? Ok() : NotFound(); ;
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Pet> Insert([FromBody] Pet pet)
+        public async Task<ActionResult<Pet>> Insert([FromBody] Pet pet)
         {
-            var created = petService.Insert(pet);
+            var created = await petService.Insert(pet);
             return CreatedAtAction(nameof(FindById), new { petID = created.ID }, created);
         }
     }

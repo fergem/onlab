@@ -9,10 +9,11 @@ namespace Domain.Repositories
 {
     public interface IPetRepository
     {
-        IReadOnlyCollection<Pet> List();
-        Pet FindById(int petID);
-        Pet Insert(Pet pet);
-        Pet Update(Pet pet);
-        Pet Delete(int petID);
+        Task<IReadOnlyCollection<Pet>> List();
+        Task<Pet> FindById(int petID);
+        Task<User> FindUserById(int petID);
+        Task<Pet> Insert(Pet pet);
+        Task<Pet> Update(Pet pet);
+        Task<Pet> Delete(int petID);
     }
 }

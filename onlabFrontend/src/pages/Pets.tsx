@@ -1,26 +1,38 @@
 import { Card, CardBody, Flex, Heading, Text } from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { LoadPetsFromApi } from "../api/PetApi";
 import { JobCard } from "../components/JobCard";
+import Pet from "../models/Pet";
 import IPet from "../models/Pet";
 
-const pets: IPet[] = [
-  { id: 1, name: "Cica", description: "szep cica", species: "cica", age: 7 },
-  {
-    id: 2,
-    name: "Kutyo",
-    description: "szep kutya",
-    species: "kutya",
-    age: 2,
-  },
-  {
-    id: 3,
-    name: "Teknoc",
-    description: "szep teknoc",
-    species: "teknoc",
-    age: 10,
-  },
-];
+// const pets: IPet[] = [
+//   // { id: 1, name: "Cica", description: "szep cica", species: "cica", age: 7 },
+//   // {
+//   //   id: 2,
+//   //   name: "Kutyo",
+//   //   description: "szep kutya",
+//   //   species: "kutya",
+//   //   age: 2,
+//   // },
+//   // {
+//   //   id: 3,
+//   //   name: "Teknoc",
+//   //   description: "szep teknoc",
+//   //   species: "teknoc",
+//   //   age: 10,
+//   // },
+
+// ;
 
 export default function Pets() {
+  const [pets, setPets] = useState<IPet[]>([]);
+  useEffect(() => {
+    axios.get<Pet[]>("/api/pets").then((response) => {
+      console.log(response.data);
+      setPets(response.data);
+    });
+  }, []);
   return (
     <Flex
       px="15%"

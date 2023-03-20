@@ -13,21 +13,21 @@ namespace DataAccess.Repositories
     public class PetRepository : IPetRepository
     {
         private readonly PetHolidayDbContext dbcontext;
-        public PetRepository(PetHolidayDbContext _context)
+        public PetRepository(PetHolidayDbContext dbcontext)
         {
-            dbcontext = _context;
+            this.dbcontext = dbcontext;
         }
-        public Pet Delete(int petID)
+        public async Task<Pet> Delete(int petID)
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyCollection<Pet> List()
+        public async Task<IReadOnlyCollection<Pet>> List()
         {
             return dbcontext.Pets.Select(ToModel).ToList();
         }
 
-        public Pet FindById(int petID)
+        public async Task<Pet> FindById(int petID)
         {
             var q = from p in dbcontext.Pets 
                            where p.ID == petID
@@ -41,7 +41,7 @@ namespace DataAccess.Repositories
             return ToModel(foundPet);
         }
 
-        public Pet Insert(Pet pet)
+        public async Task<Pet> Insert(Pet pet)
         {
             var insertPet = new DbPet()
             {
@@ -57,7 +57,7 @@ namespace DataAccess.Repositories
             return ToModel(insertPet);
         }
 
-        public Pet Update(Pet pet)
+        public async Task<Pet> Update(Pet pet)
         {
             throw new NotImplementedException();
         }
@@ -65,6 +65,11 @@ namespace DataAccess.Repositories
         public Pet ToModel(DbPet pet)
         {
             return new Pet(pet.ID, pet.Name, pet.Description, pet.Species, pet.Age);
+        }
+
+        public Task<User> FindUserById(int petID)
+        {
+            throw new NotImplementedException();
         }
     }
 }
