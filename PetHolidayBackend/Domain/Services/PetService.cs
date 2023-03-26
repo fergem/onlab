@@ -12,9 +12,9 @@ namespace Domain.Services
     {
         private readonly IPetRepository petRepository;
 
-        public PetService(IPetRepository _petRepository)
+        public PetService(IPetRepository petRepository)
         {
-            petRepository = _petRepository;
+            this.petRepository = petRepository;
         }
 
         public async Task<Pet> FindById(int petID)

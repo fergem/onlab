@@ -1,5 +1,5 @@
 import { Flex, Spacer, Icon } from "@chakra-ui/react";
-import { bg, color } from "../../utility/Constants";
+import { bg, color } from "../utility/Constants";
 import NavButton from "./NavButton";
 
 function Navbar() {
@@ -42,8 +42,8 @@ function Navbar() {
       <NavButton name="Home" route="/" />
       <NavButton name="Jobs" route="/jobs" />
       {/* <NavButton name="PetSitters" route="/petsitters" /> */}
-
       <Spacer />
+      <NavButton name="Profile" route="/profile" />
       <NavButton name="Login" route="/login" />
     </Flex>
   );

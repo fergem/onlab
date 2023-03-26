@@ -1,10 +1,10 @@
 import { VStack } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
-import Navbar from "./components/navbar/Navbar";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import PetSitters from "./pages/PetSitters";
 import Jobs from "./pages/Jobs";
+import Profile from "./pages/Profile";
 
 function App() {
   const bg = "#EAEFD3";
@@ -15,12 +15,14 @@ function App() {
       align="stretch"
       backgroundColor={bg}
       color={color}
-      borderColor={borderColor}>
+      borderColor={borderColor}
+      height="inherit"
+      minH="inherit">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />} />
-        {/* <Route path="/petsitters" element={<PetSitters />} /> */}
+        <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </VStack>

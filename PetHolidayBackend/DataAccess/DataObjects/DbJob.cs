@@ -11,11 +11,8 @@ namespace DataAccess.DataObjects
         public int ID { get; set; }
         public string? Location { get; set; }
         public int Hours { get; set; }
-        //public DateTime fromHour { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-
-        public int StatusID { get; set; }
+        public string? Description { get; set; }
+        public int? StatusID { get; set; }
         public virtual DbStatus? Status { get; set; }
 
         public string? OwnerUserID { get; set; }

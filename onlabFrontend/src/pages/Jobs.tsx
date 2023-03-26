@@ -1,62 +1,46 @@
 import { Card, CardBody, Flex, Heading, Text } from "@chakra-ui/react";
-import { LoadPetsFromApi } from "../api/PetApi";
-import { LoadUsersfromApi } from "../api/UserApi";
 import { JobCard } from "../components/JobCard";
-
-// const pets: IPet[] = [
-//   // { id: 1, name: "Cica", description: "szep cica", species: "cica", age: 7 },
-//   // {
-//   //   id: 2,
-//   //   name: "Kutyo",
-//   //   description: "szep kutya",
-//   //   species: "kutya",
-//   //   age: 2,
-//   // },
-//   // {
-//   //   id: 3,
-//   //   name: "Teknoc",
-//   //   description: "szep teknoc",
-//   //   species: "teknoc",
-//   //   age: 10,
-//   // },
-
-// ;
+import { jobs } from "../models/DummyData";
 
 export default function Jobs() {
   return (
     <Flex
-      px="15%"
-      justify="center"
+      px="20%"
       direction="column"
       gap="7"
       py="2%"
-      textAlign="center">
+      textAlign="center"
+      h="inherit">
       <Heading as="h1">How does it work?</Heading>
       <Flex justify="space-between" px="10%">
         <Text fontSize="lg">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci cum
-          aperiam consectetur tempora expedita, velit ex quasi pariatur nesciunt
-          illo non quod totam. Beatae reiciendis maxime explicabo facilis, nulla
-          voluptatum. Perferendis voluptate explicabo voluptatibus alias nisi
-          molestias. Veniam eligendi voluptate repellendus quidem, illo quaerat
-          eos odit provident harum incidunt deserunt illum velit corrupti
-          cupiditate ex tempora laborum ducimus maiores. Delectus?
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum
+          dolor sit amet consectetur adipisicing elit. Provident iusto
+          quibusdam, fugiat eius, similique accusantium possimus alias neque
+          cupiditate porro molestiae dolore sunt! Necessitatibus sapiente
+          voluptatem voluptatibus magnam doloremque incidunt.
         </Text>
       </Flex>
-      <Flex direction="row">
-        <Card flexGrow="2" height="100%">
+      <Flex direction="row" justifyContent="center">
+        <Card height="100%" flexGrow="1" minH="20vh" minW="20vh">
           <CardBody>
             <Heading as="h2" size="sm">
               Search for:
             </Heading>
           </CardBody>
         </Card>
-        <Flex direction="column" flexWrap="wrap" px="4%" flexGrow="5">
-          <>
+        <Flex direction="column" flexWrap="wrap" px="5%" flexGrow="5">
+          {/* <>
             {LoadUsersfromApi().map((x) => (
               <JobCard key={x.id} user={x} />
             ))}
-          </>
+          </>*/}
+          <Heading as="h2" size="md">
+            Available jobs
+          </Heading>
+          {jobs.map((x) => (
+            <JobCard key={x.id} job={x} />
+          ))}
         </Flex>
       </Flex>
     </Flex>

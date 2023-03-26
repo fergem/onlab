@@ -41,6 +41,8 @@ namespace DataAccess
             modelBuilder.Entity<DbStatus>()
             .ToTable("Statuses");
 
+
+            //OwnerProfile
             modelBuilder.Entity<DbOwnerProfile>()
                 .HasKey(s => s.ID);
 
@@ -54,6 +56,7 @@ namespace DataAccess
             modelBuilder.Entity<DbOwnerProfile>()
                 .Property(s => s.RequiredExperience);
 
+            //PetsitterProfile
             modelBuilder.Entity<DbPetSitterProfile>()
                 .HasKey(s => s.ID);
 
@@ -77,11 +80,6 @@ namespace DataAccess
             //    .WithOne(x => x.PetSitterProfile)
             //    .HasForeignKey<DbUser>(x => x.PetSitterProfileID);
 
-            modelBuilder.Entity<DbPet>()
-                .HasOne<DbUser>(s => s.User)
-                .WithMany(x => x.Pets)
-                .HasForeignKey(s => s.UserID);
-
             modelBuilder.Entity<DbUser>()
                 .HasMany<DbJob>(s => s.JobAdvertisements)
                 .WithOne(x => x.OwnerUser)
@@ -92,11 +90,7 @@ namespace DataAccess
             //    .WithOne(x => x.PetSitterUser)
             //    .HasForeignKey(x => x.PetSitterUserID);
 
-            modelBuilder.Entity<DbJob>()
-                .HasOne<DbStatus>(s => s.Status)
-                .WithMany(x => x.Jobs)
-                .HasForeignKey(x => x.StatusID);
-
+            //Pet
             modelBuilder.Entity<DbPet>()
                 .HasKey(s => s.ID);
 
@@ -118,6 +112,32 @@ namespace DataAccess
                .HasMaxLength(50)
                .IsUnicode(unicode: true);
 
+            modelBuilder.Entity<DbPet>()
+                .HasOne<DbUser>(s => s.User)
+                .WithMany(x => x.Pets)
+                .HasForeignKey(s => s.UserID);
+
+            //Job
+            //modelBuilder.Entity<DbJob>()
+            //    .HasOne<DbStatus>(s => s.Status)
+            //    .WithMany(x => x.Jobs)
+            //    .HasForeignKey(x => x.StatusID);
+
+            modelBuilder.Entity<DbJob>()
+                .HasKey(s => s.ID);
+
+            modelBuilder.Entity<DbJob>()
+                .Property(s => s.Description)
+                .HasMaxLength(50)
+                .IsUnicode(unicode: true);
+
+            modelBuilder.Entity<DbJob>()
+                .Property(s => s.Hours);
+
+            modelBuilder.Entity<DbJob>()
+               .Property(s => s.Location)
+               .HasMaxLength(50)
+               .IsUnicode(unicode: true);
 
             //Data seeding
             modelBuilder.Entity<DbUser>()
@@ -158,6 +178,30 @@ namespace DataAccess
                     { 
                         ID = 1, Name = "Vakarcs", Description = "Szep kutya", Species = "Kutya", Age = 7 
                     }
+                );
+            modelBuilder.Entity<DbJob>()
+                .HasData(
+                    new DbJob()
+                    {
+                        ID = 1,
+                        Hours = 4,
+                        Location = "Szeged",
+                        Description = "Kutyára kell vigyázni",
+                    },
+                    new DbJob()
+                    {
+                        ID = 2,
+                        Hours = 3,
+                        Location = "Szolnok",
+                        Description = "Cicára kell vigyázni",
+                    },
+                    new DbJob()
+                      {
+                        ID = 3,
+                        Hours = 7,
+                        Location = "Jászkarajenő",
+                        Description = "Teknőcre kell vigyázni",
+                      }
                 );
         }
     }  

@@ -9,21 +9,18 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import Navbar from "../components/navbar/Navbar";
-import NavButton from "../components/navbar/NavButton";
+import NavButton from "../components/NavButton";
+import { bg, color } from "../utility/Constants";
 
 export default function Home() {
-  const bg = "#EAEFD3";
-  const color = "#505168";
-  const borderColor = "#B3C0A4";
   return (
     <Flex
       px="20%"
-      justify="center"
       direction="column"
       gap="7"
       py="2%"
-      textAlign="center">
+      textAlign="center"
+      h="inherit">
       <Card
         direction="row"
         backgroundColor={bg}
@@ -46,10 +43,6 @@ export default function Home() {
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
               dolorum ex ullam modi, tenetur animi, quidem numquam nihil vel
               illo possimus fuga quam eum ipsum expedita, sint distinctio
-              voluptas dolor! Magni voluptate eius asperiores quam a dolorum
-              repudiandae corrupti rem. A, quibusdam culpa iure quis vero dolore
-              eum officiis non amet quas consequatur incidunt, voluptatem
-              officia quam omnis aut vel!
             </Text>
           </CardBody>
           <CardFooter>
@@ -79,10 +72,6 @@ export default function Home() {
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
               dolorum ex ullam modi, tenetur animi, quidem numquam nihil vel
               illo possimus fuga quam eum ipsum expedita, sint distinctio
-              voluptas dolor! Magni voluptate eius asperiores quam a dolorum
-              repudiandae corrupti rem. A, quibusdam culpa iure quis vero dolore
-              eum officiis non amet quas consequatur incidunt, voluptatem
-              officia quam omnis aut vel!
             </Text>
           </CardBody>
           <CardFooter>

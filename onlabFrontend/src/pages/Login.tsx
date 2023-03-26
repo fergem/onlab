@@ -11,9 +11,8 @@ export default function Login() {
       justify="center"
       direction="column"
       gap="7"
-      py="2%"
-      textAlign="center"
-      h="calc(92vh)">
+      py="15%"
+      textAlign="center">
       <Card
         direction="row"
         backgroundColor={bg}
