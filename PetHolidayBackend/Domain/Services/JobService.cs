@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,13 +29,18 @@ namespace Domain.Services
         {
             return await jobRepository.ListUnderTookJobs(userID);
         }
-        public async Task<Job> Insert(Job Job)
+        public async Task<Job> Insert(Job job)
         {
-            return await jobRepository.Insert(Job);
+            return await jobRepository.Insert(job);
         }
         public async Task<Job> Delete(int jobID)
         {
             return await jobRepository.Delete(jobID);
         }
+        public async Task<Job> FindById(int jobID)
+        {
+            return await jobRepository.FindById(jobID);
+        }
+
     }
 }

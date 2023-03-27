@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Jobs from "./pages/Jobs";
 import Profile from "./pages/Profile";
+import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 
 function App() {
   const bg = "#EAEFD3";
@@ -24,6 +25,10 @@ function App() {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/profile/createpetsitterjob"
+          element={<CreatePetSitterJob />}
+        />
       </Routes>
     </VStack>
   );

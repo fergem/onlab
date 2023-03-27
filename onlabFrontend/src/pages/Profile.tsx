@@ -1,19 +1,16 @@
 import {
-  Box,
   Flex,
   Heading,
   Image,
-  ListItem,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  UnorderedList,
 } from "@chakra-ui/react";
-import { JobCard } from "../components/JobCard";
-import { jobs } from "../models/DummyData";
 import { color, selectedColor } from "../utility/Constants";
+import OwnerProfile from "../components/OwnerProfile";
+import PetSitterProfile from "../components/PetSitterProfile";
 
 export default function Profile() {
   return (
@@ -28,13 +25,15 @@ export default function Profile() {
         Your Profile
       </Heading>
       <Flex direction="row" w="inherit" gap="2">
-        <Image
-          borderRadius="lg"
-          boxSize="300px"
-          objectFit="cover"
-          src="https://i.pinimg.com/550x/8f/6d/5c/8f6d5c365c7c29d9dab1ad219ca8eb70.jpg"
-          alt="Your Profile"
-        />
+        <Flex direction="column">
+          <Image
+            borderRadius="lg"
+            boxSize="300px"
+            objectFit="cover"
+            src="https://i.pinimg.com/550x/8f/6d/5c/8f6d5c365c7c29d9dab1ad219ca8eb70.jpg"
+            alt="Your Profile"
+          />
+        </Flex>
         <Flex direction="column" grow="2">
           <Tabs
             align="center"
@@ -51,31 +50,15 @@ export default function Profile() {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <UnorderedList>
-                  <ListItem>Lorem ipsum dolor sit amet</ListItem>
-                  <ListItem>Consectetur adipiscing elit</ListItem>
-                  <ListItem>Integer molestie lorem at massa</ListItem>
-                  <ListItem>Facilisis in pretium nisl aliquet</ListItem>
-                </UnorderedList>
+                <OwnerProfile></OwnerProfile>
               </TabPanel>
               <TabPanel>
-                <UnorderedList>
-                  <ListItem>Lorem ipsum dolor sit amet</ListItem>
-                  <ListItem>Consectetur adipiscing elit</ListItem>
-                  <ListItem>Integer molestie lorem at massa</ListItem>
-                  <ListItem>Facilisis in pretium nisl aliquet</ListItem>
-                </UnorderedList>
+                <PetSitterProfile></PetSitterProfile>
               </TabPanel>
             </TabPanels>
           </Tabs>
         </Flex>
       </Flex>
-      <Heading as="h2" size="md">
-        Your current Jobs available:
-      </Heading>
-      {jobs.map((x) => (
-        <JobCard key={x.id} job={x} />
-      ))}
     </Flex>
   );
 }

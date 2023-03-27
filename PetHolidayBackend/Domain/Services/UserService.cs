@@ -12,10 +12,12 @@ namespace Domain.Services
     public class UserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IPetRepository petRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IPetRepository petRepository)
         {
             this.userRepository = userRepository;
+            this.petRepository = petRepository;
         }
         public async Task<IReadOnlyCollection<User>> List()
         {
@@ -23,17 +25,22 @@ namespace Domain.Services
         }
 
 
-        public async Task<User> FindByName(string username)
+        public async Task<User> FindByUserName(string username)
         {
-            return await userRepository.FindByName(username);
+            return await userRepository.FindByUserName(username);
         }
 
-        public async Task<User> FindPetById(int petID)
+        public async Task<IReadOnlyCollection<Pet>> ListUsersPets()
         {
-            return await userRepository.FindPetById(petID);
+            return await petRepository.List();
         }
 
-        public async Task<User> Insert(User user)
+        public async Task<Pet> FindPetByID(int ID)
+        {
+            return await petRepository.FindById(ID);
+        }
+
+        public async Task<User> InsertUser(User user)
         {
             throw new NotImplementedException();
         }

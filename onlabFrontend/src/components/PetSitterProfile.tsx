@@ -1,4 +1,9 @@
-export default function OwnerProfile() {
+import { WarningIcon } from "@chakra-ui/icons";
+import { Spinner, Heading, Flex } from "@chakra-ui/react";
+import { JobList } from "./JobList";
+import { useGetAvailableJobs } from "../hooks/JobHooks";
+
+export default function PetSitterProfile() {
   const [jobs, error, loading] = useGetAvailableJobs();
   let jobItems;
   if (loading) {
@@ -25,4 +30,12 @@ export default function OwnerProfile() {
   } else {
     jobItems = <JobList jobs={jobs}></JobList>;
   }
+  return (
+    <Flex direction="column" flexWrap="wrap" alignItems="center">
+      <Heading as="h2" size="md">
+        Your undertook jobs:
+      </Heading>
+      {jobItems}
+    </Flex>
+  );
 }

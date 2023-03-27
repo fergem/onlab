@@ -22,14 +22,38 @@ namespace DataAccess.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<Job> FindById(int jobID)
+        {
+            var q = from p in dbcontext.Jobs
+                    where p.ID == jobID
+                    select p;
+
+            var foundJob = q.FirstOrDefault();
+            if (foundJob.Equals(null))
+            {
+                return null;
+            }
+            return ToModel(foundJob);
+        }
+
         public async Task<Job> Delete(int jobID)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Job> Insert(Job Job)
+        public async Task<Job> Insert(Job job)
         {
-            throw new NotImplementedException();
+            var insertJob = new DbJob()
+            {
+                Hours = job.Hours,
+                Location = job.Location,
+                Description = job.Description,
+            };
+
+            dbcontext.Jobs.Add(insertJob);
+            dbcontext.SaveChanges();
+
+            return ToModel(insertJob);
         }
 
         public async Task<IReadOnlyCollection<Job>> List()

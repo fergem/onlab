@@ -19,7 +19,6 @@ builder.Services.AddIdentityCore<DbUser>()
 
 //builder.Services.AddTransient<DataSeeder>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
-builder.Services.AddScoped<PetService, PetService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService, UserService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
@@ -30,10 +29,7 @@ var app = builder.Build();
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<PetHolidayDbContext>();
-    //context.Database.EnsureCreated();
     context.Database.Migrate();
-    //var service = serviceScope.ServiceProvider.GetService<DataSeeder>();
-    //service.Seed();
 }
 
 app.MapControllers();

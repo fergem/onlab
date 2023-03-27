@@ -11,8 +11,7 @@ namespace Domain.Repositories
     {
         Task<IReadOnlyCollection<User>> List();
         //Task<User> FindById(int userID);
-        Task<User> FindByName(string username);
-        Task<User> FindPetById(int petID);
+        Task<User> FindByUserName(string username);
         Task<User> Insert(User user);
         //Task<Pet> Update(User user);
         Task<User> Delete(int userID);

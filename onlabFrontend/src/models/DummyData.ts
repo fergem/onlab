@@ -6,19 +6,19 @@ export const jobs: Job[] = [
     id: 1,
     hours: 4,
     location: "Szeged",
-    jobDescription: "Kutyára kell vigyázni",
+    description: "Kutyára kell vigyázni",
   },
   {
     id: 2,
     hours: 3,
     location: "Szolnok",
-    jobDescription: "Cicára kell vigyázni",
+    description: "Cicára kell vigyázni",
   },
   {
     id: 3,
     hours: 7,
     location: "Jászkarajenő",
-    jobDescription: "Teknőcre kell vigyázni",
+    description: "Teknőcre kell vigyázni",
   },
 ];
 

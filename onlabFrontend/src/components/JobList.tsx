@@ -12,13 +12,27 @@ import {
 import Job from "../models/Job";
 import User from "../models/User";
 
-interface IProps {
+interface IPropsJobCard {
   job: Job;
 }
 
-export const JobCard: React.FC<IProps> = ({ job }) => {
+interface IPropsJobList {
+  jobs: Job[];
+}
+
+export const JobList: React.FC<IPropsJobList> = ({ jobs }) => {
   return (
-    <Card direction="row" my="2%">
+    <>
+      {jobs.map((x) => (
+        <JobCard key={x.id} job={x} />
+      ))}
+    </>
+  );
+};
+
+const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
+  return (
+    <Card direction="row" my="2%" w="45rem">
       <Image
         objectFit="cover"
         maxW="30%"
@@ -34,7 +48,7 @@ export const JobCard: React.FC<IProps> = ({ job }) => {
               Work hours: {job.hours}
             </Heading>
           </Flex>
-          <Text py="2">{job.jobDescription}</Text>
+          <Text py="2">{job.description}</Text>
         </Flex>
       </CardBody>
     </Card>
