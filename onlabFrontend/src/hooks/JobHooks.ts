@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQuery } from "react-query";
-import { JobService } from "../api/JobApi";
+import { isError, useMutation, useQuery, useQueryClient } from "react-query";
+import { JobService } from "../services/JobService";
 import Job from "../models/Job";
 
 export const useGetAvailableJobs = () => {
@@ -21,8 +21,7 @@ export const useGetAvailableJobs = () => {
       },
     }
   );
-  listJobs();
-  return [jobs, error, loading] as const;
+  return [jobs, error, loading, listJobs] as const;
 };
 
 export const usePostJobs = () => {

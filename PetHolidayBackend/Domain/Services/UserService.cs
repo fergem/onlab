@@ -40,6 +40,11 @@ namespace Domain.Services
             return await petRepository.FindById(ID);
         }
 
+        public async Task<Pet> InsertPet(Pet pet)
+        {
+            return await petRepository.Insert(pet);
+        }
+
         public async Task<User> InsertUser(User user)
         {
             throw new NotImplementedException();

@@ -6,12 +6,9 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { JobService } from "../api/JobApi";
+import { useForm } from "react-hook-form";
 import { usePostJobs } from "../hooks/JobHooks";
 import Job from "../models/Job";
-import { bg, color, selectedColor } from "../utility/Constants";
 
 export default function CreatePetSitterJob() {
   const { register, getValues } = useForm<Job>();
@@ -21,11 +18,11 @@ export default function CreatePetSitterJob() {
     <Flex direction="row" alignItems="center" justifyContent="center" py="15%">
       <Card
         direction="row"
-        backgroundColor={bg}
-        color={color}
         boxShadow="dark-lg"
         p="5%"
-        borderRadius="xl">
+        borderRadius="xl"
+        backgroundColor="#EAEFD3"
+        color="#505168">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -39,40 +36,35 @@ export default function CreatePetSitterJob() {
           <FormControl isRequired>
             <FormLabel>Hours to work for</FormLabel>
             <Input
-              placeholder="Hours to work for"
-              borderColor={selectedColor}
-              focusBorderColor={selectedColor}
+              placeholder="Type in the work of hours"
               {...register("hours")}
+              borderColor="#B3C0A4"
+              focusBorderColor="#B3C0A4"
+              _hover={{ backgroundColor: "#EAEFD3" }}
             />
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Location</FormLabel>
             <Input
-              placeholder="Location"
-              borderColor={selectedColor}
-              focusBorderColor={selectedColor}
+              placeholder="Location of the work"
               {...register("location")}
+              borderColor="#B3C0A4"
+              focusBorderColor="#B3C0A4"
+              _hover={{ backgroundColor: "#EAEFD3" }}
             />
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Description</FormLabel>
             <Input
-              placeholder="Description"
-              borderColor={selectedColor}
-              focusBorderColor={selectedColor}
+              placeholder="Description of the work"
               {...register("description")}
+              borderColor="#B3C0A4"
+              focusBorderColor="#B3C0A4"
+              _hover={{ backgroundColor: "#EAEFD3" }}
             />
           </FormControl>
           <FormControl>
-            <Button
-              mt={4}
-              colorScheme="teal"
-              type="submit"
-              borderColor={selectedColor}
-              _hover={{ bg: selectedColor }}
-              variant="outline"
-              fontSize="md"
-              color="inherit">
+            <Button mt={4} type="submit">
               Submit
             </Button>
           </FormControl>

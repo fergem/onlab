@@ -1,8 +1,18 @@
 import { Flex, Spacer, Icon } from "@chakra-ui/react";
-import { bg, color } from "../utility/Constants";
 import NavButton from "./NavButton";
+import { useState, useEffect } from "react";
+import User from "../models/User";
+import { UserService } from "../services/UserService";
 
 function Navbar() {
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
+  useEffect(() => {
+    const user = UserService.getCurrentUser();
+
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
   return (
     <Flex
       pos="sticky"
@@ -11,10 +21,9 @@ function Navbar() {
       px="15%"
       direction="row"
       alignItems="center"
-      gap="10px"
-      background={bg}>
+      gap="10px">
       <Icon
-        fill={color}
+        fill="#505168"
         height="64px"
         width="64px"
         version="1.1"
@@ -41,9 +50,14 @@ function Navbar() {
       </Icon>
       <NavButton name="Home" route="/" />
       <NavButton name="Jobs" route="/jobs" />
-      {/* <NavButton name="PetSitters" route="/petsitters" /> */}
       <Spacer />
-      <NavButton name="Profile" route="/profile" />
+      {currentUser && <NavButton name="Posted jobs" route="/postedjobs" />}
+      {currentUser && (
+        <NavButton name="Undertook jobs" route="/undertookjobs" />
+      )}
+      <Spacer />
+      {currentUser && <NavButton name="Profile" route="/profile" />}
+      <NavButton name="Register" route="/register"></NavButton>
       <NavButton name="Login" route="/login" />
     </Flex>
   );

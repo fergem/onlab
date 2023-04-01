@@ -10,7 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import NavButton from "../components/NavButton";
-import { bg, color } from "../utility/Constants";
 
 export default function Home() {
   return (
@@ -23,8 +22,8 @@ export default function Home() {
       h="inherit">
       <Card
         direction="row"
-        backgroundColor={bg}
-        color={color}
+        backgroundColor="#EAEFD3"
+        color="#505168"
         boxShadow="dark-lg"
         padding="8"
         borderRadius="xl">
@@ -52,8 +51,8 @@ export default function Home() {
       </Card>
       <Card
         direction="row-reverse"
-        backgroundColor={bg}
-        color={color}
+        backgroundColor="#EAEFD3"
+        color="#505168"
         boxShadow="dark-lg"
         padding="8"
         borderRadius="xl">

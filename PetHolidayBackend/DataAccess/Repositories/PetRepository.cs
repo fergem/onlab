@@ -66,10 +66,5 @@ namespace DataAccess.Repositories
         {
             return new Pet(pet.ID, pet.Name, pet.Description, pet.Species, pet.Age);
         }
-
-        public Task<User> FindUserById(int petID)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

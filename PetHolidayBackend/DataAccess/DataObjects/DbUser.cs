@@ -15,10 +15,12 @@ namespace DataAccess.DataObjects
             this.JobAdvertisements = new HashSet<DbJob>();
             this.JobApplications = new HashSet<DbJob>();
         }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Password { get; set; }
+        public int? Age { get; set; }
         public byte[]? Picture { get; set; }
+        public bool firstLogin { get; set; }
 
         /*public int OwnerProfileID { get; set; }
         public virtual DbOwnerProfile? OwnerProfile { get; set; }

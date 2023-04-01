@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import LoginForm from "../components/LoginForm";
+import RegisterForm from "../components/RegisterForm";
 
 export default function Login() {
   return (
@@ -10,7 +10,7 @@ export default function Login() {
       gap="7"
       py="15%"
       textAlign="center">
-      <LoginForm />
+      <RegisterForm />
     </Flex>
   );
 }

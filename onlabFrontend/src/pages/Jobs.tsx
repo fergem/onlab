@@ -7,17 +7,23 @@ import {
   Spinner,
   ThemeExtension,
   Text,
+  Button,
 } from "@chakra-ui/react";
-import { JobService } from "../api/JobApi";
+import { JobService } from "../services/JobService";
 import { JobList } from "../components/JobList";
 import Job from "../models/Job";
 import { useQuery, useMutation } from "react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetAvailableJobs } from "../hooks/JobHooks";
 
 export default function Jobs() {
   let jobItems;
-  const [jobs, error, loading] = useGetAvailableJobs();
+  const [jobs, error, loading, refetch] = useGetAvailableJobs();
+  useEffect(() => {
+    if (!error) {
+      refetch();
+    }
+  });
   if (loading) {
     jobItems = (
       <>
@@ -35,8 +41,9 @@ export default function Jobs() {
           marginTop="10%"
           alignSelf="center"></WarningIcon>
         <Heading as="h3" size="sm">
-          Error
+          Error happened
         </Heading>
+        <Button onClick={() => refetch()}>Click me to try again!</Button>
       </>
     );
   } else {
@@ -61,7 +68,7 @@ export default function Jobs() {
           voluptatem voluptatibus magnam doloremque incidunt.
         </Text>
       </Flex>
-      <Flex direction="row" justifyContent="center">
+      <Flex direction="row" justifyContent="space-between">
         <Card height="100%" boxSize="200px">
           <CardBody>
             <Heading as="h2" size="sm">
@@ -74,7 +81,7 @@ export default function Jobs() {
           flexWrap="wrap"
           px="5%"
           flexGrow="1"
-          alignItems="stretch">
+          alignItems="center">
           <Heading as="h2" size="md">
             Available jobs
           </Heading>

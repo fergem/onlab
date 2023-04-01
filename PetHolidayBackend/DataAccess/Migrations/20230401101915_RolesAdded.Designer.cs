@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    partial class PetHolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230401101915_RolesAdded")]
+    partial class RolesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +215,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Age")
+                    b.Property<int>("Age")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -227,9 +230,11 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -245,9 +250,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -271,9 +273,6 @@ namespace DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("firstLogin")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -289,67 +288,63 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "13335308-3ade-4f64-94c8-1bfe7503f4f2",
+                            Id = "ddbac373-dad0-4a6d-a102-30bbc349d691",
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "f025b42a-fa75-45d5-8293-2ce813a7cf1c",
+                            ConcurrencyStamp = "ecbf3e52-4603-4ccd-bc61-87364a3a7652",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e9902305-0835-49e4-9351-b7bd3fb98520",
+                            SecurityStamp = "8af245d7-d03a-4987-b572-c01bad84809a",
                             TwoFactorEnabled = false,
-                            UserName = "kissjanos",
-                            firstLogin = false
+                            UserName = "kissjanos"
                         },
                         new
                         {
-                            Id = "7a25ba25-3aef-4722-a323-3aefd9f0cb38",
+                            Id = "ca48d6e7-82f6-4454-b869-2bb92184fde1",
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "62b1252b-ab6a-4499-947c-09bb79817a78",
+                            ConcurrencyStamp = "ad05fcaf-dca3-4594-93bf-55cc91007ec7",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "784ca813-1060-427b-abb1-798e4cc2894a",
+                            SecurityStamp = "b8df5240-f45a-4038-bba3-4bf76c3b8be7",
                             TwoFactorEnabled = false,
-                            UserName = "nagyfero",
-                            firstLogin = false
+                            UserName = "nagyfero"
                         },
                         new
                         {
-                            Id = "255a98d3-f89b-462e-b2aa-109342b3323b",
+                            Id = "0b599815-5e6c-4d65-9be9-b62a50266df8",
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "650bccdd-65d0-42a8-96fb-da45de4eacaa",
+                            ConcurrencyStamp = "779a7302-4dc6-41cc-9f7e-47a7346d12e9",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a5fdb1ef-def7-4b8b-ab64-ab809a3099ac",
+                            SecurityStamp = "495f8c78-ebb6-4c02-9b18-3e4a43d7ffc8",
                             TwoFactorEnabled = false,
-                            UserName = "viccelek",
-                            firstLogin = false
+                            UserName = "viccelek"
                         },
                         new
                         {
-                            Id = "71db6c91-de7a-4066-9ebf-ebee25864639",
+                            Id = "cdf002ff-89b1-4119-b872-b7071a8d0b67",
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "37dc475b-3d48-4e80-9db0-6eaf425179f1",
+                            ConcurrencyStamp = "53847a8a-1f4a-4d41-b034-fe77fe4f0066",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b26b9fb-c9b8-4dd4-98c8-b9f8c139272c",
+                            SecurityStamp = "ecd4fa42-e3da-4692-abcb-40d86c05dde2",
                             TwoFactorEnabled = false,
-                            UserName = "makulatlan",
-                            firstLogin = false
+                            UserName = "makulatlan"
                         });
                 });
 
@@ -382,13 +377,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2cd4fcc6-d963-406f-9ddc-5731b787c8ff",
+                            Id = "6fc0f341-7777-4507-9a93-a830af69f5f1",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "23f816ea-a3ca-4c1e-b9e3-76971e53be43",
+                            Id = "8ac24440-cca6-41f6-af3c-6c50be4a1906",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });

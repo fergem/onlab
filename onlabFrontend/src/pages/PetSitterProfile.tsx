@@ -1,6 +1,6 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex } from "@chakra-ui/react";
-import { JobList } from "./JobList";
+import { JobList } from "../components/JobList";
 import { useGetAvailableJobs } from "../hooks/JobHooks";
 
 export default function PetSitterProfile() {
@@ -31,11 +31,19 @@ export default function PetSitterProfile() {
     jobItems = <JobList jobs={jobs}></JobList>;
   }
   return (
-    <Flex direction="column" flexWrap="wrap" alignItems="center">
-      <Heading as="h2" size="md">
-        Your undertook jobs:
-      </Heading>
-      {jobItems}
+    <Flex
+      px="20%"
+      direction="column"
+      gap="7"
+      py="2%"
+      textAlign="center"
+      h="inherit">
+      <Flex direction="column" flexWrap="wrap" alignItems="center">
+        <Heading as="h2" size="md">
+          Your undertook jobs:
+        </Heading>
+        {jobItems}
+      </Flex>
     </Flex>
   );
 }

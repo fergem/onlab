@@ -1,15 +1,6 @@
 ﻿using DataAccess.DataObjects;
-using Domain.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -30,10 +21,10 @@ namespace DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             modelBuilder.Entity<DbPet>()
-            .ToTable("Pets");
-            modelBuilder.Entity<DbOwnerProfile>()
-            .ToTable("OwnerProfiles");
+            .ToTable("Pets");   
             modelBuilder.Entity<DbPetSitterProfile>()
             .ToTable("PetSitterProfiles");
             modelBuilder.Entity<DbJob>()
@@ -41,34 +32,26 @@ namespace DataAccess
             modelBuilder.Entity<DbStatus>()
             .ToTable("Statuses");
 
+            modelBuilder.Entity<DbOwnerProfile>(entity =>
+            {
+                entity.ToTable("OwnerProfiles");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.Description).IsUnicode(unicode: true);
+                entity.Property(s => s.MinWage);
+                entity.Property(s => s.RequiredExperience);
+            });
 
             //OwnerProfile
-            modelBuilder.Entity<DbOwnerProfile>()
-                .HasKey(s => s.ID);
 
-            modelBuilder.Entity<DbOwnerProfile>()
-                .Property(s => s.Description)
-                .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbOwnerProfile>()
-                .Property(s => s.MinWage);
-
-            modelBuilder.Entity<DbOwnerProfile>()
-                .Property(s => s.RequiredExperience);
-
-            //PetsitterProfile
-            modelBuilder.Entity<DbPetSitterProfile>()
-                .HasKey(s => s.ID);
-
-            modelBuilder.Entity<DbPetSitterProfile>()
-                .Property(s => s.Description)
-                .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbPetSitterProfile>()
-                .Property(s => s.MaxWage);
-
-            modelBuilder.Entity<DbPetSitterProfile>()
-                .Property(s => s.AcquiredExperience);
+            modelBuilder.Entity<DbPetSitterProfile>(entity =>
+            {
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.Description).IsUnicode(unicode: true);
+                entity.Property(s => s.MaxWage);
+                entity.Property(s => s.AcquiredExperience);
+            });
+                //PetsitterProfile
+                
 
             /*modelBuilder.Entity<DbOwnerProfile>()
                 .HasOne<DbUser>(s => s.User)

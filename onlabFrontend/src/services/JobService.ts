@@ -1,8 +1,16 @@
 import axios from "axios";
 import Job from "../models/Job";
+import authHeader from "./DataService";
 
 const list = async () => {
   const response = await axios.get<Job[]>("/api/jobs");
+  return response.data;
+};
+
+const listUsersJobs = async (username: string) => {
+  const response = await axios.get<Job[]>("/api/jobs" + username, {
+    headers: authHeader(),
+  });
   return response.data;
 };
 

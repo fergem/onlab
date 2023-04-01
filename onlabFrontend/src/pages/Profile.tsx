@@ -8,11 +8,21 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { color, selectedColor } from "../utility/Constants";
-import OwnerProfile from "../components/OwnerProfile";
-import PetSitterProfile from "../components/PetSitterProfile";
+import OwnerProfile from "./OwnerProfile";
+import PetSitterProfile from "./PetSitterProfile";
+import { UserService } from "../services/UserService";
+import { useState, useEffect } from "react";
+import User from "../models/User";
 
 export default function Profile() {
+  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
+  useEffect(() => {
+    const user = UserService.getCurrentUser();
+    console.log(JSON.stringify(user));
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
   return (
     <Flex
       px="20%"
@@ -22,7 +32,7 @@ export default function Profile() {
       textAlign="center"
       h="inherit">
       <Heading as="h1" size="lg">
-        Your Profile
+        {currentUser?.user.userName}'s Profile
       </Heading>
       <Flex direction="row" w="inherit" gap="2">
         <Flex direction="column">
@@ -34,30 +44,7 @@ export default function Profile() {
             alt="Your Profile"
           />
         </Flex>
-        <Flex direction="column" grow="2">
-          <Tabs
-            align="center"
-            variant="enclosed"
-            textColor={color}
-            borderColor={selectedColor}>
-            <TabList>
-              <Tab _selected={{ bg: selectedColor }} fontSize="md">
-                Owner Profile
-              </Tab>
-              <Tab _selected={{ bg: selectedColor }} fontSize="md">
-                Petsitter Profile
-              </Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <OwnerProfile></OwnerProfile>
-              </TabPanel>
-              <TabPanel>
-                <PetSitterProfile></PetSitterProfile>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </Flex>
+        <Flex direction="column" grow="2"></Flex>
       </Flex>
     </Flex>
   );

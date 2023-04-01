@@ -32,7 +32,12 @@ export const JobList: React.FC<IPropsJobList> = ({ jobs }) => {
 
 const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
   return (
-    <Card direction="row" my="2%" w="45rem">
+    <Card
+      direction="row"
+      my="2%"
+      w="45rem"
+      backgroundColor="#EAEFD3"
+      color="#505168">
       <Image
         objectFit="cover"
         maxW="30%"
