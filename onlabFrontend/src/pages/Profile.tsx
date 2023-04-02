@@ -1,15 +1,4 @@
-import {
-  Flex,
-  Heading,
-  Image,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
-import OwnerProfile from "./OwnerProfile";
-import PetSitterProfile from "./PetSitterProfile";
+import { Flex, Heading, Image } from "@chakra-ui/react";
 import { UserService } from "../services/UserService";
 import { useState, useEffect } from "react";
 import User from "../models/User";
@@ -44,7 +33,15 @@ export default function Profile() {
             alt="Your Profile"
           />
         </Flex>
-        <Flex direction="column" grow="2"></Flex>
+        <div>
+          <p>
+            <strong>Id:</strong> {currentUser?.user.id}
+          </p>
+          <p>
+            <strong>Name:</strong>{" "}
+            {currentUser?.user.firstName + " " + currentUser?.user.lastName}
+          </p>
+        </div>
       </Flex>
     </Flex>
   );

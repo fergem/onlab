@@ -45,7 +45,7 @@ export default function Home() {
             </Text>
           </CardBody>
           <CardFooter>
-            <NavButton name="Be a pet owner!" route="/login" />
+            <NavButton name="Be a pet owner!" route="/register" />
           </CardFooter>
         </Flex>
       </Card>
@@ -74,7 +74,7 @@ export default function Home() {
             </Text>
           </CardBody>
           <CardFooter>
-            <NavButton name="Be a petsitter!" route="/login" />
+            <NavButton name="Be a petsitter!" route="/register" />
           </CardFooter>
         </Flex>
       </Card>
