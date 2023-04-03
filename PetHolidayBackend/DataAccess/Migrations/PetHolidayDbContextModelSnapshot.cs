@@ -43,13 +43,13 @@ namespace DataAccess.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("OwnerUserID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("OwnerUserID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PetSitterUserID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PetSitterUserID")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("StatusID")
+                    b.Property<int>("StatusID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
@@ -68,21 +68,30 @@ namespace DataAccess.Migrations
                             ID = 1,
                             Description = "Kutyára kell vigyázni",
                             Hours = 4,
-                            Location = "Szeged"
+                            Location = "Szeged",
+                            OwnerUserID = 1,
+                            PetSitterUserID = 2,
+                            StatusID = 2
                         },
                         new
                         {
                             ID = 2,
                             Description = "Cicára kell vigyázni",
                             Hours = 3,
-                            Location = "Szolnok"
+                            Location = "Szolnok",
+                            OwnerUserID = 2,
+                            PetSitterUserID = 1,
+                            StatusID = 2
                         },
                         new
                         {
                             ID = 3,
                             Description = "Teknőcre kell vigyázni",
                             Hours = 7,
-                            Location = "Jászkarajenő"
+                            Location = "Jászkarajenő",
+                            OwnerUserID = 3,
+                            PetSitterUserID = 4,
+                            StatusID = 1
                         });
                 });
 
@@ -104,12 +113,13 @@ namespace DataAccess.Migrations
                     b.Property<string>("RequiredExperience")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("OwnerProfiles", (string)null);
                 });
@@ -140,12 +150,12 @@ namespace DataAccess.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Pets", (string)null);
 
@@ -156,7 +166,8 @@ namespace DataAccess.Migrations
                             Age = 7,
                             Description = "Szep kutya",
                             Name = "Vakarcs",
-                            Species = "Kutya"
+                            Species = "Kutya",
+                            UserId = 3
                         });
                 });
 
@@ -178,12 +189,13 @@ namespace DataAccess.Migrations
                     b.Property<string>("MaxWage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("PetSitterProfiles", (string)null);
                 });
@@ -197,17 +209,34 @@ namespace DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ID");
 
                     b.ToTable("Statuses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Name = "Available"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Name = "Done"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.DataObjects.DbUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -289,64 +318,60 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "13335308-3ade-4f64-94c8-1bfe7503f4f2",
+                            Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "f025b42a-fa75-45d5-8293-2ce813a7cf1c",
+                            ConcurrencyStamp = "c2480e8f-8f85-4d26-abe1-1aa135aa706d",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e9902305-0835-49e4-9351-b7bd3fb98520",
                             TwoFactorEnabled = false,
                             UserName = "kissjanos",
                             firstLogin = false
                         },
                         new
                         {
-                            Id = "7a25ba25-3aef-4722-a323-3aefd9f0cb38",
+                            Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "62b1252b-ab6a-4499-947c-09bb79817a78",
+                            ConcurrencyStamp = "a6320b2d-baab-4f1a-b8c1-97f54d6f2456",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "784ca813-1060-427b-abb1-798e4cc2894a",
                             TwoFactorEnabled = false,
                             UserName = "nagyfero",
                             firstLogin = false
                         },
                         new
                         {
-                            Id = "255a98d3-f89b-462e-b2aa-109342b3323b",
+                            Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "650bccdd-65d0-42a8-96fb-da45de4eacaa",
+                            ConcurrencyStamp = "caa67dd6-d3d4-45d3-8504-9cbfb96189b2",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a5fdb1ef-def7-4b8b-ab64-ab809a3099ac",
                             TwoFactorEnabled = false,
                             UserName = "viccelek",
                             firstLogin = false
                         },
                         new
                         {
-                            Id = "71db6c91-de7a-4066-9ebf-ebee25864639",
+                            Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "37dc475b-3d48-4e80-9db0-6eaf425179f1",
+                            ConcurrencyStamp = "04641515-089a-433e-81f0-a9fb79b21231",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b26b9fb-c9b8-4dd4-98c8-b9f8c139272c",
                             TwoFactorEnabled = false,
                             UserName = "makulatlan",
                             firstLogin = false
@@ -357,6 +382,42 @@ namespace DataAccess.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "60df331a-9a3b-433d-86cb-5fc490dd8b0e",
+                            Name = "PetSitter",
+                            NormalizedName = "PETSITTER"
+                        },
+                        new
+                        {
+                            Id = "0a17d40c-6e88-435a-aa5e-0d7f64453a47",
+                            Name = "Owner",
+                            NormalizedName = "OWNER"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -378,23 +439,9 @@ namespace DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "2cd4fcc6-d963-406f-9ddc-5731b787c8ff",
-                            Name = "PetSitter",
-                            NormalizedName = "PETSITTER"
-                        },
-                        new
-                        {
-                            Id = "23f816ea-a3ca-4c1e-b9e3-76971e53be43",
-                            Name = "Owner",
-                            NormalizedName = "OWNER"
-                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -408,9 +455,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -419,7 +465,7 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -433,9 +479,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -444,7 +489,7 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -455,9 +500,8 @@ namespace DataAccess.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -466,13 +510,13 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -481,10 +525,10 @@ namespace DataAccess.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -504,15 +548,21 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "OwnerUser")
                         .WithMany("JobAdvertisements")
-                        .HasForeignKey("OwnerUserID");
+                        .HasForeignKey("OwnerUserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("DataAccess.DataObjects.DbUser", "PetSitterUser")
                         .WithMany("JobApplications")
-                        .HasForeignKey("PetSitterUserID");
+                        .HasForeignKey("PetSitterUserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("DataAccess.DataObjects.DbStatus", "Status")
                         .WithMany("Jobs")
-                        .HasForeignKey("StatusID");
+                        .HasForeignKey("StatusID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("OwnerUser");
 
@@ -524,8 +574,10 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.DataObjects.DbOwnerProfile", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithOne("OwnerProfile")
+                        .HasForeignKey("DataAccess.DataObjects.DbOwnerProfile", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -534,7 +586,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "User")
                         .WithMany("Pets")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -542,22 +596,24 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.DataObjects.DbPetSitterProfile", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithOne("PetSitterProfile")
+                        .HasForeignKey("DataAccess.DataObjects.DbPetSitterProfile", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", null)
                         .WithMany()
@@ -566,7 +622,7 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", null)
                         .WithMany()
@@ -575,9 +631,9 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -590,7 +646,7 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", null)
                         .WithMany()
@@ -609,6 +665,10 @@ namespace DataAccess.Migrations
                     b.Navigation("JobAdvertisements");
 
                     b.Navigation("JobApplications");
+
+                    b.Navigation("OwnerProfile");
+
+                    b.Navigation("PetSitterProfile");
 
                     b.Navigation("Pets");
                 });

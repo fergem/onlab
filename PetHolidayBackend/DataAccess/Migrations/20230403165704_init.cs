@@ -17,7 +17,8 @@ namespace DataAccess.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -31,11 +32,14 @@ namespace DataAccess.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: true),
                     Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    firstLogin = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -57,12 +61,26 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityRole",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,7 +93,7 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -96,7 +114,7 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -118,7 +136,7 @@ namespace DataAccess.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,8 +153,8 @@ namespace DataAccess.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -159,7 +177,7 @@ namespace DataAccess.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -184,16 +202,17 @@ namespace DataAccess.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RequiredExperience = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MinWage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OwnerProfiles", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_OwnerProfiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_OwnerProfiles_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,16 +225,17 @@ namespace DataAccess.Migrations
                     Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Species = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pets", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Pets_AspNetUsers_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Pets_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -227,16 +247,17 @@ namespace DataAccess.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AcquiredExperience = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxWage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PetSitterProfiles", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_PetSitterProfiles_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_PetSitterProfiles_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,13 +266,12 @@ namespace DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Hours = table.Column<int>(type: "int", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     StatusID = table.Column<int>(type: "int", nullable: false),
-                    OwnerUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PetSitterUserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    OwnerUserID = table.Column<int>(type: "int", nullable: false),
+                    PetSitterUserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -260,12 +280,14 @@ namespace DataAccess.Migrations
                         name: "FK_Jobs_AspNetUsers_OwnerUserID",
                         column: x => x.OwnerUserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Jobs_AspNetUsers_PetSitterUserID",
                         column: x => x.PetSitterUserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Jobs_Statuses_StatusID",
                         column: x => x.StatusID,
@@ -276,19 +298,47 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName", "firstLogin" },
                 values: new object[,]
                 {
-                    { "0ad6386c-1849-48c4-99ce-1ab7b956fe55", 0, 23, "87cde174-ef38-49cb-bcec-18b85f2af6f6", null, false, "Kiss", "Janos", false, null, null, null, null, null, false, null, "a3103e27-45ab-4e02-94ac-4b0c958f925d", false, "kissjanos" },
-                    { "68054422-3439-4cef-8ed6-b081067cc8e2", 0, 17, "8b0fcf0e-adad-4fa1-a172-4699ad8a208e", null, false, "Maku", "Látlan", false, null, null, null, null, null, false, null, "8bcf2586-8f56-4c75-92ff-0c871334b7ca", false, "makulatlan" },
-                    { "db3c6156-f4cc-44da-b187-fe128413b896", 0, 32, "9d035110-ebb9-480b-89cd-4ce59183db58", null, false, "Nagy", "Feró", false, null, null, null, null, null, false, null, "b86cf490-ec80-447f-86d4-1bf473a3ef03", false, "nagyfero" },
-                    { "e864c390-95a4-435c-b34b-3349b6a261f7", 0, 43, "fd7c2ee9-6fd3-4139-8eab-5cebf8f733dc", null, false, "Vicc", "Elek", false, null, null, null, null, null, false, null, "f75ca1d3-1ca9-4055-afd2-ac08fab966a7", false, "viccelek" }
+                    { 1, 0, 23, "c2480e8f-8f85-4d26-abe1-1aa135aa706d", null, false, "Kiss", "Janos", false, null, null, null, null, null, null, false, null, null, false, "kissjanos", false },
+                    { 2, 0, 32, "a6320b2d-baab-4f1a-b8c1-97f54d6f2456", null, false, "Nagy", "Feró", false, null, null, null, null, null, null, false, null, null, false, "nagyfero", false },
+                    { 3, 0, 43, "caa67dd6-d3d4-45d3-8504-9cbfb96189b2", null, false, "Vicc", "Elek", false, null, null, null, null, null, null, false, null, null, false, "viccelek", false },
+                    { 4, 0, 17, "04641515-089a-433e-81f0-a9fb79b21231", null, false, "Maku", "Látlan", false, null, null, null, null, null, null, false, null, null, false, "makulatlan", false }
+                });
+
+            migrationBuilder.InsertData(
+                table: "IdentityRole",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "0a17d40c-6e88-435a-aa5e-0d7f64453a47", null, "Owner", "OWNER" },
+                    { "60df331a-9a3b-433d-86cb-5fc490dd8b0e", null, "PetSitter", "PETSITTER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Statuses",
+                columns: new[] { "ID", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Available" },
+                    { 2, "Done" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Jobs",
+                columns: new[] { "ID", "Description", "Hours", "Location", "OwnerUserID", "PetSitterUserID", "StatusID" },
+                values: new object[,]
+                {
+                    { 1, "Kutyára kell vigyázni", 4, "Szeged", 1, 2, 2 },
+                    { 2, "Cicára kell vigyázni", 3, "Szolnok", 2, 1, 2 },
+                    { 3, "Teknőcre kell vigyázni", 7, "Jászkarajenő", 3, 4, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Pets",
-                columns: new[] { "ID", "Age", "Description", "Name", "Species", "UserID" },
-                values: new object[] { 1, 7, "Szep kutya", "Vakarcs", "Kutya", null });
+                columns: new[] { "ID", "Age", "Description", "Name", "Species", "UserId" },
+                values: new object[] { 1, 7, "Szep kutya", "Vakarcs", "Kutya", 3 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -345,19 +395,21 @@ namespace DataAccess.Migrations
                 column: "StatusID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OwnerProfiles_UserId",
+                name: "IX_OwnerProfiles_UserID",
                 table: "OwnerProfiles",
-                column: "UserId");
+                column: "UserID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pets_UserID",
+                name: "IX_Pets_UserId",
                 table: "Pets",
-                column: "UserID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetSitterProfiles_UserId",
+                name: "IX_PetSitterProfiles_UserID",
                 table: "PetSitterProfiles",
-                column: "UserId");
+                column: "UserID",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -377,6 +429,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "IdentityRole");
 
             migrationBuilder.DropTable(
                 name: "Jobs");

@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PetHolidayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PetHolidayDbContext")));
 
-builder.Services.AddIdentity<DbUser, IdentityRole>(x =>
+builder.Services.AddIdentity<DbUser, IdentityRole<int>>(x =>
 {
     x.Password.RequiredLength = 6;
     x.Password.RequireUppercase = false;

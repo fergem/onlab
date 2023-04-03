@@ -1,10 +1,13 @@
 ﻿using DataAccess.DataObjects;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess
 {
-    public class PetHolidayDbContext : IdentityDbContext<DbUser>
+    public class PetHolidayDbContext : IdentityDbContext<DbUser, IdentityRole<int>, int>
     {
         public PetHolidayDbContext(DbContextOptions options)
         : base(options)
@@ -21,16 +24,9 @@ namespace DataAccess
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            //Convention??
 
-            modelBuilder.Entity<DbPet>()
-            .ToTable("Pets");   
-            modelBuilder.Entity<DbPetSitterProfile>()
-            .ToTable("PetSitterProfiles");
-            modelBuilder.Entity<DbJob>()
-            .ToTable("Jobs");
-            modelBuilder.Entity<DbStatus>()
-            .ToTable("Statuses");
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Entity<DbOwnerProfile>(entity =>
             {
@@ -41,92 +37,98 @@ namespace DataAccess
                 entity.Property(s => s.RequiredExperience);
             });
 
-            //OwnerProfile
-
             modelBuilder.Entity<DbPetSitterProfile>(entity =>
             {
+                entity.ToTable("PetSitterProfiles");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
                 entity.Property(s => s.MaxWage);
                 entity.Property(s => s.AcquiredExperience);
             });
-                //PetsitterProfile
-                
+              
+            modelBuilder.Entity<DbPet>(entity =>
+            {
+                entity.ToTable("Pets");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Age);
+                entity.Property(s => s.Species).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
+            });
 
-            /*modelBuilder.Entity<DbOwnerProfile>()
-                .HasOne<DbUser>(s => s.User)
-                .WithOne(x => x.OwnerProfile)
-                .HasForeignKey<DbUser>(x => x.OwnerProfileID);
-            **/
-            //modelBuilder.Entity<DbPetSitterProfile>()
-            //    .HasOne<DbUser>(s => s.User)
-            //    .WithOne(x => x.PetSitterProfile)
-            //    .HasForeignKey<DbUser>(x => x.PetSitterProfileID);
+            modelBuilder.Entity<DbJob>(entity =>
+            {
+                entity.ToTable("Jobs");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Hours);
+                entity.Property(s => s.Location).HasMaxLength(50).IsUnicode(unicode: true);
+            });
 
-            modelBuilder.Entity<DbUser>()
-                .HasMany<DbJob>(s => s.JobAdvertisements)
-                .WithOne(x => x.OwnerUser)
-                .HasForeignKey(x => x.OwnerUserID);
+            modelBuilder.Entity<DbStatus>(entity =>
+            {
+                entity.ToTable("Statuses");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true); ;
+            });
+           
 
-            //modelBuilder.Entity<DbUser>()
-            //    .HasMany<DbJob>(s => s.JobApplications)
-            //    .WithOne(x => x.PetSitterUser)
-            //    .HasForeignKey(x => x.PetSitterUserID);
-
-            //Pet
-            modelBuilder.Entity<DbPet>()
-                .HasKey(s => s.ID);
-
-            modelBuilder.Entity<DbPet>()
-                .Property(s => s.Name)
-                .HasMaxLength(50)
-                .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbPet>()
-                .Property(s => s.Age);
-
-            modelBuilder.Entity<DbPet>()
-               .Property(s => s.Species)
-               .HasMaxLength(50)
-               .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbPet>()
-               .Property(s => s.Description)
-               .HasMaxLength(50)
-               .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbPet>()
-                .HasOne<DbUser>(s => s.User)
-                .WithMany(x => x.Pets)
-                .HasForeignKey(s => s.UserID);
-
-            //Job
-            //modelBuilder.Entity<DbJob>()
-            //    .HasOne<DbStatus>(s => s.Status)
-            //    .WithMany(x => x.Jobs)
-            //    .HasForeignKey(x => x.StatusID);
-
-            modelBuilder.Entity<DbJob>()
-                .HasKey(s => s.ID);
-
-            modelBuilder.Entity<DbJob>()
-                .Property(s => s.Description)
-                .HasMaxLength(50)
-                .IsUnicode(unicode: true);
-
-            modelBuilder.Entity<DbJob>()
-                .Property(s => s.Hours);
-
-            modelBuilder.Entity<DbJob>()
-               .Property(s => s.Location)
-               .HasMaxLength(50)
-               .IsUnicode(unicode: true);
+            //Relationship configuration
+            OneToOneRelationshipConfiguration(modelBuilder);
+            OneToManyRelationshipConfiguration(modelBuilder);
 
             //Data seeding
+            DataSeeding(modelBuilder);
+            
+        }
+
+        private void OneToManyRelationshipConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbStatus>()
+                .HasMany(c => c.Jobs)
+                .WithOne(s => s.Status)
+                .IsRequired();
+
+            modelBuilder.Entity<DbUser>()
+                .HasMany(c => c.Pets)
+                .WithOne(s => s.User)
+                .IsRequired();
+
+            modelBuilder.Entity<DbUser>()
+                .HasMany(c => c.JobAdvertisements)
+                .WithOne(s => s.OwnerUser)
+                .HasForeignKey(e => e.OwnerUserID)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<DbUser>()
+                .HasMany(c => c.JobApplications)
+                .WithOne(s => s.PetSitterUser)
+                .HasForeignKey(e => e.PetSitterUserID)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+        }
+
+        private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbUser>()
+                .HasOne(c => c.OwnerProfile)
+                .WithOne(s => s.User)
+                .HasForeignKey<DbOwnerProfile>(b => b.UserID);
+
+            modelBuilder.Entity<DbUser>()
+                .HasOne(c => c.PetSitterProfile)
+                .WithOne(s => s.User)
+                .HasForeignKey<DbPetSitterProfile>(b => b.UserID);
+        }
+
+        public void DataSeeding(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<DbUser>()
                 .HasData(
                     new DbUser()
                     {
+                        Id = 1,
                         UserName = "kissjanos",
                         FirstName = "Kiss",
                         LastName = "Janos",
@@ -134,6 +136,7 @@ namespace DataAccess
                     },
                     new DbUser()
                     {
+                        Id = 2,
                         UserName = "nagyfero",
                         FirstName = "Nagy",
                         LastName = "Feró",
@@ -141,6 +144,7 @@ namespace DataAccess
                     },
                     new DbUser()
                     {
+                        Id = 3,
                         UserName = "viccelek",
                         FirstName = "Vicc",
                         LastName = "Elek",
@@ -148,6 +152,7 @@ namespace DataAccess
                     },
                     new DbUser()
                     {
+                        Id = 4,
                         UserName = "makulatlan",
                         FirstName = "Maku",
                         LastName = "Látlan",
@@ -157,10 +162,29 @@ namespace DataAccess
 
             modelBuilder.Entity<DbPet>()
                 .HasData(
-                    new DbPet() 
-                    { 
-                        ID = 1, Name = "Vakarcs", Description = "Szep kutya", Species = "Kutya", Age = 7 
+                    new DbPet()
+                    {
+                        ID = 1,
+                        Name = "Vakarcs",
+                        Description = "Szep kutya",
+                        Species = "Kutya",
+                        Age = 7,
+                        UserId = 3,
                     }
+                );
+            modelBuilder.Entity<DbStatus>()
+                .HasData(
+                    new DbStatus()
+                    {
+                        ID = 1,
+                        Name = "Available" 
+                    },
+                    new DbStatus()
+                    {
+                        ID = 2,
+                        Name = "Done"
+                    }
+
                 );
             modelBuilder.Entity<DbJob>()
                 .HasData(
@@ -170,6 +194,9 @@ namespace DataAccess
                         Hours = 4,
                         Location = "Szeged",
                         Description = "Kutyára kell vigyázni",
+                        StatusID = 2,
+                        OwnerUserID = 1,
+                        PetSitterUserID = 2,
                     },
                     new DbJob()
                     {
@@ -177,14 +204,20 @@ namespace DataAccess
                         Hours = 3,
                         Location = "Szolnok",
                         Description = "Cicára kell vigyázni",
+                        StatusID = 2,
+                        OwnerUserID = 2,
+                        PetSitterUserID = 1,
                     },
                     new DbJob()
-                      {
+                    {
                         ID = 3,
                         Hours = 7,
                         Location = "Jászkarajenő",
                         Description = "Teknőcre kell vigyázni",
-                      }
+                        StatusID = 1,
+                        OwnerUserID = 3,
+                        PetSitterUserID = 4,
+                    }
                 );
         }
     }  
