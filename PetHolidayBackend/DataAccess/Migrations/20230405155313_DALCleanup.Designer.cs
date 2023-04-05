@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    partial class PetHolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405155313_DALCleanup")]
+    partial class DALCleanup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -337,7 +340,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "8a2f4455-69b1-448f-8280-714aa1eac798",
+                            ConcurrencyStamp = "c3aa9561-9ed8-4031-9930-a1c6b06b69a9",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
@@ -353,7 +356,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "ed0572b6-9cd5-44e2-ab05-f3637866b0b7",
+                            ConcurrencyStamp = "6b29dd85-7e45-47a4-b267-3716af91df73",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
@@ -369,7 +372,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "36b3f424-96a0-4ce6-ab9a-56b832b9c063",
+                            ConcurrencyStamp = "f2e7b75a-6536-4442-96b1-ae201ea4e76f",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
@@ -385,7 +388,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "81e87d10-bebe-40d1-bb3b-332b4ae9e71d",
+                            ConcurrencyStamp = "c415dd69-dbd8-46cd-985c-461ee2cb4e6c",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
@@ -419,13 +422,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27d42b69-17ed-41f5-a979-2304937a8f31",
+                            Id = "8da61b76-9e78-414d-b55e-1b7e9a473229",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "6695bb84-1552-4237-b012-3cd8415185b8",
+                            Id = "d376cb57-cdff-4b9b-b84a-45a29028357a",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });
@@ -686,11 +689,9 @@ namespace DataAccess.Migrations
 
                     b.Navigation("JobApplications");
 
-                    b.Navigation("OwnerProfile")
-                        .IsRequired();
+                    b.Navigation("OwnerProfile");
 
-                    b.Navigation("PetSitterProfile")
-                        .IsRequired();
+                    b.Navigation("PetSitterProfile");
 
                     b.Navigation("Pets");
                 });

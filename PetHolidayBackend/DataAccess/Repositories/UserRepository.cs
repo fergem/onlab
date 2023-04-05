@@ -1,53 +1,77 @@
 ﻿using DataAccess.DataObjects;
 using Domain.Models;
+using Domain.Models.AuthHelpers;
 using Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace DataAccess.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly PetHolidayDbContext dbcontext;
-        public UserRepository(PetHolidayDbContext dbcontext)
+        private readonly UserManager<DbUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<DbUser> signInManager;
+
+        public UserRepository(UserManager<DbUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<DbUser> signInManager)
         {
-            this.dbcontext = dbcontext;
-        }
-       
-        public async Task<IReadOnlyCollection<User>> List()
-        {
-            return dbcontext.Users.Select(ToModel).ToList();
+            this.userManager = userManager;
+            this.roleManager = roleManager;
+            this.signInManager = signInManager;
         }
 
-        public async Task<User> FindByUserName(string username)
+        public async Task<User> Login(LoginModel loginModel)
         {
-            var q = from p in dbcontext.Users
-                    where p.UserName == username
-                    select p;
+            var user = await userManager.FindByNameAsync(loginModel.Username);
+            if (user == null)
+                throw new Exception("Incorrect username");
 
-            var foundUser = q.FirstOrDefault();
-            if (foundUser.Equals(null))
+            var result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.RememberMe, false);
+            if (!result.Succeeded)
+                throw new Exception("Incorrect password");
+
+            //if(user.firstLogin)
+            //{
+
+            //}
+            //KETTŐS VISSZAADÁS MERT A ROLET IS KELL
+            var userRoles = await userManager.GetRolesAsync(user);
+            var authClaims = new List<Claim> {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+            foreach (var userRole in userRoles)
             {
-                return null;
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
-            return ToModel(foundUser);
+            return ToModel(user);
         }
 
-        public async Task<User> Insert(User user)
+        public async Task<User> Register(RegisterModel registerModel)
         {
-            throw new NotImplementedException();
+            var IsExist = await userManager.FindByNameAsync(registerModel.Username);
+            if (IsExist != null)
+                throw new Exception("User already exist");
+
+            DbUser appUser = new DbUser
+            {
+                UserName = registerModel.Username,
+                Email = registerModel.Email,
+                Password = registerModel.Password,
+                firstLogin = true,
+            };
+            var result = await userManager.CreateAsync(appUser, registerModel.Password);
+            if (!result.Succeeded)
+                throw new Exception("User creation failed, check user credentials");
+
+            return ToModel(appUser);
         }
 
-        public async Task<User> Delete(int userID)
-        {
-            throw new NotImplementedException();
-        }
         public User ToModel(DbUser user)
         {
-            return new User(user.FirstName, user.LastName, user.Age, user.Picture);
+            return new User(user.FirstName, user.Password);
         }
     }
 }

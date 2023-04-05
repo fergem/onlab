@@ -1,11 +1,7 @@
 ﻿using DataAccess.DataObjects;
 using Domain.Models;
 using Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
@@ -17,28 +13,12 @@ namespace DataAccess.Repositories
             this.dbcontext = dbcontext;
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListJobs()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Job> FindById(int jobID)
         {
-            var q = from p in dbcontext.Jobs
-                    where p.ID == jobID
-                    select p;
-
-            var foundJob = q.FirstOrDefault();
-            if (foundJob.Equals(null))
-            {
-                return null;
-            }
-            return ToModel(foundJob);
-        }
-
-        public async Task<Job> Delete(int jobID)
-        {
-            throw new NotImplementedException();
+            var job = await dbcontext.Jobs.FindAsync(jobID);
+            if (job == null)
+                throw new Exception("Job doesnt exist");
+            return ToModel(job);
         }
 
         public async Task<Job> Insert(Job job)
@@ -48,9 +28,11 @@ namespace DataAccess.Repositories
                 Hours = job.Hours,
                 Location = job.Location,
                 Description = job.Description,
+                OwnerUserID = job.OwnerUserID,
+                StatusID = 1
             };
 
-            dbcontext.Jobs.Add(insertJob);
+            await dbcontext.Jobs.AddAsync(insertJob);
             dbcontext.SaveChanges();
 
             return ToModel(insertJob);
@@ -58,22 +40,40 @@ namespace DataAccess.Repositories
 
         public async Task<IReadOnlyCollection<Job>> List()
         {
-            return dbcontext.Jobs.Select(ToModel).ToList();
+            return await dbcontext.Jobs.Select(s => ToModel(s)).ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<Job>> ListAvailableJobs()
+        {
+
+            return await dbcontext.Jobs
+                .Include(s => s.Status)
+                .Where(s => s.Status.Name == "Available")
+                .Select(s => ToModel(s)).ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID)
         {
-            throw new NotImplementedException();
+            return await dbcontext.Jobs
+                .Include(s => s.OwnerUser)
+                .Where(d => d.OwnerUserID == userID)
+                .Select(s => ToModel(s))
+                .ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
         {
-            throw new NotImplementedException();
+           
+            return await dbcontext.Jobs
+                .Include(s => s.PetSitterUser)
+                .Where(d => d.PetSitterUserID == userID)
+                .Select(s => ToModel(s))
+                .ToListAsync();
         }
 
         public Job ToModel(DbJob job)
         {
-            return new Job(job.ID, job.Hours, job.Description, job.Location);
+            return new Job(job.ID, job.Hours, job.Description, job.Location, job.StatusID);
         }
     }
 }

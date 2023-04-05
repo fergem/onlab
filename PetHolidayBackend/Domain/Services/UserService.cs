@@ -1,33 +1,27 @@
 ﻿using Domain.Models;
+using Domain.Models.AuthHelpers;
 using Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Domain.Services
 {
     public class UserService
     {
-        private readonly IUserRepository userRepository;
         private readonly IPetRepository petRepository;
+        private readonly IUserRepository userRepository;
 
-        public UserService(IUserRepository userRepository, IPetRepository petRepository)
+        public UserService(IPetRepository petRepository, IUserRepository userRepository)
         {
-            this.userRepository = userRepository;
             this.petRepository = petRepository;
+            this.userRepository = userRepository;
         }
-        public async Task<IReadOnlyCollection<User>> List()
+        public async Task<User> Login(LoginModel loginModel)
         {
-            return await userRepository.List();
+            return await userRepository.Login(loginModel);
         }
-
-
-        public async Task<User> FindByUserName(string username)
+        public async Task<User> Register(RegisterModel registerModel)
         {
-            return await userRepository.FindByUserName(username);
+            return await userRepository.Register(registerModel);
         }
 
         public async Task<IReadOnlyCollection<Pet>> ListUsersPets()
@@ -40,19 +34,9 @@ namespace Domain.Services
             return await petRepository.FindById(ID);
         }
 
-        public async Task<Pet> InsertPet(Pet pet)
+        public async Task<Pet> InsertPet(Pet pet, int userID)
         {
-            return await petRepository.Insert(pet);
-        }
-
-        public async Task<User> InsertUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<User> Delete(int userID)
-        {
-            throw new NotImplementedException();
+            return await petRepository.Insert(pet, userID);
         }
     }
 }

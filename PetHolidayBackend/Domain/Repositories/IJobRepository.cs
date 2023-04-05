@@ -14,6 +14,5 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
         Task<Job> Insert(Job job);
-        Task<Job> Delete(int jobID);
     }
 }

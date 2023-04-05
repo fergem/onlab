@@ -12,21 +12,21 @@ namespace DataAccess.DataObjects
     {
         public DbUser() 
         {
-            this.Pets = new HashSet<DbPet>();
-            //this.JobAdvertisements = new HashSet<DbJob>();
-            //this.JobApplications = new HashSet<DbJob>();
+            Pets = new HashSet<DbPet>();
+            JobAdvertisements = new HashSet<DbJob>();
+            JobApplications = new HashSet<DbJob>();
         }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public string? Password { get; set; }
-        public int? Age { get; set; }
+        public required string Password { get; set; }
+        public int Age { get; set; }
         public byte[]? Picture { get; set; }
-        public bool firstLogin { get; set; }
+        public required bool firstLogin { get; set; }
 
         
-        public virtual DbOwnerProfile? OwnerProfile { get; set; }
+        public virtual DbOwnerProfile OwnerProfile { get; set; } = null!;
 
-        public virtual DbPetSitterProfile?  PetSitterProfile { get;  set; }
+        public virtual DbPetSitterProfile PetSitterProfile { get; set; } = null!;
         
         public virtual ICollection<DbPet> Pets { get; set; }
         public virtual ICollection<DbJob> JobAdvertisements { get; set; }

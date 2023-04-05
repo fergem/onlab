@@ -12,10 +12,12 @@ namespace Domain.Services
     public class JobService
     {
         private readonly IJobRepository jobRepository;
+        private readonly IStatusRepository statusRepository;
 
-        public JobService(IJobRepository jobRepository)
+        public JobService(IJobRepository jobRepository, IStatusRepository statusRepository)
         {
             this.jobRepository = jobRepository;
+            this.statusRepository = statusRepository;
         }
         public async Task<IReadOnlyCollection<Job>> List()
         {
@@ -33,10 +35,7 @@ namespace Domain.Services
         {
             return await jobRepository.Insert(job);
         }
-        public async Task<Job> Delete(int jobID)
-        {
-            return await jobRepository.Delete(jobID);
-        }
+      
         public async Task<Job> FindById(int jobID)
         {
             return await jobRepository.FindById(jobID);

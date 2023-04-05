@@ -7,6 +7,7 @@ using DataAccess.DataObjects;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace DataAccess.Repositories
 {
@@ -19,52 +20,47 @@ namespace DataAccess.Repositories
         }
         public async Task<Pet> Delete(int petID)
         {
-            throw new NotImplementedException();
+            var pet = await dbcontext.Pets.FindAsync(petID);
+            if (pet == null)
+                throw new Exception("Pet wanted to be deleted doesnt exists");
+            dbcontext.Remove(pet);
+            await dbcontext.SaveChangesAsync();
+            return ToModel(pet);
         }
 
         public async Task<IReadOnlyCollection<Pet>> List()
         {
-            return dbcontext.Pets.Select(ToModel).ToList();
+            return await dbcontext.Pets.Select(s => ToModel(s)).ToListAsync();
         }
 
         public async Task<Pet> FindById(int petID)
         {
-            var q = from p in dbcontext.Pets 
-                           where p.ID == petID
-                           select p;
-            
-            var foundPet = q.FirstOrDefault();
-            if (foundPet.Equals(null))
+            var pet = await dbcontext.Pets.FindAsync(petID);
+            if(pet == null) 
             {
-                return null;
+                throw new Exception("Pet doesnt exist");
             }
-            return ToModel(foundPet);
+            return ToModel(pet);
         }
 
-        public async Task<Pet> Insert(Pet pet)
+        public async Task<Pet> Insert(Pet pet, int userID)
         {
             var insertPet = new DbPet()
             {
                 Name = pet.Name,
                 Species = pet.Species,
                 Description = pet.Description,
-                Age = pet.Age
+                Age = pet.Age,
+                UserID = userID
             };
-
-            dbcontext.Pets.Add(insertPet);
+            await dbcontext.Pets.AddAsync(insertPet);
             dbcontext.SaveChanges();
-
             return ToModel(insertPet);
-        }
-
-        public async Task<Pet> Update(Pet pet)
-        {
-            throw new NotImplementedException();
         }
 
         public Pet ToModel(DbPet pet)
         {
-            return new Pet(pet.ID, pet.Name, pet.Description, pet.Species, pet.Age);
+            return new Pet(pet.ID, pet.Name, pet.Description, pet.Species, pet.Age, pet.UserID);
         }
     }
 }

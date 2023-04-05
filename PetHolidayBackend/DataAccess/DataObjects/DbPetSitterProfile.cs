@@ -16,6 +16,6 @@ namespace DataAccess.DataObjects
         public string? MaxWage { get; set; }
 
         public int UserID { get; set; }
-        public virtual DbUser User { get; set; }
+        public virtual DbUser User { get; set; } = null!;
     }
 }

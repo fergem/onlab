@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const login = async (username: string, password: string) => {
-  console.log("Szarlogin");
   return await axios
     .post<any>("/api/users/login", {
       username,

@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    partial class PetHolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405132217_PictureAddedToPets")]
+    partial class PictureAddedToPets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,6 @@ namespace DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -40,7 +42,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -48,8 +49,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("OwnerUserID")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PetSitterUserID")
-                        .IsRequired()
+                    b.Property<int>("PetSitterUserID")
                         .HasColumnType("int");
 
                     b.Property<int>("StatusID")
@@ -139,13 +139,11 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -154,17 +152,16 @@ namespace DataAccess.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Species")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Pets", (string)null);
 
@@ -176,7 +173,7 @@ namespace DataAccess.Migrations
                             Description = "Szep kutya",
                             Name = "Vakarcs",
                             Species = "Kutya",
-                            UserID = 3
+                            UserId = 3
                         });
                 });
 
@@ -218,7 +215,6 @@ namespace DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -236,11 +232,6 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 2,
-                            Name = "In progress"
-                        },
-                        new
-                        {
-                            ID = 3,
                             Name = "Done"
                         });
                 });
@@ -256,7 +247,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
+                    b.Property<int?>("Age")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -291,7 +282,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -337,64 +327,60 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "8a2f4455-69b1-448f-8280-714aa1eac798",
+                            ConcurrencyStamp = "8304460f-97ec-409a-a4ae-84c6fe5b92ae",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
-                            Password = "asd",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos",
-                            firstLogin = true
+                            firstLogin = false
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "ed0572b6-9cd5-44e2-ab05-f3637866b0b7",
+                            ConcurrencyStamp = "51022d97-5dc9-4d31-b3b6-ed3ffd47e9d2",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
-                            Password = "asd",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero",
-                            firstLogin = true
+                            firstLogin = false
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "36b3f424-96a0-4ce6-ab9a-56b832b9c063",
+                            ConcurrencyStamp = "ea41f7da-8c1e-493f-adde-56ffc06e09a6",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
-                            Password = "asd",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek",
-                            firstLogin = true
+                            firstLogin = false
                         },
                         new
                         {
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "81e87d10-bebe-40d1-bb3b-332b4ae9e71d",
+                            ConcurrencyStamp = "6713e84c-b9f1-4dbc-9b30-a5685ac99782",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
-                            Password = "asd",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan",
-                            firstLogin = true
+                            firstLogin = false
                         });
                 });
 
@@ -419,13 +405,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27d42b69-17ed-41f5-a979-2304937a8f31",
+                            Id = "0e34d378-9b63-4a43-b14d-ffcbd6bef73f",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "6695bb84-1552-4237-b012-3cd8415185b8",
+                            Id = "1b5bc07f-6c24-4089-95e0-4938ae0cc96e",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });
@@ -606,7 +592,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.DataObjects.DbUser", "User")
                         .WithMany("Pets")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -686,11 +672,9 @@ namespace DataAccess.Migrations
 
                     b.Navigation("JobApplications");
 
-                    b.Navigation("OwnerProfile")
-                        .IsRequired();
+                    b.Navigation("OwnerProfile");
 
-                    b.Navigation("PetSitterProfile")
-                        .IsRequired();
+                    b.Navigation("PetSitterProfile");
 
                     b.Navigation("Pets");
                 });

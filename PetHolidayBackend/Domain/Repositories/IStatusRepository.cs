@@ -1,5 +1,4 @@
 ﻿using Domain.Models;
-using Domain.Models.AuthHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-    public interface IUserRepository
+    public interface IStatusRepository
     {
-        Task<User> Register(RegisterModel registerModel);
-        Task<User> Login(LoginModel loginModel);
+        //Task<IReadOnlyCollection<Pet>> List();
+        Task<Status> FindById(int statusID);
+        //Task<Status> Update(Status status);
     }
 }

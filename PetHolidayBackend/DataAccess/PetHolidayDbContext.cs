@@ -54,6 +54,7 @@ namespace DataAccess
                 entity.Property(s => s.Age);
                 entity.Property(s => s.Species).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Picture);
             });
 
             modelBuilder.Entity<DbJob>(entity =>
@@ -79,7 +80,6 @@ namespace DataAccess
 
             //Data seeding
             DataSeeding(modelBuilder);
-            
         }
 
         private void OneToManyRelationshipConfiguration(ModelBuilder modelBuilder)
@@ -133,6 +133,8 @@ namespace DataAccess
                         FirstName = "Kiss",
                         LastName = "Janos",
                         Age = 23,
+                        Password = "asd",
+                        firstLogin = true
                     },
                     new DbUser()
                     {
@@ -141,6 +143,8 @@ namespace DataAccess
                         FirstName = "Nagy",
                         LastName = "Feró",
                         Age = 32,
+                        Password = "asd",
+                        firstLogin = true
                     },
                     new DbUser()
                     {
@@ -149,6 +153,8 @@ namespace DataAccess
                         FirstName = "Vicc",
                         LastName = "Elek",
                         Age = 43,
+                        Password = "asd",
+                        firstLogin = true
                     },
                     new DbUser()
                     {
@@ -157,6 +163,8 @@ namespace DataAccess
                         FirstName = "Maku",
                         LastName = "Látlan",
                         Age = 17,
+                        Password = "asd",
+                        firstLogin = true
                     }
                 );
 
@@ -169,7 +177,7 @@ namespace DataAccess
                         Description = "Szep kutya",
                         Species = "Kutya",
                         Age = 7,
-                        UserId = 3,
+                        UserID = 3,
                     }
                 );
             modelBuilder.Entity<DbStatus>()
@@ -182,9 +190,13 @@ namespace DataAccess
                     new DbStatus()
                     {
                         ID = 2,
+                        Name = "In progress"
+                    },
+                    new DbStatus()
+                    {
+                        ID = 3,
                         Name = "Done"
                     }
-
                 );
             modelBuilder.Entity<DbJob>()
                 .HasData(
