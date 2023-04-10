@@ -28,7 +28,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel registerModel)
         {
-
+            await userService.Register(registerModel);
             return Ok(new Response
             {
                 Status = "Success",
@@ -42,15 +42,25 @@ namespace PetHolidayWebApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-           
-            //var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"]));
-            //var token = new JwtSecurityToken(expires: DateTime.Now.AddHours(3), claims: authClaims, signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
+            var result = await userService.Login(loginModel);
+
+            var authClaims = new List<Claim> {
+                new Claim(ClaimTypes.Name, result.user.UserName),
+                new Claim(ClaimTypes.Email, result.user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+            foreach (var userRole in result.userRoles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            }
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"]));
+            var token = new JwtSecurityToken(expires: DateTime.Now.AddHours(3), claims: authClaims, signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
             return Ok(new
             {
-                //bearer = new JwtSecurityTokenHandler().WriteToken(token),
-                //expiration = token.ValidTo,
-                //user = user,
-                //Role = userRoles,
+                bearer = new JwtSecurityTokenHandler().WriteToken(token),
+                expiration = token.ValidTo,
+                user = result.user,
+                Role = result.userRoles,
                 status = "User Login Successfully"
             });
         }
@@ -71,7 +81,7 @@ namespace PetHolidayWebApi.Controllers
 
 
         [Authorize]
-        [HttpPost]
+        [HttpPost("/addpet")]
         public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet)
         {
             var created = await userService.InsertPet(pet,1);

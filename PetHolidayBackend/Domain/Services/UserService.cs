@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Domain.Repositories;
-
+using System.Security.Claims;
 
 namespace Domain.Services
 {
@@ -15,7 +15,7 @@ namespace Domain.Services
             this.petRepository = petRepository;
             this.userRepository = userRepository;
         }
-        public async Task<User> Login(LoginModel loginModel)
+        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             return await userRepository.Login(loginModel);
         }

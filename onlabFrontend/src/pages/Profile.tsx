@@ -21,7 +21,7 @@ export default function Profile() {
       textAlign="center"
       h="inherit">
       <Heading as="h1" size="lg">
-        {currentUser?.user.userName}'s Profile
+        {currentUser?.userName}'s Profile
       </Heading>
       <Flex direction="row" w="inherit" gap="2">
         <Flex direction="column">
@@ -35,11 +35,11 @@ export default function Profile() {
         </Flex>
         <div>
           <p>
-            <strong>Id:</strong> {currentUser?.user.id}
+            <strong>Id:</strong> {currentUser?.id}
           </p>
           <p>
             <strong>Name:</strong>{" "}
-            {currentUser?.user.firstName + " " + currentUser?.user.lastName}
+            {currentUser?.firstName + " " + currentUser?.lastName}
           </p>
         </div>
       </Flex>

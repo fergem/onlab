@@ -1,3 +1,4 @@
+import Status from "./Status";
 import User from "./User";
 
 export default interface Job {
@@ -5,6 +6,7 @@ export default interface Job {
   hours: number;
   location: string;
   description: string;
-  //   ownerUser: User | null;
-  //   applicantUser: User | null;
+  ownerUser: User | undefined;
+  appliedUser: User | undefined;
+  status: Status;
 }

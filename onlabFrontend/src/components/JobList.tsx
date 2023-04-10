@@ -1,16 +1,14 @@
 import {
   Card,
   Image,
-  Stack,
   CardBody,
   Heading,
   Text,
-  CardFooter,
-  Button,
   Flex,
+  CardHeader,
 } from "@chakra-ui/react";
 import Job from "../models/Job";
-import User from "../models/User";
+import { StatusBadge } from "./StatusBadge";
 
 interface IPropsJobCard {
   job: Job;
@@ -32,27 +30,27 @@ export const JobList: React.FC<IPropsJobList> = ({ jobs }) => {
 
 const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
   return (
-    <Card
-      direction="row"
-      my="2%"
-      w="45rem"
-      backgroundColor="#EAEFD3"
-      color="#505168">
+    <Card direction="row" my="2%" w="45rem" color="#505168" h="30vh">
       <Image
+        borderRadius="10"
         objectFit="cover"
-        maxW="30%"
+        w="20vh"
         h="20vh"
         src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
         alt="Caffe Latte"
+        alignSelf="center"
+        mx="3vh"
       />
       <CardBody>
-        <Flex direction="column">
-          <Flex direction="row" w="inherit" justifyContent="space-between">
-            <Heading size="md">{job.location}</Heading>
-            <Heading size="sm" alignSelf="end">
-              Work hours: {job.hours}
-            </Heading>
-          </Flex>
+        <Flex direction="row" justifyContent="space-between" mb="2vh" mt="3vh">
+          <Heading size="md">
+            {!job.ownerUser?.userName && "undefined"}'s job
+          </Heading>
+          <StatusBadge status={job.status}></StatusBadge>
+        </Flex>
+        <Flex direction="column" alignItems="flex-start">
+          {/* <Heading size="sm"> Work hours: {job.hours}</Heading> */}
+          <Heading size="sm">{job.location}</Heading>
           <Text py="2">{job.description}</Text>
         </Flex>
       </CardBody>

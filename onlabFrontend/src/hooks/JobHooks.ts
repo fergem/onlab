@@ -15,8 +15,9 @@ export const useGetAvailableJobs = () => {
       return await JobService.list();
     },
     {
-      enabled: false,
+      //enabled: false,
       onSuccess: (res) => {
+        console.log("shiker jobok leszedése");
         setJobs(res);
       },
     }
@@ -43,6 +44,12 @@ export const usePostJobs = () => {
         location: postLocation,
         description: postDescription,
         hours: postHours,
+        ownerUser: null, //ez a user
+        appliedUser: null,
+        status: {
+          id: 1,
+          name: "Available",
+        },
       });
     },
     {

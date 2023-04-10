@@ -21,7 +21,9 @@ function Navbar() {
       px="15%"
       direction="row"
       alignItems="center"
-      gap="10px">
+      gap="10px"
+      zIndex="9999"
+      backgroundColor="#EAEFD3">
       <Icon
         fill="#505168"
         height="64px"

@@ -5,16 +5,13 @@ import {
   Flex,
   Heading,
   Spinner,
-  ThemeExtension,
   Text,
   Button,
 } from "@chakra-ui/react";
-import { JobService } from "../services/JobService";
 import { JobList } from "../components/JobList";
-import Job from "../models/Job";
-import { useQuery, useMutation } from "react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGetAvailableJobs } from "../hooks/JobHooks";
+import { dummyJobs } from "../models/DummyData";
 
 export default function Jobs() {
   let jobItems;
@@ -49,6 +46,7 @@ export default function Jobs() {
   } else {
     jobItems = <JobList jobs={jobs}></JobList>;
   }
+  jobItems = <JobList jobs={dummyJobs}></JobList>;
 
   return (
     <Flex

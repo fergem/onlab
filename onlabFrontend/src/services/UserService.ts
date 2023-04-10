@@ -1,4 +1,5 @@
 import axios from "axios";
+import Pet from "../models/Pet";
 
 const login = async (username: string, password: string) => {
   return await axios
@@ -15,11 +16,20 @@ const login = async (username: string, password: string) => {
     });
 };
 
-export const register = (username: string, email: string, password: string) => {
+const register = (username: string, email: string, password: string) => {
   return axios.post<any>("/api/users/register", {
     username,
     email,
     password,
+  });
+};
+
+const insertPet = ({ name, description, species, age }: Pet) => {
+  return axios.post<any>("/api/users/addpet", {
+    name,
+    description,
+    species,
+    age,
   });
 };
 
@@ -37,9 +47,23 @@ const getCurrentUser = () => {
   return null;
 };
 
+const authHeader = () => {
+  const userStr = localStorage.getItem("user");
+  let user = null;
+  if (userStr) user = JSON.parse(userStr);
+
+  if (user && user.bearer) {
+    return { Authorization: "Bearer " + user.bearer };
+  } else {
+    return { Authorization: "" };
+  }
+};
+
 export const UserService = {
   login,
   logout,
   getCurrentUser,
   register,
+  authHeader,
+  insertPet,
 };

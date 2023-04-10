@@ -71,7 +71,7 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public Job ToModel(DbJob job)
+        public static Job ToModel(DbJob job)
         {
             return new Job(job.ID, job.Hours, job.Description, job.Location, job.StatusID);
         }

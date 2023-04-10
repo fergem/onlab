@@ -13,14 +13,16 @@ namespace Domain.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
         public int Age { get; set; }
         public byte[]? Picture { get; set; }
         public bool firstLogin { get; set; }
 
-        public User(string userName, string password)
+        public User(string userName, string password, string email)
         {
             UserName = userName;
             Password = password;
+            Email = email;
         }
     }
 }

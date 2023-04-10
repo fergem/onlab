@@ -11,17 +11,17 @@ namespace DataAccess.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<DbUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
+        //private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<DbUser> signInManager;
 
-        public UserRepository(UserManager<DbUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<DbUser> signInManager)
+        public UserRepository(UserManager<DbUser> userManager, SignInManager<DbUser> signInManager)
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
+            //this.roleManager = roleManager;
             this.signInManager = signInManager;
         }
 
-        public async Task<User> Login(LoginModel loginModel)
+        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             var user = await userManager.FindByNameAsync(loginModel.Username);
             if (user == null)
@@ -35,18 +35,9 @@ namespace DataAccess.Repositories
             //{
 
             //}
-            //KETTŐS VISSZAADÁS MERT A ROLET IS KELL
+            
             var userRoles = await userManager.GetRolesAsync(user);
-            var authClaims = new List<Claim> {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-            return ToModel(user);
+            return (ToModel(user), userRoles);
         }
 
         public async Task<User> Register(RegisterModel registerModel)
@@ -69,9 +60,9 @@ namespace DataAccess.Repositories
             return ToModel(appUser);
         }
 
-        public User ToModel(DbUser user)
+        public static User ToModel(DbUser user)
         {
-            return new User(user.FirstName, user.Password);
+            return new User(user.FirstName, user.Password, user.Email);
         }
     }
 }

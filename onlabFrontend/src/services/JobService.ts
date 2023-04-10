@@ -1,6 +1,6 @@
 import axios from "axios";
 import Job from "../models/Job";
-import authHeader from "./DataService";
+import { UserService } from "./UserService";
 
 const list = async () => {
   const response = await axios.get<Job[]>("/api/jobs");
@@ -9,7 +9,7 @@ const list = async () => {
 
 const listUsersJobs = async (username: string) => {
   const response = await axios.get<Job[]>("/api/jobs" + username, {
-    headers: authHeader(),
+    headers: UserService.authHeader(),
   });
   return response.data;
 };
@@ -26,4 +26,5 @@ const createJob = async ({ hours, location, description }: Job) => {
 export const JobService = {
   list,
   createJob,
+  listUsersJobs,
 };
