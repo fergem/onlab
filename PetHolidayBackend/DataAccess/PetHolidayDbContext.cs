@@ -134,7 +134,7 @@ namespace DataAccess
                         LastName = "Janos",
                         Age = 23,
                         Password = "asd",
-                        firstLogin = true
+                        //FirstLogin = true
                     },
                     new DbUser()
                     {
@@ -144,7 +144,7 @@ namespace DataAccess
                         LastName = "Feró",
                         Age = 32,
                         Password = "asd",
-                        firstLogin = true
+                        //FirstLogin = true
                     },
                     new DbUser()
                     {
@@ -154,7 +154,7 @@ namespace DataAccess
                         LastName = "Elek",
                         Age = 43,
                         Password = "asd",
-                        firstLogin = true
+                        //FirstLogin = true
                     },
                     new DbUser()
                     {
@@ -164,7 +164,7 @@ namespace DataAccess
                         LastName = "Látlan",
                         Age = 17,
                         Password = "asd",
-                        firstLogin = true
+                        //FirstLogin = true
                     }
                 );
 

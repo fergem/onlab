@@ -21,8 +21,7 @@ namespace DataAccess.DataObjects
         public required string Password { get; set; }
         public int Age { get; set; }
         public byte[]? Picture { get; set; }
-        public required bool firstLogin { get; set; }
-
+        //public required bool FirstLogin { get; set; }
         
         public virtual DbOwnerProfile OwnerProfile { get; set; } = null!;
 

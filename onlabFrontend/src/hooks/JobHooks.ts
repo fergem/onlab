@@ -12,7 +12,8 @@ export const useGetAvailableJobs = () => {
   } = useQuery<Job[], Error>(
     "query-jobs",
     async () => {
-      return await JobService.list();
+      const data = await JobService.list();
+      return data;
     },
     {
       //enabled: false,

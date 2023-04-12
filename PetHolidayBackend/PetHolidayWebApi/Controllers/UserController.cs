@@ -1,9 +1,8 @@
-﻿using DataAccess.DataObjects;
+﻿
 using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,12 +16,12 @@ namespace PetHolidayWebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService userService;
-        private readonly IConfiguration configuration;
+        private readonly AuthService authService;
 
-        public UserController(UserService userService, IConfiguration configuration)
+        public UserController(UserService userService, AuthService authService)
         {
             this.userService = userService;
-            this.configuration = configuration;
+            this.authService = authService;
         }
 
         [HttpPost("register")]
@@ -43,27 +42,18 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest();
 
             var result = await userService.Login(loginModel);
+            var token = authService.GenerateToken(result.user, result.userRoles);
 
-            var authClaims = new List<Claim> {
-                new Claim(ClaimTypes.Name, result.user.UserName),
-                new Claim(ClaimTypes.Email, result.user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-            foreach (var userRole in result.userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"]));
-            var token = new JwtSecurityToken(expires: DateTime.Now.AddHours(3), claims: authClaims, signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
             return Ok(new
             {
-                bearer = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = token.ValidTo,
+                bearer = token,
                 user = result.user,
                 Role = result.userRoles,
                 status = "User Login Successfully"
             });
         }
+
+       
 
         //[HttpGet("/list/{userName}")]
         //public async Task<ActionResult<User>> FindByUsername([FromRoute] string userName)
@@ -81,11 +71,20 @@ namespace PetHolidayWebApi.Controllers
 
 
         [Authorize]
-        [HttpPost("/addpet")]
-        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet)
+        [HttpPost("addpet")]
+        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet, [FromHeader] string Authorization)
         {
-            var created = await userService.InsertPet(pet,1);
+            var userID = authService.ValidateToken(Authorization);
+            var created = await userService.InsertPet(pet,userID);
             return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult> Get([FromHeader] string Authorization)
+        {
+            var userName = authService.ValidateToken(Authorization);
+            return Ok(userName);
+        }            
     }
 }

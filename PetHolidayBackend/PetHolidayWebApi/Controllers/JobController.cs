@@ -30,6 +30,16 @@ namespace PetHolidayWebApi.Controllers
             return value != null ? Ok() : NotFound(); ;
         }
 
+
+        [HttpGet("status/{statusID}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<User>> FindStatusById([FromRoute] int statusID)
+        {
+            var value = await jobService.FindStatusById(statusID);
+            return value != null ? Ok(value) : NotFound(); ;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

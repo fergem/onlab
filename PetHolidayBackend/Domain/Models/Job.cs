@@ -8,20 +8,12 @@ namespace Domain.Models
 {
     public class Job
     {
-        public int ID { get; set; }
-        public string Location { get; set; }
-        public int Hours { get; set; }
-        public string Description { get; set; }
-        public int OwnerUserID { get; set; }
-        public int? PetSitterUserID { get; set; }
-        public int StatusID { get; set; }
-        public Job(int ID, int Hours, string Description, string Location, int StatusID)
-        {
-            this.ID = ID;
-            this.Description = Description;
-            this.Hours = Hours;
-            this.Location = Location;
-            this.StatusID = StatusID;
-        }
+        public required int ID { get; set; }
+        public required string Location { get; set; }
+        public required int Hours { get; set; }
+        public required string Description { get; set; }
+        public UserInformation? OwnerUserInformation { get; set; }
+        //public UserInformation? PetSitterUserInformation { get; set; }
+        public required Status Status { get; set; }
     }
 }

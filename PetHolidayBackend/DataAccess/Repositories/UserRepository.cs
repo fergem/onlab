@@ -37,7 +37,7 @@ namespace DataAccess.Repositories
             //}
             
             var userRoles = await userManager.GetRolesAsync(user);
-            return (ToModel(user), userRoles);
+            return (ModelMapper.ToUserModel(user), userRoles);
         }
 
         public async Task<User> Register(RegisterModel registerModel)
@@ -51,18 +51,15 @@ namespace DataAccess.Repositories
                 UserName = registerModel.Username,
                 Email = registerModel.Email,
                 Password = registerModel.Password,
-                firstLogin = true,
+                //firstLogin = true,
             };
             var result = await userManager.CreateAsync(appUser, registerModel.Password);
             if (!result.Succeeded)
                 throw new Exception("User creation failed, check user credentials");
-
-            return ToModel(appUser);
+ 
+            return ModelMapper.ToUserModel(appUser);
         }
 
-        public static User ToModel(DbUser user)
-        {
-            return new User(user.FirstName, user.Password, user.Email);
-        }
+        
     }
 }

@@ -2,6 +2,8 @@
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace DataAccess.Repositories
 {
@@ -18,7 +20,7 @@ namespace DataAccess.Repositories
             var job = await dbcontext.Jobs.FindAsync(jobID);
             if (job == null)
                 throw new Exception("Job doesnt exist");
-            return ToModel(job);
+            return ModelMapper.ToJobModel(job);
         }
 
         public async Task<Job> Insert(Job job)
@@ -28,19 +30,24 @@ namespace DataAccess.Repositories
                 Hours = job.Hours,
                 Location = job.Location,
                 Description = job.Description,
-                OwnerUserID = job.OwnerUserID,
+                OwnerUserID = job.OwnerUserInformation.ID,
                 StatusID = 1
             };
 
             await dbcontext.Jobs.AddAsync(insertJob);
             dbcontext.SaveChanges();
 
-            return ToModel(insertJob);
+            return ModelMapper.ToJobModel(insertJob);
         }
 
         public async Task<IReadOnlyCollection<Job>> List()
         {
-            return await dbcontext.Jobs.Select(s => ToModel(s)).ToListAsync();
+            return await dbcontext.Jobs
+                .Include(s => s.Status)
+                .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
+                .Select(s => ModelMapper.ToJobModel(s))
+                .ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListAvailableJobs()
@@ -48,32 +55,33 @@ namespace DataAccess.Repositories
 
             return await dbcontext.Jobs
                 .Include(s => s.Status)
+                .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
                 .Where(s => s.Status.Name == "Available")
-                .Select(s => ToModel(s)).ToListAsync();
+                .Select(s => ModelMapper.ToJobModel(s)).ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID)
         {
             return await dbcontext.Jobs
+                .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
                 .Where(d => d.OwnerUserID == userID)
-                .Select(s => ToModel(s))
+                .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
         {
-           
+
             return await dbcontext.Jobs
+                .Include(s => s.Status)
+                .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
                 .Where(d => d.PetSitterUserID == userID)
-                .Select(s => ToModel(s))
+                .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
-        }
-
-        public static Job ToModel(DbJob job)
-        {
-            return new Job(job.ID, job.Hours, job.Description, job.Location, job.StatusID);
-        }
-    }
+        }   
+    } 
 }

@@ -25,12 +25,12 @@ namespace DataAccess.Repositories
                 throw new Exception("Pet wanted to be deleted doesnt exists");
             dbcontext.Remove(pet);
             await dbcontext.SaveChangesAsync();
-            return ToModel(pet);
+            return ModelMapper.ToPetModel(pet);
         }
 
         public async Task<IReadOnlyCollection<Pet>> List()
         {
-            return await dbcontext.Pets.Select(s => ToModel(s)).ToListAsync();
+            return await dbcontext.Pets.Select(s => ModelMapper.ToPetModel(s)).ToListAsync();
         }
 
         public async Task<Pet> FindById(int petID)
@@ -40,7 +40,7 @@ namespace DataAccess.Repositories
             {
                 throw new Exception("Pet doesnt exist");
             }
-            return ToModel(pet);
+            return ModelMapper.ToPetModel(pet);
         }
 
         public async Task<Pet> Insert(Pet pet, int userID)
@@ -55,12 +55,7 @@ namespace DataAccess.Repositories
             };
             await dbcontext.Pets.AddAsync(insertPet);
             dbcontext.SaveChanges();
-            return ToModel(insertPet);
-        }
-
-        public Pet ToModel(DbPet pet)
-        {
-            return new Pet(pet.ID, pet.Name, pet.Description, pet.Species, pet.Age, pet.UserID);
-        }
+            return ModelMapper.ToPetModel(insertPet);
+        }        
     }
 }

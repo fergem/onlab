@@ -25,7 +25,7 @@ namespace DataAccess.Repositories
 
         private Status ToModel(DbStatus status)
         {
-            return new Status(status.ID, status.Name);
+            return new Status() { ID = status.ID, Name=status.Name };
         }
     }
 }

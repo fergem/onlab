@@ -17,7 +17,7 @@ export default function Jobs() {
   let jobItems;
   const [jobs, error, loading, refetch] = useGetAvailableJobs();
   useEffect(() => {
-    if (!error) {
+    if (error) {
       refetch();
     }
   });
