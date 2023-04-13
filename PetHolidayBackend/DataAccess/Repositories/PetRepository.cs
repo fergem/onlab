@@ -28,9 +28,9 @@ namespace DataAccess.Repositories
             return ModelMapper.ToPetModel(pet);
         }
 
-        public async Task<IReadOnlyCollection<Pet>> List()
+        public async Task<IReadOnlyCollection<Pet>> List(int userID)
         {
-            return await dbcontext.Pets.Select(s => ModelMapper.ToPetModel(s)).ToListAsync();
+            return await dbcontext.Pets.Include(s => s.User).Where(s => s.UserID == userID).Select(s => ModelMapper.ToPetModel(s)).ToListAsync();
         }
 
         public async Task<Pet> FindById(int petID)

@@ -24,9 +24,9 @@ namespace Domain.Services
             return await userRepository.Register(registerModel);
         }
 
-        public async Task<IReadOnlyCollection<Pet>> ListUsersPets()
+        public async Task<IReadOnlyCollection<Pet>> ListUsersPets(int userID)
         {
-            return await petRepository.List();
+            return await petRepository.List(userID);
         }
 
         public async Task<Pet> FindPetByID(int ID)

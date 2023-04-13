@@ -9,7 +9,7 @@ namespace Domain.Repositories
 {
     public interface IPetRepository
     {
-        Task<IReadOnlyCollection<Pet>> List();
+        Task<IReadOnlyCollection<Pet>> List(int userID);
         Task<Pet> FindById(int petID);
         Task<Pet> Insert(Pet pet, int userID);
         //Task<Pet> Update(Pet pet);

@@ -46,7 +46,7 @@ export default function Jobs() {
   } else {
     jobItems = <JobList jobs={jobs}></JobList>;
   }
-  jobItems = <JobList jobs={dummyJobs}></JobList>;
+  //jobItems = <JobList jobs={dummyJobs}></JobList>;
 
   return (
     <Flex

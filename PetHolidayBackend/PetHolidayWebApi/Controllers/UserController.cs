@@ -69,6 +69,15 @@ namespace PetHolidayWebApi.Controllers
             return value != null ? Ok() : NotFound(); ;
         }
 
+        [Authorize]
+        [HttpGet("/pets")]
+        public async Task<ActionResult<User>> ListPets([FromHeader] string Authorization)
+        {
+            var userID = authService.ValidateToken(Authorization);
+            var value = await userService.ListUsersPets(userID);
+            return value != null ? Ok(value) : NotFound(); ;
+        }
+
 
         [Authorize]
         [HttpPost("addpet")]

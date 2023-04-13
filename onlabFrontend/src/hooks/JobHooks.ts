@@ -45,8 +45,8 @@ export const usePostJobs = () => {
         location: postLocation,
         description: postDescription,
         hours: postHours,
-        ownerUser: null, //ez a user
-        appliedUser: null,
+        ownerUser: undefined, //ez a user
+        appliedUser: undefined,
         status: {
           id: 1,
           name: "Available",

@@ -52,7 +52,7 @@ export default function RegisterForm() {
 
     UserService.register(username, email, password).then(
       () => {
-        navigate("/profile");
+        navigate("/login");
         window.location.reload();
       },
       (error) => {

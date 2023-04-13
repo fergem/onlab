@@ -10,6 +10,7 @@ function Navbar() {
     const user = UserService.getCurrentUser();
 
     if (user) {
+      console.log(user);
       setCurrentUser(user);
     }
   }, []);
@@ -59,8 +60,8 @@ function Navbar() {
       )}
       <Spacer />
       {currentUser && <NavButton name="Profile" route="/profile" />}
-      <NavButton name="Register" route="/register"></NavButton>
-      <NavButton name="Login" route="/login" />
+      {currentUser || <NavButton name="Register" route="/register"></NavButton>}
+      {currentUser || <NavButton name="Login" route="/login" />}
     </Flex>
   );
 }

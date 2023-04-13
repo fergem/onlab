@@ -24,6 +24,13 @@ const register = (username: string, email: string, password: string) => {
   });
 };
 
+const getUserPets = async () => {
+  const response = await axios.get<Pet[]>("/api/users/pets", {
+    headers: authHeader(),
+  });
+  return response.data;
+};
+
 const insertPet = ({ name, description, species, age }: Pet) => {
   return axios.post<any>("/api/users/addpet", {
     name,
@@ -40,8 +47,9 @@ const logout = () => {
 const getCurrentUser = () => {
   const userStr = localStorage.getItem("user");
   if (userStr) {
-    console.log(JSON.parse(userStr));
-    return JSON.parse(userStr);
+    //console.log(JSON.parse(userStr));
+    const loggedUser = JSON.parse(userStr);
+    return loggedUser.user;
   }
 
   return null;
@@ -66,4 +74,5 @@ export const UserService = {
   register,
   authHeader,
   insertPet,
+  getUserPets,
 };

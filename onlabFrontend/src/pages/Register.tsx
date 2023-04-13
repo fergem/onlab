@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import RegisterForm from "../components/RegisterForm";
 
-export default function Login() {
+export default function Register() {
   return (
     <Flex
       px="40%"

@@ -124,6 +124,7 @@ namespace DataAccess
 
         public void DataSeeding(ModelBuilder modelBuilder)
         {
+            var hasher = new PasswordHasher<IdentityUser>();
             modelBuilder.Entity<DbUser>()
                 .HasData(
                     new DbUser()
@@ -134,6 +135,8 @@ namespace DataAccess
                         LastName = "Janos",
                         Age = 23,
                         Password = "asd",
+                        NormalizedUserName = "KISSJANOS",
+                        PasswordHash = hasher.HashPassword(null, "asd"),
                         //FirstLogin = true
                     },
                     new DbUser()
@@ -144,6 +147,8 @@ namespace DataAccess
                         LastName = "Feró",
                         Age = 32,
                         Password = "asd",
+                        NormalizedUserName = "NAGYFERO",
+                        PasswordHash = hasher.HashPassword(null, "asd"),
                         //FirstLogin = true
                     },
                     new DbUser()
@@ -154,6 +159,8 @@ namespace DataAccess
                         LastName = "Elek",
                         Age = 43,
                         Password = "asd",
+                        NormalizedUserName = "VICCELEK",
+                        PasswordHash = hasher.HashPassword(null, "asd"),
                         //FirstLogin = true
                     },
                     new DbUser()
@@ -164,6 +171,8 @@ namespace DataAccess
                         LastName = "Látlan",
                         Age = 17,
                         Password = "asd",
+                        NormalizedUserName = "MAKULATLAN",
+                        PasswordHash = hasher.HashPassword(null, "asd"),
                         //FirstLogin = true
                     }
                 );
@@ -176,6 +185,24 @@ namespace DataAccess
                         Name = "Vakarcs",
                         Description = "Szep kutya",
                         Species = "Kutya",
+                        Age = 7,
+                        UserID = 3,
+                    },
+                    new DbPet()
+                    {
+                        ID = 2,
+                        Name = "Miu",
+                        Description = "Szep cica",
+                        Species = "Cica",
+                        Age = 7,
+                        UserID = 3,
+                    },
+                    new DbPet()
+                    {
+                        ID = 3,
+                        Name = "Teki",
+                        Description = "Szep teknőc",
+                        Species = "Teknős",
                         Age = 7,
                         UserID = 3,
                     }

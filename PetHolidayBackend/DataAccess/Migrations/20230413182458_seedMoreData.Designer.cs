@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    partial class PetHolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230413182458_seedMoreData")]
+    partial class seedMoreData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,14 +355,12 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "3b390ca1-36ca-42b4-a1fe-68159bc4c87e",
+                            ConcurrencyStamp = "7446f688-4e94-47ea-936c-77d232362c7c",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
-                            NormalizedUserName = "KISSJANOS",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO1kHCy/0J8tTBBlySFMg1qxRawv+Z5wZBHRNtKAKiISg4ASUWXe4zMCiAAZFtpp7g==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos"
@@ -369,14 +370,12 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "9607b686-d350-4b0f-9e68-38c693a0bd13",
+                            ConcurrencyStamp = "4365f275-1983-4589-a522-3b3c00bd32d8",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
-                            NormalizedUserName = "NAGYFERO",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMMS1fQ12LiXfrGTK+6DqsbuRuIOrbG3tYWlPzHlASF40E8jHKnnYYofFg1l00FZzg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero"
@@ -386,14 +385,13 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "ef7d36a3-2775-4ee0-86f4-d4d0ccb40e9d",
+                            ConcurrencyStamp = "e5583638-d108-4216-9281-a6aa10c55246",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             NormalizedUserName = "VICCELEK",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAECCnsbWFr8p88ApKmwSbnx0wlR55/yFlfMUda6WfCU56ABG8lJaR7N6DHm8H+re/gQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek"
@@ -403,14 +401,12 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "45a1f4f0-1ad1-4cb5-bf3c-c3d6e4f7334a",
+                            ConcurrencyStamp = "91e296c1-f83d-400a-8481-5935afe3e260",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
-                            NormalizedUserName = "MAKULATLAN",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEANK80EjzeXUH+kOeYBAG+5Y0I+TbbGjXxdVInvrBeRkY0diHq7Psx6P6DX76BnjSg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan"
@@ -438,13 +434,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ed19bf3f-ae27-42ed-88c3-4c2dcea70aa7",
+                            Id = "7007a2bf-891a-477a-8bb6-03fd01c42e72",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "83e0f3aa-df2c-4b41-a71f-689e1a2efeab",
+                            Id = "185d5943-ce63-47c1-9e58-5a555100e2c3",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });
