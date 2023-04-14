@@ -18,10 +18,8 @@ export default function Profile() {
   let petItems;
   const [pets, error, loading, refetch] = useGetUserPets();
   useEffect(() => {
-    if (error) {
-      refetch();
-    }
-  });
+    refetch();
+  }, []);
   if (loading) {
     petItems = (
       <>
@@ -45,6 +43,7 @@ export default function Profile() {
       </>
     );
   } else {
+    console.log(pets);
     petItems = <PetList pets={pets}></PetList>;
   }
 
@@ -95,8 +94,19 @@ export default function Profile() {
       <Heading size="lg" borderBottom="1px" pb="1%">
         Your pets
       </Heading>
-      <Flex direction="row" w="100%" gap="2">
-        {petItems}
+      <Flex
+        direction="row"
+        w="100%"
+        justifyContent="space-evenly"
+        flexWrap="wrap">
+        {!petItems ? (
+          <Heading size="lg">
+            You've currently got no pets. Consider adding one to your profile
+            with the <em>Add pet</em> button.
+          </Heading>
+        ) : (
+          petItems
+        )}
       </Flex>
     </Flex>
   );

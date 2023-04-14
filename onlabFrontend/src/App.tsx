@@ -9,10 +9,6 @@ import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import OwnerProfile from "./pages/OwnerProfile";
 import PetSitterProfile from "./pages/PetSitterProfile";
 import Register from "./pages/Register";
-import { useEffect, useState } from "react";
-import User from "./models/User";
-import { UserService } from "./services/UserService";
-
 function App() {
   return (
     <VStack align="stretch" minH="inherit">
@@ -25,10 +21,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/postedjobs" element={<OwnerProfile />} />
         <Route path="/undertookjobs" element={<PetSitterProfile />} />
-        <Route
-          path="/profile/createpetsitterjob"
-          element={<CreatePetSitterJob />}
-        />
+        <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
       </Routes>
     </VStack>
   );

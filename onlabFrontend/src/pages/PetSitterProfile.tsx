@@ -1,10 +1,14 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { JobList } from "../components/JobList";
-import { useGetAvailableJobs } from "../hooks/JobHooks";
+import { useGetUserUnderTookJobs } from "../hooks/JobHooks";
 
 export default function PetSitterProfile() {
-  const [jobs, error, loading] = useGetAvailableJobs();
+  const [jobs, error, loading, refetch] = useGetUserUnderTookJobs();
+  useEffect(() => {
+    refetch();
+  }, []);
   let jobItems;
   if (loading) {
     jobItems = (

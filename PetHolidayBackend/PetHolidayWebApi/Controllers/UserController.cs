@@ -70,9 +70,10 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("/pets")]
+        [HttpGet("pets")]
         public async Task<ActionResult<User>> ListPets([FromHeader] string Authorization)
         {
+            var useername = HttpContext.User.Identity.Name;
             var userID = authService.ValidateToken(Authorization);
             var value = await userService.ListUsersPets(userID);
             return value != null ? Ok(value) : NotFound(); ;
@@ -83,9 +84,11 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost("addpet")]
         public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet, [FromHeader] string Authorization)
         {
+            var useername = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value;
             var userID = authService.ValidateToken(Authorization);
             var created = await userService.InsertPet(pet,userID);
             return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
+            //return Ok(useername);
         }
 
         [Authorize]

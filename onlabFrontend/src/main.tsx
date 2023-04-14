@@ -12,10 +12,10 @@ const UserContext = createContext({ user: {} });
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
       retry: 1,
-      refetchInterval: 600000,
+      refetchInterval: 6000,
       retryDelay: 6000,
       staleTime: 5 * 10000,
     },

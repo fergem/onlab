@@ -9,7 +9,6 @@ const login = async (username: string, password: string) => {
     })
     .then((response) => {
       if (response.data.bearer) {
-        console.log(JSON.stringify(response.data));
         localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
@@ -42,6 +41,7 @@ const insertPet = ({ name, description, species, age }: Pet) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  window.location.reload();
 };
 
 const getCurrentUser = () => {

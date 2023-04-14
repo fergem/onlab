@@ -1,12 +1,16 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex, Button, Box } from "@chakra-ui/react";
 import { JobList } from "../components/JobList";
-import { useGetAvailableJobs } from "../hooks/JobHooks";
+import { useGetUserPostedJobs } from "../hooks/JobHooks";
 import NavButton from "../components/NavButton";
+import { useEffect } from "react";
 
 export default function OwnerProfile() {
-  const [jobs, error, loading] = useGetAvailableJobs();
-  let jobItems;
+  const [jobs, error, loading, refetch] = useGetUserPostedJobs();
+  useEffect(() => {
+    refetch();
+  }, []);
+  let jobItems = null;
   if (loading) {
     jobItems = (
       <>
@@ -29,7 +33,7 @@ export default function OwnerProfile() {
       </>
     );
   } else {
-    jobItems = <JobList jobs={jobs}></JobList>;
+    if (!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
   return (
     <Flex
@@ -41,14 +45,26 @@ export default function OwnerProfile() {
       h="inherit">
       <Flex direction="column" flexWrap="wrap" alignItems="center">
         <Box m="2%">
-          <NavButton
-            name="Create new petsitting job"
-            route="createpetsitterjob"></NavButton>
+          {!jobItems ?? (
+            <NavButton
+              name="Create new petsitting job"
+              route="/createpetsitterjob"></NavButton>
+          )}
         </Box>
         <Heading as="h2" size="md">
           Your current Jobs available:
         </Heading>
-        {jobItems}
+        {!jobItems ? (
+          <Heading size="lg">
+            You've currently got no posted jobs. Consider posting one with the{" "}
+            <NavButton
+              name="Create new petsitting job"
+              route="/createpetsitterjob"></NavButton>{" "}
+            button.
+          </Heading>
+        ) : (
+          jobItems
+        )}
       </Flex>
     </Flex>
   );

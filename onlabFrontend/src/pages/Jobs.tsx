@@ -14,13 +14,11 @@ import { useGetAvailableJobs } from "../hooks/JobHooks";
 import { dummyJobs } from "../models/DummyData";
 
 export default function Jobs() {
-  let jobItems;
+  let jobItems = null;
   const [jobs, error, loading, refetch] = useGetAvailableJobs();
   useEffect(() => {
-    if (error) {
-      refetch();
-    }
-  });
+    refetch();
+  }, []);
   if (loading) {
     jobItems = (
       <>
@@ -44,8 +42,9 @@ export default function Jobs() {
       </>
     );
   } else {
-    jobItems = <JobList jobs={jobs}></JobList>;
+    if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
+  //console.log(jobItems);
   //jobItems = <JobList jobs={dummyJobs}></JobList>;
 
   return (
@@ -83,7 +82,14 @@ export default function Jobs() {
           <Heading as="h2" size="md">
             Available jobs
           </Heading>
-          {jobItems}
+          {!jobItems ? (
+            <Heading size="lg">
+              You've currently got no posted jobs. Consider posting one with the{" "}
+              <em>C</em> button.
+            </Heading>
+          ) : (
+            jobItems
+          )}
         </Flex>
       </Flex>
     </Flex>

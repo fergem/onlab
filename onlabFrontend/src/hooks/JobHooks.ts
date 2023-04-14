@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
-import { isError, useMutation, useQuery, useQueryClient } from "react-query";
+import { useState } from "react";
+import { useMutation, useQuery } from "react-query";
 import { JobService } from "../services/JobService";
 import Job from "../models/Job";
+import axios from "axios";
+import { UserService } from "../services/UserService";
 
 export const useGetAvailableJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
+
   const {
     isLoading: loading,
     refetch: listJobs,
@@ -12,17 +15,23 @@ export const useGetAvailableJobs = () => {
   } = useQuery<Job[], Error>(
     "query-jobs",
     async () => {
-      const data = await JobService.list();
+      const data = JobService.list();
       return data;
     },
     {
+      refetchOnMount: true,
+      refetchInterval: 6000,
+      refetchOnWindowFocus: true,
       //enabled: false,
       onSuccess: (res) => {
-        console.log("shiker jobok leszedése");
         setJobs(res);
+      },
+      onError: (err) => {
+        console.log(err);
       },
     }
   );
+
   return [jobs, error, loading, listJobs] as const;
 };
 
@@ -68,6 +77,64 @@ export const usePostJobs = () => {
   return [job, setJobData, postJob] as const;
 };
 
-export const useGetUserPostedJobs = (ID: number) => {};
+export const useGetUserPostedJobs = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
 
-export const useGetUserUnderTookJobs = (ID: number) => {};
+  const {
+    isLoading: loading,
+    refetch: listJobs,
+    isError: error,
+  } = useQuery<Job[], Error>(
+    "query-jobs",
+    async () => {
+      const data = JobService.listUsersPostedJobs();
+      return data;
+    },
+    {
+      refetchOnMount: true,
+      refetchInterval: 6000,
+      refetchOnWindowFocus: true,
+      //enabled: false,
+      onSuccess: (res) => {
+        console.log("shiker jobok leszedése");
+        setJobs(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
+  return [jobs, error, loading, listJobs] as const;
+};
+
+export const useGetUserUnderTookJobs = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
+
+  const {
+    isLoading: loading,
+    refetch: listJobs,
+    isError: error,
+  } = useQuery<Job[], Error>(
+    "query-jobs",
+    async () => {
+      const data = JobService.listUsersUndertookJobs();
+      return data;
+    },
+    {
+      refetchOnMount: true,
+      refetchInterval: 6000,
+      refetchOnWindowFocus: true,
+      //enabled: false,
+      onSuccess: (res) => {
+        console.log("shiker jobok leszedése");
+        setJobs(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
+  return [jobs, error, loading, listJobs] as const;
+};

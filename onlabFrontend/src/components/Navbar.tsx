@@ -1,8 +1,9 @@
-import { Flex, Spacer, Icon } from "@chakra-ui/react";
+import { Flex, Spacer, Icon, Button, Link } from "@chakra-ui/react";
 import NavButton from "./NavButton";
 import { useState, useEffect } from "react";
 import User from "../models/User";
 import { UserService } from "../services/UserService";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 function Navbar() {
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
@@ -60,8 +61,15 @@ function Navbar() {
       )}
       <Spacer />
       {currentUser && <NavButton name="Profile" route="/profile" />}
-      {currentUser || <NavButton name="Register" route="/register"></NavButton>}
-      {currentUser || <NavButton name="Login" route="/login" />}
+      {!!currentUser == false && (
+        <NavButton name="Register" route="/register"></NavButton>
+      )}
+      {!!currentUser == false && <NavButton name="Login" route="/login" />}
+      {currentUser && (
+        <Link as={ReactRouterLink} to="/" style={{ textDecoration: "none" }}>
+          <Button onClick={UserService.logout}>Logout</Button>
+        </Link>
+      )}
     </Flex>
   );
 }

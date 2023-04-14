@@ -4,12 +4,20 @@ import Status from "../models/Status";
 import { UserService } from "./UserService";
 
 const list = async () => {
+  console.log("listing");
   const response = await axios.get<Job[]>("/api/jobs");
   return response.data;
 };
 
-const listUsersJobs = async (username: string) => {
-  const response = await axios.get<Job[]>("/api/jobs" + username, {
+const listUsersPostedJobs = async () => {
+  const response = await axios.get<Job[]>("/api/jobs/posted", {
+    headers: UserService.authHeader(),
+  });
+  return response.data;
+};
+
+const listUsersUndertookJobs = async () => {
+  const response = await axios.get<Job[]>("/api/jobs/undertook", {
     headers: UserService.authHeader(),
   });
   return response.data;
@@ -32,6 +40,7 @@ const getJobStatus = async (id: number) => {
 export const JobService = {
   list,
   createJob,
-  listUsersJobs,
+  listUsersPostedJobs,
+  listUsersUndertookJobs,
   getJobStatus,
 };
