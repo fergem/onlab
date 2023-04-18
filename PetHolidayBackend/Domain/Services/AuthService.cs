@@ -45,33 +45,5 @@ namespace Domain.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
-        public int ValidateToken(string token)
-        {
-            if (token == null)
-                throw new Exception("Bearer token is null");
-            token = token.Replace("Bearer ", "");
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"]);
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "ID").Value);
-                return userId;
-            }
-            catch
-            {
-                throw new Exception("Cannot get ID provided by bearer");
-            }
-        }
     }
 }

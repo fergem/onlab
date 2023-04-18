@@ -25,3 +25,5 @@ export const useGetUserPets = () => {
   );
   return [pets, error, loading, listJobs] as const;
 };
+
+export const usePostUserPet = () => {};

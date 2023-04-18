@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { JobService } from "../services/JobService";
 import Job from "../models/Job";
-import axios from "axios";
-import { UserService } from "../services/UserService";
 
 export const useGetAvailableJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);

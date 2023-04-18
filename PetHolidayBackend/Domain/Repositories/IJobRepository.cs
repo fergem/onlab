@@ -13,6 +13,6 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
-        Task<Job> Insert(Job job);
+        Task<Job> Insert(Job job, int userID);
     }
 }

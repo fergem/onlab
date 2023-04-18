@@ -71,32 +71,26 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("pets")]
-        public async Task<ActionResult<User>> ListPets([FromHeader] string Authorization)
+        public async Task<ActionResult<User>> ListPets()
         {
-            var useername = HttpContext.User.Identity.Name;
-            var userID = authService.ValidateToken(Authorization);
-            var value = await userService.ListUsersPets(userID);
-            return value != null ? Ok(value) : NotFound(); ;
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+
+           var value = await userService.ListUsersPets(userID);
+            return Ok(value);
         }
 
 
         [Authorize]
         [HttpPost("addpet")]
-        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet, [FromHeader] string Authorization)
+        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet)
         {
-            var useername = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value;
-            var userID = authService.ValidateToken(Authorization);
-            var created = await userService.InsertPet(pet,userID);
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            var created = await userService.InsertPet(pet, userID);
             return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
-            //return Ok(useername);
-        }
-
-        [Authorize]
-        [HttpGet]
-        public async Task<ActionResult> Get([FromHeader] string Authorization)
-        {
-            var userName = authService.ValidateToken(Authorization);
-            return Ok(userName);
-        }            
+        }           
     }
 }

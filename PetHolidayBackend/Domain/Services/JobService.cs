@@ -31,9 +31,9 @@ namespace Domain.Services
         {
             return await jobRepository.ListUnderTookJobs(userID);
         }
-        public async Task<Job> Insert(Job job)
+        public async Task<Job> Insert(Job job, int userID)
         {
-            return await jobRepository.Insert(job);
+            return await jobRepository.Insert(job, userID);
         }
       
         public async Task<Job> FindById(int jobID)

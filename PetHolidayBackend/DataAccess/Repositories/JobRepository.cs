@@ -23,14 +23,14 @@ namespace DataAccess.Repositories
             return ModelMapper.ToJobModel(job);
         }
 
-        public async Task<Job> Insert(Job job)
+        public async Task<Job> Insert(Job job, int userID)
         {
             var insertJob = new DbJob()
             {
                 Hours = job.Hours,
                 Location = job.Location,
                 Description = job.Description,
-                OwnerUserID = job.OwnerUserInformation.ID,
+                OwnerUserID = userID,
                 StatusID = 1
             };
 
