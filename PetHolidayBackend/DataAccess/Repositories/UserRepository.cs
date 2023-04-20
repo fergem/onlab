@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 

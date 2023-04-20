@@ -97,7 +97,7 @@ export default function RegisterForm() {
                   <Spinner boxSize="20px" alignSelf="center" />
                 ) : (
                   <Heading as="h6" size="md">
-                    Login
+                    Register
                   </Heading>
                 )}
               </Button>

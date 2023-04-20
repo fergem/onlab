@@ -65,11 +65,7 @@ function Navbar() {
         <NavButton name="Register" route="/register"></NavButton>
       )}
       {!!currentUser == false && <NavButton name="Login" route="/login" />}
-      {currentUser && (
-        <Link as={ReactRouterLink} to="/" style={{ textDecoration: "none" }}>
-          <Button onClick={UserService.logout}>Logout</Button>
-        </Link>
-      )}
+      {currentUser && <Button onClick={UserService.logout}>Logout</Button>}
     </Flex>
   );
 }

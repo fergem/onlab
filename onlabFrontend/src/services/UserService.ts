@@ -31,17 +31,23 @@ const getUserPets = async () => {
 };
 
 const insertPet = ({ name, description, species, age }: Pet) => {
-  return axios.post<any>("/api/users/addpet", {
-    name,
-    description,
-    species,
-    age,
-  });
+  return axios.post<any>(
+    "/api/users/addpet",
+    {
+      name,
+      description,
+      species,
+      age,
+    },
+    {
+      headers: authHeader(),
+    }
+  );
 };
 
 const logout = () => {
   localStorage.removeItem("user");
-  window.location.reload();
+  window.location.href = "/";
 };
 
 const getCurrentUser = () => {

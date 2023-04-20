@@ -36,7 +36,10 @@ export default function LoginForm() {
     password: "",
   };
 
-  const handleLogin = (formValue: { username: string; password: string }) => {
+  const handleCreatePet = (formValue: {
+    username: string;
+    password: string;
+  }) => {
     const { username, password } = formValue;
     setMessage("");
     setLoading(true);
@@ -65,7 +68,7 @@ export default function LoginForm() {
       <Box bg="white" p={6} rounded="md" w={64}>
         <Formik
           initialValues={initialValues}
-          onSubmit={handleLogin}
+          onSubmit={handleCreatePet}
           validationSchema={validationSchema}>
           <Form>
             <VStack spacing={4} align="flex-start">

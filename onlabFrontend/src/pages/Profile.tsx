@@ -5,6 +5,7 @@ import User from "../models/User";
 import { PetList } from "../components/PetList";
 import { useGetUserPets } from "../hooks/UserHooks";
 import { WarningIcon } from "@chakra-ui/icons";
+import CreatePet from "../components/CreatePet";
 
 export default function Profile() {
   const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
@@ -91,9 +92,12 @@ export default function Profile() {
           </Text>
         </Flex>
       </Flex>
-      <Heading size="lg" borderBottom="1px" pb="1%">
-        Your pets
-      </Heading>
+
+      <Flex direction="row" borderBottom="1px" pb="1%" justifyContent="center">
+        <Heading size="lg">Your pets</Heading>
+        <CreatePet></CreatePet>
+      </Flex>
+
       <Flex
         direction="row"
         w="100%"
