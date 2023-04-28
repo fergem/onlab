@@ -16,7 +16,7 @@ export default function Profile() {
     }
   }, []);
 
-  let petItems;
+  let petItems = undefined;
   const [pets, error, loading, refetch] = useGetUserPets();
   useEffect(() => {
     refetch();
@@ -44,7 +44,6 @@ export default function Profile() {
       </>
     );
   } else {
-    console.log(pets);
     petItems = <PetList pets={pets}></PetList>;
   }
 
@@ -103,13 +102,13 @@ export default function Profile() {
         w="100%"
         justifyContent="space-evenly"
         flexWrap="wrap">
-        {!petItems ? (
+        {pets.length > 0 ? (
+          petItems
+        ) : (
           <Heading size="lg">
             You've currently got no pets. Consider adding one to your profile
             with the <em>Add pet</em> button.
           </Heading>
-        ) : (
-          petItems
         )}
       </Flex>
     </Flex>

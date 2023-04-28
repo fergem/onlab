@@ -19,12 +19,11 @@ namespace DataAccess
         public DbSet<DbOwnerProfile> OwnerProfiles { get; set; }
         public DbSet<DbStatus> Statuses { get; set; }
         public DbSet<DbJob> Jobs { get; set; }
+        public DbSet<DbPetImage> PetImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //Convention??
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
@@ -54,7 +53,6 @@ namespace DataAccess
                 entity.Property(s => s.Age);
                 entity.Property(s => s.Species).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
-                entity.Property(s => s.Picture);
             });
 
             modelBuilder.Entity<DbJob>(entity =>
@@ -72,8 +70,13 @@ namespace DataAccess
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true); ;
             });
-           
 
+            modelBuilder.Entity<DbPetImage>(entity =>
+            {
+                entity.ToTable("PetImages");
+                entity.HasKey(s => s.ID);
+            });
+                
             //Relationship configuration
             OneToOneRelationshipConfiguration(modelBuilder);
             OneToManyRelationshipConfiguration(modelBuilder);
@@ -107,6 +110,12 @@ namespace DataAccess
                 .HasForeignKey(e => e.PetSitterUserID)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            /*modelBuilder.Entity<DbPet>()
+                .HasMany(c => c.Images)
+                .WithOne(s => s.Pet)
+                .HasForeignKey(e => e.PetID)
+                .IsRequired();*/
         }
 
         private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)
@@ -120,6 +129,11 @@ namespace DataAccess
                 .HasOne(c => c.PetSitterProfile)
                 .WithOne(s => s.User)
                 .HasForeignKey<DbPetSitterProfile>(b => b.UserID);
+
+            modelBuilder.Entity<DbPet>()
+                .HasOne(c => c.Image)
+                .WithOne(s => s.Pet)
+                .HasForeignKey<DbPetImage>(e => e.PetID);
         }
 
         public void DataSeeding(ModelBuilder modelBuilder)

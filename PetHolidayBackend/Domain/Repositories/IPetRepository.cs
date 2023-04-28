@@ -12,7 +12,8 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<Pet>> List(int userID);
         Task<Pet> FindById(int petID);
         Task<Pet> Insert(Pet pet, int userID);
-        //Task<Pet> Update(Pet pet);
+        Task<Pet> Update(Pet pet);
+        Task<Pet> AddImage(int ID, byte[] file);
         Task<Pet> Delete(int petID);
     }
 }

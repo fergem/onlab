@@ -80,7 +80,21 @@ namespace DataAccess
         }
         internal static Pet ToPetModel(DbPet pet)
         {
-            return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID};
+            //var images = new List<PetImage>();
+            //foreach (var image in pet.Images)
+                //images.Add(ToPetImageModel(image));
+
+            return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Image = ToPetImageModel(pet.Image)};
+        }
+        internal static PetImage? ToPetImageModel(DbPetImage image)
+        {
+            if (image == null)
+                return null;
+            return new PetImage()
+            {
+                ID = image.ID,
+                Picture = image.Picture,
+            };
         }
     }
 }

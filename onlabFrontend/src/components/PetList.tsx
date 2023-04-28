@@ -16,6 +16,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import Pet from "../models/Pet";
+import { baseDogPicture } from "../utility/constants";
 
 interface IPropsPetCard {
   pet: Pet;
@@ -45,7 +46,11 @@ const PetCard: React.FC<IPropsPetCard> = ({ pet }) => {
           onClick={onOpen}
           w="2xs"
           h="2xs"
-          src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+          src={
+            pet.image
+              ? "data:image/png;base64," + pet.image.picture
+              : baseDogPicture
+          }
           alt="Green double couch with wooden legs"
           borderRadius="lg"
         />
@@ -60,7 +65,11 @@ const PetCard: React.FC<IPropsPetCard> = ({ pet }) => {
               <Image
                 w="2xs"
                 h="2xs"
-                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                src={
+                  pet.image
+                    ? "data:image/png;base64," + pet.image.picture
+                    : baseDogPicture
+                }
                 alt="Green double couch with wooden legs"
                 borderRadius="lg"
               />

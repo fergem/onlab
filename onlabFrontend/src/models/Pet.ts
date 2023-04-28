@@ -4,4 +4,10 @@ export default interface Pet {
   description: string;
   species: string;
   age: number;
+  image: PetImage;
+}
+
+export interface PetImage {
+  id: number;
+  picture: string;
 }

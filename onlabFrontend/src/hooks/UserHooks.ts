@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import Pet from "../models/Pet";
+import ImageUploadService from "../services/ImageUploadService";
 import { UserService } from "../services/UserService";
 
 export const useGetUserPets = () => {
@@ -16,9 +17,7 @@ export const useGetUserPets = () => {
       return data;
     },
     {
-      //enabled: false,
       onSuccess: (res) => {
-        //console.log("shiker jobok leszedése");
         setPets(res);
       },
     }
@@ -27,3 +26,21 @@ export const useGetUserPets = () => {
 };
 
 export const usePostUserPet = () => {};
+
+export const petImageUpload = (petID: number, file: File) => {
+  const {
+    isLoading: loading,
+    mutate: postPetPicture,
+    isError: error,
+  } = useMutation<any, Error>(
+    async () => {
+      const data = await ImageUploadService.uploadPetPicture(petID, file);
+      return data;
+    },
+    {
+      onSuccess: (res) => {},
+      onError: (err: any) => {},
+    }
+  );
+  return [postPetPicture] as const;
+};

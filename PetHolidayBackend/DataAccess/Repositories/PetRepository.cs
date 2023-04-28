@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using DataAccess.DataObjects;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace DataAccess.Repositories
@@ -30,7 +33,12 @@ namespace DataAccess.Repositories
 
         public async Task<IReadOnlyCollection<Pet>> List(int userID)
         {
-            return await dbcontext.Pets.Include(s => s.User).Where(s => s.UserID == userID).Select(s => ModelMapper.ToPetModel(s)).ToListAsync();
+            return await dbcontext.Pets
+                .Include(s => s.Image)
+                .Include(s => s.User)
+                .Where(s => s.UserID == userID)
+                .Select(s => ModelMapper.ToPetModel(s))
+                .ToListAsync();
         }
 
         public async Task<Pet> FindById(int petID)
@@ -53,9 +61,55 @@ namespace DataAccess.Repositories
                 Age = pet.Age,
                 UserID = userID
             };
+            if(pet.Image != null)
+            {
+                //foreach (var image in pet.Images)
+                //{
+                    var dbImage = new DbPetImage()
+                    {
+                        PetID = insertPet.ID,
+                        Picture = pet.Image.Picture,
+                    };
+                    await dbcontext.PetImages.AddAsync(dbImage);
+                //}
+            }
+            
             await dbcontext.Pets.AddAsync(insertPet);
-            dbcontext.SaveChanges();
+            await dbcontext.SaveChangesAsync();
             return ModelMapper.ToPetModel(insertPet);
-        }        
+        }
+
+        public async Task<Pet> Update(Pet pet)
+        {
+            var dbPet = await dbcontext.Pets.FindAsync(pet.ID);
+            if (dbPet == null)
+                throw new Exception("Nincs ilyen pet");
+
+            dbPet.Age = pet.Age;
+            dbPet.Description = pet.Description;
+            dbPet.Species = pet.Species;
+            dbPet.Name = pet.Name;
+
+            await dbcontext.SaveChangesAsync();
+     
+            return ModelMapper.ToPetModel(dbPet);
+        }
+
+        public async Task<Pet> AddImage(int ID, byte[] file)
+        {
+            var dbPet = await dbcontext.Pets.Include(s => s.Image).FirstOrDefaultAsync(s => s.ID == ID);
+            if (dbPet == null)
+                throw new Exception("Nincs ilyen pet");
+            var dbImage = new DbPetImage()
+            {
+                PetID = dbPet.ID,
+                Picture = file,
+            };
+
+            dbPet.Image = dbImage;
+            await dbcontext.PetImages.AddAsync(dbImage);
+            await dbcontext.SaveChangesAsync();
+            return ModelMapper.ToPetModel(dbPet);
+        }
     }
 }

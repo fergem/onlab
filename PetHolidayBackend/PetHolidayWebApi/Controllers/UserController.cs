@@ -3,8 +3,10 @@ using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -91,6 +93,31 @@ namespace PetHolidayWebApi.Controllers
                 BadRequest();
             var created = await userService.InsertPet(pet, userID);
             return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
-        }           
+        }
+
+        [Authorize]
+        [HttpPut("updatepet")]
+        public async Task<ActionResult<Pet>> UpdatePet([FromBody] Pet pet)
+        {
+            var updatedPet = await userService.UpdatePet(pet);
+            return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+        }
+
+        [Authorize]
+        [HttpPost("addpetimage")]
+        public async Task<ActionResult<Pet>> AddPetImage([FromHeader] int petID,[FromForm] IFormFile file)
+        {
+            if (file != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    var fileData = stream.ToArray();
+                    var updatedPet = await userService.AddPetImage(petID, fileData);
+                    return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                }
+            }
+            return BadRequest();
+        }
     }
 }

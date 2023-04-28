@@ -38,5 +38,15 @@ namespace Domain.Services
         {
             return await petRepository.Insert(pet, userID);
         }
+
+        public async Task<Pet> UpdatePet(Pet pet)
+        {
+            return await petRepository.Update(pet);
+        }
+
+        public async Task<Pet> AddPetImage(int ID, byte[] file)
+        {
+            return await petRepository.AddImage(ID, file);
+        }
     }
 }
