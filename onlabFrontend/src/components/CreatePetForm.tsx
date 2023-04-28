@@ -31,7 +31,6 @@ export default function CreatePetForm() {
 
   return (
     <form onSubmit={handleSubmit(handleCreatePet)}>
-      <ImageUpload></ImageUpload>
       <FormControl isInvalid={!!errors.name}>
         <FormLabel htmlFor="name">Name of your pet</FormLabel>
         <Input

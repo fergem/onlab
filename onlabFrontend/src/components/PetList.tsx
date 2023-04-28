@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import Pet from "../models/Pet";
 import { baseDogPicture } from "../utility/constants";
+import ImageUpload from "./PetImageUpload";
 
 interface IPropsPetCard {
   pet: Pet;
@@ -62,6 +63,7 @@ const PetCard: React.FC<IPropsPetCard> = ({ pet }) => {
             <ModalCloseButton />
             <Divider colorScheme="cyan" />
             <ModalBody>
+              <ImageUpload></ImageUpload>
               <Image
                 w="2xs"
                 h="2xs"
