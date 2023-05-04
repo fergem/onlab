@@ -33,8 +33,9 @@ export default function OwnerProfile() {
       </>
     );
   } else {
-    if (!jobs) jobItems = <JobList jobs={jobs}></JobList>;
+    if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
+  console.log(jobs);
   return (
     <Flex
       px="20%"
@@ -45,16 +46,18 @@ export default function OwnerProfile() {
       h="inherit">
       <Flex direction="column" flexWrap="wrap" alignItems="center">
         <Box m="2%">
-          {!jobItems ?? (
+          {jobs.length > 0 ?? (
             <NavButton
               name="Create new petsitting job"
               route="/createpetsitterjob"></NavButton>
           )}
         </Box>
         <Heading as="h2" size="md">
-          Your current Jobs available:
+          Your posted jobs all time:
         </Heading>
-        {!jobItems ? (
+        {jobs.length > 0 ? (
+          jobItems
+        ) : (
           <Heading size="lg">
             You've currently got no posted jobs. Consider posting one with the{" "}
             <NavButton
@@ -62,8 +65,6 @@ export default function OwnerProfile() {
               route="/createpetsitterjob"></NavButton>{" "}
             button.
           </Heading>
-        ) : (
-          jobItems
         )}
       </Flex>
     </Flex>

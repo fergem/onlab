@@ -13,5 +13,6 @@ namespace Domain.Repositories
     {
         Task<User> Register(RegisterModel registerModel);
         Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel);
+        Task<User> AddProfilePicture(int userID, byte[] file);
     }
 }

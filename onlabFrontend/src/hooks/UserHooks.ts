@@ -8,21 +8,25 @@ export const useGetUserPets = () => {
   const [pets, setPets] = useState<Pet[]>([]);
   const {
     isLoading: loading,
-    refetch: listJobs,
+    refetch: listPets,
     isError: error,
   } = useQuery<Pet[], Error>(
-    "query-jobs",
+    "query-pets",
+
     async () => {
       const data = await UserService.getUserPets();
       return data;
     },
     {
+      refetchOnMount: true,
+      refetchInterval: 6000,
+      refetchOnWindowFocus: true,
       onSuccess: (res) => {
         setPets(res);
       },
     }
   );
-  return [pets, error, loading, listJobs] as const;
+  return [pets, error, loading, listPets] as const;
 };
 
 export const usePostUserPet = () => {};
@@ -34,7 +38,7 @@ export const petImageUpload = (petID: number, file: File) => {
     isError: error,
   } = useMutation<any, Error>(
     async () => {
-      const data = await ImageUploadService.uploadPetPicture(petID, file);
+      const data = await ImageUploadService.uploadPetPictures(petID, file);
       return data;
     },
     {
@@ -43,4 +47,23 @@ export const petImageUpload = (petID: number, file: File) => {
     }
   );
   return [postPetPicture] as const;
+};
+
+export const userProfilePictureUpload = () => {
+  const [fileSelected, setFileSelected] = useState<File>();
+  const {
+    isLoading: loading,
+    mutate: postProfilePicture,
+    isError: error,
+  } = useMutation<any, Error>(
+    async () => {
+      const data = await ImageUploadService.uploadProfilePicture(fileSelected);
+      return data;
+    },
+    {
+      onSuccess: (res) => {},
+      onError: (err: any) => {},
+    }
+  );
+  return [fileSelected, setFileSelected, postProfilePicture] as const;
 };

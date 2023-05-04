@@ -4,7 +4,6 @@ import Status from "../models/Status";
 import { UserService } from "./UserService";
 
 const list = async () => {
-  console.log("listing");
   const response = await axios.get<Job[]>("/api/jobs");
   return response.data;
 };
@@ -23,12 +22,13 @@ const listUsersUndertookJobs = async () => {
   return response.data;
 };
 
-const createJob = async ({ hours, location, description }: Job) => {
-  const response = await axios.post<any>("/api/jobs", {
-    hours,
-    location,
-    description,
-  });
+const createJob = async ({ hours, location, description, payment }: Job) => {
+  const response = await axios.post<any>(
+    "/api/jobs",
+    { hours, location, description, payment },
+
+    { headers: UserService.authHeader() }
+  );
   return response.data;
 };
 

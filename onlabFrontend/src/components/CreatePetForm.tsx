@@ -15,9 +15,7 @@ import ImageUpload from "./PetImageUpload";
 import { useForm } from "react-hook-form";
 
 export default function CreatePetForm() {
-  const [addPet, newAddPet] = useState<Pet>();
   const handleCreatePet = (pet: Pet) => {
-    console.log(pet);
     UserService.insertPet(pet).then(() => {
       window.location.reload();
     });

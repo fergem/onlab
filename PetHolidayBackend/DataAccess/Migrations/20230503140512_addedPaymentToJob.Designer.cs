@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20230426105707_PetImage_added")]
-    partial class PetImage_added
+    [Migration("20230503140512_addedPaymentToJob")]
+    partial class addedPaymentToJob
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,8 +51,10 @@ namespace DataAccess.Migrations
                     b.Property<int>("OwnerUserID")
                         .HasColumnType("int");
 
+                    b.Property<int>("Payment")
+                        .HasColumnType("int");
+
                     b.Property<int?>("PetSitterUserID")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("StatusID")
@@ -76,6 +78,7 @@ namespace DataAccess.Migrations
                             Hours = 4,
                             Location = "Szeged",
                             OwnerUserID = 1,
+                            Payment = 10,
                             PetSitterUserID = 2,
                             StatusID = 2
                         },
@@ -86,6 +89,7 @@ namespace DataAccess.Migrations
                             Hours = 3,
                             Location = "Szolnok",
                             OwnerUserID = 2,
+                            Payment = 20,
                             PetSitterUserID = 1,
                             StatusID = 2
                         },
@@ -96,6 +100,7 @@ namespace DataAccess.Migrations
                             Hours = 7,
                             Location = "Jászkarajenő",
                             OwnerUserID = 3,
+                            Payment = 30,
                             PetSitterUserID = 4,
                             StatusID = 1
                         });
@@ -214,7 +219,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PetID");
+                    b.HasIndex("PetID")
+                        .IsUnique();
 
                     b.ToTable("PetImages", (string)null);
                 });
@@ -373,14 +379,14 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "0957f726-f578-4057-903b-abe1b7b07a32",
+                            ConcurrencyStamp = "f725184f-eac0-49f7-96ab-6b912c2afc55",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             NormalizedUserName = "KISSJANOS",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAELRtfns6MH7JEqziEQMBxlx6XgaIYtSHrSrnrRAwhX/zGQUfyZG95vTZW4nm8PRRtg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBVarxbYaLsL7j7X1ZL8500EIPc5MwjHd0Z4T4em2ZiZyS8KgAr+E9IdfY80cHFxIg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos"
@@ -390,14 +396,14 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "7d3c47e8-0b1e-41c8-8db9-8c4655036cb8",
+                            ConcurrencyStamp = "9d442611-5740-4169-b00e-3505fcf397e1",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             NormalizedUserName = "NAGYFERO",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJnKAoFz9KY7fdXCpzugWXqbMnbg3k/oQc+GEqSa+QCRFJpy2Nm4X4QOfKcIm94xjA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI83MdGpn6ldX9VrX5JBF1dyJ3aIvpoKIkH36iJYvwhWMAdwIOsXuNnyJJzA2kS2vg==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero"
@@ -407,14 +413,14 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "3d1bbf46-e982-4cbe-98a8-9b605bf4bc35",
+                            ConcurrencyStamp = "a5998e38-08e5-4bd6-a5d7-a64307c74278",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             NormalizedUserName = "VICCELEK",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAIkwaL7wGh1dcl50fFabf9Rd8gMDb1Q7suAhSnrPSwKYV4K0dV5O+e1cjp6qLGg7Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFhwyQbo8/q+DEQjV3Q7+UXQmVAyps9kinMwayy9c1KSva0bn1QO7je79PEe/kc44A==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek"
@@ -424,14 +430,14 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "35f03148-d991-4343-ab45-ec2fc97eb066",
+                            ConcurrencyStamp = "6a8eae75-873d-4e9d-b70d-44a760c01e57",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             NormalizedUserName = "MAKULATLAN",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAENhOEviW6PNsO0DFqDP/D0uZx0tIJ9/ownNr1yVc1Op54zP25GI4nUMOeGoWWXrIog==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGV13OHiqIOvpUbxaXSLJZJkaZNe6IWfz2blHNpdgy5wwtQzQcolaWjNW9VJnJGkcA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan"
@@ -459,13 +465,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ed58905d-4279-414f-a24c-e9e8d3e6d8d0",
+                            Id = "c4da47b9-701c-4771-977c-e95e2bedf215",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "b783dca5-03c0-46ec-9a30-f861bf48a727",
+                            Id = "da6c88df-af50-40d3-bff7-bdc51b4644d1",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });
@@ -614,9 +620,7 @@ namespace DataAccess.Migrations
 
                     b.HasOne("DataAccess.DataObjects.DbUser", "PetSitterUser")
                         .WithMany("JobApplications")
-                        .HasForeignKey("PetSitterUserID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("PetSitterUserID");
 
                     b.HasOne("DataAccess.DataObjects.DbStatus", "Status")
                         .WithMany("Jobs")
@@ -656,8 +660,8 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.DataObjects.DbPetImage", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbPet", "Pet")
-                        .WithMany("Images")
-                        .HasForeignKey("PetID")
+                        .WithOne("Image")
+                        .HasForeignKey("DataAccess.DataObjects.DbPetImage", "PetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -728,7 +732,8 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DataObjects.DbPet", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("Image")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DataAccess.DataObjects.DbStatus", b =>

@@ -1,12 +1,13 @@
 import Status from "./Status";
-import User from "./User";
+import { UserInformation } from "./User";
 
 export default interface Job {
   id?: number;
   hours: number;
   location: string;
   description: string;
-  ownerUser: User | undefined;
-  appliedUser: User | undefined;
+  payment: number;
+  ownerUserInformation: UserInformation;
+  appliedUserInformation: UserInformation | undefined;
   status: Status;
 }

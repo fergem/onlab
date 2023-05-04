@@ -14,13 +14,16 @@ namespace DataAccess.Repositories
         private readonly UserManager<DbUser> userManager;
         //private readonly RoleManager<IdentityRole> roleManager;
         private readonly SignInManager<DbUser> signInManager;
-
-        public UserRepository(UserManager<DbUser> userManager, SignInManager<DbUser> signInManager)
+        private readonly PetHolidayDbContext dbContext;
+        public UserRepository(UserManager<DbUser> userManager, SignInManager<DbUser> signInManager, PetHolidayDbContext dbContext)
         {
             this.userManager = userManager;
             //this.roleManager = roleManager;
             this.signInManager = signInManager;
+            this.dbContext = dbContext;
         }
+
+
 
         public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
@@ -61,6 +64,14 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserModel(appUser);
         }
 
-        
+        public async Task<User> AddProfilePicture(int userID, byte[] file)
+        {
+            var user = await userManager.FindByIdAsync(userID.ToString());
+            if (user == null)
+                throw new Exception("User not exists");
+            user.Picture = file;
+            await dbContext.SaveChangesAsync();
+            return ModelMapper.ToUserModel(user);
+        }
     }
 }

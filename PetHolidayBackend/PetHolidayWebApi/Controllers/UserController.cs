@@ -45,7 +45,6 @@ namespace PetHolidayWebApi.Controllers
 
             var result = await userService.Login(loginModel);
             var token = authService.GenerateToken(result.user, result.userRoles);
-
             return Ok(new
             {
                 bearer = token,
@@ -114,6 +113,26 @@ namespace PetHolidayWebApi.Controllers
                     await file.CopyToAsync(stream);
                     var fileData = stream.ToArray();
                     var updatedPet = await userService.AddPetImage(petID, fileData);
+                    return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                }
+            }
+            return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPost("addprofilepicture")]
+        public async Task<ActionResult<Pet>> AddProfilePicture([FromForm] IFormFile file)
+        {
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            if (file != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    var fileData = stream.ToArray();
+                    var updatedPet = await userService.AddProfilePicture(userID, fileData);
                     return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
                 }
             }

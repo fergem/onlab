@@ -16,18 +16,27 @@ namespace DataAccess
             {
                 ID = job.OwnerUser.Id,
                 UserName = job.OwnerUser.UserName,
+                Picture = job.OwnerUser.Picture,
+                FirstName = job.OwnerUser.FirstName,
+                LastName = job.OwnerUser.LastName,
+                Age = job.OwnerUser.Age,
+                Email = job.OwnerUser.Email,
             };
             var status = new Status()
             {
                 ID = job.Status.ID,
                 Name = job.Status.Name,
             };
-            /*if (job.PetSitterUser != null)
+            if (job.PetSitterUser != null)
             {
-                var petSitter = new UserInformation()
+                var petSitterInformation = new UserInformation()
                 {
                     ID = job.PetSitterUser.Id,
                     UserName = job.PetSitterUser.UserName,
+                    Picture = job.PetSitterUser.Picture,
+                    FirstName = job.PetSitterUser.FirstName,
+                    LastName = job.PetSitterUser.LastName,
+                    Age = job.PetSitterUser.Age,
                     Email = job.PetSitterUser.Email,
                 };
                 return new Job()
@@ -37,16 +46,18 @@ namespace DataAccess
                     Hours = job.Hours,
                     Location = job.Location,
                     OwnerUserInformation = ownerUserInformation,
-                    PetSitterUserInformation = petSitter,
+                    Payment = job.Payment,
+                    PetSitterUserInformation = petSitterInformation,
                     Status = status,
                 };
-            }*/
+            }
             return new Job()
             {
                 ID = job.ID,
                 Description = job.Description,
                 Hours = job.Hours,
                 Location = job.Location,
+                Payment = job.Payment,
                 OwnerUserInformation = ownerUserInformation,
                 Status = status,
             };
@@ -76,6 +87,10 @@ namespace DataAccess
                 JobAdvertisements = jobAdvertisements,
                 JobApplications = jobAplications,
                 Pets = pets,
+                Picture = user.Picture,
+                Age = user.Age,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
             };
         }
         internal static Pet ToPetModel(DbPet pet)

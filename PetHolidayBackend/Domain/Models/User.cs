@@ -29,6 +29,8 @@ namespace Domain.Models
         public required string UserName { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public required string Email { get; set; }
         public int? Age { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }

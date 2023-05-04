@@ -1,20 +1,14 @@
 import { Flex, Spacer, Icon, Button, Link } from "@chakra-ui/react";
 import NavButton from "./NavButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import User from "../models/User";
 import { UserService } from "../services/UserService";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { UserContext } from "../services/AuthService";
 
 function Navbar() {
-  const [currentUser, setCurrentUser] = useState<User | undefined>(undefined);
-  useEffect(() => {
-    const user = UserService.getCurrentUser();
+  const { user } = useContext(UserContext);
 
-    if (user) {
-      console.log(user);
-      setCurrentUser(user);
-    }
-  }, []);
   return (
     <Flex
       pos="sticky"

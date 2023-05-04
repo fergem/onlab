@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const uploadPetPicture = async (ID: number, file: File) => {
+const uploadPetPictures = async (ID: number, file: File) => {
   let formData = new FormData();
 
   formData.append("file", file);
@@ -19,14 +19,26 @@ const uploadPetPicture = async (ID: number, file: File) => {
   return response.data;
 };
 
-const getPetPicture = async () => {
-  const response = await axios.get<string>("/files");
+const uploadProfilePicture = async (file: File | undefined) => {
+  let formData = new FormData();
+  if (file != undefined) formData.append("file", file);
+
+  const response = await axios.post<string>(
+    "/api/users/addpetimage",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
   return response.data;
 };
 
 const ImageUploadService = {
-  uploadPetPicture,
-  getPetPicture,
+  uploadPetPictures,
+  uploadProfilePicture,
 };
 
 export default ImageUploadService;

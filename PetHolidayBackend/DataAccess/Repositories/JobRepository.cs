@@ -25,14 +25,24 @@ namespace DataAccess.Repositories
 
         public async Task<Job> Insert(Job job, int userID)
         {
+            var ownerUser = await dbcontext.Users.FindAsync(userID);
+            if (ownerUser == null)
+                throw new Exception("User doesnt exists that wants to add a job");
+            var availableStatus = await dbcontext.Statuses.FindAsync(1);
+            if (availableStatus == null)
+                throw new Exception("Available status doesnt exists");
             var insertJob = new DbJob()
             {
                 Hours = job.Hours,
                 Location = job.Location,
                 Description = job.Description,
-                OwnerUserID = userID,
-                StatusID = 1
+                OwnerUserID = ownerUser.Id,
+                OwnerUser = ownerUser,
+                StatusID = 1,
+                Status = availableStatus,
+                Payment = job.Payment,
             };
+
 
             await dbcontext.Jobs.AddAsync(insertJob);
             dbcontext.SaveChanges();

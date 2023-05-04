@@ -24,6 +24,11 @@ namespace Domain.Services
             return await userRepository.Register(registerModel);
         }
 
+        public async Task<User> AddProfilePicture(int userID, byte[] file)
+        {
+            return await userRepository.AddProfilePicture(userID, file);
+        }
+
         public async Task<IReadOnlyCollection<Pet>> ListUsersPets(int userID)
         {
             return await petRepository.List(userID);

@@ -104,12 +104,15 @@ namespace DataAccess
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<DbJob>()
+                .HasOne(s => s.PetSitterUser)
+                .WithMany(s => s.JobApplications)
+                .HasForeignKey(s => s.PetSitterUserID);
+
+            /*modelBuilder.Entity<DbUser>()
                 .HasMany(c => c.JobApplications)
                 .WithOne(s => s.PetSitterUser)
-                .HasForeignKey(e => e.PetSitterUserID)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+                .HasForeignKey(e => e.PetSitterUserID);*/
 
             /*modelBuilder.Entity<DbPet>()
                 .HasMany(c => c.Images)
@@ -250,6 +253,7 @@ namespace DataAccess
                         StatusID = 2,
                         OwnerUserID = 1,
                         PetSitterUserID = 2,
+                        Payment = 10,
                     },
                     new DbJob()
                     {
@@ -260,6 +264,7 @@ namespace DataAccess
                         StatusID = 2,
                         OwnerUserID = 2,
                         PetSitterUserID = 1,
+                        Payment = 20,
                     },
                     new DbJob()
                     {
@@ -270,6 +275,7 @@ namespace DataAccess
                         StatusID = 1,
                         OwnerUserID = 3,
                         PetSitterUserID = 4,
+                        Payment = 30,
                     }
                 );
         }

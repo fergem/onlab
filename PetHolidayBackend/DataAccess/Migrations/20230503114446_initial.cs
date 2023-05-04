@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,10 +36,9 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Age = table.Column<int>(type: "int", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
                     Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    firstLogin = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -80,7 +79,7 @@ namespace DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,18 +220,18 @@ namespace DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Species = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Species = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pets", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Pets_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Pets_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -266,12 +265,12 @@ namespace DataAccess.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Hours = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     StatusID = table.Column<int>(type: "int", nullable: false),
                     OwnerUserID = table.Column<int>(type: "int", nullable: false),
-                    PetSitterUserID = table.Column<int>(type: "int", nullable: false)
+                    PetSitterUserID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -286,8 +285,7 @@ namespace DataAccess.Migrations
                         name: "FK_Jobs_AspNetUsers_PetSitterUserID",
                         column: x => x.PetSitterUserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Jobs_Statuses_StatusID",
                         column: x => x.StatusID,
@@ -296,15 +294,35 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PetImages",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PetID = table.Column<int>(type: "int", nullable: false),
+                    Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PetImages", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_PetImages_Pets_PetID",
+                        column: x => x.PetID,
+                        principalTable: "Pets",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName", "firstLogin" },
+                columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, 23, "c2480e8f-8f85-4d26-abe1-1aa135aa706d", null, false, "Kiss", "Janos", false, null, null, null, null, null, null, false, null, null, false, "kissjanos", false },
-                    { 2, 0, 32, "a6320b2d-baab-4f1a-b8c1-97f54d6f2456", null, false, "Nagy", "Feró", false, null, null, null, null, null, null, false, null, null, false, "nagyfero", false },
-                    { 3, 0, 43, "caa67dd6-d3d4-45d3-8504-9cbfb96189b2", null, false, "Vicc", "Elek", false, null, null, null, null, null, null, false, null, null, false, "viccelek", false },
-                    { 4, 0, 17, "04641515-089a-433e-81f0-a9fb79b21231", null, false, "Maku", "Látlan", false, null, null, null, null, null, null, false, null, null, false, "makulatlan", false }
+                    { 1, 0, 23, "20f4ed99-3ef4-4803-8413-9756d2d9437c", null, false, "Kiss", "Janos", false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEGT2URoRt8J+cLQlvg0KqpNknzyoB01QirMCmpytFc+7Gc7TxUw9knW60bcwEMu22w==", null, false, null, null, false, "kissjanos" },
+                    { 2, 0, 32, "6cecb6a6-86a3-4e4a-9d28-5b037f87e827", null, false, "Nagy", "Feró", false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAEDMW1JNs9EGfh4152VVEN0ff5FoygxBDI52pP0y+zqZv6UPUtDwWQ94EcJagqjt0yg==", null, false, null, null, false, "nagyfero" },
+                    { 3, 0, 43, "e7fa2c97-2b29-4439-84eb-a7aa945ee994", null, false, "Vicc", "Elek", false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEL7kHAjwRfU9IsJjAkecVmAj0cQimhfkpbOwLnZPC7/T7KC8RsQlJMO9xfYzBTRsBg==", null, false, null, null, false, "viccelek" },
+                    { 4, 0, 17, "f1eede45-5ab7-4a9b-9d80-e66f87a2380f", null, false, "Maku", "Látlan", false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEE2cuOrhtOC1UkajPwVsiU/OSJfMu+FgTNsXG5C8eKB6FO4J3+u8MjRnMtOlIPXd2A==", null, false, null, null, false, "makulatlan" }
                 });
 
             migrationBuilder.InsertData(
@@ -312,8 +330,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0a17d40c-6e88-435a-aa5e-0d7f64453a47", null, "Owner", "OWNER" },
-                    { "60df331a-9a3b-433d-86cb-5fc490dd8b0e", null, "PetSitter", "PETSITTER" }
+                    { "21cfba42-83b5-4102-a2e2-827c41e450dd", null, "PetSitter", "PETSITTER" },
+                    { "ff4d55c4-3db9-42c5-98ed-a016e655d322", null, "Owner", "OWNER" }
                 });
 
             migrationBuilder.InsertData(
@@ -322,7 +340,8 @@ namespace DataAccess.Migrations
                 values: new object[,]
                 {
                     { 1, "Available" },
-                    { 2, "Done" }
+                    { 2, "In progress" },
+                    { 3, "Done" }
                 });
 
             migrationBuilder.InsertData(
@@ -337,8 +356,13 @@ namespace DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "Pets",
-                columns: new[] { "ID", "Age", "Description", "Name", "Species", "UserId" },
-                values: new object[] { 1, 7, "Szep kutya", "Vakarcs", "Kutya", 3 });
+                columns: new[] { "ID", "Age", "Description", "Name", "Species", "UserID" },
+                values: new object[,]
+                {
+                    { 1, 7, "Szep kutya", "Vakarcs", "Kutya", 3 },
+                    { 2, 7, "Szep cica", "Miu", "Cica", 3 },
+                    { 3, 7, "Szep teknőc", "Teki", "Teknős", 3 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -401,9 +425,15 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pets_UserId",
+                name: "IX_PetImages_PetID",
+                table: "PetImages",
+                column: "PetID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pets_UserID",
                 table: "Pets",
-                column: "UserId");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PetSitterProfiles_UserID",
@@ -440,7 +470,7 @@ namespace DataAccess.Migrations
                 name: "OwnerProfiles");
 
             migrationBuilder.DropTable(
-                name: "Pets");
+                name: "PetImages");
 
             migrationBuilder.DropTable(
                 name: "PetSitterProfiles");
@@ -450,6 +480,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Statuses");
+
+            migrationBuilder.DropTable(
+                name: "Pets");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

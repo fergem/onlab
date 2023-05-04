@@ -38,6 +38,7 @@ export const usePostJobs = () => {
   const [postLocation, setPostLocation] = useState("");
   const [postDescription, setPostDescription] = useState("");
   const [postHours, setPostHours] = useState(0);
+  const [postPayment, setPostPayment] = useState(0);
 
   //const [postResult, setPostResult] = useState<string | null>(null);
   //esetleg error kidobása??
@@ -49,28 +50,23 @@ export const usePostJobs = () => {
     "query-jobs",
     async () => {
       return await JobService.createJob({
+        hours: postHours,
         location: postLocation,
         description: postDescription,
-        hours: postHours,
-        ownerUser: undefined, //ez a user
-        appliedUser: undefined,
-        status: {
-          id: 1,
-          name: "Available",
-        },
-      });
+        payment: postPayment,
+      } as Job);
     },
     {
       onSuccess: (res) => {
         setJob(res);
-        console.log(job);
       },
     }
   );
-  const setJobData = ({ hours, location, description }: Job) => {
+  const setJobData = ({ hours, location, description, payment }: Job) => {
     setPostLocation(location);
     setPostHours(hours);
     setPostDescription(description);
+    setPostPayment(payment);
   };
   return [job, setJobData, postJob] as const;
 };
@@ -94,7 +90,6 @@ export const useGetUserPostedJobs = () => {
       refetchOnWindowFocus: true,
       //enabled: false,
       onSuccess: (res) => {
-        console.log("shiker jobok leszedése");
         setJobs(res);
       },
       onError: (err) => {
@@ -125,7 +120,6 @@ export const useGetUserUnderTookJobs = () => {
       refetchOnWindowFocus: true,
       //enabled: false,
       onSuccess: (res) => {
-        console.log("shiker jobok leszedése");
         setJobs(res);
       },
       onError: (err) => {

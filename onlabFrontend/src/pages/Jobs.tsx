@@ -7,11 +7,11 @@ import {
   Spinner,
   Text,
   Button,
+  Wrap,
 } from "@chakra-ui/react";
 import { JobList } from "../components/JobList";
 import { useEffect } from "react";
 import { useGetAvailableJobs } from "../hooks/JobHooks";
-import { dummyJobs } from "../models/DummyData";
 
 export default function Jobs() {
   let jobItems = null;
@@ -44,12 +44,12 @@ export default function Jobs() {
   } else {
     if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
-  //console.log(jobItems);
+
   //jobItems = <JobList jobs={dummyJobs}></JobList>;
 
   return (
     <Flex
-      px="20%"
+      px="10%"
       direction="column"
       gap="7"
       py="2%"
@@ -65,33 +65,14 @@ export default function Jobs() {
           voluptatem voluptatibus magnam doloremque incidunt.
         </Text>
       </Flex>
-      <Flex direction="row" justifyContent="space-between">
-        <Card height="100%" boxSize="200px">
-          <CardBody>
-            <Heading as="h2" size="sm">
-              Search for:
-            </Heading>
-          </CardBody>
-        </Card>
-        <Flex
-          direction="column"
-          flexWrap="wrap"
-          px="5%"
-          flexGrow="1"
-          alignItems="center">
-          <Heading as="h2" size="md">
-            Available jobs
-          </Heading>
-          {!jobItems ? (
-            <Heading size="lg">
-              You've currently got no posted jobs. Consider posting one with the{" "}
-              <em>C</em> button.
-            </Heading>
-          ) : (
-            jobItems
-          )}
-        </Flex>
-      </Flex>
+      <Heading as="h2" size="md">
+        Available jobs
+      </Heading>
+      {jobs.length > 0 ? (
+        jobItems
+      ) : (
+        <Heading size="lg">There are currently no available jobs</Heading>
+      )}
     </Flex>
   );
 }
