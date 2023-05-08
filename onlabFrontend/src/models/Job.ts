@@ -11,3 +11,8 @@ export default interface Job {
   appliedUserInformation: UserInformation | undefined;
   status: Status;
 }
+
+export interface JobHoursRange {
+  minHours: number;
+  maxHours: number;
+}

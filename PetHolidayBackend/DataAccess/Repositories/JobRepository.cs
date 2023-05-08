@@ -1,5 +1,6 @@
 ﻿using DataAccess.DataObjects;
 using Domain.Models;
+using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -50,12 +51,13 @@ namespace DataAccess.Repositories
             return ModelMapper.ToJobModel(insertJob);
         }
 
-        public async Task<IReadOnlyCollection<Job>> List()
+        public async Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters)
         {
             return await dbcontext.Jobs
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
+                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
@@ -92,6 +94,29 @@ namespace DataAccess.Repositories
                 .Where(d => d.PetSitterUserID == userID)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
-        }   
+        }
+
+        public async Task<Job> TakeJob(int jobID, int userID)
+        {
+
+            var jobToTake = await dbcontext.Jobs
+                .Include(s => s.Status)
+                .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
+                .FirstAsync(s => s.ID == jobID);
+
+            if (jobToTake == null)
+                throw new Exception("There is no such job that you want to undertake");
+
+            var userToTakeJob = await dbcontext.Users.FindAsync(userID);
+            if (userToTakeJob == null)
+                throw new Exception("There is no such user to take job");
+
+            jobToTake.PetSitterUser = userToTakeJob;
+
+            await dbcontext.SaveChangesAsync();
+
+            return ModelMapper.ToJobModel(jobToTake);
+        }
     } 
 }

@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,9 +20,9 @@ namespace Domain.Services
             this.jobRepository = jobRepository;
             this.statusRepository = statusRepository;
         }
-        public async Task<IReadOnlyCollection<Job>> List()
+        public async Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters)
         {
-            return await jobRepository.List();
+            return await jobRepository.List(jobParameters);
         }
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID)
         {
@@ -44,6 +45,11 @@ namespace Domain.Services
         public async Task<Status> FindStatusById(int statusID)
         {
             return await statusRepository.FindById(statusID);
+        }
+
+        public async Task<Job> TakeJob(int jobID, int userID)
+        {
+            return await jobRepository.TakeJob(jobID, userID);
         }
     }
 }

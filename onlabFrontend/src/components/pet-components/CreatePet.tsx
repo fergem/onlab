@@ -8,20 +8,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Heading,
-  Spinner,
-  VStack,
 } from "@chakra-ui/react";
-import { Formik, Field } from "formik";
-import { useRef, useState } from "react";
-import { Form } from "react-router-dom";
-import { UserService } from "../services/UserService";
-
-import Pet from "../models/Pet";
+import { useRef } from "react";
 import CreatePetForm from "./CreatePetForm";
 
 export default function CreatePet() {

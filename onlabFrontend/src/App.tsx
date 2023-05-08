@@ -9,21 +9,16 @@ import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import OwnerProfile from "./pages/OwnerProfile";
 import PetSitterProfile from "./pages/PetSitterProfile";
 import Register from "./pages/Register";
-import User, { LoggedUser } from "./models/User";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  useState,
-} from "react";
-import { UserService } from "./services/UserService";
-import AuthService from "./services/AuthService";
+
+import { AuthContext } from "./context/AuthContext";
+import { useState } from "react";
+import User from "./models/User";
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
   return (
     <VStack align="stretch" minH="inherit">
-      <AuthService>
+      <AuthContext.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -35,7 +30,7 @@ function App() {
           <Route path="/undertookjobs" element={<PetSitterProfile />} />
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
-      </AuthService>
+      </AuthContext.Provider>
     </VStack>
   );
 }

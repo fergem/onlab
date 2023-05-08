@@ -7,10 +7,11 @@ import {
   Flex,
   WrapItem,
   Wrap,
+  useDisclosure,
 } from "@chakra-ui/react";
-import Job from "../models/Job";
-import { baseProfilePicture } from "../utility/constants";
-import { StatusBadge } from "./StatusBadge";
+import Job from "../../models/Job";
+import { baseProfilePicture } from "../../utility/constants";
+import JobDialog from "./JobDialog";
 
 interface IPropsJobCard {
   job: Job;
@@ -31,9 +32,10 @@ export const JobList: React.FC<IPropsJobList> = ({ jobs }) => {
 };
 
 const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <WrapItem>
-      <Card direction="row" my="2%" color="#505168" h="100%">
+      <Card my="2%" color="#505168" h="100%" onClick={onOpen}>
         <CardBody>
           <Image
             borderRadius="100"
@@ -45,17 +47,16 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
                 ? "data:image/png;base64," + job.ownerUserInformation.picture
                 : baseProfilePicture
             }
-            alt="Caffe Latte"
-            alignSelf="center"
+            alt="Job picture"
             mx="3vh"
             mb="2vh"
           />
           <Heading size="md">{job.ownerUserInformation.userName}'s job</Heading>
-          <Flex direction="column" alignItems="flex-start">
-            {/* <Heading size="sm"> Work hours: {job.hours}</Heading> */}
-            <Heading size="sm">{job.location}</Heading>
-            <Text py="2">{job.description}</Text>
+          <Flex direction="column" justifyContent="center" alignItems="center">
+            <Text size="sm"> {job.hours} hours of work</Text>
+            <Text size="sm">{job.location}</Text>
           </Flex>
+          <JobDialog job={job} onClose={onClose} isOpen={isOpen}></JobDialog>
         </CardBody>
       </Card>
     </WrapItem>

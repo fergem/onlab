@@ -1,16 +1,14 @@
 import { Button, Flex, Heading, Image, Spinner, Text } from "@chakra-ui/react";
-import { UserService } from "../services/UserService";
-import { useState, useEffect, useContext } from "react";
-import User from "../models/User";
-import { PetList } from "../components/PetList";
+import { useEffect } from "react";
 import { useGetUserPets } from "../hooks/UserHooks";
 import { WarningIcon } from "@chakra-ui/icons";
-import CreatePet from "../components/CreatePet";
+import CreatePet from "../components/pet-components/CreatePet";
 import ProfilePicture from "../components/ProfilePicture";
-import { UserContext } from "../services/AuthService";
+import { useAuth } from "../hooks/AuthHooks";
+import { PetList } from "../components/pet-components/PetList";
 
 export default function Profile() {
-  const { user } = useContext(UserContext);
+  const { user } = useAuth();
 
   let petItems = undefined;
   const [pets, error, loading, refetch] = useGetUserPets();
@@ -66,19 +64,19 @@ export default function Profile() {
             <b> Username:</b>
           </Text>
           <Text fontSize="xl">
-            {user.User.userName ?? "You've got no name consider adding one"}
+            {user?.userName ?? "You've got no name consider adding one"}
           </Text>
           <Text fontSize="xl">
             <b> First Name:</b>
           </Text>
           <Text fontSize="xl">
-            {user.User.firstName ?? "You've got no name consider adding one"}
+            {user?.firstName ?? "You've got no name consider adding one"}
           </Text>
           <Text fontSize="xl">
             <b> Last Name:</b>
           </Text>
           <Text fontSize="xl">
-            {user.User.lastName ?? "You've got no name consider adding one"}
+            {user?.lastName ?? "You've got no name consider adding one"}
           </Text>
         </Flex>
       </Flex>

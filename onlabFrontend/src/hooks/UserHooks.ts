@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useMutation, useQuery } from "react-query";
+import { AuthContext } from "../context/AuthContext";
 import Pet from "../models/Pet";
 import ImageUploadService from "../services/ImageUploadService";
 import { UserService } from "../services/UserService";
+import { useAuth } from "./AuthHooks";
 
 export const useGetUserPets = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -10,9 +12,8 @@ export const useGetUserPets = () => {
     isLoading: loading,
     refetch: listPets,
     isError: error,
-  } = useQuery<Pet[], Error>(
+  } = useQuery<any, Error>(
     "query-pets",
-
     async () => {
       const data = await UserService.getUserPets();
       return data;

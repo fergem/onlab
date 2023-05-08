@@ -1,9 +1,9 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex, Button, Box } from "@chakra-ui/react";
-import { JobList } from "../components/JobList";
 import { useGetUserPostedJobs } from "../hooks/JobHooks";
 import NavButton from "../components/NavButton";
 import { useEffect } from "react";
+import { JobList } from "../components/job-components/JobList";
 
 export default function OwnerProfile() {
   const [jobs, error, loading, refetch] = useGetUserPostedJobs();
@@ -35,7 +35,6 @@ export default function OwnerProfile() {
   } else {
     if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
-  console.log(jobs);
   return (
     <Flex
       px="20%"
@@ -56,7 +55,12 @@ export default function OwnerProfile() {
           Your posted jobs all time:
         </Heading>
         {jobs.length > 0 ? (
-          jobItems
+          <>
+            <NavButton
+              name="Create new petsitting job"
+              route="/createpetsitterjob"></NavButton>
+            {jobItems}
+          </>
         ) : (
           <Heading size="lg">
             You've currently got no posted jobs. Consider posting one with the{" "}

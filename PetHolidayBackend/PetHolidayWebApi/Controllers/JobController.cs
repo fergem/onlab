@@ -1,6 +1,8 @@
 ﻿using Domain.Models;
+using Domain.Models.QueryHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -20,9 +22,12 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IReadOnlyCollection<Job>> List()
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> List([FromQuery] JobParameters jobParameters)
         {
-            return await jobService.List();
+            if (!jobParameters.ValidHoursRange)
+                return BadRequest("Max hours cannot be less than min hours");
+
+            return Ok(await jobService.List(jobParameters));
         }
 
         [Authorize]
@@ -71,6 +76,17 @@ namespace PetHolidayWebApi.Controllers
                 BadRequest();
             var created = await jobService.Insert(job, userID);
             return CreatedAtAction(nameof(FindById), new { jobID = created.ID }, created);
+        }
+
+        [Authorize]
+        [HttpPut("takejob/{jobID}")]
+        public async Task<ActionResult<Job>> TakeJob([FromRoute] int jobID)
+        {
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            var underTookJob = await jobService.TakeJob(jobID, userID);
+            return CreatedAtAction(nameof(FindById), new { jobID = underTookJob.ID }, underTookJob);
         }
     }
 }

@@ -45,9 +45,9 @@ namespace PetHolidayWebApi.Controllers
 
             var result = await userService.Login(loginModel);
             var token = authService.GenerateToken(result.user, result.userRoles);
+            result.user.Bearer = token;
             return Ok(new
             {
-                bearer = token,
                 user = result.user,
                 Role = result.userRoles,
                 status = "User Login Successfully"

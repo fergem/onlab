@@ -9,6 +9,7 @@ export default interface User {
   email?: string;
   picture?: BinaryData[];
   pets?: Pet[];
+  bearer?: string;
 }
 
 export interface UserInformation {
@@ -18,9 +19,4 @@ export interface UserInformation {
   age?: number;
   email?: string;
   picture?: BinaryData[];
-}
-
-export interface LoggedUser {
-  bearer?: string;
-  User?: User;
 }

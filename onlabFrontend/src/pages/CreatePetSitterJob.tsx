@@ -13,9 +13,11 @@ import {
   NumberIncrementStepper,
   NumberInputStepper,
   FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { usePostJobs } from "../hooks/JobHooks";
 import { useGetUserPets } from "../hooks/UserHooks";
 import Job from "../models/Job";
@@ -29,12 +31,29 @@ export default function CreatePetSitterJob() {
     register,
     formState: { errors, isSubmitting },
   } = useForm<Job>();
-  const [job, setJobData, postJob] = usePostJobs();
-
+  const [job, error, setJobData, postJob] = usePostJobs();
+  const toast = useToast();
+  const navigate = useNavigate();
   const handleCreateJob = (job: Job) => {
     setJobData(job);
-    console.log(job);
     postJob();
+    if (!error) {
+      toast({
+        title: "Job created",
+        description: "You have succesfully created a job",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate("/postedjobs");
+    } else
+      toast({
+        title: "Job not created created",
+        description: "You have not succesfully created a job",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
   };
 
   return (

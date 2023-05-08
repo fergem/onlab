@@ -1,7 +1,7 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { JobList } from "../components/JobList";
+import { JobList } from "../components/job-components/JobList";
 import { useGetUserUnderTookJobs } from "../hooks/JobHooks";
 
 export default function PetSitterProfile() {

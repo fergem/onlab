@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.QueryHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,12 @@ namespace Domain.Repositories
 {
     public interface IJobRepository
     {
-        Task<IReadOnlyCollection<Job>> List();
+        Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters);
         Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
         Task<Job> Insert(Job job, int userID);
+        Task<Job> TakeJob(int jobID, int userID);
+
     }
 }

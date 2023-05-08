@@ -7,12 +7,9 @@ import {
   Select,
   FormControl,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import Pet from "../models/Pet";
-import { UserService } from "../services/UserService";
-import * as Yup from "yup";
-import ImageUpload from "./PetImageUpload";
 import { useForm } from "react-hook-form";
+import Pet from "../../models/Pet";
+import { UserService } from "../../services/UserService";
 
 export default function CreatePetForm() {
   const handleCreatePet = (pet: Pet) => {

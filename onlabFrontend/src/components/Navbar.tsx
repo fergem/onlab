@@ -1,13 +1,10 @@
-import { Flex, Spacer, Icon, Button, Link } from "@chakra-ui/react";
+import { Flex, Spacer, Icon, Button } from "@chakra-ui/react";
 import NavButton from "./NavButton";
-import { useState, useEffect, useContext } from "react";
-import User from "../models/User";
 import { UserService } from "../services/UserService";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { UserContext } from "../services/AuthService";
+import { useAuth } from "../hooks/AuthHooks";
 
 function Navbar() {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useAuth();
 
   return (
     <Flex
@@ -49,17 +46,15 @@ function Navbar() {
       <NavButton name="Home" route="/" />
       <NavButton name="Jobs" route="/jobs" />
       <Spacer />
-      {currentUser && <NavButton name="Posted jobs" route="/postedjobs" />}
-      {currentUser && (
-        <NavButton name="Undertook jobs" route="/undertookjobs" />
-      )}
+      {user && <NavButton name="Posted jobs" route="/postedjobs" />}
+      {user && <NavButton name="Undertook jobs" route="/undertookjobs" />}
       <Spacer />
-      {currentUser && <NavButton name="Profile" route="/profile" />}
-      {!!currentUser == false && (
+      {user && <NavButton name="Profile" route="/profile" />}
+      {!!user == false && (
         <NavButton name="Register" route="/register"></NavButton>
       )}
-      {!!currentUser == false && <NavButton name="Login" route="/login" />}
-      {currentUser && <Button onClick={UserService.logout}>Logout</Button>}
+      {!!user == false && <NavButton name="Login" route="/login" />}
+      {user && <Button onClick={logout}>Logout</Button>}
     </Flex>
   );
 }

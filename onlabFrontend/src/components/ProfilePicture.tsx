@@ -1,8 +1,11 @@
 import { Button, Flex, Image, Input } from "@chakra-ui/react";
 import { useState } from "react";
+import { useAuth } from "../hooks/AuthHooks";
 import { userProfilePictureUpload } from "../hooks/UserHooks";
+import { baseProfilePicture } from "../utility/constants";
 
 export default function ProfilePicture() {
+  const { user } = useAuth();
   const [fileSelected, setFileSelected, postProfilePicture] =
     userProfilePictureUpload();
 
@@ -21,7 +24,11 @@ export default function ProfilePicture() {
         boxSize="300px"
         objectFit="cover"
         mr="3rem"
-        src=""
+        src={
+          user?.picture
+            ? "data:image/png;base64," + user.picture
+            : baseProfilePicture
+        }
         alt="Your Profile Picture"
       />
       <input type="file" accept="image/*" onChange={saveFileSelected} />

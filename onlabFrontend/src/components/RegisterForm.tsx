@@ -18,9 +18,11 @@ import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { UserService } from "../services/UserService";
 import { Form, Formik, Field } from "formik";
+import { useAuth } from "../hooks/AuthHooks";
 
 export default function RegisterForm() {
   let navigate: NavigateFunction = useNavigate();
+  const { register } = useAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -50,7 +52,7 @@ export default function RegisterForm() {
     setMessage("");
     setLoading(true);
 
-    UserService.register(username, email, password).then(
+    register(username, email, password).then(
       () => {
         navigate("/login");
         window.location.reload();

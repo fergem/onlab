@@ -15,11 +15,12 @@ import { Formik, Field, ErrorMessage, Form } from "formik";
 import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { useAuth } from "../hooks/AuthHooks";
 import { UserService } from "../services/UserService";
 
 export default function LoginForm() {
   let navigate: NavigateFunction = useNavigate();
-
+  const { login } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
 
@@ -44,10 +45,10 @@ export default function LoginForm() {
     setMessage("");
     setLoading(true);
 
-    UserService.login(username, password).then(
+    login(username, password).then(
       () => {
-        navigate("/profile");
-        window.location.reload();
+        // navigate("/profile");
+        // window.location.reload();
       },
       (error) => {
         const resMessage =

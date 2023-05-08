@@ -1,24 +1,17 @@
 import { WarningIcon } from "@chakra-ui/icons";
-import {
-  Card,
-  CardBody,
-  Flex,
-  Heading,
-  Spinner,
-  Text,
-  Button,
-  Wrap,
-} from "@chakra-ui/react";
-import { JobList } from "../components/JobList";
-import { useEffect } from "react";
+import { Flex, Heading, Spinner, Text, Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import JobFilter from "../components/job-components/JobFilter";
+import { JobList } from "../components/job-components/JobList";
 import { useGetAvailableJobs } from "../hooks/JobHooks";
 
 export default function Jobs() {
   let jobItems = null;
-  const [jobs, error, loading, refetch] = useGetAvailableJobs();
+  const [hoursRangeFilter, setHoursRangeFilter] = useState<string>("");
+  const [jobs, error, loading, refetch] = useGetAvailableJobs(hoursRangeFilter);
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
   if (loading) {
     jobItems = (
       <>
@@ -54,7 +47,8 @@ export default function Jobs() {
       gap="7"
       py="2%"
       textAlign="center"
-      h="inherit">
+      h="inherit"
+      alignItems="center">
       <Heading as="h1">How does it work?</Heading>
       <Flex justify="space-between" px="10%">
         <Text fontSize="lg">
@@ -65,6 +59,9 @@ export default function Jobs() {
           voluptatem voluptatibus magnam doloremque incidunt.
         </Text>
       </Flex>
+      <JobFilter
+        setHoursRangeFilter={setHoursRangeFilter}
+        refetch={refetch}></JobFilter>
       <Heading as="h2" size="md">
         Available jobs
       </Heading>

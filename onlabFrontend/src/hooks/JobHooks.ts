@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query";
 import { JobService } from "../services/JobService";
 import Job from "../models/Job";
 
-export const useGetAvailableJobs = () => {
+export const useGetAvailableJobs = (hoursRangeFilter: string) => {
   const [jobs, setJobs] = useState<Job[]>([]);
 
   const {
@@ -13,15 +13,16 @@ export const useGetAvailableJobs = () => {
   } = useQuery<Job[], Error>(
     "query-jobs",
     async () => {
-      const data = JobService.list();
+      const data = JobService.list(hoursRangeFilter);
       return data;
     },
     {
       refetchOnMount: true,
       refetchInterval: 6000,
       refetchOnWindowFocus: true,
-      //enabled: false,
+
       onSuccess: (res) => {
+        console.log(res);
         setJobs(res);
       },
       onError: (err) => {
@@ -68,7 +69,7 @@ export const usePostJobs = () => {
     setPostDescription(description);
     setPostPayment(payment);
   };
-  return [job, setJobData, postJob] as const;
+  return [job, error, setJobData, postJob] as const;
 };
 
 export const useGetUserPostedJobs = () => {
@@ -90,6 +91,7 @@ export const useGetUserPostedJobs = () => {
       refetchOnWindowFocus: true,
       //enabled: false,
       onSuccess: (res) => {
+        console.log(res);
         setJobs(res);
       },
       onError: (err) => {
