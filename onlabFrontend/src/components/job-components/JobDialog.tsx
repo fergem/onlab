@@ -84,6 +84,7 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
               ) : (
                 <Button onClick={handleTakeJob}>Take Job</Button>
               )}
+              <Text>{job.status.name} status</Text>
             </Flex>
           </Flex>
         </ModalBody>

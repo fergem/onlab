@@ -22,6 +22,11 @@ const listUsersUndertookJobs = async () => {
   return response.data;
 };
 
+const listApprovals = async () => {
+  const response = await axios.get<Job[]>("/api/jobs/approvals");
+  return response.data;
+};
+
 const createJob = async ({ hours, location, description, payment }: Job) => {
   console.log({ hours, location, description, payment });
   const response = await axios.post<any>("/api/jobs", {
@@ -44,12 +49,12 @@ const takeJob = async (id: number) => {
 };
 
 const approveJob = async (id: number) => {
-  const response = await axios.put<Job>("/api/jobs/approvejob" + id);
+  const response = await axios.put<Job>("/api/jobs/approvejob/" + id);
   return response.data;
 };
 
-const declineUser = async (id: number) => {
-  const response = await axios.put<Job>("/api/jobs/declineUser" + id);
+const declineJob = async (id: number) => {
+  const response = await axios.put<Job>("/api/jobs/declineUser/" + id);
   return response.data;
 };
 
@@ -61,5 +66,6 @@ export const JobService = {
   getJobStatus,
   takeJob,
   approveJob,
-  declineUser,
+  declineJob,
+  listApprovals,
 };

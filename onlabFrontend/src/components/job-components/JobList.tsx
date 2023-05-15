@@ -9,16 +9,15 @@ import {
   Wrap,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useAuth } from "../../hooks/AuthHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
 import JobDialog from "./JobDialog";
 
-interface IPropsJobCard {
+export interface IPropsJobCard {
   job: Job;
 }
 
-interface IPropsJobList {
+export interface IPropsJobList {
   jobs: Job[];
 }
 

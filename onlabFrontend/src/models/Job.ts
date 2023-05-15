@@ -8,7 +8,7 @@ export default interface Job {
   description: string;
   payment: number;
   ownerUserInformation: UserInformation;
-  appliedUserInformation: UserInformation | undefined;
+  petSitterUserInformation: UserInformation | undefined;
   status: Status;
 }
 

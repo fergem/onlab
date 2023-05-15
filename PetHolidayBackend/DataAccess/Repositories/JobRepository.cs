@@ -59,6 +59,7 @@ namespace DataAccess.Repositories
                 .FirstOrDefaultAsync(s => s.Name == (DbStatusName)Enum.Parse(typeof(DbStatusName), jobParameters.JobStatus.ToString()));
             if (dbStatus == null)
                 throw new Exception("Status doesnt exist");
+            
             return await dbcontext.Jobs
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
@@ -70,11 +71,23 @@ namespace DataAccess.Repositories
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobParameters jobParameters)
         {
+            if (jobParameters.JobStatus == StatusName.Empty)
+            {
+                return await dbcontext.Jobs
+                .Include(s => s.Status)
+                .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
+                .Where(s => s.OwnerUserID == userID && s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
+                .Select(s => ModelMapper.ToJobModel(s))
+                .ToListAsync();
+            }
+
             var dbStatus = await dbcontext
                 .Statuses
                 .FirstOrDefaultAsync(s => s.Name == (DbStatusName)Enum.Parse(typeof(DbStatusName), jobParameters.JobStatus.ToString()));
             if (dbStatus == null)
                 throw new Exception("Status doesnt exist");
+            
             return await dbcontext.Jobs
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
@@ -82,6 +95,16 @@ namespace DataAccess.Repositories
                 .Where(s => s.OwnerUserID == userID && s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == dbStatus.Name)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
+        }
+        public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
+        {
+            return await dbcontext.Jobs
+               .Include(s => s.Status)
+               .Include(s => s.OwnerUser)
+               .Include(s => s.PetSitterUser)
+               .Where(s => s.OwnerUserID == userID && s.Status.Name == DbStatusName.WaitingForApproval && s.PetSitterUserID != null)
+               .Select(s => ModelMapper.ToJobModel(s))
+               .ToListAsync();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)

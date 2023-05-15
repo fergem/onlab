@@ -20,6 +20,7 @@ namespace DataAccess.DataObjects
 
     public enum DbStatusName
     {
+        Empty,
         Available,
         WaitingForApproval,
         Inprogress,

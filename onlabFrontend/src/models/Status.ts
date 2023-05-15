@@ -4,6 +4,7 @@ export default interface Status {
 }
 
 export enum StatusName {
+  Empty = "Empty",
   Available = "Available",
   WaitingForApproval = "WaitingForApproval",
   Inprogress = "Inprogress",

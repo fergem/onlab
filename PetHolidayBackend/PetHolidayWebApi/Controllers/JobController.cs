@@ -26,7 +26,7 @@ namespace PetHolidayWebApi.Controllers
         {
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
-            if (!jobParameters.validJobStatus)
+            if (!jobParameters.ValidJobStatus)
                 return BadRequest("Requested status doesnt exist");
 
             return Ok(await jobService.List(jobParameters));
@@ -41,9 +41,19 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest("There is no such user with this Bearer");
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
-            if (!jobParameters.validJobStatus)
+            if (!jobParameters.ValidJobStatus)
                 return BadRequest("Requested status doesnt exist");
             return Ok(await jobService.ListPostedJobs(userID, jobParameters));
+        }
+
+        [Authorize]
+        [HttpGet("approvals")]
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListApprovals()
+        {
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                return BadRequest("There is no such user with this Bearer");
+            return Ok(await jobService.ListApprovals(userID));
         }
 
         [Authorize]
@@ -59,7 +69,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet("{jobID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> FindById([FromRoute] int jobID)
+        public async Task<ActionResult<User>> FindById([FromRoute] int jobID) 
         {
             var value = await jobService.FindById(jobID);
             return value != null ? Ok() : NotFound(); ;
@@ -83,6 +93,7 @@ namespace PetHolidayWebApi.Controllers
             var created = await jobService.Insert(job, userID);
             return CreatedAtAction(nameof(FindById), new { jobID = created.ID }, created);
         }
+
 
         [Authorize]
         [HttpPut("takejob/{jobID}")]

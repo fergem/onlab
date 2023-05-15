@@ -1,10 +1,11 @@
 import { CheckIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex, Button, Box } from "@chakra-ui/react";
-import { useGetUserPostedJobs } from "../hooks/JobHooks";
+import { useGetApprovals, useGetUserPostedJobs } from "../hooks/JobHooks";
 import NavButton from "../components/NavButton";
 import { useEffect } from "react";
 import { JobList } from "../components/job-components/JobList";
 import { StatusName } from "../models/Status";
+import { JobApprovalList } from "../components/job-components/JobApprovalList";
 
 export default function OwnerProfile() {
   const [jobs, error, loading, refetch] = useGetUserPostedJobs({
@@ -12,12 +13,15 @@ export default function OwnerProfile() {
       minHours: 0,
       maxHours: 12,
     },
-    statusName: StatusName.Available,
+    statusName: StatusName.Empty,
   });
+  const [approvals, e, l, refetchApprovals] = useGetApprovals();
   useEffect(() => {
     refetch();
+    refetchApprovals();
   }, []);
   let jobItems = null;
+  let jobsToApprove = null;
   if (loading) {
     jobItems = (
       <>
@@ -40,8 +44,11 @@ export default function OwnerProfile() {
       </>
     );
   } else {
-    if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
+    if (!!jobs) {
+      jobItems = <JobList jobs={jobs}></JobList>;
+    }
   }
+  jobsToApprove = <JobApprovalList jobs={approvals}></JobApprovalList>;
 
   return (
     <Flex
@@ -51,18 +58,11 @@ export default function OwnerProfile() {
       py="2%"
       textAlign="center"
       h="inherit">
-      <Flex>
-        <Heading as="h2" size="md">
-          Your pending job approvals, please select the{" "}
-          <Button>
-            <CheckIcon></CheckIcon>
-          </Button>{" "}
-          if you think the petsitter wanting to do the job is ok for you,
-          otherwise click on the{" "}
-          <Button>
-            <CloseIcon></CloseIcon>
-          </Button>
-        </Heading>
+      <Heading as="h2" size="md">
+        Your pending job approvals
+      </Heading>
+      <Flex direction="column" flexWrap="wrap" alignItems="center">
+        {jobsToApprove}
       </Flex>
       <Flex direction="column" flexWrap="wrap" alignItems="center">
         <Box m="2%">

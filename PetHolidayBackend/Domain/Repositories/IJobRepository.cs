@@ -12,6 +12,7 @@ namespace Domain.Repositories
     {
         Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters);
         Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobParameters jobParameters);
+        Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
         Task<Job> Insert(Job job, int userID);

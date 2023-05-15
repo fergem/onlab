@@ -16,6 +16,7 @@ namespace Domain.Models
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum StatusName
     {
+        Empty,
         Available,
         WaitingForApproval,
         Inprogress,

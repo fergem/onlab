@@ -28,6 +28,10 @@ namespace Domain.Services
         {
             return await jobRepository.ListPostedJobs(userID, jobParameters);
         }
+        public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
+        {
+            return await jobRepository.ListApprovals(userID);
+        }
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
         {
             return await jobRepository.ListUnderTookJobs(userID);

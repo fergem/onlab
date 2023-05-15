@@ -32,6 +32,33 @@ export const useGetJobs = (jobParameters: JobParameters) => {
   return [jobs, error, loading, listJobs] as const;
 };
 
+export const useGetApprovals = () => {
+  const [approvals, setApprovals] = useState<Job[]>([]);
+  const {
+    isLoading: loading,
+    refetch: listApprovals,
+    isError: error,
+  } = useQuery<Job[], Error>(
+    "query-approvals",
+    async () => {
+      const data = JobService.listApprovals();
+      return data;
+    },
+    {
+      refetchOnMount: true,
+      refetchInterval: 6000,
+      refetchOnWindowFocus: true,
+
+      onSuccess: (res) => {
+        setApprovals(res);
+      },
+      onError: (err) => {},
+    }
+  );
+
+  return [approvals, error, loading, listApprovals] as const;
+};
+
 export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const {
@@ -107,7 +134,7 @@ export const useTakeJob = () => {
 export const useApproveJob = () => {
   //const toast = useToast({ duration: 5000, isClosable: true });
   const {
-    isLoading: isTakingJob,
+    isLoading: isApproveingJob,
     mutate: approveJob,
     isError: error,
   } = useMutation<any, Error, number>(
@@ -124,7 +151,30 @@ export const useApproveJob = () => {
     }
   );
 
-  return [approveJob, isTakingJob, error] as const;
+  return [approveJob, isApproveingJob, error] as const;
+};
+
+export const useDeclineJob = () => {
+  //const toast = useToast({ duration: 5000, isClosable: true });
+  const {
+    isLoading: isDecliningJob,
+    mutate: declineJob,
+    isError: error,
+  } = useMutation<any, Error, number>(
+    "mutate-approveJob",
+    async (id: number) => {
+      if (id !== null) {
+        const asd = await JobService.declineJob(id);
+        return asd;
+      }
+    },
+    {
+      onSuccess: (res) => {},
+      onError: (err: any) => {},
+    }
+  );
+
+  return [declineJob, isDecliningJob, error] as const;
 };
 
 export const usePostJobs = () => {

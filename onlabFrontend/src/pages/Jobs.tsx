@@ -63,8 +63,7 @@ export default function Jobs() {
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum
           dolor sit amet consectetur adipisicing elit. Provident iusto
           quibusdam, fugiat eius, similique accusantium possimus alias neque
-          cupiditate porro molestiae dolore sunt! Necessitatibus sapiente
-          voluptatem voluptatibus magnam doloremque incidunt.
+          cupiditate porro molestiae dolore sunt!
         </Text>
       </Flex>
       <JobFilter
