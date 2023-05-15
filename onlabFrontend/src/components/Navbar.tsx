@@ -4,7 +4,7 @@ import { UserService } from "../services/UserService";
 import { useAuth } from "../hooks/AuthHooks";
 
 function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, logoutUser } = useAuth();
 
   return (
     <Flex
@@ -54,7 +54,7 @@ function Navbar() {
         <NavButton name="Register" route="/register"></NavButton>
       )}
       {!!user == false && <NavButton name="Login" route="/login" />}
-      {user && <Button onClick={logout}>Logout</Button>}
+      {user && <Button onClick={logoutUser}>Logout</Button>}
     </Flex>
   );
 }

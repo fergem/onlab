@@ -1,14 +1,19 @@
+import { JobParameters } from "./../models/Job";
 import axios from "axios";
 import Job from "../models/Job";
 import Status from "../models/Status";
 
-const list = async (hoursRange: string) => {
-  const response = await axios.get<Job[]>(`/api/jobs?${hoursRange}`);
+const list = async (jobParameters: JobParameters) => {
+  const response = await axios.get<Job[]>(
+    `/api/jobs?minhours=${jobParameters.jobHoursRange.minHours}&maxhours=${jobParameters.jobHoursRange.maxHours}&jobstatus=${jobParameters.statusName}`
+  );
   return response.data;
 };
 
-const listUsersPostedJobs = async () => {
-  const response = await axios.get<Job[]>("/api/jobs/posted");
+const listUsersPostedJobs = async (jobParameters: JobParameters) => {
+  const response = await axios.get<Job[]>(
+    `/api/jobs/posted?minhours=${jobParameters.jobHoursRange.minHours}&maxhours=${jobParameters.jobHoursRange.maxHours}&jobstatus=${jobParameters.statusName}`
+  );
   return response.data;
 };
 
@@ -18,6 +23,7 @@ const listUsersUndertookJobs = async () => {
 };
 
 const createJob = async ({ hours, location, description, payment }: Job) => {
+  console.log({ hours, location, description, payment });
   const response = await axios.post<any>("/api/jobs", {
     hours,
     location,
@@ -37,6 +43,16 @@ const takeJob = async (id: number) => {
   return response.data;
 };
 
+const approveJob = async (id: number) => {
+  const response = await axios.put<Job>("/api/jobs/approvejob" + id);
+  return response.data;
+};
+
+const declineUser = async (id: number) => {
+  const response = await axios.put<Job>("/api/jobs/declineUser" + id);
+  return response.data;
+};
+
 export const JobService = {
   list,
   createJob,
@@ -44,4 +60,6 @@ export const JobService = {
   listUsersUndertookJobs,
   getJobStatus,
   takeJob,
+  approveJob,
+  declineUser,
 };

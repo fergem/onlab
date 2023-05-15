@@ -13,8 +13,16 @@ namespace DataAccess.DataObjects
             this.Jobs = new HashSet<DbJob>();
         }
         public int ID { get; set; }
-        public required string Name { get; set; }
+        public required DbStatusName Name { get; set; }
 
         public virtual ICollection<DbJob> Jobs { get; set; }
+    }
+
+    public enum DbStatusName
+    {
+        Available,
+        WaitingForApproval,
+        Inprogress,
+        Done,
     }
 }

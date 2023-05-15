@@ -22,11 +22,10 @@ namespace DataAccess
                 Age = job.OwnerUser.Age,
                 Email = job.OwnerUser.Email,
             };
-            var status = new Status()
-            {
-                ID = job.Status.ID,
-                Name = job.Status.Name,
-            };
+            var status = ToStatusModel(job.Status);
+            if (status == null)
+                throw new Exception("Status doesnt exist");
+
             if (job.PetSitterUser != null)
             {
                 var petSitterInformation = new UserInformation()
@@ -110,6 +109,11 @@ namespace DataAccess
                 ID = image.ID,
                 Picture = image.Picture,
             };
+        }
+
+        internal static Status ToStatusModel(DbStatus status)
+        {
+            return new Status() { ID = status.ID, Name = (StatusName)Enum.Parse(typeof(StatusName), status.Name.ToString()) };
         }
     }
 }

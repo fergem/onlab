@@ -1,61 +1,31 @@
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
   FormControl,
   FormLabel,
   Input,
   Button,
-  Box,
-  Checkbox,
   Flex,
   FormErrorMessage,
-  Heading,
-  Spinner,
-  VStack,
+  Card,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { UserService } from "../services/UserService";
-import { Form, Formik, Field } from "formik";
 import { useAuth } from "../hooks/AuthHooks";
+import User, { RegisterModel } from "../models/User";
 
 export default function RegisterForm() {
   let navigate: NavigateFunction = useNavigate();
-  const { register } = useAuth();
+  const { registerUser } = useAuth();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterModel>();
 
-  const validationSchema = Yup.object().shape({
-    username: Yup.string().required("This field is required!"),
-    email: Yup.string().required("This field is required!"),
-    password: Yup.string().required("This field is required!"),
-  });
-
-  const initialValues: {
-    username: string;
-    password: string;
-    email: string;
-  } = {
-    username: "",
-    password: "",
-    email: "",
-  };
-
-  const handleRegister = (formValue: {
-    username: string;
-    email: string;
-    password: string;
-  }) => {
-    const { username, email, password } = formValue;
-    setMessage("");
-    setLoading(true);
-
-    register(username, email, password).then(
+  const handleRegister = (registerModel: RegisterModel) => {
+    registerUser(registerModel).then(
       () => {
         navigate("/login");
-        window.location.reload();
       },
       (error) => {
         const resMessage =
@@ -64,49 +34,74 @@ export default function RegisterForm() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        setLoading(false);
-        setMessage(resMessage);
       }
     );
   };
 
   return (
-    <Flex align="center" justify="center">
-      <Box bg="white" p={6} rounded="md" w={64}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleRegister}
-          validationSchema={validationSchema}>
-          <Form>
-            <VStack spacing={4} align="flex-start">
-              <FormControl>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Field as={Input} name="email" type="email" />
-                <FormErrorMessage>{message}</FormErrorMessage>
+    <Flex justify="center" textAlign="center" alignItems="center">
+      <Card
+        boxShadow="dark-lg"
+        borderRadius="xl"
+        color="#505168"
+        boxSize="fit-content"
+        p="10%">
+        <form onSubmit={handleSubmit(handleRegister)}>
+          <Flex
+            direction="row"
+            alignItems="center"
+            justifyContent="space-evenly">
+            <Flex direction="column">
+              <FormControl isInvalid={!!errors.email}>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  id="email"
+                  placeholder="email"
+                  type="email"
+                  {...register("email", {
+                    required: "This is required",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="username">Username</FormLabel>
-                <Field as={Input} name="username" type="text" />
+              <FormControl isInvalid={!!errors.userName}>
+                <FormLabel>Username</FormLabel>
+                <Input
+                  id="userName"
+                  placeholder="Username"
+                  {...register("userName", {
+                    required: "This is required",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.userName && errors.userName.message}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Field as={Input} name="password" type="password" />
-                <FormErrorMessage>{message}</FormErrorMessage>
+              <FormControl isInvalid={!!errors.password}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  id="password"
+                  placeholder="Password"
+                  type="password"
+                  {...register("password", {
+                    required: "This is required",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="purple" width="full">
-                {loading ? (
-                  <Spinner boxSize="20px" alignSelf="center" />
-                ) : (
-                  <Heading as="h6" size="md">
-                    Register
-                  </Heading>
-                )}
+
+              <Button mt={4} type="submit" isLoading={isSubmitting}>
+                Submit
               </Button>
-            </VStack>
-          </Form>
-        </Formik>
-      </Box>
+            </Flex>
+          </Flex>
+          <FormControl></FormControl>
+        </form>
+      </Card>
     </Flex>
   );
 }

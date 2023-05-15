@@ -10,7 +10,11 @@ import {
   Image,
   Text,
   Box,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
+import { useAuth } from "../../hooks/AuthHooks";
+import { useTakeJob } from "../../hooks/JobHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
 
@@ -21,11 +25,19 @@ interface JobDialog {
 }
 
 const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
+  const [takeJob, error, loading] = useTakeJob();
+  const { user } = useAuth();
+  const handleTakeJob = () => {
+    takeJob(job.id);
+    if (!error) onClose();
+  };
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{job.ownerUserInformation.userName}'s job</ModalHeader>
+        <ModalHeader>
+          {job.ownerUserInformation.userName ?? ""}'s job
+        </ModalHeader>
         <ModalCloseButton />
         <Divider colorScheme="cyan" />
         <ModalBody>
@@ -67,6 +79,11 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
             <Flex direction="column" justifyContent="center" w="50%">
               <Text>Description: </Text>
               <Text>{job.description}</Text>
+              {user?.userName === job.ownerUserInformation.userName ? (
+                <></>
+              ) : (
+                <Button onClick={handleTakeJob}>Take Job</Button>
+              )}
             </Flex>
           </Flex>
         </ModalBody>

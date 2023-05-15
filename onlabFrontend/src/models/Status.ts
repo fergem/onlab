@@ -1,4 +1,11 @@
 export default interface Status {
   id: number;
-  name: string;
+  name: StatusName;
+}
+
+export enum StatusName {
+  Available = "Available",
+  WaitingForApproval = "WaitingForApproval",
+  Inprogress = "Inprogress",
+  Done = "Done",
 }

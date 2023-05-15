@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 
 namespace DataAccess
@@ -68,7 +69,7 @@ namespace DataAccess
             {
                 entity.ToTable("Statuses");
                 entity.HasKey(s => s.ID);
-                entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true); ;
+                entity.Property(s => s.Name).HasConversion(new EnumToStringConverter<DbStatusName>());
             });
 
             modelBuilder.Entity<DbPetImage>(entity =>
@@ -229,17 +230,22 @@ namespace DataAccess
                     new DbStatus()
                     {
                         ID = 1,
-                        Name = "Available" 
+                        Name = DbStatusName.Available 
                     },
                     new DbStatus()
                     {
                         ID = 2,
-                        Name = "In progress"
+                        Name = DbStatusName.WaitingForApproval
                     },
                     new DbStatus()
                     {
                         ID = 3,
-                        Name = "Done"
+                        Name = DbStatusName.Inprogress
+                    },
+                    new DbStatus()
+                    {
+                        ID = 4,
+                        Name = DbStatusName.Done
                     }
                 );
             modelBuilder.Entity<DbJob>()
@@ -250,9 +256,9 @@ namespace DataAccess
                         Hours = 4,
                         Location = "Szeged",
                         Description = "Kutyára kell vigyázni",
-                        StatusID = 2,
+                        StatusID = 1,
                         OwnerUserID = 1,
-                        PetSitterUserID = 2,
+                        PetSitterUserID = null,
                         Payment = 10,
                     },
                     new DbJob()
@@ -261,9 +267,9 @@ namespace DataAccess
                         Hours = 3,
                         Location = "Szolnok",
                         Description = "Cicára kell vigyázni",
-                        StatusID = 2,
+                        StatusID = 1,
                         OwnerUserID = 2,
-                        PetSitterUserID = 1,
+                        PetSitterUserID = null,
                         Payment = 20,
                     },
                     new DbJob()
@@ -274,7 +280,7 @@ namespace DataAccess
                         Description = "Teknőcre kell vigyázni",
                         StatusID = 1,
                         OwnerUserID = 3,
-                        PetSitterUserID = 4,
+                        PetSitterUserID = null,
                         Payment = 30,
                     }
                 );

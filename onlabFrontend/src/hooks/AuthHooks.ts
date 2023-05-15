@@ -1,7 +1,8 @@
+import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import User from "../models/User";
+import User, { LoginModel, RegisterModel } from "../models/User";
 import { AuthService } from "../services/AuthService";
 
 export const useLocalStorage = () => {
@@ -51,31 +52,30 @@ export const useAuth = () => {
   useEffect(() => {
     const user = getItem("user");
     if (user) {
-      addUser(JSON.parse(user));
+      const contextUser = JSON.parse(user);
+      addUser(contextUser);
+      axios.defaults.headers.common["Authorization"] =
+        "Bearer " + contextUser.bearer;
     }
   }, []);
 
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
-    await AuthService.register(username, email, password);
+  const registerUser = async (registerModel: RegisterModel) => {
+    await AuthService.register(registerModel);
     navigate("/login");
   };
 
-  const login = async (username: string, password: string) => {
-    const userData = await AuthService.login(username, password);
+  const loginUser = async (loginModel: LoginModel) => {
+    const userData = await AuthService.login(loginModel);
     addUser(userData.user);
     navigate("/profile");
   };
 
-  const logout = async () => {
+  const logoutUser = async () => {
     if (user)
       //await AuthService.logout(authHeader());
       removeUser();
     navigate("/");
   };
 
-  return { user, register, login, logout };
+  return { user, registerUser, loginUser, logoutUser };
 };

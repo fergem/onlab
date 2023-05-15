@@ -5,8 +5,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
-  Image,
   NumberInput,
   NumberInputField,
   NumberDecrementStepper,
@@ -15,15 +13,12 @@ import {
   FormErrorMessage,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { usePostJobs } from "../hooks/JobHooks";
-import { useGetUserPets } from "../hooks/UserHooks";
+
 import Job from "../models/Job";
-import User from "../models/User";
-import { UserService } from "../services/UserService";
-import { baseDogPicture } from "../utility/constants";
 
 export default function CreatePetSitterJob() {
   const {
@@ -31,29 +26,31 @@ export default function CreatePetSitterJob() {
     register,
     formState: { errors, isSubmitting },
   } = useForm<Job>();
-  const [job, error, setJobData, postJob] = usePostJobs();
+  const [job, error, postJob] = usePostJobs();
   const toast = useToast();
   const navigate = useNavigate();
   const handleCreateJob = (job: Job) => {
-    setJobData(job);
-    postJob();
-    if (!error) {
-      toast({
-        title: "Job created",
-        description: "You have succesfully created a job",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      navigate("/postedjobs");
-    } else
-      toast({
-        title: "Job not created created",
-        description: "You have not succesfully created a job",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+    postJob(job, {
+      onSuccess() {
+        toast({
+          title: "Job created",
+          description: "You have succesfully created a job",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate("/postedjobs");
+      },
+      onError(error) {
+        toast({
+          title: "Job not created created",
+          description: "You have not succesfully created a job",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      },
+    });
   };
 
   return (
@@ -77,15 +74,6 @@ export default function CreatePetSitterJob() {
               borderRadius="lg"
             /> */}
             <Flex direction="column">
-              {/* <FormControl>
-                <Select
-                  placeholder="Select option"
-                  {...register("pets", { required: "Please select one" })}>
-                  <option value="dog">Dog</option> majd petek .mapelve
-                  <option value="cat">Cat</option>
-                  <option value="turtle">Turtle</option>
-                </Select>
-              </FormControl> */}
               <FormControl isInvalid={!!errors.hours}>
                 <FormLabel>Work of hours</FormLabel>
                 <NumberInput defaultValue={1} min={1} max={12}>

@@ -3,15 +3,23 @@ import { Flex, Heading, Spinner, Text, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import JobFilter from "../components/job-components/JobFilter";
 import { JobList } from "../components/job-components/JobList";
-import { useGetAvailableJobs } from "../hooks/JobHooks";
+import { useGetJobs } from "../hooks/JobHooks";
+import { JobParameters } from "../models/Job";
+import { StatusName } from "../models/Status";
 
 export default function Jobs() {
   let jobItems = null;
-  const [hoursRangeFilter, setHoursRangeFilter] = useState<string>("");
-  const [jobs, error, loading, refetch] = useGetAvailableJobs(hoursRangeFilter);
+  const [jobFilter, setJobFilter] = useState<JobParameters>({
+    jobHoursRange: {
+      minHours: 0,
+      maxHours: 12,
+    },
+    statusName: StatusName.Available,
+  });
+  const [jobs, error, loading, refetch] = useGetJobs(jobFilter);
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, []);
   if (loading) {
     jobItems = (
       <>
@@ -60,7 +68,8 @@ export default function Jobs() {
         </Text>
       </Flex>
       <JobFilter
-        setHoursRangeFilter={setHoursRangeFilter}
+        jobFilter={jobFilter}
+        setJobFilter={setJobFilter}
         refetch={refetch}></JobFilter>
       <Heading as="h2" size="md">
         Available jobs

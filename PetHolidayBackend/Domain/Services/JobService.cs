@@ -24,9 +24,9 @@ namespace Domain.Services
         {
             return await jobRepository.List(jobParameters);
         }
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID)
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobParameters jobParameters)
         {
-            return await jobRepository.ListPostedJobs(userID);
+            return await jobRepository.ListPostedJobs(userID, jobParameters);
         }
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
         {
@@ -50,6 +50,15 @@ namespace Domain.Services
         public async Task<Job> TakeJob(int jobID, int userID)
         {
             return await jobRepository.TakeJob(jobID, userID);
+        }
+
+        public async Task<Job> ApproveUser(int jobID)
+        {
+            return await jobRepository.ApproveUser(jobID);
+        }
+        public async Task<Job> DeclineUser(int jobID)
+        {
+            return await jobRepository.DeclineUser(jobID);
         }
     }
 }

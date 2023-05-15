@@ -1,8 +1,8 @@
-import Status from "./Status";
+import Status, { StatusName } from "./Status";
 import { UserInformation } from "./User";
 
 export default interface Job {
-  id?: number;
+  id: number;
   hours: number;
   location: string;
   description: string;
@@ -15,4 +15,9 @@ export default interface Job {
 export interface JobHoursRange {
   minHours: number;
   maxHours: number;
+}
+
+export interface JobParameters {
+  jobHoursRange: JobHoursRange;
+  statusName: StatusName;
 }

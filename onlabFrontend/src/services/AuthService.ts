@@ -1,10 +1,11 @@
 import axios from "axios";
+import { LoginModel, RegisterModel } from "../models/User";
 
-const login = async (username: string, password: string) => {
+const login = async (loginModel: LoginModel) => {
   return await axios
     .post<any>("/api/users/login", {
-      username,
-      password,
+      username: loginModel.userName,
+      password: loginModel.password,
     })
     .then((response) => {
       axios.defaults.headers.common["Authorization"] =
@@ -13,11 +14,11 @@ const login = async (username: string, password: string) => {
     });
 };
 
-const register = async (username: string, email: string, password: string) => {
+const register = async (registerModel: RegisterModel) => {
   return await axios.post<any>("/api/users/register", {
-    username,
-    email,
-    password,
+    email: registerModel.email,
+    username: registerModel.userName,
+    password: registerModel.password,
   });
 };
 

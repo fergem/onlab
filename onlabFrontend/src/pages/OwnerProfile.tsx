@@ -1,12 +1,19 @@
-import { WarningIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, WarningIcon } from "@chakra-ui/icons";
 import { Spinner, Heading, Flex, Button, Box } from "@chakra-ui/react";
 import { useGetUserPostedJobs } from "../hooks/JobHooks";
 import NavButton from "../components/NavButton";
 import { useEffect } from "react";
 import { JobList } from "../components/job-components/JobList";
+import { StatusName } from "../models/Status";
 
 export default function OwnerProfile() {
-  const [jobs, error, loading, refetch] = useGetUserPostedJobs();
+  const [jobs, error, loading, refetch] = useGetUserPostedJobs({
+    jobHoursRange: {
+      minHours: 0,
+      maxHours: 12,
+    },
+    statusName: StatusName.Available,
+  });
   useEffect(() => {
     refetch();
   }, []);
@@ -35,6 +42,7 @@ export default function OwnerProfile() {
   } else {
     if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
   }
+
   return (
     <Flex
       px="20%"
@@ -43,6 +51,19 @@ export default function OwnerProfile() {
       py="2%"
       textAlign="center"
       h="inherit">
+      <Flex>
+        <Heading as="h2" size="md">
+          Your pending job approvals, please select the{" "}
+          <Button>
+            <CheckIcon></CheckIcon>
+          </Button>{" "}
+          if you think the petsitter wanting to do the job is ok for you,
+          otherwise click on the{" "}
+          <Button>
+            <CloseIcon></CloseIcon>
+          </Button>
+        </Heading>
+      </Flex>
       <Flex direction="column" flexWrap="wrap" alignItems="center">
         <Box m="2%">
           {jobs.length > 0 ?? (

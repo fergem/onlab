@@ -1,54 +1,30 @@
 import {
-  Box,
   Button,
-  Checkbox,
+  Card,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
-  Spinner,
-  VStack,
 } from "@chakra-ui/react";
-import { Formik, Field, ErrorMessage, Form } from "formik";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import * as Yup from "yup";
 import { useAuth } from "../hooks/AuthHooks";
-import { UserService } from "../services/UserService";
+import { LoginModel } from "../models/User";
 
 export default function LoginForm() {
   let navigate: NavigateFunction = useNavigate();
-  const { login } = useAuth();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const { loginUser } = useAuth();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginModel>();
 
-  const validationSchema = Yup.object().shape({
-    username: Yup.string().required("This field is required!"),
-    password: Yup.string().required("This field is required!"),
-  });
-
-  const initialValues: {
-    username: string;
-    password: string;
-  } = {
-    username: "",
-    password: "",
-  };
-
-  const handleCreatePet = (formValue: {
-    username: string;
-    password: string;
-  }) => {
-    const { username, password } = formValue;
-    setMessage("");
-    setLoading(true);
-
-    login(username, password).then(
+  const handleLogin = (loginModel: LoginModel) => {
+    loginUser(loginModel).then(
       () => {
-        // navigate("/profile");
-        // window.location.reload();
+        navigate("/jobs");
       },
       (error) => {
         const resMessage =
@@ -57,44 +33,60 @@ export default function LoginForm() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
-        setLoading(false);
-        setMessage(resMessage);
       }
     );
   };
 
   return (
-    <Flex align="center" justify="center">
-      <Box bg="white" p={6} rounded="md" w={64}>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleCreatePet}
-          validationSchema={validationSchema}>
-          <Form>
-            <VStack spacing={4} align="flex-start">
-              <FormControl>
-                <FormLabel htmlFor="username">Username</FormLabel>
-                <Field as={Input} name="username" type="text" />
+    <Flex justify="center" textAlign="center" alignItems="center">
+      <Card
+        boxShadow="dark-lg"
+        borderRadius="xl"
+        color="#505168"
+        boxSize="fit-content"
+        p="10%">
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <Flex
+            direction="row"
+            alignItems="center"
+            justifyContent="space-evenly">
+            <Flex direction="column">
+              <FormControl isInvalid={!!errors.userName}>
+                <FormLabel>Username</FormLabel>
+                <Input
+                  id="userName"
+                  placeholder="Username"
+                  {...register("userName", {
+                    required: "This is required",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.userName && errors.userName.message}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
-                <Field as={Input} name="password" type="password" />
-                <FormErrorMessage>{message}</FormErrorMessage>
+              <FormControl isInvalid={!!errors.password}>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  id="password"
+                  placeholder="Password"
+                  type="password"
+                  {...register("password", {
+                    required: "This is required",
+                  })}
+                />
+                <FormErrorMessage>
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="purple" width="full">
-                {loading ? (
-                  <Spinner boxSize="20px" alignSelf="center" />
-                ) : (
-                  <Heading as="h6" size="md">
-                    Login
-                  </Heading>
-                )}
+
+              <Button mt={4} type="submit" isLoading={isSubmitting}>
+                Submit
               </Button>
-            </VStack>
-          </Form>
-        </Formik>
-      </Box>
+            </Flex>
+          </Flex>
+          <FormControl></FormControl>
+        </form>
+      </Card>
     </Flex>
   );
 }

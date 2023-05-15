@@ -11,13 +11,14 @@ import PetSitterProfile from "./pages/PetSitterProfile";
 import Register from "./pages/Register";
 
 import { AuthContext } from "./context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User from "./models/User";
+import { useAuth, useLocalStorage } from "./hooks/AuthHooks";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   return (
-    <VStack align="stretch" minH="inherit">
+    <VStack align="stretch" h="inherit">
       <AuthContext.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>

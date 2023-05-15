@@ -26,18 +26,24 @@ namespace PetHolidayWebApi.Controllers
         {
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
+            if (!jobParameters.validJobStatus)
+                return BadRequest("Requested status doesnt exist");
 
             return Ok(await jobService.List(jobParameters));
         }
 
         [Authorize]
         [HttpGet("posted")]
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs()
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobParameters jobParameters)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
-                BadRequest();
-            return await jobService.ListPostedJobs(userID);
+                return BadRequest("There is no such user with this Bearer");
+            if (!jobParameters.ValidHoursRange)
+                return BadRequest("Max hours cannot be less than min hours");
+            if (!jobParameters.validJobStatus)
+                return BadRequest("Requested status doesnt exist");
+            return Ok(await jobService.ListPostedJobs(userID, jobParameters));
         }
 
         [Authorize]
@@ -82,11 +88,57 @@ namespace PetHolidayWebApi.Controllers
         [HttpPut("takejob/{jobID}")]
         public async Task<ActionResult<Job>> TakeJob([FromRoute] int jobID)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            var underTookJob = await jobService.TakeJob(jobID, userID);
-            return CreatedAtAction(nameof(FindById), new { jobID = underTookJob.ID }, underTookJob);
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                if (!foundUser)
+                    return BadRequest("There is no such user with this Bearer");
+
+                var underTookJob = await jobService.TakeJob(jobID, userID);
+                return CreatedAtAction(nameof(FindById), new { jobID = underTookJob.ID }, underTookJob);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("approvejob/{jobID}")]
+        public async Task<ActionResult<Job>> ApproveUser([FromRoute] int jobID)
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                if (!foundUser)
+                    return BadRequest("There is no such user with this Bearer");
+
+                var job = await jobService.ApproveUser(jobID);
+                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("declineuser/{jobID}")]
+        public async Task<ActionResult<Job>> DeclineUser([FromRoute] int jobID)
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                if (!foundUser)
+                    return BadRequest("There is no such user with this Bearer");
+
+                var job = await jobService.DeclineUser(jobID);
+                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -20,3 +20,14 @@ export interface UserInformation {
   email?: string;
   picture?: BinaryData[];
 }
+
+export interface RegisterModel {
+  userName?: string;
+  email?: string;
+  password?: string;
+}
+
+export interface LoginModel {
+  userName?: string;
+  password?: string;
+}

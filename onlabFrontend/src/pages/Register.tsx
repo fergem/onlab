@@ -4,12 +4,11 @@ import RegisterForm from "../components/RegisterForm";
 export default function Register() {
   return (
     <Flex
-      px="40%"
-      justify="center"
-      direction="column"
-      gap="7"
-      py="15%"
-      textAlign="center">
+      justifyContent="center"
+      alignItems="center"
+      direction="row"
+      textAlign="center"
+      h="inherit">
       <RegisterForm />
     </Flex>
   );

@@ -11,7 +11,10 @@ namespace Domain.Models.QueryHelpers
     {
         public uint MinHours { get; set; }
         public uint MaxHours { get; set; } = 12;
+        public StatusName JobStatus { get; set; }
 
         public bool ValidHoursRange => MaxHours > MinHours;
+
+        public bool validJobStatus => Enum.IsDefined(typeof(StatusName), JobStatus);
     }
 }

@@ -20,12 +20,7 @@ namespace DataAccess.Repositories
             var status = await dbcontext.Statuses.FindAsync(statusID);
             if (status == null)
                 throw new Exception("Status doesnt exist");
-            return ToModel(status);
-        }
-
-        private Status ToModel(DbStatus status)
-        {
-            return new Status() { ID = status.ID, Name=status.Name };
+            return ModelMapper.ToStatusModel(status);
         }
     }
 }

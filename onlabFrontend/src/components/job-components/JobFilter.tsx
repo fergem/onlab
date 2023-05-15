@@ -1,28 +1,45 @@
 import {
+  Button,
   Card,
   CardBody,
   RangeSlider,
   RangeSliderFilledTrack,
   RangeSliderThumb,
   RangeSliderTrack,
+  Select,
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { JobParameters } from "../../models/Job";
+import { StatusName } from "../../models/Status";
 
 interface IProp {
-  setHoursRangeFilter(range: string): void;
+  jobFilter: JobParameters;
+  setJobFilter(jobParameter: JobParameters): void;
   refetch(): void;
 }
 
-const JobFilter: React.FC<IProp> = ({ setHoursRangeFilter, refetch }) => {
+const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
   const [range, setRange] = useState<number[]>([0, 12]);
+  const [value, setValue] = useState(jobFilter.statusName);
   const handleHoursRangeChange = (val: number[]) => {
     setRange(val);
-    if (range[0] > 0 && range[1] < 12)
-      setHoursRangeFilter(`minHours=${range[0]}&maxHours=${range[1]}`);
-    else if (range[0] > 0) setHoursRangeFilter(`minHours=${range[0]}`);
-    else if (range[1] < 12) setHoursRangeFilter(`maxHours=${range[1]}`);
-    else setHoursRangeFilter("");
+    setJobFilter({
+      ...jobFilter,
+      jobHoursRange: {
+        minHours: range[0],
+        maxHours: range[1],
+      },
+    });
+  };
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setValue(event.target.value as StatusName);
+    setJobFilter({
+      ...jobFilter,
+      statusName: event.target.value as StatusName,
+    });
+  };
+  const handleFilters = () => {
     refetch();
   };
   return (
@@ -45,6 +62,14 @@ const JobFilter: React.FC<IProp> = ({ setHoursRangeFilter, refetch }) => {
           <RangeSliderThumb index={0} />
           <RangeSliderThumb index={1} />
         </RangeSlider>
+        <Select onChange={handleSelectChange} value={value}>
+          <option value={StatusName.Available}>Available</option>
+          <option value={StatusName.WaitingForApproval}>
+            Waiting For Approval
+          </option>
+          <option value={StatusName.Inprogress}>In Progress</option>
+        </Select>
+        <Button onClick={handleFilters}>Apply filters</Button>
       </CardBody>
     </Card>
   );
