@@ -1,6 +1,6 @@
 import { JobParameters } from "./../models/Job";
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { JobService } from "../services/JobService";
 import Job from "../models/Job";
 import { useToast } from "@chakra-ui/toast";
@@ -132,7 +132,7 @@ export const useTakeJob = () => {
 };
 
 export const useApproveJob = () => {
-  //const toast = useToast({ duration: 5000, isClosable: true });
+  const queryClient = useQueryClient();
   const {
     isLoading: isApproveingJob,
     mutate: approveJob,
@@ -146,7 +146,9 @@ export const useApproveJob = () => {
       }
     },
     {
-      onSuccess: (res) => {},
+      onSuccess: (res) => {
+        queryClient.invalidateQueries("query-approvals");
+      },
       onError: (err: any) => {},
     }
   );
@@ -155,7 +157,7 @@ export const useApproveJob = () => {
 };
 
 export const useDeclineJob = () => {
-  //const toast = useToast({ duration: 5000, isClosable: true });
+  const queryClient = useQueryClient();
   const {
     isLoading: isDecliningJob,
     mutate: declineJob,
@@ -169,7 +171,9 @@ export const useDeclineJob = () => {
       }
     },
     {
-      onSuccess: (res) => {},
+      onSuccess: (res) => {
+        queryClient.invalidateQueries("query-approvals");
+      },
       onError: (err: any) => {},
     }
   );
@@ -192,7 +196,7 @@ export const usePostJobs = () => {
         description: description,
         payment: payment,
       } as Job);
-    },
+    }, ////POST JOB , petIDs: number
     {
       onSuccess: (res) => {
         setJob(res);
@@ -219,13 +223,11 @@ export const useGetUserUnderTookJobs = () => {
       refetchOnMount: true,
       refetchInterval: 6000,
       refetchOnWindowFocus: true,
-      //enabled: false,
+
       onSuccess: (res) => {
         setJobs(res);
       },
-      onError: (err) => {
-        console.log(err);
-      },
+      onError: (err) => {},
     }
   );
 

@@ -85,7 +85,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Job>> InsertJob([FromBody] Job job)
+        public async Task<ActionResult<Job>> InsertJob([FromBody] InsertJobModel job)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)

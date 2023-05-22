@@ -28,11 +28,11 @@ export interface IPropsJobApprovalList {
 export const JobApprovalList: React.FC<IPropsJobApprovalList> = ({ jobs }) => {
   return (
     <SimpleGrid
-      w="100%"
+      w="50%"
       alignItems="center"
       spacing="2"
-      columns={2}
-      minChildWidth="200px">
+      columns={1}
+      minChildWidth="100%">
       {jobs.map((x) => (
         <JobApprovalCard key={x.id} job={x} />
       ))}

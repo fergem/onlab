@@ -6,12 +6,16 @@ const getUserPets = async () => {
   return response.data;
 };
 
-const insertPet = ({ name, description, species, age }: Pet) => {
+const insertPet = (
+  { name, description, species, age }: Pet,
+  petIDs: number[]
+) => {
   return axios.post<any>("/api/users/addpet", {
     name,
     description,
     species,
     age,
+    petIDs,
   });
 };
 

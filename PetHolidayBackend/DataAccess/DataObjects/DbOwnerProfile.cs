@@ -11,9 +11,11 @@ namespace DataAccess.DataObjects
         public int ID { get; set; }
         public string? Description { get; set; }
 
-        public string? RequiredExperience { get; set; }
+        public int MinRequiredExperience { get; set; }
 
-        public string? MinWage { get; set; }
+        public int MinWage { get; set; }
+
+        public string? Location { get; set; }
 
         public int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;

@@ -4,19 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models.QueryHelpers
 {
-    public class Job
+    public class InsertJobModel
     {
-        public int ID { get; set; }
         public required string Location { get; set; }
         public required int Hours { get; set; }
         public required string Description { get; set; }
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }
-        public UserInformation? OwnerUserInformation { get; set; }
-        public UserInformation? PetSitterUserInformation { get; set; }
-        public Status? Status { get; set; }
-        public required ICollection<Pet> Pets { get; set; }
+        public required List<int> petIDs { get; set; }
     }
 }

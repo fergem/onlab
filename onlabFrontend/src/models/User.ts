@@ -1,3 +1,4 @@
+import OwnerProfile from "./OwnerProfile";
 import Pet from "./Pet";
 
 export default interface User {
@@ -10,6 +11,8 @@ export default interface User {
   picture?: BinaryData[];
   pets?: Pet[];
   bearer?: string;
+  location?: string;
+  ownerProfile?: OwnerProfile;
 }
 
 export interface UserInformation {
@@ -18,6 +21,7 @@ export interface UserInformation {
   userName?: string;
   age?: number;
   email?: string;
+  location?: string;
   picture?: BinaryData[];
 }
 

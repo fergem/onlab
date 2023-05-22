@@ -2,6 +2,7 @@
 using Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace DataAccess
             if (status == null)
                 throw new Exception("Status doesnt exist");
 
+            var pets = new List<Pet>();
+            foreach (var petJob in job.Pets)
+                if(petJob.Pet != null)
+                    pets.Add(ToPetModel(petJob.Pet));
+
             if (job.PetSitterUser != null)
             {
                 var petSitterInformation = new UserInformation()
@@ -48,6 +54,8 @@ namespace DataAccess
                     Payment = job.Payment,
                     PetSitterUserInformation = petSitterInformation,
                     Status = status,
+                    MinRequiredExperience = job.MinRequiredExperience,
+                    Pets = pets,
                 };
             }
             return new Job()
@@ -59,6 +67,8 @@ namespace DataAccess
                 Payment = job.Payment,
                 OwnerUserInformation = ownerUserInformation,
                 Status = status,
+                MinRequiredExperience = job.MinRequiredExperience,
+                Pets = pets,
             };
         }
         internal static User ToUserModel(DbUser user)
@@ -78,6 +88,14 @@ namespace DataAccess
             {
                 pets.Add(ToPetModel(pet));
             }
+            var ownerProfile = new OwnerProfile()
+            {
+                ID = user.OwnerProfile.ID,
+                Description = user.OwnerProfile.Description,
+                MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
+                MinWage = user.OwnerProfile.MinWage,
+                UserID = user.OwnerProfile.UserID,
+            };
             return new User()
             {
                 ID = user.Id,
@@ -90,6 +108,7 @@ namespace DataAccess
                 Age = user.Age,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                OwnerProfile = ownerProfile != null ? ownerProfile : null,
             };
         }
         internal static Pet ToPetModel(DbPet pet)

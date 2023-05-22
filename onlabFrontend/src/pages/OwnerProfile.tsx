@@ -58,6 +58,9 @@ export default function OwnerProfile() {
       py="2%"
       textAlign="center"
       h="inherit">
+      <NavButton
+        name="Create new petsitting job"
+        route="/createpetsitterjob"></NavButton>
       <Heading as="h2" size="md">
         Your pending job approvals
       </Heading>
@@ -76,12 +79,7 @@ export default function OwnerProfile() {
           Your posted jobs all time:
         </Heading>
         {jobs.length > 0 ? (
-          <>
-            <NavButton
-              name="Create new petsitting job"
-              route="/createpetsitterjob"></NavButton>
-            {jobItems}
-          </>
+          <>{jobItems}</>
         ) : (
           <Heading size="lg">
             You've currently got no posted jobs. Consider posting one with the{" "}

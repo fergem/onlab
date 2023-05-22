@@ -25,7 +25,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToJobModel(job);
         }
 
-        public async Task<Job> Insert(Job job, int userID)
+        public async Task<Job> Insert(InsertJobModel job, int userID)
         {
             var ownerUser = await dbcontext.Users.FindAsync(userID);
             if (ownerUser == null)
@@ -33,6 +33,12 @@ namespace DataAccess.Repositories
             var availableStatus = await dbcontext.Statuses.FindAsync(1);
             if (availableStatus == null)
                 throw new Exception("Available status doesnt exists");
+            var petsToInsert = await dbcontext.Pets.Where(s => job.petIDs.Contains(s.ID)).ToListAsync();
+            if (!petsToInsert.Any())
+                throw new Exception("No pets to add job");
+
+           
+
             var insertJob = new DbJob()
             {
                 Hours = job.Hours,
@@ -43,10 +49,17 @@ namespace DataAccess.Repositories
                 StatusID = 1,
                 Status = availableStatus,
                 Payment = job.Payment,
+                MinRequiredExperience = job.MinRequiredExperience
+               
             };
 
+            var petJobs = new List<DbPetJob>();
+            foreach (var pet in petsToInsert)
+                petJobs.Add(new DbPetJob() { Pet = pet, Job = insertJob });
 
+           
             await dbcontext.Jobs.AddAsync(insertJob);
+            await dbcontext.PetJobs.AddRangeAsync(petJobs);
             dbcontext.SaveChanges();
 
             return ModelMapper.ToJobModel(insertJob);
@@ -54,17 +67,28 @@ namespace DataAccess.Repositories
 
         public async Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters)
         {
-            var dbStatus = await dbcontext
+            if(jobParameters.JobStatus != null)
+            {
+                var dbStatus = await dbcontext
                 .Statuses
                 .FirstOrDefaultAsync(s => s.Name == (DbStatusName)Enum.Parse(typeof(DbStatusName), jobParameters.JobStatus.ToString()));
-            if (dbStatus == null)
-                throw new Exception("Status doesnt exist");
+                if (dbStatus == null)
+                    throw new Exception("Status doesnt exist");
+                return await dbcontext.Jobs
+                   .Include(s => s.Status)
+                   .Include(s => s.OwnerUser)
+                   .Include(s => s.PetSitterUser)
+                   .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == dbStatus.Name)
+                   .Select(s => ModelMapper.ToJobModel(s))
+                   .ToListAsync();
+            }
+            
             
             return await dbcontext.Jobs
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
-                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == dbStatus.Name)
+                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }

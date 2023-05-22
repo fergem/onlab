@@ -43,7 +43,7 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
             w="20vh"
             h="20vh"
             src={
-              job.ownerUserInformation.picture
+              job?.ownerUserInformation?.picture
                 ? "data:image/png;base64," + job.ownerUserInformation.picture
                 : baseProfilePicture
             }
@@ -51,7 +51,9 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
             mx="3vh"
             mb="2vh"
           />
-          <Heading size="md">{job.ownerUserInformation.userName}'s job</Heading>
+          <Heading size="md">
+            {job?.ownerUserInformation?.userName}'s job
+          </Heading>
           <Flex direction="column" justifyContent="center" alignItems="center">
             <Text size="sm"> {job.hours} hours of work</Text>
             <Text size="sm">{job.location}</Text>

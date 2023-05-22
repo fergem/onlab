@@ -1,4 +1,5 @@
 ﻿using DataAccess.DataObjects;
+using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace DataAccess
         public DbSet<DbStatus> Statuses { get; set; }
         public DbSet<DbJob> Jobs { get; set; }
         public DbSet<DbPetImage> PetImages { get; set; }
+        public DbSet<DbPetJob> PetJobs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,13 +30,23 @@ namespace DataAccess
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
+            modelBuilder.Entity<DbUser>().Navigation(s => s.OwnerProfile).AutoInclude();
+            modelBuilder.Entity<DbPet>().Navigation(s => s.Jobs).AutoInclude();
+            modelBuilder.Entity<DbJob>().Navigation(s => s.Pets).AutoInclude();
+
+            modelBuilder.Entity<DbPetJob>(entity =>
+            {
+                entity.ToTable("PetJob");
+                entity.HasKey(s => new { s.PetID, s.JobID });
+            });
+
             modelBuilder.Entity<DbOwnerProfile>(entity =>
             {
                 entity.ToTable("OwnerProfiles");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
                 entity.Property(s => s.MinWage);
-                entity.Property(s => s.RequiredExperience);
+                entity.Property(s => s.MinRequiredExperience);
             });
 
             modelBuilder.Entity<DbPetSitterProfile>(entity =>
@@ -81,7 +93,7 @@ namespace DataAccess
             //Relationship configuration
             OneToOneRelationshipConfiguration(modelBuilder);
             OneToManyRelationshipConfiguration(modelBuilder);
-
+            ManyToManyRelationshipConfiguration(modelBuilder);
             //Data seeding
             DataSeeding(modelBuilder);
         }
@@ -138,6 +150,19 @@ namespace DataAccess
                 .HasOne(c => c.Image)
                 .WithOne(s => s.Pet)
                 .HasForeignKey<DbPetImage>(e => e.PetID);
+        }
+
+        private void ManyToManyRelationshipConfiguration(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbPetJob>()
+                .HasOne(s => s.Job)
+                .WithMany(s => s.Pets)
+                .HasForeignKey(s => s.JobID);
+
+            modelBuilder.Entity<DbPetJob>()
+                .HasOne(s => s.Pet)
+                .WithMany(s => s.Jobs)
+                .HasForeignKey(s => s.PetID);
         }
 
         public void DataSeeding(ModelBuilder modelBuilder)
@@ -225,6 +250,23 @@ namespace DataAccess
                         UserID = 3,
                     }
                 );
+            modelBuilder.Entity<DbPetJob>()
+                .HasData(
+                    new DbPetJob()
+                    {
+                        JobID = 1,
+                        PetID = 1,
+                    },
+                    new DbPetJob()
+                    {
+                        JobID = 2,
+                        PetID = 2,
+                    }, new DbPetJob()
+                    {
+                        JobID = 3,
+                        PetID = 3,
+                    }
+                 );
             modelBuilder.Entity<DbStatus>()
                 .HasData(
                     new DbStatus()
@@ -260,6 +302,7 @@ namespace DataAccess
                         OwnerUserID = 1,
                         PetSitterUserID = null,
                         Payment = 10,
+                        MinRequiredExperience = 0,
                     },
                     new DbJob()
                     {
@@ -271,6 +314,7 @@ namespace DataAccess
                         OwnerUserID = 2,
                         PetSitterUserID = null,
                         Payment = 20,
+                        MinRequiredExperience = 1,
                     },
                     new DbJob()
                     {
@@ -282,6 +326,7 @@ namespace DataAccess
                         OwnerUserID = 3,
                         PetSitterUserID = null,
                         Payment = 30,
+                        MinRequiredExperience = 3,
                     }
                 );
         }

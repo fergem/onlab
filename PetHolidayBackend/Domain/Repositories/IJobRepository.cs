@@ -15,7 +15,7 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
-        Task<Job> Insert(Job job, int userID);
+        Task<Job> Insert(InsertJobModel job, int userID);
         Task<Job> TakeJob(int jobID, int userID);
         Task<Job> ApproveUser(int jobID);
         Task<Job> DeclineUser(int jobID);

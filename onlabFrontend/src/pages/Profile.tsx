@@ -1,4 +1,16 @@
-import { Button, Flex, Heading, Image, Spinner, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useGetUserPets } from "../hooks/UserHooks";
 import { WarningIcon } from "@chakra-ui/icons";
@@ -59,25 +71,56 @@ export default function Profile() {
           w="100%"
           gap="2"
           color="#505168"
-          alignItems="flex-start">
-          <Text fontSize="xl">
-            <b> Username:</b>
-          </Text>
-          <Text fontSize="xl">
-            {user?.userName ?? "You've got no name consider adding one"}
-          </Text>
-          <Text fontSize="xl">
-            <b> First Name:</b>
-          </Text>
-          <Text fontSize="xl">
-            {user?.firstName ?? "You've got no name consider adding one"}
-          </Text>
-          <Text fontSize="xl">
-            <b> Last Name:</b>
-          </Text>
-          <Text fontSize="xl">
-            {user?.lastName ?? "You've got no name consider adding one"}
-          </Text>
+          alignItems="center">
+          <Tabs variant="soft-rounded" colorScheme="yellow">
+            <TabList justifyContent="center" alignItems="center">
+              <Tab>Profile</Tab>
+              <Tab>Owner Profile</Tab>
+              <Tab>PetSitter Profile</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <Text fontSize="xl">
+                  <b> Username:</b>{" "}
+                  {user?.userName ??
+                    "You've got no username consider adding one"}
+                </Text>
+                <Text fontSize="xl">
+                  <b> First Name:</b>{" "}
+                  {user?.firstName ??
+                    "You've got no first name consider adding one"}
+                </Text>
+
+                <Text fontSize="xl">
+                  <b> Last Name:</b>{" "}
+                  {user?.lastName ??
+                    "You've got no last name consider adding one"}
+                </Text>
+              </TabPanel>
+              <TabPanel>
+                <Text fontSize="xl">
+                  <b> Description:</b>{" "}
+                  {user?.ownerProfile?.minWage ??
+                    "You've got no name consider adding one"}
+                </Text>
+                <Text fontSize="xl">
+                  <b> Minimum required experience for job: </b>
+                  {user?.ownerProfile?.minRequiredExperience ??
+                    "You've got no name consider adding one"}
+                </Text>
+
+                <Text fontSize="xl">
+                  <b> Default Wage:</b>{" "}
+                  {user?.ownerProfile?.minWage ??
+                    "You've got no name consider adding one"}
+                </Text>
+              </TabPanel>
+              <TabPanel>
+                <p>three!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Flex>
       </Flex>
 

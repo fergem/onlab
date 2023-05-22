@@ -12,13 +12,22 @@ import {
   NumberInputStepper,
   FormErrorMessage,
   useToast,
+  Checkbox,
+  CheckboxGroup,
+  SimpleGrid,
+  Image,
 } from "@chakra-ui/react";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/AuthHooks";
 import { usePostJobs } from "../hooks/JobHooks";
+import { useGetUserPets } from "../hooks/UserHooks";
 
 import Job from "../models/Job";
+import Pet from "../models/Pet";
+import { baseDogPicture } from "../utility/constants";
 
 export default function CreatePetSitterJob() {
   const {
@@ -26,9 +35,15 @@ export default function CreatePetSitterJob() {
     register,
     formState: { errors, isSubmitting },
   } = useForm<Job>();
+  const { user } = useAuth();
+  const [pets] = useGetUserPets();
+  const [selectedPet, setSelectedPet] = useState<Pet[]>([]);
   const [job, error, postJob] = usePostJobs();
   const toast = useToast();
   const navigate = useNavigate();
+
+  const handleSelectPet = () => {};
+
   const handleCreateJob = (job: Job) => {
     postJob(job, {
       onSuccess() {
@@ -55,25 +70,13 @@ export default function CreatePetSitterJob() {
 
   return (
     <Flex justify="center" direction="row" gap="7" py="15%" textAlign="center">
-      <Card boxShadow="dark-lg" borderRadius="xl" color="#505168" w="40%">
+      <Card boxShadow="dark-lg" borderRadius="xl" color="#505168" w="60%">
         <form onSubmit={handleSubmit(handleCreateJob)}>
           <Flex
             direction="row"
             alignItems="center"
             justifyContent="space-evenly">
-            {/* <Image
-              w="40%"
-              h="40%"
-              src={
-                !!pets
-                  ? "data:image/png;base64," + pets[0].image
-                  : baseDogPicture
-                baseDogPicture
-              }
-              alt="Your pet"
-              borderRadius="lg"
-            /> */}
-            <Flex direction="column">
+            <Flex direction="column" flex="1 1 0" p="3%">
               <FormControl isInvalid={!!errors.hours}>
                 <FormLabel>Work of hours</FormLabel>
                 <NumberInput defaultValue={1} min={1} max={12}>
@@ -93,11 +96,35 @@ export default function CreatePetSitterJob() {
                   {errors.hours && errors.hours.message}
                 </FormErrorMessage>
               </FormControl>
+              <FormControl isInvalid={!!errors.hours}>
+                <FormLabel>Minimum Required Experience (years)</FormLabel>
+                <NumberInput
+                  defaultValue={user?.ownerProfile?.minRequiredExperience ?? 0}
+                  min={0}
+                  max={12}>
+                  <NumberInputField
+                    id="minRequiredExperience"
+                    placeholder="Minimum Required Experience"
+                    {...register("minRequiredExperience", {
+                      required: "This is required",
+                    })}
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <FormErrorMessage>
+                  {errors.minRequiredExperience &&
+                    errors.minRequiredExperience.message}
+                </FormErrorMessage>
+              </FormControl>
               <FormControl isInvalid={!!errors.location}>
                 <FormLabel>Location of the work</FormLabel>
                 <Input
                   id="location"
                   placeholder="Location"
+                  defaultValue={user?.location ?? ""}
                   {...register("location", {
                     required: "This is required",
                   })}
@@ -114,9 +141,6 @@ export default function CreatePetSitterJob() {
                   {...register("description", {
                     required: "This is required",
                   })}
-                  // borderColor="#B3C0A4"
-                  // focusBorderColor="#B3C0A4"
-                  // _hover={{ backgroundColor: "#EAEFD3" }}
                 />
                 <FormErrorMessage>
                   {errors.description && errors.description.message}
@@ -128,6 +152,7 @@ export default function CreatePetSitterJob() {
                   id="payment"
                   type="number"
                   placeholder="Payment"
+                  defaultValue={user?.ownerProfile?.minWage ?? 0}
                   {...register("payment", {
                     required: "This is required",
                   })}
@@ -136,12 +161,42 @@ export default function CreatePetSitterJob() {
                   {errors.payment && errors.payment.message}
                 </FormErrorMessage>
               </FormControl>
+
               <Button mt={4} type="submit" isLoading={isSubmitting}>
                 Submit
               </Button>
             </Flex>
+            <Flex flex="1 1 0" p="3%">
+              <FormControl>
+                <FormLabel>
+                  Select the animals that you want to be petsitted
+                </FormLabel>
+
+                <CheckboxGroup
+                  colorScheme="blue"
+                  defaultValue={["naruto", "kakashi"]}>
+                  <SimpleGrid columns={3} spacing={4}>
+                    {pets.map((s) => (
+                      <Flex
+                        direction="column"
+                        backgroundColor="#EAEFD3"
+                        borderRadius="10px"
+                        alignItems="center"
+                        justifyContent="center">
+                        <Image
+                          src={
+                            s.image
+                              ? "data:image/png;base64," + s.image
+                              : baseDogPicture
+                          }></Image>
+                        <Checkbox value={s.name}>{s.name}</Checkbox>
+                      </Flex>
+                    ))}
+                  </SimpleGrid>
+                </CheckboxGroup>
+              </FormControl>
+            </Flex>
           </Flex>
-          <FormControl></FormControl>
         </form>
       </Card>
     </Flex>

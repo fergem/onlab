@@ -5,6 +5,8 @@
         public DbPet()
         {
             //Images = new HashSet<DbPetImage>();
+            Jobs = new HashSet<DbPetJob>();
+
         }
 
         public int ID { get; set; }
@@ -19,7 +21,7 @@
 
         public required int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;
-        //public virtual ICollection<DbPetImage> Images { get; set; }
         public virtual DbPetImage Image { get; set;}
+        public virtual ICollection<DbPetJob> Jobs { get; set; }
     }
 }

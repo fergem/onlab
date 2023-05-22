@@ -36,7 +36,7 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {job.ownerUserInformation.userName ?? ""}'s job
+          {job.ownerUserInformation?.userName ?? ""}'s job
         </ModalHeader>
         <ModalCloseButton />
         <Divider colorScheme="cyan" />
@@ -57,7 +57,7 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
                 mx="3vh"
                 mb="2vh"
                 src={
-                  job.ownerUserInformation.picture
+                  job.ownerUserInformation?.picture
                     ? "data:image/png;base64," +
                       job.ownerUserInformation.picture
                     : baseProfilePicture
@@ -79,12 +79,12 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
             <Flex direction="column" justifyContent="center" w="50%">
               <Text>Description: </Text>
               <Text>{job.description}</Text>
-              {user?.userName === job.ownerUserInformation.userName ? (
+              {user?.userName === job.ownerUserInformation?.userName ? (
                 <></>
               ) : (
                 <Button onClick={handleTakeJob}>Take Job</Button>
               )}
-              <Text>{job.status.name} status</Text>
+              <Text>{job.status?.name ?? "No"} status</Text>
             </Flex>
           </Flex>
         </ModalBody>
