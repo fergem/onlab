@@ -1,4 +1,4 @@
-import { JobParameters } from "./../models/Job";
+import { JobParameters, JobWithPetIDs } from "./../models/Job";
 import axios from "axios";
 import Job from "../models/Job";
 import Status from "../models/Status";
@@ -31,16 +31,21 @@ const listApprovals = async () => {
   return response.data;
 };
 
-const createJob = async (
-  { hours, location, description, payment }: Job,
-  petIDs: number[]
-) => {
-  console.log({ hours, location, description, payment });
+const createJob = async ({
+  hours,
+  location,
+  description,
+  payment,
+  minRequiredExperience,
+  petIDs,
+}: JobWithPetIDs) => {
+  console.log({ hours, location, description, payment, petIDs });
   const response = await axios.post<any>("/api/jobs", {
     hours,
     location,
     description,
     payment,
+    minRequiredExperience,
     petIDs,
   });
   return response.data;

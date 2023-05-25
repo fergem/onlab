@@ -78,6 +78,7 @@ namespace DataAccess.Repositories
                    .Include(s => s.Status)
                    .Include(s => s.OwnerUser)
                    .Include(s => s.PetSitterUser)
+                   .Include(s => s.Pets)
                    .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == dbStatus.Name)
                    .Select(s => ModelMapper.ToJobModel(s))
                    .ToListAsync();
@@ -88,6 +89,7 @@ namespace DataAccess.Repositories
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
+                .Include(s => s.Pets)
                 .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
@@ -101,6 +103,7 @@ namespace DataAccess.Repositories
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
+                .Include(s => s.Pets)
                 .Where(s => s.OwnerUserID == userID && s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
@@ -116,6 +119,7 @@ namespace DataAccess.Repositories
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
+                .Include(s => s.Pets)
                 .Where(s => s.OwnerUserID == userID && s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == dbStatus.Name)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
@@ -138,6 +142,7 @@ namespace DataAccess.Repositories
                 .Include(s => s.Status)
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
+                .Include(s => s.Pets)
                 .Where(d => d.PetSitterUserID == userID)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();

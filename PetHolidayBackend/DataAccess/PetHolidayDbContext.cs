@@ -31,8 +31,10 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Entity<DbUser>().Navigation(s => s.OwnerProfile).AutoInclude();
-            modelBuilder.Entity<DbPet>().Navigation(s => s.Jobs).AutoInclude();
-            modelBuilder.Entity<DbJob>().Navigation(s => s.Pets).AutoInclude();
+            //modelBuilder.Entity<DbPet>().Navigation(s => s.Jobs).AutoInclude();
+            //modelBuilder.Entity<DbJob>().Navigation(s => s.Pets).AutoInclude();
+            modelBuilder.Entity<DbPetJob>().Navigation(s => s.Job).AutoInclude();
+            modelBuilder.Entity<DbPetJob>().Navigation(s => s.Pet).AutoInclude();
 
             modelBuilder.Entity<DbPetJob>(entity =>
             {

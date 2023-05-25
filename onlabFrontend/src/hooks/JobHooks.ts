@@ -1,4 +1,4 @@
-import { JobParameters } from "./../models/Job";
+import { JobParameters, JobWithPetIDs } from "./../models/Job";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { JobService } from "../services/JobService";
@@ -182,21 +182,30 @@ export const useDeclineJob = () => {
 };
 
 export const usePostJobs = () => {
-  const [job, setJob] = useState<Job>();
+  const [job, setJob] = useState<JobWithPetIDs>();
   const {
     isLoading: isPostingJob,
     mutate: postJob,
     isError: error,
-  } = useMutation<any, Error, Job>(
+  } = useMutation<any, Error, JobWithPetIDs>(
     "mutate-postJob",
-    async ({ hours, location, description, payment }: Job) => {
+    async ({
+      hours,
+      location,
+      description,
+      payment,
+      minRequiredExperience,
+      petIDs,
+    }: JobWithPetIDs) => {
       return await JobService.createJob({
         hours: hours,
         location: location,
         description: description,
         payment: payment,
-      } as Job);
-    }, ////POST JOB , petIDs: number
+        minRequiredExperience: minRequiredExperience,
+        petIDs: petIDs,
+      } as JobWithPetIDs);
+    },
     {
       onSuccess: (res) => {
         setJob(res);

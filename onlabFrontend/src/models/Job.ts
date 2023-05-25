@@ -1,3 +1,4 @@
+import Pet from "./Pet";
 import Status, { StatusName } from "./Status";
 import { UserInformation } from "./User";
 
@@ -11,6 +12,11 @@ export default interface Job {
   petSitterUserInformation?: UserInformation;
   minRequiredExperience?: number;
   status?: Status;
+  pets?: Pet[];
+}
+
+export interface JobWithPetIDs extends Job {
+  petIDs: number[];
 }
 
 export interface JobHoursRange {

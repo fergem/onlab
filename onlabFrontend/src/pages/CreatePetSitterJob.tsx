@@ -37,35 +37,45 @@ export default function CreatePetSitterJob() {
   } = useForm<Job>();
   const { user } = useAuth();
   const [pets] = useGetUserPets();
-  const [selectedPet, setSelectedPet] = useState<Pet[]>([]);
+  const [selectedPets, setSelectedPets] = useState<number[]>([]);
   const [job, error, postJob] = usePostJobs();
   const toast = useToast();
   const navigate = useNavigate();
 
-  const handleSelectPet = () => {};
+  const handleSelectPet = (petID: number) => {
+    if (!selectedPets.includes(petID)) {
+      setSelectedPets((t) => [...t, petID]);
+    } else {
+      setSelectedPets((t) => t.filter((s) => s != petID));
+    }
+  };
 
   const handleCreateJob = (job: Job) => {
-    postJob(job, {
-      onSuccess() {
-        toast({
-          title: "Job created",
-          description: "You have succesfully created a job",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        navigate("/postedjobs");
-      },
-      onError(error) {
-        toast({
-          title: "Job not created created",
-          description: "You have not succesfully created a job",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      },
-    });
+    console.log("asasd", selectedPets);
+    postJob(
+      { ...job, petIDs: selectedPets },
+      {
+        onSuccess() {
+          toast({
+            title: "Job created",
+            description: "You have succesfully created a job",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          navigate("/postedjobs");
+        },
+        onError(error) {
+          toast({
+            title: "Job not created created",
+            description: "You have not succesfully created a job",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -171,29 +181,17 @@ export default function CreatePetSitterJob() {
                 <FormLabel>
                   Select the animals that you want to be petsitted
                 </FormLabel>
-
-                <CheckboxGroup
-                  colorScheme="blue"
-                  defaultValue={["naruto", "kakashi"]}>
-                  <SimpleGrid columns={3} spacing={4}>
+                <SimpleGrid columns={3} spacing={4}>
+                  <CheckboxGroup colorScheme="blue">
                     {pets.map((s) => (
-                      <Flex
-                        direction="column"
-                        backgroundColor="#EAEFD3"
-                        borderRadius="10px"
-                        alignItems="center"
-                        justifyContent="center">
-                        <Image
-                          src={
-                            s.image
-                              ? "data:image/png;base64," + s.image
-                              : baseDogPicture
-                          }></Image>
-                        <Checkbox value={s.name}>{s.name}</Checkbox>
-                      </Flex>
+                      <CheckboxWithImage
+                        pet={s}
+                        handlePet={handleSelectPet}
+                        key={s.id}
+                      />
                     ))}
-                  </SimpleGrid>
-                </CheckboxGroup>
+                  </CheckboxGroup>
+                </SimpleGrid>
               </FormControl>
             </Flex>
           </Flex>
@@ -202,3 +200,32 @@ export default function CreatePetSitterJob() {
     </Flex>
   );
 }
+
+export interface ICheckboxProps {
+  pet: Pet;
+  handlePet: (petID: number) => void;
+}
+
+export const CheckboxWithImage: React.FC<ICheckboxProps> = ({
+  pet,
+  handlePet,
+}) => {
+  const handleSelectPet = () => {
+    handlePet(pet.id);
+  };
+
+  return (
+    <Flex
+      direction="column"
+      backgroundColor="#EAEFD3"
+      borderRadius="10px"
+      alignItems="center"
+      justifyContent="center">
+      <Image
+        src={
+          pet.image ? "data:image/png;base64," + pet.image : baseDogPicture
+        }></Image>
+      <Checkbox onChange={handleSelectPet}>{pet.name}</Checkbox>
+    </Flex>
+  );
+};
