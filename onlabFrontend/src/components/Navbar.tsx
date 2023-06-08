@@ -1,4 +1,4 @@
-import { Flex, Spacer, Icon, Button } from "@chakra-ui/react";
+import { Flex, Spacer, Icon, Button, Text } from "@chakra-ui/react";
 import NavButton from "./NavButton";
 import { UserService } from "../services/UserService";
 import { useAuth } from "../hooks/AuthHooks";
@@ -15,7 +15,7 @@ function Navbar() {
       direction="row"
       alignItems="center"
       gap="10px"
-      zIndex="9999"
+      zIndex="5"
       backgroundColor="#EAEFD3">
       <Icon
         fill="#505168"
@@ -49,7 +49,9 @@ function Navbar() {
       {user && <NavButton name="Posted jobs" route="/postedjobs" />}
       {user && <NavButton name="Undertook jobs" route="/undertookjobs" />}
       <Spacer />
-      {user && <NavButton name="Profile" route="/profile" />}
+      {user && (
+        <NavButton name={`${user.userName}'s profile`} route="/profile" />
+      )}
       {!!user == false && (
         <NavButton name="Register" route="/register"></NavButton>
       )}

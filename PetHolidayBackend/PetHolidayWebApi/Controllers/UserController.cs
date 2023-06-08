@@ -54,8 +54,6 @@ namespace PetHolidayWebApi.Controllers
             });
         }
 
-       
-
         //[HttpGet("/list/{userName}")]
         //public async Task<ActionResult<User>> FindByUsername([FromRoute] string userName)
         //{
@@ -120,7 +118,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [Authorize]
-        [HttpPost("addprofilepicture")]
+        [HttpPut("addprofilepicture")]
         public async Task<ActionResult<Pet>> AddProfilePicture([FromForm] IFormFile file)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
@@ -132,8 +130,8 @@ namespace PetHolidayWebApi.Controllers
                 {
                     await file.CopyToAsync(stream);
                     var fileData = stream.ToArray();
-                    var updatedPet = await userService.AddProfilePicture(userID, fileData);
-                    return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                    var updatedProfile = await userService.AddProfilePicture(userID, fileData);
+                    return Ok(updatedProfile);
                 }
             }
             return BadRequest();

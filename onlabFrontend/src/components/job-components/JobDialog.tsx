@@ -31,12 +31,30 @@ interface JobDialog {
 }
 
 const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
-  const [takeJob, error, loading] = useTakeJob();
+  const [takeJob] = useTakeJob();
   const { user } = useAuth();
+  const toast = useToast({ duration: 5000, isClosable: true });
+
   const handleTakeJob = () => {
-    takeJob(job.id);
-    if (!error) onClose();
+    takeJob(job.id, {
+      onSuccess: () => {
+        toast({
+          title: "Job taken",
+          description: `You have taken the job`,
+          status: "success",
+        });
+        onClose();
+      },
+      onError: (err: any) => {
+        toast({
+          title: "Job not taken",
+          description: err.response.data,
+          status: "error",
+        });
+      },
+    });
   };
+
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered size="3xl">
       <ModalOverlay />
@@ -62,8 +80,8 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
                 <Image
                   borderRadius="200"
                   objectFit="cover"
-                  w="30vh"
-                  h="30vh"
+                  w="20vh"
+                  h="20vh"
                   mx="3vh"
                   mb="2vh"
                   src={
@@ -157,8 +175,15 @@ export const PetDescription: React.FC<IPetsProps> = ({ pet }) => {
         border="1px solid #505168"
         width="10vw">
         <Image
+          objectFit="cover"
+          w="20vh"
+          h="20vh"
+          mx="3vh"
+          mb="2vh"
           src={
-            pet.image ? "data:image/png;base64," + pet.image : baseDogPicture
+            pet.image
+              ? "data:image/png;base64," + pet.image.picture
+              : baseDogPicture
           }></Image>
         <Text>{pet.name}</Text>
       </Flex>

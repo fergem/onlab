@@ -49,13 +49,27 @@ export const useAuth = () => {
   const { getItem } = useLocalStorage();
   const navigate = useNavigate();
 
+  const parseJwt = (token: string) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const user = getItem("user");
     if (user) {
       const contextUser = JSON.parse(user);
-      addUser(contextUser);
-      axios.defaults.headers.common["Authorization"] =
-        "Bearer " + contextUser.bearer;
+      const decodedJwt = parseJwt(contextUser.bearer);
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        navigate("/");
+        removeUser();
+      } else {
+        addUser(contextUser);
+        axios.defaults.headers.common["Authorization"] =
+          "Bearer " + contextUser.bearer;
+      }
     }
   }, []);
 

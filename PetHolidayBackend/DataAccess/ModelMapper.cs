@@ -88,14 +88,32 @@ namespace DataAccess
             {
                 pets.Add(ToPetModel(pet));
             }
-            var ownerProfile = new OwnerProfile()
+            if(user.OwnerProfile != null)
             {
-                ID = user.OwnerProfile.ID,
-                Description = user.OwnerProfile.Description,
-                MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
-                MinWage = user.OwnerProfile.MinWage,
-                UserID = user.OwnerProfile.UserID,
-            };
+                var ownerProfile = new OwnerProfile()
+                {
+                    ID = user.OwnerProfile.ID,
+                    Description = user.OwnerProfile.Description,
+                    MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
+                    MinWage = user.OwnerProfile.MinWage,
+                    UserID = user.OwnerProfile.UserID,
+                };
+                return new User()
+                {
+                    ID = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    JobAdvertisements = jobAdvertisements,
+                    JobApplications = jobAplications,
+                    Pets = pets,
+                    Picture = user.Picture,
+                    Age = user.Age,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    OwnerProfile = ownerProfile,
+                };
+            }
+           
             return new User()
             {
                 ID = user.Id,
@@ -108,7 +126,6 @@ namespace DataAccess
                 Age = user.Age,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                OwnerProfile = ownerProfile != null ? ownerProfile : null,
             };
         }
         internal static Pet ToPetModel(DbPet pet)

@@ -91,44 +91,16 @@ const fortmatResponse = (res: any) => {
 };
 
 export const useTakeJob = () => {
-  const [putResult, setPutResult] = useState<string | null>(null);
-  const toast = useToast({ duration: 5000, isClosable: true });
-  const {
-    isLoading: isTakingJob,
-    mutate: takeJob,
-    isError: error,
-  } = useMutation<any, Error, number>(
+  const { mutate: takeJob } = useMutation<any, Error, number>(
     "mutate-takeJob",
     async (id: number) => {
-      console.log("asd", id);
-      if (id !== null) {
-        console.log("asdasd");
-
-        const asd = await JobService.takeJob(id);
-        console.log("asdasd", asd);
-        return asd;
+      if (id) {
+        return await JobService.takeJob(id);
       }
-    },
-    {
-      onSuccess: (res) => {
-        toast({
-          title: "Job taken",
-          description: `You have taken the job`,
-          status: "success",
-        });
-      },
-      onError: (err: any) => {
-        const desc = fortmatResponse(err.response?.data || err);
-        toast({
-          title: "Job not taken",
-          description: err.response.data,
-          status: "error",
-        });
-      },
     }
   );
 
-  return [takeJob, isTakingJob, error] as const;
+  return [takeJob] as const;
 };
 
 export const useApproveJob = () => {

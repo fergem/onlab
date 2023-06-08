@@ -51,13 +51,8 @@ export const petImageUpload = (petID: number, file: File) => {
 };
 
 export const userProfilePictureUpload = () => {
-  const [fileSelected, setFileSelected] = useState<File>();
-  const {
-    isLoading: loading,
-    mutate: postProfilePicture,
-    isError: error,
-  } = useMutation<any, Error>(
-    async () => {
+  const { mutate: postProfilePicture } = useMutation<any, Error, File>(
+    async (fileSelected: File) => {
       const data = await ImageUploadService.uploadProfilePicture(fileSelected);
       return data;
     },
@@ -66,5 +61,5 @@ export const userProfilePictureUpload = () => {
       onError: (err: any) => {},
     }
   );
-  return [fileSelected, setFileSelected, postProfilePicture] as const;
+  return [postProfilePicture] as const;
 };

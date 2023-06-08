@@ -19,12 +19,12 @@ const uploadPetPictures = async (ID: number, file: File) => {
   return response.data;
 };
 
-const uploadProfilePicture = async (file: File | undefined) => {
+const uploadProfilePicture = async (file: File) => {
   let formData = new FormData();
-  if (file != undefined) formData.append("file", file);
+  formData.append("file", file);
 
-  const response = await axios.post<string>(
-    "/api/users/addpetimage",
+  const response = await axios.put<string>(
+    "/api/users/addprofilepicture",
     formData,
     {
       headers: {

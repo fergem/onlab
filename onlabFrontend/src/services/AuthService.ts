@@ -24,7 +24,7 @@ const register = async (registerModel: RegisterModel) => {
 
 const logout = async () => {
   return await axios.post("api/users/logout").then(() => {
-    axios.defaults.headers.common["Authorization"] = " ";
+    axios.defaults.headers.common["Authorization"] = "";
   });
 };
 

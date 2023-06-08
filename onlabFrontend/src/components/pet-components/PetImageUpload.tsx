@@ -1,7 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { PetImage } from "../models/Pet";
-import ImageUploadService from "../services/ImageUploadService";
+import { useState } from "react";
 
 interface IProps {
   onOpen(): void;
