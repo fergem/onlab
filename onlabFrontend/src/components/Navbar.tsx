@@ -1,23 +1,12 @@
-import { Flex, Spacer, Icon, Button, Text } from "@chakra-ui/react";
 import NavButton from "./NavButton";
-import { UserService } from "../services/UserService";
 import { useAuth } from "../hooks/AuthHooks";
 
 function Navbar() {
   const { user, logoutUser } = useAuth();
 
   return (
-    <Flex
-      pos="sticky"
-      top="0"
-      shadow="base"
-      px="15%"
-      direction="row"
-      alignItems="center"
-      gap="10px"
-      zIndex="5"
-      backgroundColor="#EAEFD3">
-      <Icon
+    <nav className="relative flex flex-wrap items-center justify-between px-52 py-1 shadow-xl sticky top-0 z-50 bg-base-100 items-center">
+      <svg
         fill="#505168"
         height="64px"
         width="64px"
@@ -42,22 +31,30 @@ function Navbar() {
             <path d="M212.104,69.737c-2.617-1.212-5.447-1.827-8.411-1.827c-11.532,0-23.71,9.578-30.299,23.827 c-8.525,18.396-4.863,37.61,8.368,43.756c2.609,1.197,5.429,1.804,8.38,1.804c11.559,0,23.745-9.572,30.324-23.822 C228.962,95.052,225.287,75.839,212.104,69.737z M206.846,107.19c-4.53,9.812-11.987,15.106-16.704,15.106 c-0.788,0-1.482-0.143-2.093-0.423c-4.696-2.181-6.141-12.835-1.043-23.835c4.544-9.827,11.988-15.129,16.687-15.129 c0.781,0,1.47,0.143,2.107,0.438C210.484,85.517,211.926,96.175,206.846,107.19z" />{" "}
           </g>{" "}
         </g>
-      </Icon>
-      <NavButton name="Home" route="/" />
-      <NavButton name="Jobs" route="/jobs" />
-      <Spacer />
-      {user && <NavButton name="Posted jobs" route="/postedjobs" />}
-      {user && <NavButton name="Undertook jobs" route="/undertookjobs" />}
-      <Spacer />
-      {user && (
-        <NavButton name={`${user.userName}'s profile`} route="/profile" />
-      )}
-      {!!user == false && (
-        <NavButton name="Register" route="/register"></NavButton>
-      )}
-      {!!user == false && <NavButton name="Login" route="/login" />}
-      {user && <Button onClick={logoutUser}>Logout</Button>}
-    </Flex>
+      </svg>
+      <div className="flex gap-3">
+        <NavButton name="Home" route="/" />
+        <NavButton name="Jobs" route="/jobs" />
+
+        {user && <NavButton name="Posted jobs" route="/postedjobs" />}
+        {user && <NavButton name="Undertook jobs" route="/undertookjobs" />}
+      </div>
+
+      <div className="flex gap-3">
+        {user && (
+          <NavButton name={`${user.userName}'s profile`} route="/profile" />
+        )}
+        {!!user == false && (
+          <NavButton name="Register" route="/register"></NavButton>
+        )}
+        {!!user == false && <NavButton name="Login" route="/login" />}
+        {user && (
+          <button className="btn" onClick={logoutUser}>
+            Logout
+          </button>
+        )}
+      </div>
+    </nav>
   );
 }
 

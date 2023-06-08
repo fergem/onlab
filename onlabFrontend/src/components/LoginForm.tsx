@@ -1,12 +1,3 @@
-import {
-  Button,
-  Card,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
@@ -19,7 +10,7 @@ export default function LoginForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginModel>();
+  } = useForm<LoginModel>({ mode: "onChange" });
 
   const handleLogin = (loginModel: LoginModel) => {
     loginUser(loginModel).then(
@@ -38,55 +29,49 @@ export default function LoginForm() {
   };
 
   return (
-    <Flex justify="center" textAlign="center" alignItems="center">
-      <Card
-        boxShadow="dark-lg"
-        borderRadius="xl"
-        color="#505168"
-        boxSize="fit-content"
-        p="10%">
+    <div className="flex justify-center text-center align-center">
+      <div className="card shadow-2xl rounded-xl p-10">
         <form onSubmit={handleSubmit(handleLogin)}>
-          <Flex
-            direction="row"
-            alignItems="center"
-            justifyContent="space-evenly">
-            <Flex direction="column">
-              <FormControl isInvalid={!!errors.userName}>
-                <FormLabel>Username</FormLabel>
-                <Input
-                  id="userName"
-                  placeholder="Username"
-                  {...register("userName", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.userName && errors.userName.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  id="password"
-                  placeholder="Password"
-                  type="password"
-                  {...register("password", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              <Button mt={4} type="submit" isLoading={isSubmitting}>
-                Submit
-              </Button>
-            </Flex>
-          </Flex>
-          <FormControl></FormControl>
+          <div className="flex flex-col gap-4">
+            <div className="form-control">
+              <label className="label">Username</label>
+              <input
+                className={`input input-bordered w-full max-w-xs ${
+                  errors.userName ? "input-error" : "input-primary"
+                }`}
+                id="userName"
+                placeholder="Username"
+                {...register("userName", {
+                  required: "This is required for a login",
+                })}
+              />
+              <div className="color-error">
+                {errors.userName && errors.userName.message}
+              </div>
+            </div>
+            <div className="form-control">
+              <label className="label">Password</label>
+              <input
+                className={`input input-bordered w-full max-w-xs ${
+                  errors.password ? "input-error" : "input-primary"
+                }`}
+                id="password"
+                placeholder="Password"
+                type="password"
+                {...register("password", {
+                  required: "This is required for a login",
+                })}
+              />
+              <div className="color-error">
+                {errors.password && errors.password.message}
+              </div>
+            </div>
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
-      </Card>
-    </Flex>
+      </div>
+    </div>
   );
 }

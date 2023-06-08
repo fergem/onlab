@@ -4,8 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { EuiProvider } from "@elastic/eui";
-import "@elastic/eui/dist/eui_theme_light.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,11 +21,9 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <EuiProvider colorMode="light">
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </EuiProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
 );

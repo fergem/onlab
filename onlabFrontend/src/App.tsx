@@ -1,4 +1,3 @@
-import { VStack } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -18,7 +17,7 @@ import { useAuth, useLocalStorage } from "./hooks/AuthHooks";
 function App() {
   const [user, setUser] = useState<User | null>(null);
   return (
-    <VStack align="stretch" h="inherit">
+    <div className="flex flex-col">
       <AuthContext.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>
@@ -32,7 +31,7 @@ function App() {
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
       </AuthContext.Provider>
-    </VStack>
+    </div>
   );
 }
 

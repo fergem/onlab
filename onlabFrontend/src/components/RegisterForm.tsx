@@ -1,13 +1,4 @@
 import { useForm } from "react-hook-form";
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Flex,
-  FormErrorMessage,
-  Card,
-} from "@chakra-ui/react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 import User, { RegisterModel } from "../models/User";
@@ -20,7 +11,7 @@ export default function RegisterForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterModel>();
+  } = useForm<RegisterModel>({ mode: "onChange" });
 
   const handleRegister = (registerModel: RegisterModel) => {
     registerUser(registerModel).then(
@@ -37,71 +28,69 @@ export default function RegisterForm() {
       }
     );
   };
-
+  //isLoading={isSubmitting}
+  //isInvalid={!!errors.email}
   return (
-    <Flex justify="center" textAlign="center" alignItems="center">
-      <Card
-        boxShadow="dark-lg"
-        borderRadius="xl"
-        color="#505168"
-        boxSize="fit-content"
-        p="10%">
+    <div className="flex justify-center text-center align-center">
+      <div className="card shadow-2xl rounded-xl p-10">
         <form onSubmit={handleSubmit(handleRegister)}>
-          <Flex
-            direction="row"
-            alignItems="center"
-            justifyContent="space-evenly">
-            <Flex direction="column">
-              <FormControl isInvalid={!!errors.email}>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  id="email"
-                  placeholder="email"
-                  type="email"
-                  {...register("email", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.email && errors.email.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.userName}>
-                <FormLabel>Username</FormLabel>
-                <Input
-                  id="userName"
-                  placeholder="Username"
-                  {...register("userName", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.userName && errors.userName.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  id="password"
-                  placeholder="Password"
-                  type="password"
-                  {...register("password", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              <Button mt={4} type="submit" isLoading={isSubmitting}>
-                Submit
-              </Button>
-            </Flex>
-          </Flex>
-          <FormControl></FormControl>
+          <div className="flex flex-col gap-4">
+            <div className="form-control">
+              <label className="label">Email</label>
+              <input
+                className={`input input-bordered w-full max-w-xs ${
+                  errors.email ? "input-error" : "input-primary"
+                }`}
+                id="email"
+                placeholder="email"
+                type="email"
+                {...register("email", {
+                  required: "This is required",
+                })}
+              />
+              <div className="color-error">
+                {errors.email && errors.email.message}
+              </div>
+            </div>
+            <div className="form-control">
+              <label className="label">Username</label>
+              <input
+                className={`input input-bordered w-full max-w-xs ${
+                  errors.userName ? "input-error" : "input-primary"
+                }`}
+                id="userName"
+                placeholder="Username"
+                {...register("userName", {
+                  required: "This is required",
+                })}
+              />
+              <div className="color-error">
+                {errors.userName && errors.userName.message}
+              </div>
+            </div>
+            <div className="form-control">
+              <label className="label">Password</label>
+              <input
+                className={`input input-bordered w-full max-w-xs ${
+                  errors.password ? "input-error" : "input-primary"
+                }`}
+                id="password"
+                placeholder="Password"
+                type="password"
+                {...register("password", {
+                  required: "This is required",
+                })}
+              />
+              <div className="color-error">
+                {errors.password && errors.password.message}
+              </div>
+            </div>
+            <button className="btn btn-primary" type="submit">
+              Submit
+            </button>
+          </div>
         </form>
-      </Card>
-    </Flex>
+      </div>
+    </div>
   );
 }
