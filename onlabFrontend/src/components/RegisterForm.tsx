@@ -11,7 +11,7 @@ export default function RegisterForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterModel>({ mode: "onChange" });
+  } = useForm<RegisterModel>({ mode: "onBlur" });
 
   const handleRegister = (registerModel: RegisterModel) => {
     registerUser(registerModel).then(
@@ -28,29 +28,32 @@ export default function RegisterForm() {
       }
     );
   };
-  //isLoading={isSubmitting}
-  //isInvalid={!!errors.email}
   return (
-    <div className="flex justify-center text-center align-center">
+    <div className="flex justify-center text-center items-center h-fit">
       <div className="card shadow-2xl rounded-xl p-10">
         <form onSubmit={handleSubmit(handleRegister)}>
           <div className="flex flex-col gap-4">
-            <div className="form-control">
+            <div className="form-control w-full max-w-xs">
               <label className="label">Email</label>
               <input
                 className={`input input-bordered w-full max-w-xs ${
-                  errors.email ? "input-error" : "input-primary"
+                  !!errors.email ? "input-error" : "input-primary"
                 }`}
                 id="email"
-                placeholder="email"
+                placeholder="Email"
                 type="email"
                 {...register("email", {
                   required: "This is required",
+                  pattern: {
+                    value:
+                      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "Email is invalid",
+                  },
                 })}
               />
-              <div className="color-error">
+              <label className="label text-error text-sm">
                 {errors.email && errors.email.message}
-              </div>
+              </label>
             </div>
             <div className="form-control">
               <label className="label">Username</label>
@@ -62,11 +65,19 @@ export default function RegisterForm() {
                 placeholder="Username"
                 {...register("userName", {
                   required: "This is required",
+                  minLength: {
+                    value: 6,
+                    message: "Username must be at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "Username must not exceed 20 characters",
+                  },
                 })}
               />
-              <div className="color-error">
+              <label className="label text-error text-sm">
                 {errors.userName && errors.userName.message}
-              </div>
+              </label>
             </div>
             <div className="form-control">
               <label className="label">Password</label>
@@ -79,14 +90,26 @@ export default function RegisterForm() {
                 type="password"
                 {...register("password", {
                   required: "This is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  maxLength: {
+                    value: 40,
+                    message: "Password must not exceed 40 characters",
+                  },
                 })}
               />
-              <div className="color-error">
+              <label className="label text-error text-sm">
                 {errors.password && errors.password.message}
-              </div>
+              </label>
             </div>
             <button className="btn btn-primary" type="submit">
-              Submit
+              {isSubmitting ? (
+                <span className="loading loading-spinner loading-md"></span>
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
         </form>

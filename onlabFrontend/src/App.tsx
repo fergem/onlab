@@ -17,7 +17,7 @@ import { useAuth, useLocalStorage } from "./hooks/AuthHooks";
 function App() {
   const [user, setUser] = useState<User | null>(null);
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen">
       <AuthContext.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>

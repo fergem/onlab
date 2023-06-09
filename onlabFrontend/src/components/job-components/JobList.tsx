@@ -1,14 +1,4 @@
-import {
-  Card,
-  Image,
-  CardBody,
-  Heading,
-  Text,
-  Flex,
-  WrapItem,
-  Wrap,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { useState } from "react";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
 import JobDialog from "./JobDialog";
@@ -23,44 +13,40 @@ export interface IPropsJobList {
 
 export const JobList: React.FC<IPropsJobList> = ({ jobs }) => {
   return (
-    <Wrap w="100%" justify="center" spacing="2%">
+    <div className="flex justify-center flex-wrap gap-2">
       {jobs.map((x) => (
         <JobCard key={x.id} job={x} />
       ))}
-    </Wrap>
+    </div>
   );
 };
 
 const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(true);
   return (
-    <WrapItem>
-      <Card my="2%" color="#505168" h="100%" onClick={onOpen}>
-        <CardBody>
-          <Image
-            borderRadius="100"
-            objectFit="cover"
-            w="20vh"
-            h="20vh"
-            src={
-              job?.ownerUserInformation?.picture
-                ? "data:image/png;base64," + job.ownerUserInformation.picture
-                : baseProfilePicture
-            }
-            alt="Job picture"
-            mx="3vh"
-            mb="2vh"
-          />
-          <Heading size="md">
-            {job?.ownerUserInformation?.userName}'s job
-          </Heading>
-          <Flex direction="column" justifyContent="center" alignItems="center">
-            <Text size="sm"> {job.hours} hours of work</Text>
-            <Text size="sm">{job.location}</Text>
-          </Flex>
-          <JobDialog job={job} onClose={onClose} isOpen={isOpen}></JobDialog>
-        </CardBody>
-      </Card>
-    </WrapItem>
+    <div
+      className="card shadow-2xl rounded-xl p-10"
+      onClick={() => setIsOpen(true)}>
+      <div className="card-body">
+        <img
+          className="object-contain rounded-lg w-62 h-62"
+          src={
+            job?.ownerUserInformation?.picture
+              ? "data:image/png;base64," + job.ownerUserInformation.picture
+              : baseProfilePicture
+          }
+          alt="Job picture"
+        />
+        <h2>{job?.ownerUserInformation?.userName}'s job</h2>
+        <div className="flex direction-col justify-center align-center">
+          <span> {job.hours} hours of work</span>
+          <span>{job.location}</span>
+        </div>
+        <JobDialog
+          job={job}
+          onClose={() => setIsOpen(false)}
+          isOpen={isOpen}></JobDialog>
+      </div>
+    </div>
   );
 };

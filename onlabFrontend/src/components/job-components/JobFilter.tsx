@@ -1,15 +1,3 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  Flex,
-  RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
-  Select,
-  Text,
-} from "@chakra-ui/react";
 import { useState } from "react";
 import { JobParameters } from "../../models/Job";
 import { StatusName } from "../../models/Status";
@@ -44,7 +32,7 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
     refetch();
   };
   return (
-    <Card boxSize="20%">
+    <div className="card">
       <CardBody>
         <Flex direction="column" gap="3">
           <Flex direction="column" w="100%">
@@ -76,7 +64,7 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
           <Button onClick={handleFilters}>Apply filters</Button>
         </Flex>
       </CardBody>
-    </Card>
+    </div>
   );
 };
 

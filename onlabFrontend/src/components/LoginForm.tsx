@@ -10,7 +10,7 @@ export default function LoginForm() {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm<LoginModel>({ mode: "onChange" });
+  } = useForm<LoginModel>({ mode: "onBlur" });
 
   const handleLogin = (loginModel: LoginModel) => {
     loginUser(loginModel).then(
@@ -45,9 +45,9 @@ export default function LoginForm() {
                   required: "This is required for a login",
                 })}
               />
-              <div className="color-error">
+              <label className="label text-error text-sm">
                 {errors.userName && errors.userName.message}
-              </div>
+              </label>
             </div>
             <div className="form-control">
               <label className="label">Password</label>
@@ -62,9 +62,9 @@ export default function LoginForm() {
                   required: "This is required for a login",
                 })}
               />
-              <div className="color-error">
+              <label className="label text-error text-sm">
                 {errors.password && errors.password.message}
-              </div>
+              </label>
             </div>
             <button className="btn btn-primary" type="submit">
               Submit
