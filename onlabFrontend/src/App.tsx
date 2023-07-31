@@ -1,24 +1,22 @@
-import { VStack } from "@chakra-ui/react";
-import { Route, Routes } from "react-router-dom";
+import { Container } from "@mui/material";
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Jobs from "./pages/Jobs";
-import Profile from "./pages/Profile";
-import CreatePetSitterJob from "./pages/CreatePetSitterJob";
-import OwnerProfile from "./pages/OwnerProfile";
-import PetSitterProfile from "./pages/PetSitterProfile";
-import Register from "./pages/Register";
-
 import { AuthContext } from "./context/AuthContext";
-import { useEffect, useState } from "react";
 import User from "./models/User";
-import { useAuth, useLocalStorage } from "./hooks/AuthHooks";
+import CreatePetSitterJob from "./pages/CreatePetSitterJob";
+import Home from "./pages/Home";
+import Jobs from "./pages/Jobs";
+import Login from "./pages/Login";
+import OwnerProfile from "./pages/OwnerProfile";
+import Profile from "./pages/Profile";
+import Register from "./pages/Register";
+import PetSitterProfile from "./pages/PetSitterProfile";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   return (
-    <VStack align="stretch" h="inherit">
+    <Container sx={{ height: "100vh" }} disableGutters maxWidth={false}>
       <AuthContext.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>
@@ -32,7 +30,7 @@ function App() {
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
       </AuthContext.Provider>
-    </VStack>
+    </Container>
   );
 }
 
