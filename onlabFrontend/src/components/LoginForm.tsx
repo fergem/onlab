@@ -79,7 +79,7 @@ export default function LoginForm() {
                 </FormErrorMessage>
               </FormControl>
 
-              <Button mt={4} type="submit" isLoading={isSubmitting}>
+              <Button color="cyan" size="md" isLoading={isSubmitting}>
                 Submit
               </Button>
             </Flex>

@@ -69,7 +69,9 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
           </option>
           <option value={StatusName.Inprogress}>In Progress</option>
         </Select>
-        <Button onClick={handleFilters}>Apply filters</Button>
+        <Button color="cyan" size="md" onClick={handleFilters}>
+          Apply filters
+        </Button>
       </CardBody>
     </Card>
   );

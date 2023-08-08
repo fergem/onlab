@@ -3,11 +3,17 @@ import { CustomStepper } from "../components/CustomStepper";
 
 import { useCreateJobDetailsForm } from "../hooks/useCreateJobDetailsForm";
 import { usePetSelector } from "../hooks/usePetSelector";
-import { Card, Container, Stack } from "@mui/material";
 
 export default function CreatePetSitterJob() {
   const [selectedPets, setSelectedPets] = useState<number[]>([]);
-  const petSelectorStep = usePetSelector(selectedPets, setSelectedPets);
+  const handleSelectPets = (id: number) => {
+    if (selectedPets.includes(id)) {
+      setSelectedPets((t) => t.filter((s) => s != id));
+    } else {
+      setSelectedPets((t) => [...t, id]);
+    }
+  };
+  const petSelectorStep = usePetSelector(selectedPets, handleSelectPets);
   const createJobDetailsFormStep = useCreateJobDetailsForm(selectedPets);
 
   return (

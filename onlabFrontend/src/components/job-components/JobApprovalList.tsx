@@ -79,10 +79,10 @@ const JobApprovalCard: React.FC<IPropsJobApprovalCard> = ({ job }) => {
           </Flex>
 
           <Flex direction="column">
-            <Button m="5%" onClick={handleApproveJob}>
+            <Button>
               <CheckIcon></CheckIcon>
             </Button>
-            <Button m="5%">
+            <Button>
               <CloseIcon onClick={handleDeclineJob}></CloseIcon>
             </Button>
           </Flex>

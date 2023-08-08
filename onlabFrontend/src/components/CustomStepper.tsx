@@ -1,12 +1,3 @@
-import {
-  Box,
-  Stepper,
-  Step,
-  StepLabel,
-  Typography,
-  Button,
-  Container,
-} from "@mui/material";
 import React, { useState } from "react";
 
 export interface StepPropsWithContent {
@@ -30,7 +21,7 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
   };
 
   return (
-    <Container disableGutters sx={{ padding: "3%", minWidth: "50vw" }}>
+    <Container disableGutters sx={{ padding: "3%", minWidth: "40vw" }}>
       <Stepper activeStep={activeStep}>
         {steps.map((s) => {
           return (
@@ -45,10 +36,10 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
         {steps[activeStep].content}
         <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
           <Button
-            color="inherit"
+            color="cyan"
+            size="md"
             disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}>
+            onClick={handleBack}>
             Back
           </Button>
           <Box sx={{ flex: "1 1 auto" }} />

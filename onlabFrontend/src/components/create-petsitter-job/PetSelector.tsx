@@ -1,21 +1,10 @@
-import {
-  Container,
-  Box,
-  Card,
-  CardContent,
-  ImageList,
-  ImageListItem,
-  Typography,
-  Stack,
-  useTheme,
-} from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useGetUserPets } from "../../hooks/UserHooks";
 import { baseDogPicture } from "../../utility/constants";
 
 interface IProps {
   selectedPets: number[];
-  setSelectedPets: Dispatch<SetStateAction<number[]>>;
+  setSelectedPets: (id: number) => void;
 }
 
 export const PetSelector: React.FC<IProps> = ({
@@ -29,11 +18,7 @@ export const PetSelector: React.FC<IProps> = ({
   }, []);
 
   const handleSelectPets = (id: number) => {
-    if (selectedPets.includes(id)) {
-      setSelectedPets((t) => t.filter((s) => s != id));
-    } else {
-      setSelectedPets((t) => [...t, id]);
-    }
+    setSelectedPets(id);
   };
 
   const getIsSelectedPet = (id: number) =>
@@ -78,8 +63,8 @@ export const PetSelector: React.FC<IProps> = ({
               }}>
               <Box sx={{ maxWidth: "120px", borderRadius: "10%" }}>
                 <img
-                  src={s.image ? s.image.picture : baseDogPicture}
-                  srcSet={s.image ? s.image.picture : baseDogPicture}
+                  src={s.image?.picture ?? baseDogPicture}
+                  srcSet={s.image?.picture ?? baseDogPicture}
                   alt={s.name ?? "title"}
                   loading="lazy"
                 />

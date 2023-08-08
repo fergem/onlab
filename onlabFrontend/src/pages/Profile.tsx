@@ -46,7 +46,9 @@ export default function Profile() {
         <Heading as="h3" size="sm">
           Error happened
         </Heading>
-        <Button onClick={() => refetch()}>Click me to try again!</Button>
+        <Button color="cyan" size="md" onClick={() => refetch()}>
+          Click me to try again!
+        </Button>
       </>
     );
   } else {

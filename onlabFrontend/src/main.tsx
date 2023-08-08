@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { MantineProvider } from "@mantine/core";
+import CustomMantineProvider from "./CustomMantineProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <CustomMantineProvider />
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

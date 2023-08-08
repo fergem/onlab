@@ -86,9 +86,7 @@ export default function CreatePetForm() {
           {errors.description && errors.description.message}
         </FormErrorMessage>
       </FormControl>
-      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Submit
-      </Button>
+      <Button isLoading={isSubmitting}>Submit</Button>
     </form>
   );
 }

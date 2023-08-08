@@ -134,7 +134,9 @@ const JobDialog: React.FC<JobDialog> = ({ job, onClose, isOpen }) => {
           {user?.userName === job.ownerUserInformation?.userName ? (
             <></>
           ) : (
-            <Button onClick={handleTakeJob}>Take Job</Button>
+            <Button color="cyan" size="md" onClick={handleTakeJob}>
+              Take Job
+            </Button>
           )}
         </ModalBody>
       </ModalContent>

@@ -51,7 +51,7 @@ const PetDialog: React.FC<IPropsPetDialog> = ({ pet, onClose, isOpen }) => {
           </Flex>
         </ModalBody>
         {/* <ModalFooter>
-    <Button onClick={onClose}>Close</Button>
+    <Button  > onClick={onClose}>Close</Button>
   </ModalFooter> */}
       </ModalContent>
     </Modal>

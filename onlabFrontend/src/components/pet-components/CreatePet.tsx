@@ -18,9 +18,7 @@ export default function CreatePet() {
 
   return (
     <>
-      <Button onClick={onOpen} ml="30%">
-        Add a pet
-      </Button>
+      <Button onClick={onOpen}>Add a pet</Button>
 
       <Modal
         isOpen={isOpen}
@@ -36,9 +34,7 @@ export default function CreatePet() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
+            <Button onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
