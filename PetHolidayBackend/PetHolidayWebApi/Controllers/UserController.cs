@@ -29,12 +29,19 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel registerModel)
         {
-            await userService.Register(registerModel);
-            return Ok(new Response
+            try
             {
-                Status = "Success",
-                Message = "User created successfully!"
-            });
+                var result = await userService.Register(registerModel);
+                return Ok(new Response
+                {
+                    Status = "Success",
+                    Message = "User created successfully!"
+                });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]

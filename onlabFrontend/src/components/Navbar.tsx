@@ -42,7 +42,7 @@ function Navbar() {
         <NavButton name="Register" route="/register"></NavButton>
       )}
       {!!user == false && <NavButton name="Login" route="/login" />}
-      {user && <Button>Logout</Button>}
+      {user && <Button onClick={logoutUser}>Logout</Button>}
     </Group>
   );
 }

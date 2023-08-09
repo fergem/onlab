@@ -21,7 +21,15 @@ namespace Domain.Services
         }
         public async Task<User> Register(RegisterModel registerModel)
         {
-            return await userRepository.Register(registerModel);
+            try
+            {
+                var response = await userRepository.Register(registerModel);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<User> AddProfilePicture(int userID, byte[] file)

@@ -1,5 +1,3 @@
-import { WarningIcon } from "@chakra-ui/icons";
-import { Flex, Heading, Spinner, Text, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import JobFilter from "../components/job-components/JobFilter";
 import { JobList } from "../components/job-components/JobList";
