@@ -15,7 +15,6 @@ import {
 import { useApproveJob, useDeclineJob } from "../../hooks/JobHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
-import JobDialog from "./JobDialog";
 
 export interface IPropsJobApprovalCard {
   job: Job;

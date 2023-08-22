@@ -28,3 +28,11 @@ export interface JobParameters {
   jobHoursRange?: JobHoursRange;
   statusName?: StatusName;
 }
+
+export const DefaultJobParameters: JobParameters = {
+  jobHoursRange: {
+    minHours: 0,
+    maxHours: 12,
+  },
+  statusName: StatusName.Available,
+};

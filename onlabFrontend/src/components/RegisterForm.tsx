@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 import { useNotification } from "../hooks/useNotification";
-import User, { RegisterModel } from "../models/User";
+import User, { RegisterModel, Validation } from "../models/User";
 
 export default function RegisterForm() {
   const navigate: NavigateFunction = useNavigate();
@@ -17,39 +17,23 @@ export default function RegisterForm() {
       password: "",
     },
     validate: {
-      userName: (val) => userNameValidation(val),
-      email: (val) => emailValidation(val),
-      password: (val) => passwordValidation(val),
+      userName: (val) => Validation.userNameValidation(val),
+      email: (val) => Validation.emailValidation(val),
+      password: (val) => Validation.passwordValidation(val),
     },
   });
 
-  const userNameValidation = (val: string) => {
-    if (val.length < 4) return "Username is too short";
-    if (val.length > 10) return "Username is too long";
-    return null;
-  };
-
-  const passwordValidation = (val: string) => {
-    if (val.length < 4) return "Username is too short";
-    if (val.length > 10) return "Username is too long";
-    return null;
-  };
-
-  const emailValidation = (val: string) =>
-    /^\S+@\S+$/.test(val) ? null : "Invalid email";
-
   const handleRegister = (registerModel: RegisterModel) => {
-    registerUser(registerModel).then(
-      () => {
+    registerUser(registerModel)
+      .then(() => {
         navigate("/login");
         notification.success("Successful registration");
-      },
-      (error) => {
+      })
+      .catch((error) => {
         const resMessage =
           error?.response?.data?.message || error.message || error.toString();
         notification.error(resMessage);
-      }
-    );
+      });
   };
 
   return (

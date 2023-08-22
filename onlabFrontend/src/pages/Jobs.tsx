@@ -1,83 +1,43 @@
-import { useEffect, useState } from "react";
+import { Box, Container, Title, Text, Group, Stack } from "@mantine/core";
+import { useState } from "react";
 import JobFilter from "../components/job-components/JobFilter";
 import { JobList } from "../components/job-components/JobList";
 import { useGetJobs } from "../hooks/JobHooks";
-import { JobParameters } from "../models/Job";
-import { StatusName } from "../models/Status";
+import { DefaultJobParameters, JobParameters } from "../models/Job";
 
 export default function Jobs() {
-  let jobItems = null;
-  const [jobFilter, setJobFilter] = useState<JobParameters>({
-    jobHoursRange: {
-      minHours: 0,
-      maxHours: 12,
-    },
-    statusName: StatusName.Available,
-  });
+  const [jobFilter, setJobFilter] =
+    useState<JobParameters>(DefaultJobParameters);
   const [jobs, error, loading, refetch] = useGetJobs(jobFilter);
-  useEffect(() => {
-    refetch();
-  }, []);
-  if (loading) {
-    jobItems = (
-      <>
-        <Spinner boxSize="100px" marginTop="10%" alignSelf="center" />
-        <Heading as="h3" size="sm" marginTop="2%">
-          Loading...
-        </Heading>
-      </>
-    );
-  } else if (error) {
-    jobItems = (
-      <>
-        <WarningIcon
-          boxSize="100px"
-          marginTop="10%"
-          alignSelf="center"></WarningIcon>
-        <Heading as="h3" size="sm">
-          Error happened
-        </Heading>
-        <Button color="cyan" size="md" onClick={() => refetch()}>
-          Click me to try again!
-        </Button>
-      </>
-    );
-  } else {
-    if (!!jobs) jobItems = <JobList jobs={jobs}></JobList>;
-  }
-
-  //jobItems = <JobList jobs={dummyJobs}></JobList>;
 
   return (
-    <Flex
-      px="10%"
-      direction="column"
-      gap="7"
-      py="2%"
-      textAlign="center"
-      h="inherit"
-      alignItems="center">
-      <Heading as="h1">How does it work?</Heading>
-      <Flex justify="space-between" px="10%">
-        <Text fontSize="lg">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum
-          dolor sit amet consectetur adipisicing elit. Provident iusto
-          quibusdam, fugiat eius, similique accusantium possimus alias neque
-          cupiditate porro molestiae dolore sunt!
-        </Text>
-      </Flex>
-      <JobFilter
-        jobFilter={jobFilter}
-        setJobFilter={setJobFilter}
-        refetch={refetch}></JobFilter>
-      <Heading as="h2" size="md">
-        Available jobs
-      </Heading>
-      {jobs.length > 0 ? (
-        jobItems
-      ) : (
-        <Heading size="lg">There are currently no available jobs</Heading>
-      )}
-    </Flex>
+    <Container>
+      <Stack align="center" justify="center">
+        <Title order={1}>How does it work?</Title>
+        <Box px="10%">
+          <Text fz="lg">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem
+            ipsum dolor sit amet consectetur adipisicing elit. Provident iusto
+            quibusdam, fugiat eius, similique accusantium possimus alias neque
+            cupiditate porro molestiae dolore sunt!
+          </Text>
+        </Box>
+      </Stack>
+
+      <Group align="top" position="center">
+        <JobFilter
+          jobFilter={jobFilter}
+          setJobFilter={setJobFilter}
+          refetch={refetch}></JobFilter>
+        <Stack align="center" justify="center">
+          <Title order={2}>Available jobs</Title>
+          <JobList
+            jobs={jobs}
+            loading={loading}
+            error={error}
+            refetch={refetch}></JobList>
+        </Stack>
+      </Group>
+    </Container>
   );
 }

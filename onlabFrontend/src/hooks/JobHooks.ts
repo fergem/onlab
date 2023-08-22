@@ -18,6 +18,7 @@ export const useGetJobs = (jobParameters: JobParameters) => {
       return data;
     },
     {
+      retry: false,
       refetchOnMount: true,
       refetchInterval: 6000,
       refetchOnWindowFocus: true,
