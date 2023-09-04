@@ -36,7 +36,7 @@ export interface LoginModel {
   password?: string;
 }
 
-export const Validation = {
+export const UserValidation = {
   userNameValidation(val: string) {
     if (val.length < 4) return "Username is too short";
     if (val.length > 10) return "Username is too long";

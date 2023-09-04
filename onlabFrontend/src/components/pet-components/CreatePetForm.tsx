@@ -1,12 +1,3 @@
-import {
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Button,
-  Flex,
-  Select,
-  FormControl,
-} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import Pet from "../../models/Pet";
 import { UserService } from "../../services/UserService";

@@ -101,12 +101,8 @@ export const useTakeJob = () => {
   } = useMutation<any, Error, number>(
     "mutate-takeJob",
     async (id: number) => {
-      console.log("asd", id);
       if (id !== null) {
-        console.log("asdasd");
-
         const asd = await JobService.takeJob(id);
-        console.log("asdasd", asd);
         return asd;
       }
     },

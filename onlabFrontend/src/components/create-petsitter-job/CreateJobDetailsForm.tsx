@@ -1,42 +1,45 @@
-import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { usePostJobs } from "../../hooks/JobHooks";
-import Job from "../../models/Job";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import Job, { CreateJobModel, JobValidation } from "../../models/Job";
+
+import {
+  Button,
+  Grid,
+  NumberInput,
+  Paper,
+  Stack,
+  Textarea,
+  TextInput,
+} from "@mantine/core";
+import { useNotification } from "../../hooks/useNotification";
+import { useForm } from "@mantine/form";
 interface IProps {
   selectedPetIds: number[];
 }
 
 export const CreateJobDetailsForm: React.FC<IProps> = ({ selectedPetIds }) => {
-  const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required("Fullname is required"),
-    username: Yup.string()
-      .required("Username is required")
-      .min(6, "Username must be at least 6 characters")
-      .max(20, "Username must not exceed 20 characters"),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
-    confirmPassword: Yup.string()
-      .required("Confirm Password is required")
-      .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
-    acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
-  });
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Job[]>({
-    resolver: yupResolver(validationSchema),
+  const navigate = useNavigate();
+  const notification = useNotification();
+
+  const form = useForm({
+    initialValues: {
+      hours: 0,
+      location: "",
+      description: "",
+      minRequiredExperience: 1,
+      payment: 0,
+    },
+    validate: {
+      description: (val) => JobValidation.validateDescription(val),
+      location: (val) => JobValidation.validateLocation(val),
+    },
+    validateInputOnChange: true,
   });
 
   const { user } = useAuth();
-  const handleCreateJob = (job: Job) => {
+
+  const handleCreateJob = (job: CreateJobModel) => {
     postJob(
       { ...job, petIDs: selectedPetIds },
       {
@@ -49,15 +52,53 @@ export const CreateJobDetailsForm: React.FC<IProps> = ({ selectedPetIds }) => {
   };
 
   const [job, error, postJob] = usePostJobs();
-  const navigate = useNavigate();
   return (
-    <form onSubmit={handleSubmit(handleCreateJob)}>
-      <Container>
-        <Stack direction="column">
-          <TextField id="outlined-basic" label="Email" variant="outlined" />
-          <Button>Submit</Button>
-        </Stack>
-      </Container>
+    <form onSubmit={form.onSubmit(handleCreateJob)}>
+      <Stack justify="space-evenly">
+        <Grid>
+          <Grid.Col span={4}>
+            <NumberInput
+              label="Hours"
+              withAsterisk
+              {...form.getInputProps("hours")}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <NumberInput
+              label="Min experience"
+              withAsterisk
+              {...form.getInputProps("minRequiredExperience")}
+            />
+          </Grid.Col>
+          <Grid.Col span={4}>
+            <NumberInput
+              label="Payment by hours"
+              withAsterisk
+              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+              step={5}
+              formatter={(value) =>
+                !Number.isNaN(parseFloat(value))
+                  ? `$ ${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+                  : "$ "
+              }
+              {...form.getInputProps("payment")}
+            />
+          </Grid.Col>
+        </Grid>
+        <TextInput
+          withAsterisk
+          label="Location"
+          placeholder="Budapest"
+          {...form.getInputProps("location")}
+        />
+
+        <Textarea
+          placeholder="Your text"
+          label="Description"
+          withAsterisk
+          {...form.getInputProps("description")}
+        />
+      </Stack>
     </form>
   );
 };

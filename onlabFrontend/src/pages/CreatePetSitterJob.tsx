@@ -1,3 +1,4 @@
+import { Center, Container, Paper } from "@mantine/core";
 import { useState } from "react";
 import { CustomStepper } from "../components/CustomStepper";
 
@@ -13,15 +14,16 @@ export default function CreatePetSitterJob() {
       setSelectedPets((t) => [...t, id]);
     }
   };
-  const petSelectorStep = usePetSelector(selectedPets, handleSelectPets);
+
+  const petSelectorStep = usePetSelector(handleSelectPets);
   const createJobDetailsFormStep = useCreateJobDetailsForm(selectedPets);
 
   return (
-    <Stack minHeight="100%" alignItems="center" justifyContent="center">
-      <Card>
+    <Center mih="80vh">
+      <Paper shadow="sm" p="xl">
         <CustomStepper
           steps={[petSelectorStep, createJobDetailsFormStep]}></CustomStepper>
-      </Card>
-    </Stack>
+      </Paper>
+    </Center>
   );
 }

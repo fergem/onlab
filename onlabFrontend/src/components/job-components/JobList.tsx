@@ -48,7 +48,11 @@ export const JobList: React.FC<IPropsJobList> = ({
       </>
     );
   } else if (jobs.length === 0) {
-    return <Title order={2}>There are currently no available jobs</Title>;
+    return (
+      <Title order={2} align="center">
+        There are currently no available jobs
+      </Title>
+    );
   }
 
   return (
@@ -68,7 +72,7 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
       p="sm"
       withBorder
       onClick={() => navigate("/job", { state: { job } })}>
-      <Container m="0px" w="600px">
+      <Container m="0px">
         <Group>
           <Image
             fit="contain"

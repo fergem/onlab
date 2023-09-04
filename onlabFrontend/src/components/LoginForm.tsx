@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 import { useNotification } from "../hooks/useNotification";
-import { LoginModel, Validation } from "../models/User";
+import { LoginModel, UserValidation } from "../models/User";
 
 export default function LoginForm() {
   let navigate: NavigateFunction = useNavigate();
@@ -17,8 +17,8 @@ export default function LoginForm() {
       password: "",
     },
     validate: {
-      userName: (val) => Validation.userNameValidation(val),
-      password: (val) => Validation.passwordValidation(val),
+      userName: (val) => UserValidation.userNameValidation(val),
+      password: (val) => UserValidation.passwordValidation(val),
     },
   });
 
@@ -48,6 +48,7 @@ export default function LoginForm() {
             withAsterisk
             label="Password"
             placeholder="blabla123"
+            type="password"
             {...form.getInputProps("password")}
           />
           <Button type="submit">Submit</Button>

@@ -1,14 +1,14 @@
 import {
+  Box,
   Button,
-  Card,
-  CardBody,
+  Center,
+  Container,
+  Paper,
   RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
   Select,
+  Stack,
   Text,
-} from "@chakra-ui/react";
+} from "@mantine/core";
 import { useState } from "react";
 import { JobParameters } from "../../models/Job";
 import { StatusName } from "../../models/Status";
@@ -32,48 +32,51 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
       },
     });
   };
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue(event.target.value as StatusName);
+  const handleSelectChange = (event: string) => {
+    setValue(event as StatusName);
     setJobFilter({
       ...jobFilter,
-      statusName: event.target.value as StatusName,
+      statusName: event as StatusName,
     });
   };
   const handleFilters = () => {
     refetch();
   };
+  const selectData = [
+    { value: StatusName.Available, label: "Available" },
+    { value: StatusName.WaitingForApproval, label: "Waiting For Approval" },
+    { value: StatusName.Inprogress, label: "In Progress" },
+  ];
   return (
-    <Card boxSize="20%">
-      <CardBody>
-        <Text>
-          {range[0]}-{range[1]}
-        </Text>
-        <RangeSlider
-          aria-label={["min", "max"]}
-          defaultValue={[0, 12]}
-          min={0}
-          minStepsBetweenThumbs={1}
-          max={12}
-          step={1}
-          onChange={handleHoursRangeChange}>
-          <RangeSliderTrack>
-            <RangeSliderFilledTrack />
-          </RangeSliderTrack>
-          <RangeSliderThumb index={0} />
-          <RangeSliderThumb index={1} />
-        </RangeSlider>
-        <Select onChange={handleSelectChange} value={value}>
-          <option value={StatusName.Available}>Available</option>
-          <option value={StatusName.WaitingForApproval}>
-            Waiting For Approval
-          </option>
-          <option value={StatusName.Inprogress}>In Progress</option>
-        </Select>
-        <Button color="cyan" size="md" onClick={handleFilters}>
-          Apply filters
-        </Button>
-      </CardBody>
-    </Card>
+    <Container>
+      <Paper shadow="sm" p="sm" withBorder>
+        <Stack justify="center" align="center">
+          <Text>
+            {range[0]}-{range[1]}
+          </Text>
+          <Box miw="100%">
+            <RangeSlider
+              defaultValue={[0, 12]}
+              min={0}
+              max={12}
+              step={1}
+              onChange={handleHoursRangeChange}
+            />
+          </Box>
+
+          <Select
+            onChange={handleSelectChange}
+            data={selectData}
+            transitionProps={{
+              transition: "pop-top-left",
+              duration: 80,
+              timingFunction: "ease",
+            }}
+          />
+          <Button onClick={handleFilters}>Apply filters</Button>
+        </Stack>
+      </Paper>
+    </Container>
   );
 };
 

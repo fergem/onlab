@@ -1,17 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
 import { PetSelector } from "../components/create-petsitter-job/PetSelector";
 import Pet from "../models/Pet";
+import { useGetUserPets } from "./UserHooks";
 
-export const usePetSelector = (
-  selectedPets: number[],
-  setSelectedPets: (id: number) => void
-) => {
+export const usePetSelector = (setSelectedPets: (id: number) => void) => {
+  const [pets, error, loading] = useGetUserPets();
+
   return {
-    title: "Select pets",
+    title: "Please select pets",
     content: (
       <PetSelector
-        selectedPets={selectedPets}
-        setSelectedPets={setSelectedPets}></PetSelector>
+        setSelectedPets={setSelectedPets}
+        pets={pets}
+        error={error}
+        loading={loading}></PetSelector>
     ),
   };
 };

@@ -11,3 +11,5 @@ export interface PetImage {
   id: number;
   picture: string;
 }
+
+export const PetValidation = {};

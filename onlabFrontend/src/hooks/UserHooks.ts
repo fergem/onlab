@@ -19,6 +19,7 @@ export const useGetUserPets = () => {
       return data;
     },
     {
+      retryDelay: 6000,
       refetchOnMount: true,
       refetchInterval: 6000,
       refetchOnWindowFocus: true,
@@ -51,20 +52,20 @@ export const petImageUpload = (petID: number, file: File) => {
 };
 
 export const userProfilePictureUpload = () => {
-  const [fileSelected, setFileSelected] = useState<File>();
+  const [fileSelected, setFileSelected] = useState<File | null>(null);
   const {
     isLoading: loading,
     mutate: postProfilePicture,
     isError: error,
   } = useMutation<any, Error>(
     async () => {
-      const data = await ImageUploadService.uploadProfilePicture(fileSelected);
-      return data;
+      if (fileSelected)
+        return await ImageUploadService.uploadProfilePicture(fileSelected);
     },
     {
       onSuccess: (res) => {},
       onError: (err: any) => {},
     }
   );
-  return [fileSelected, setFileSelected, postProfilePicture] as const;
+  return { fileSelected, setFileSelected, postProfilePicture };
 };

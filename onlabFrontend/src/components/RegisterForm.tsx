@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 import { useNotification } from "../hooks/useNotification";
-import User, { RegisterModel, Validation } from "../models/User";
+import User, { RegisterModel, UserValidation } from "../models/User";
 
 export default function RegisterForm() {
   const navigate: NavigateFunction = useNavigate();
@@ -17,9 +17,9 @@ export default function RegisterForm() {
       password: "",
     },
     validate: {
-      userName: (val) => Validation.userNameValidation(val),
-      email: (val) => Validation.emailValidation(val),
-      password: (val) => Validation.passwordValidation(val),
+      userName: (val) => UserValidation.userNameValidation(val),
+      email: (val) => UserValidation.emailValidation(val),
+      password: (val) => UserValidation.passwordValidation(val),
     },
   });
 

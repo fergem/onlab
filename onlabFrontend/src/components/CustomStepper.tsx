@@ -1,53 +1,50 @@
+import { Button, Group, Stack, Stepper } from "@mantine/core";
 import React, { useState } from "react";
 
 export interface StepPropsWithContent {
   title: string;
   content: React.ReactNode;
+  stepDisabled: boolean;
+  onFinish(): void;
 }
-interface IProps {
+export interface IProps {
   steps: StepPropsWithContent[];
 }
 
 export const CustomStepper: React.FC<IProps> = ({ steps }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const nextStep = () =>
+    setActiveStep((current) =>
+      current < steps.length ? current + 1 : current
+    );
+  const prevStep = () =>
+    setActiveStep((current) => (current > 0 ? current - 1 : current));
 
-  const handleNext = () => {
-    if (activeStep <= steps.length)
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const getNextStepText = () => {
+    return activeStep === steps.length ? "Finish" : "Next";
   };
 
   return (
-    <Container disableGutters sx={{ padding: "3%", minWidth: "40vw" }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((s) => {
-          return (
-            <Step key={s.title}>
-              <StepLabel>{s.title}</StepLabel>
-            </Step>
-          );
-        })}
+    <Stack spacing="xs">
+      <Stepper
+        active={activeStep}
+        onStepClick={setActiveStep}
+        breakpoint="sm"
+        allowNextStepsSelect={false}
+        color="indigo"
+        iconSize={32}>
+        {steps.map((s) => (
+          <Stepper.Step key={s.title} label={s.title}>
+            {s.content}
+          </Stepper.Step>
+        ))}
       </Stepper>
-
-      <React.Fragment>
-        {steps[activeStep].content}
-        <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-          <Button
-            color="cyan"
-            size="md"
-            disabled={activeStep === 0}
-            onClick={handleBack}>
-            Back
-          </Button>
-          <Box sx={{ flex: "1 1 auto" }} />
-          <Button onClick={handleNext}>
-            {activeStep === steps.length - 1 ? "Finish" : "Next"}
-          </Button>
-        </Box>
-      </React.Fragment>
-    </Container>
+      <Group position="center" mt="xl">
+        <Button variant="default" onClick={prevStep}>
+          Back
+        </Button>
+        <Button onClick={nextStep}>{getNextStepText()}</Button>
+      </Group>
+    </Stack>
   );
 };
