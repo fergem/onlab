@@ -12,17 +12,10 @@ export const usePetSelector = ({
   selectedPets,
   handleSelectPets,
 }: IPropsPetSelectorHook) => {
-  const [pets, error, loading] = useGetUserPets();
   const stepDisabled = selectedPets?.length === 0;
   return {
     stepDisabled: stepDisabled,
     title: "Please select pets",
-    content: (
-      <PetSelector
-        selectPets={handleSelectPets}
-        pets={pets}
-        error={error}
-        loading={loading}></PetSelector>
-    ),
+    content: <PetSelector selectPets={handleSelectPets} />,
   };
 };

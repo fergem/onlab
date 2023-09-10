@@ -26,9 +26,14 @@ export default function CustomMantineProvider() {
         components: {
           Button: {
             defaultProps: (theme) => ({
-              variant: "light",
-              color: theme.colorScheme === "dark" ? "orange" : "indigo",
+              variant: "filled",
+              color: "blue",
               size: "md",
+            }),
+          },
+          RangeSlider: {
+            defaultProps: (theme) => ({
+              color: "blue",
             }),
           },
         },

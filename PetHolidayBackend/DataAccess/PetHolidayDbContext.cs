@@ -66,7 +66,7 @@ namespace DataAccess
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Age);
-                entity.Property(s => s.Species).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Species);
                 entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
             });
 
@@ -229,8 +229,8 @@ namespace DataAccess
                         ID = 1,
                         Name = "Vakarcs",
                         Description = "Szep kutya",
-                        Species = "Kutya",
-                        Age = 7,
+                        Species = PetSpecies.Dog,
+                        Age = 2,
                         UserID = 3,
                     },
                     new DbPet()
@@ -238,16 +238,16 @@ namespace DataAccess
                         ID = 2,
                         Name = "Miu",
                         Description = "Szep cica",
-                        Species = "Cica",
-                        Age = 7,
+                        Species = PetSpecies.Cat,
+                        Age = 3,
                         UserID = 3,
                     },
                     new DbPet()
                     {
                         ID = 3,
-                        Name = "Teki",
-                        Description = "Szep teknőc",
-                        Species = "Teknős",
+                        Name = "Ló rider",
+                        Description = "Egy nagyon nagy ló",
+                        Species = PetSpecies.Horse,
                         Age = 7,
                         UserID = 3,
                     }

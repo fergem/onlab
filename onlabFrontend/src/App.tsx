@@ -8,6 +8,7 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import AuthVerify from "./components/AuthVerify";
 import JobPage from "./components/job-components/JobPage";
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./context/AuthContext";
@@ -16,7 +17,7 @@ import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
 import Login from "./pages/Login";
-import OwnerProfile from "./pages/OwnerProfile";
+import OwnerProfile from "./pages/PostedJobs";
 import PetSitterProfile from "./pages/PetSitterProfile";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
@@ -38,6 +39,7 @@ function App() {
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
       </AppShell>
+      <AuthVerify />
     </AuthContext.Provider>
   );
 }

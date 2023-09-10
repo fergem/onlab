@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Container,
+  MultiSelect,
   Paper,
   RangeSlider,
   Select,
@@ -11,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { JobParameters } from "../../models/Job";
+import { getPetSpeciesValueLabel } from "../../models/Pet";
 import { StatusName } from "../../models/Status";
 
 interface IProp {
@@ -50,29 +52,39 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
   return (
     <Container>
       <Paper shadow="sm" p="sm" withBorder>
-        <Stack justify="center" align="center">
-          <Text>
-            {range[0]}-{range[1]}
-          </Text>
-          <Box miw="100%">
-            <RangeSlider
-              defaultValue={[0, 12]}
-              min={0}
-              max={12}
-              step={1}
-              onChange={handleHoursRangeChange}
-            />
-          </Box>
-
+        <Text fz="md" align="left">
+          Search for:
+        </Text>
+        <Stack justify="center" spacing="xl">
           <Select
             onChange={handleSelectChange}
             data={selectData}
+            radius="md"
             transitionProps={{
               transition: "pop-top-left",
               duration: 80,
               timingFunction: "ease",
             }}
           />
+          <MultiSelect
+            data={getPetSpeciesValueLabel()}
+            label="Experience in"
+            placeholder="Pick animals"
+          />
+          <Box>
+            <Text fz="sm">Hours</Text>
+            <RangeSlider
+              defaultValue={[1, 12]}
+              marks={[
+                { value: 1, label: "1" },
+                { value: 12, label: "12" },
+              ]}
+              min={1}
+              max={12}
+              minRange={1}
+              onChange={handleHoursRangeChange}
+            />
+          </Box>
           <Button onClick={handleFilters}>Apply filters</Button>
         </Stack>
       </Paper>

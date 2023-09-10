@@ -11,7 +11,7 @@ export default function Jobs() {
   const [jobs, error, loading, refetch] = useGetJobs(jobFilter);
 
   return (
-    <Container>
+    <Stack>
       <Stack align="center" justify="center">
         <Title order={1}>How does it work?</Title>
         <Box px="10%">
@@ -25,7 +25,7 @@ export default function Jobs() {
       </Stack>
 
       <Grid align="top" justify="center" mt="2%">
-        <Grid.Col span={4}>
+        <Grid.Col span={2}>
           <JobFilter
             jobFilter={jobFilter}
             setJobFilter={setJobFilter}
@@ -33,8 +33,10 @@ export default function Jobs() {
           />
         </Grid.Col>
         <Grid.Col span={6}>
-          <Stack align="center" justify="center">
-            <Title order={2}>Available jobs</Title>
+          <Stack justify="center">
+            <Title order={2} align="center">
+              Available jobs
+            </Title>
             <JobList
               jobs={jobs}
               loading={loading}
@@ -43,6 +45,6 @@ export default function Jobs() {
           </Stack>
         </Grid.Col>
       </Grid>
-    </Container>
+    </Stack>
   );
 }

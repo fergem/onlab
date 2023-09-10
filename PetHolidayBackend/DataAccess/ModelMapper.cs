@@ -120,7 +120,7 @@ namespace DataAccess
         {
             //var images = new List<PetImage>();
             //foreach (var image in pet.Images)
-                //images.Add(ToPetImageModel(image));
+            //images.Add(ToPetImageModel(image));
 
             return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Image = ToPetImageModel(pet.Image)};
         }

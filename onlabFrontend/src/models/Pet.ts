@@ -7,6 +7,14 @@ export default interface Pet {
   image?: PetImage;
 }
 
+export interface PetInsertModel {
+  name: string;
+  description: string;
+  species: PetSpecies;
+  age: number;
+  picture: File;
+}
+
 export enum PetSpecies {
   Dog = "Dog",
   Cat = "Cat",
@@ -16,6 +24,14 @@ export enum PetSpecies {
   SmallMammal = "Small Mammal",
   Lizard = "Lizard",
   Exotic = "Exotic",
+}
+
+export function getPetSpeciesValueLabel() {
+  const petSpecies = [];
+  for (const [key, value] of Object.entries(PetSpecies)) {
+    petSpecies.push({ value: key, label: value });
+  }
+  return petSpecies;
 }
 
 export interface PetImage {

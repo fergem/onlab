@@ -10,8 +10,7 @@ export const useCreateJobDetailsForm = (selectedPetIds: number[]) => {
   const navigate = useNavigate();
   const notification = useNotification();
 
-  const [stepDisabled, setStepDisabled] = useState(true);
-  const [job, error, postJob] = usePostJobs();
+  const { job, error, postJob } = usePostJobs();
 
   const form = useForm({
     initialValues: {

@@ -1,4 +1,6 @@
-﻿namespace DataAccess.DataObjects
+﻿using Domain.Models;
+
+namespace DataAccess.DataObjects
 {
     public class DbPet
     {
@@ -15,7 +17,7 @@
 
         public required string Description { get; set; }
 
-        public required string Species { get; set; }
+        public required PetSpecies Species { get; set; }
 
         public required int Age { get; set; }
 

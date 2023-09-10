@@ -11,7 +11,11 @@ import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useNotification } from "../../hooks/useNotification";
 import { usePostUserPet } from "../../hooks/UserHooks";
-import Pet, { PetSpecies, PetValidation } from "../../models/Pet";
+import Pet, {
+  getPetSpeciesValueLabel,
+  PetSpecies,
+  PetValidation,
+} from "../../models/Pet";
 import PetImageSelect from "./PetImageSelect";
 
 interface IAddPetProps {
@@ -42,7 +46,7 @@ export default function AddPetForm({ close }: IAddPetProps) {
   });
 
   const handleCreatePet = (pet: Pet) => {
-    postPet(pet);
+    postPet();
     close();
     if (error) {
       notification.error("Could not create pet in system");
@@ -92,12 +96,4 @@ export default function AddPetForm({ close }: IAddPetProps) {
       </Stack>
     </form>
   );
-}
-
-function getPetSpeciesValueLabel() {
-  const petSpecies = [];
-  for (const [key, value] of Object.entries(PetSpecies)) {
-    petSpecies.push({ value: key, label: value });
-  }
-  return petSpecies;
 }
