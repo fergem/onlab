@@ -31,7 +31,15 @@ export const useGetUserPets = () => {
   return [pets, error, loading, listPets] as const;
 };
 
-export const usePostUserPet = () => {};
+export const usePostUserPet = () => {
+  const { mutate: postPet, isError: error } = useMutation<any, Error, Pet>(
+    "mutate-postPet",
+    async (pet: Pet) => {
+      return await UserService.insertPet(pet);
+    }
+  );
+  return { error, postPet };
+};
 
 export const petImageUpload = (petID: number, file: File) => {
   const {
@@ -48,7 +56,7 @@ export const petImageUpload = (petID: number, file: File) => {
       onError: (err: any) => {},
     }
   );
-  return [postPetPicture] as const;
+  return { postPetPicture };
 };
 
 export const userProfilePictureUpload = () => {

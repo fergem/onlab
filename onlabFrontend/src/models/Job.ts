@@ -29,11 +29,11 @@ export interface JobWithPetIDs extends Job {
 }
 
 export interface CreateJobModel {
-  hours?: number;
-  location?: string;
-  description?: string;
-  minRequiredExperience?: number;
-  payment?: number;
+  hours: number;
+  location: string;
+  description: string;
+  minRequiredExperience: number;
+  payment: number;
 }
 
 export interface JobHoursRange {

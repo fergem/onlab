@@ -1,12 +1,14 @@
 import { Center, Container, Paper } from "@mantine/core";
+import { useCallback } from "react";
 import { useState } from "react";
 import { CustomStepper } from "../components/CustomStepper";
 
 import { useCreateJobDetailsForm } from "../hooks/useCreateJobDetailsForm";
-import { usePetSelector } from "../hooks/usePetSelector";
+import { IPropsPetSelectorHook, usePetSelector } from "../hooks/usePetSelector";
 
 export default function CreatePetSitterJob() {
   const [selectedPets, setSelectedPets] = useState<number[]>([]);
+
   const handleSelectPets = (id: number) => {
     if (selectedPets.includes(id)) {
       setSelectedPets((t) => t.filter((s) => s != id));
@@ -15,7 +17,10 @@ export default function CreatePetSitterJob() {
     }
   };
 
-  const petSelectorStep = usePetSelector(handleSelectPets);
+  const petSelectorStep = usePetSelector({
+    selectedPets,
+    handleSelectPets,
+  });
   const createJobDetailsFormStep = useCreateJobDetailsForm(selectedPets);
 
   return (

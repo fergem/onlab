@@ -4,12 +4,14 @@ import { useState } from "react";
 import { baseDogPicture, basePetPicture } from "../utility/constants";
 
 export interface IPropsSelectableImage {
-  onClick(): void;
+  onClick(id: number): void;
   source: string;
   title: string;
+  id: number;
 }
 
 export default function SelectableImage({
+  id,
   source,
   onClick,
   title,
@@ -18,7 +20,7 @@ export default function SelectableImage({
 
   const handleClick = () => {
     setSelected((t) => !t);
-    onClick();
+    onClick(id);
   };
 
   return (

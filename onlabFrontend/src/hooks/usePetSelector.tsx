@@ -1,16 +1,25 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { PetSelector } from "../components/create-petsitter-job/PetSelector";
 import Pet from "../models/Pet";
 import { useGetUserPets } from "./UserHooks";
 
-export const usePetSelector = (setSelectedPets: (id: number) => void) => {
-  const [pets, error, loading] = useGetUserPets();
+export interface IPropsPetSelectorHook {
+  selectedPets: number[];
+  handleSelectPets: (id: number) => void;
+}
 
+export const usePetSelector = ({
+  selectedPets,
+  handleSelectPets,
+}: IPropsPetSelectorHook) => {
+  const [pets, error, loading] = useGetUserPets();
+  const stepDisabled = selectedPets?.length === 0;
   return {
+    stepDisabled: stepDisabled,
     title: "Please select pets",
     content: (
       <PetSelector
-        setSelectedPets={setSelectedPets}
+        selectPets={handleSelectPets}
         pets={pets}
         error={error}
         loading={loading}></PetSelector>

@@ -13,47 +13,20 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useNotification } from "../../hooks/useNotification";
-import { useForm } from "@mantine/form";
+import { useForm, UseFormReturnType } from "@mantine/form";
+
+export type CreateJobForm = UseFormReturnType<
+  CreateJobModel,
+  (values: CreateJobModel) => CreateJobModel
+>;
+
 interface IProps {
-  selectedPetIds: number[];
+  form: CreateJobForm;
 }
 
-export const CreateJobDetailsForm: React.FC<IProps> = ({ selectedPetIds }) => {
-  const navigate = useNavigate();
-  const notification = useNotification();
-
-  const form = useForm({
-    initialValues: {
-      hours: 0,
-      location: "",
-      description: "",
-      minRequiredExperience: 1,
-      payment: 0,
-    },
-    validate: {
-      description: (val) => JobValidation.validateDescription(val),
-      location: (val) => JobValidation.validateLocation(val),
-    },
-    validateInputOnChange: true,
-  });
-
-  const { user } = useAuth();
-
-  const handleCreateJob = (job: CreateJobModel) => {
-    postJob(
-      { ...job, petIDs: selectedPetIds },
-      {
-        onSuccess() {
-          navigate("/postedjobs");
-        },
-        onError(error) {},
-      }
-    );
-  };
-
-  const [job, error, postJob] = usePostJobs();
+export const CreateJobDetailsForm: React.FC<IProps> = ({ form }) => {
   return (
-    <form onSubmit={form.onSubmit(handleCreateJob)}>
+    <form>
       <Stack justify="space-evenly">
         <Grid>
           <Grid.Col span={4}>

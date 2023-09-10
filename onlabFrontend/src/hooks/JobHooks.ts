@@ -209,7 +209,7 @@ export const usePostJobs = () => {
       },
     }
   );
-  return [job, error, postJob] as const;
+  return { job, error, postJob };
 };
 
 export const useGetUserUnderTookJobs = () => {

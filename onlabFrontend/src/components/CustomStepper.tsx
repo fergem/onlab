@@ -5,7 +5,7 @@ export interface StepPropsWithContent {
   title: string;
   content: React.ReactNode;
   stepDisabled: boolean;
-  onFinish(): void;
+  onFinish?: () => void;
 }
 export interface IProps {
   steps: StepPropsWithContent[];
@@ -19,10 +19,6 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
     );
   const prevStep = () =>
     setActiveStep((current) => (current > 0 ? current - 1 : current));
-
-  const getNextStepText = () => {
-    return activeStep === steps.length ? "Finish" : "Next";
-  };
 
   return (
     <Stack spacing="xs">
@@ -43,7 +39,17 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
         <Button variant="default" onClick={prevStep}>
           Back
         </Button>
-        <Button onClick={nextStep}>{getNextStepText()}</Button>
+        {activeStep !== steps.length - 1 ? (
+          <Button onClick={nextStep} disabled={steps[activeStep].stepDisabled}>
+            Next
+          </Button>
+        ) : (
+          <Button
+            onClick={steps[activeStep].onFinish}
+            disabled={steps[activeStep].stepDisabled}>
+            Finish
+          </Button>
+        )}
       </Group>
     </Stack>
   );
