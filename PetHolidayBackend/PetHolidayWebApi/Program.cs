@@ -65,6 +65,7 @@ var app = builder.Build();
 using (var serviceScope = app.Services.CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetRequiredService<PetHolidayDbContext>();
+    context.Database.EnsureDeleted();
     context.Database.Migrate();
 }
 
