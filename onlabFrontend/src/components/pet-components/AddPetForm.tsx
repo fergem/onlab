@@ -46,7 +46,7 @@ export default function AddPetForm({ close }: IAddPetProps) {
   });
 
   const handleCreatePet = (pet: Pet) => {
-    postPet();
+    postPet({ ...pet, picture: petImage });
     close();
     if (error) {
       notification.error("Could not create pet in system");
@@ -58,10 +58,7 @@ export default function AddPetForm({ close }: IAddPetProps) {
   return (
     <form onSubmit={form.onSubmit(handleCreatePet)}>
       <Stack justify="space-evenly">
-        <PetImageSelect
-          petImage={petImage}
-          setPetimage={handleSetPetimage}
-        ></PetImageSelect>
+        <PetImageSelect petImage={petImage} setPetimage={handleSetPetimage} />
         <TextInput
           withAsterisk
           label="Name"

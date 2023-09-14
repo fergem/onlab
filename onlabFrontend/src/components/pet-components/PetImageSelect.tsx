@@ -1,4 +1,4 @@
-import { Image, FileInput, Paper, Box, Center, rem } from "@mantine/core";
+import { Center, FileInput, Image, Paper } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 
 interface IProps {
@@ -19,7 +19,7 @@ export default function PetImageSelect({ petImage, setPetimage }: IProps) {
               src={URL.createObjectURL(petImage)}
               fit="contain"
               radius="md"
-              width="150px"
+              width="170px"
               alt="Your pets image"
             />
           </Paper>

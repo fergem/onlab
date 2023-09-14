@@ -1,13 +1,10 @@
 import { Image, Modal, Paper, ScrollArea, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconHeartPlus } from "@tabler/icons-react";
-import { useRef } from "react";
 import { addPetImage } from "../../utility/constants";
 import AddPetForm from "./AddPetForm";
 
 export default function AddPet() {
   const [opened, { open, close }] = useDisclosure(false);
-  const initialRef = useRef(null);
 
   return (
     <>
@@ -34,7 +31,8 @@ export default function AddPet() {
           opacity: 0.55,
           blur: 3,
         }}
-        scrollAreaComponent={ScrollArea.Autosize}>
+        scrollAreaComponent={ScrollArea.Autosize}
+      >
         <Modal.Body>
           <AddPetForm close={close} />
         </Modal.Body>

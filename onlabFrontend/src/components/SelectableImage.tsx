@@ -1,4 +1,4 @@
-import { Flex, Image } from "@mantine/core";
+import { Center, Image } from "@mantine/core";
 import { useState } from "react";
 import { basePetPicture } from "../utility/constants";
 
@@ -6,7 +6,7 @@ export interface IPropsSelectableImage {
   onClick(id: number): void;
   source: string;
   title: string;
-  id: number;
+  id: number | null;
 }
 
 export default function SelectableImage({
@@ -21,13 +21,10 @@ export default function SelectableImage({
     setSelected((t) => !t);
     onClick(id);
   };
-
   return (
-    <Flex
+    <Center
       onClick={handleClick}
       bg={selected ? "indigo.2" : "white"}
-      align="center"
-      justify="center"
       sx={(theme) => ({
         borderRadius: "5%",
         "&:hover": {
@@ -35,18 +32,13 @@ export default function SelectableImage({
         },
         transition: "background-color 0.3s ease",
       })}
-      w="125px"
-      h="125px"
     >
       <Image
-        width="75px"
-        height="75px"
         fit="contain"
         radius="md"
         src={source ?? basePetPicture}
-        alt="Pet picutre"
-        caption={title ?? ""}
+        alt="Pet picture"
       />
-    </Flex>
+    </Center>
   );
 }

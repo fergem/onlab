@@ -56,6 +56,7 @@ export const useAuth = () => {
       addUser(contextUser);
       axios.defaults.headers.common.Authorization = `Bearer ${contextUser.bearer}`;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const registerUser = async (registerModel: RegisterModel) => {

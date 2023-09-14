@@ -8,12 +8,18 @@ import "./index.css";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      retry: 1,
-      refetchInterval: 6000,
-      retryDelay: 6000,
-      staleTime: 5 * 10000,
+      retry: 2,
+      staleTime: 1000 * 30, // 30seconds
+      cacheTime: 1000 * 30, // 30 seconds
+      refetchOnMount: "always",
+      refetchOnWindowFocus: "always",
+      refetchOnReconnect: "always",
+      refetchInterval: 1000 * 30, // 30 seconds
+      refetchIntervalInBackground: false,
+      suspense: false,
+    },
+    mutations: {
+      retry: 2,
     },
   },
 });

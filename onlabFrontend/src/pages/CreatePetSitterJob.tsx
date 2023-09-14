@@ -10,7 +10,7 @@ export default function CreatePetSitterJob() {
 
   const handleSelectPets = (id: number) => {
     if (selectedPets.includes(id)) {
-      setSelectedPets((t) => t.filter((s) => s != id));
+      setSelectedPets((t) => t.filter((s) => s !== id));
     } else {
       setSelectedPets((t) => [...t, id]);
     }

@@ -1,32 +1,23 @@
-import {
-  Loader,
-  Alert,
-  Button,
-  Grid,
-  Stack,
-  Image,
-  Text,
-  Title,
-  Paper,
-  Box,
-} from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { Center, Grid, Image, Paper, Stack, Text } from "@mantine/core";
 import { useGetUserPets } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
 import { baseDogPicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
 import AddPet from "./AddPet";
-import PetDialog from "./PetDialog";
 
 interface IPropsPetList {
   isAddingPet: boolean;
 }
 
 export default function PetList({ isAddingPet = false }: IPropsPetList) {
-  const [pets, error, loading, refetch] = useGetUserPets();
-  console.log(pets);
+  const { pets, error, loading, listPets } = useGetUserPets();
   return (
-    <LoadingBoundary loading={loading} error={error} refetch={refetch}>
+    <LoadingBoundary
+      loading={loading}
+      error={error}
+      refetch={listPets}
+      isEmpty={pets.length === 0}
+    >
       <Grid justify="center">
         {pets.map((x) => (
           <Grid.Col span={2} key={x.id}>
@@ -34,8 +25,8 @@ export default function PetList({ isAddingPet = false }: IPropsPetList) {
           </Grid.Col>
         ))}
         {isAddingPet && !loading && (
-          <Grid.Col span={2}>
-            <AddPet></AddPet>
+          <Grid.Col span={pets.length > 0 ? 2 : 12}>
+            <AddPet />
           </Grid.Col>
         )}
       </Grid>
@@ -51,18 +42,18 @@ export function PetCard({ pet }: IPropsPetCard) {
   return (
     <Stack justify="center" align="center">
       <Paper shadow="xs" p="md" withBorder>
-        <Box maw="100px" mah="100px">
+        <Center>
           <Image
             fit="contain"
             radius="md"
             src={
               pet.image
-                ? "data:image/png;base64," + pet.image.picture
+                ? `data:image/png;base64,${pet.image.picture}`
                 : baseDogPicture
             }
             alt="Green double couch with wooden legs"
           />
-        </Box>
+        </Center>
 
         <Text size="lg" align="center" mt="sm">
           {pet.name}

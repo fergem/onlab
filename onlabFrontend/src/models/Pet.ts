@@ -12,7 +12,7 @@ export interface PetInsertModel {
   description: string;
   species: PetSpecies;
   age: number;
-  picture: File;
+  picture: File | null;
 }
 
 export interface PetImageUploadModel {

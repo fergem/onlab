@@ -10,10 +10,10 @@ import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
 import Login from "./pages/Login";
-import PetSitterProfile from "./pages/PetSitterProfile";
 import OwnerProfile from "./pages/PostedJobs";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import UndertookJobs from "./pages/UndertookJobs";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -35,7 +35,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/postedjobs" element={<OwnerProfile />} />
-          <Route path="/undertookjobs" element={<PetSitterProfile />} />
+          <Route path="/undertookjobs" element={<UndertookJobs />} />
           <Route path="/job" element={<JobPage />} />
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>

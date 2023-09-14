@@ -67,7 +67,12 @@ export default function JobApprovalList({
   refetch,
 }: IPropsJobApprovalList) {
   return (
-    <LoadingBoundary loading={loading} error={error} refetch={refetch}>
+    <LoadingBoundary
+      loading={loading}
+      error={error}
+      refetch={refetch}
+      isEmpty={approvals.length === 0}
+    >
       <Stack justify="center">
         {approvals.map((x) => (
           <JobApprovalCard key={x.id} job={x} />

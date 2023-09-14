@@ -30,6 +30,7 @@ function JobPage() {
       notifications.error("Could not take job");
     }
   };
+
   return (
     <Container size="xl">
       <Title order={1} align="center" mb="3%">

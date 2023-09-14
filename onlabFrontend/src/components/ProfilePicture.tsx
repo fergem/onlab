@@ -1,4 +1,12 @@
-import { Button, FileInput, Image, Paper, Stack, rem } from "@mantine/core";
+import {
+  Button,
+  FileInput,
+  Grid,
+  Image,
+  Paper,
+  Stack,
+  rem,
+} from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
 import { useAuth } from "../hooks/AuthHooks";
@@ -20,25 +28,27 @@ export default function ProfilePicture() {
   return (
     <Stack>
       <Paper shadow="xs" p="md">
-        <Image
-          fit="contain"
-          radius="md"
-          maw="200px"
-          miw="200px"
-          height="200px"
-          src={
-            user?.picture
-              ? `data:image/png;base64,${user.picture}`
-              : baseProfilePicture
-          }
-          alt="Your Profile Picture"
-        />
+        <Grid>
+          <Grid.Col span={4}>
+            <Image
+              fit="contain"
+              radius="md"
+              src={
+                user?.picture
+                  ? `data:image/png;base64,${user.picture}`
+                  : baseProfilePicture
+              }
+              alt="Your Profile Picture"
+            />
+            <FileInput
+              placeholder="Pick file"
+              onChange={saveFileSelected}
+              icon={<IconUpload size={rem(14)} />}
+            />
+          </Grid.Col>
+        </Grid>
       </Paper>
-      <FileInput
-        placeholder="Pick file"
-        onChange={saveFileSelected}
-        icon={<IconUpload size={rem(14)} />}
-      />
+
       {fileSelected && <Button onClick={upload}>Upload picture</Button>}
     </Stack>
   );

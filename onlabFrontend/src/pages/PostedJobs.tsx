@@ -1,26 +1,55 @@
+import { Button, Grid, Group, Stack, Title, Tooltip } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 import JobApprovalList from "../components/job-components/JobApprovalList";
 import JobList from "../components/job-components/JobList";
 import { useGetApprovals, useGetUserPostedJobs } from "../hooks/JobHooks";
 import { DefaultJobParameters } from "../models/Job";
 
 export default function OwnerProfile() {
+  const navigate = useNavigate();
   const { jobs, error, loading, listJobs } =
     useGetUserPostedJobs(DefaultJobParameters);
   const { approvals, approvalsLoading, approvalsError, listApprovals } =
     useGetApprovals();
 
+  const handleAdd = () => {
+    navigate("/createpetsitterjob");
+  };
   return (
-    <>
-      {" "}
-      <JobApprovalList
-        approvals={approvals}
-        loading={approvalsLoading}
-        error={approvalsError}
-        refetch={listApprovals}
-      />
-      ;
-      <JobList jobs={jobs} loading={loading} error={error} refetch={listJobs} />
-      ;
-    </>
+    <Stack align="center" justify="center">
+      <Grid w="95%" align="center" justify="center">
+        <Grid.Col span={5}>
+          <Title align="center" order={2} mb={10}>
+            Approvals
+          </Title>
+          <JobApprovalList
+            approvals={approvals}
+            loading={approvalsLoading}
+            error={approvalsError}
+            refetch={listApprovals}
+          />
+        </Grid.Col>
+        <Grid.Col span={7}>
+          <Group align="center" position="center" mb={10}>
+            <Tooltip label="Post new job">
+              <Button variant="subtle" color="dark" onClick={handleAdd}>
+                <IconPlus />
+              </Button>
+            </Tooltip>
+            <Title align="center" order={2}>
+              Posted jobs
+            </Title>
+          </Group>
+
+          <JobList
+            jobs={jobs}
+            loading={loading}
+            error={error}
+            refetch={listJobs}
+          />
+        </Grid.Col>
+      </Grid>
+    </Stack>
   );
 }

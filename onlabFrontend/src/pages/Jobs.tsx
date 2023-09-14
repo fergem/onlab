@@ -25,14 +25,14 @@ export default function Jobs() {
       </Stack>
 
       <Grid align="top" justify="center" mt="2%">
-        <Grid.Col span={2}>
+        <Grid.Col span={3}>
           <JobFilter
             jobFilter={jobFilter}
             setJobFilter={setJobFilter}
             refetch={listJobs}
           />
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={7}>
           <Stack justify="center">
             <Title order={2} align="center">
               Available jobs

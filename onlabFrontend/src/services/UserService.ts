@@ -6,19 +6,36 @@ const getUserPets = async () => {
   return response.data;
 };
 
-const insertPet = ({
+const insertPet = async ({
   name,
   description,
   species,
   age,
   picture,
 }: PetInsertModel) => {
-  return axios.post<PetInsertModel>("/api/users/addpet", {
+  const result = await axios.post<Pet>("/api/users/addpet", {
     name,
     description,
     species,
     age,
   });
+
+  const formData = new FormData();
+
+  if (picture) formData.append("file", picture);
+
+  const endresult = await axios.post<string>(
+    "/api/users/addpetimage",
+    formData,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        petID: result.data.id,
+      },
+    }
+  );
+
+  return endresult.data;
 };
 
 const UserService = {

@@ -27,7 +27,7 @@ const PetDialog: React.FC<IPropsPetDialog> = ({ pet, onClose, isOpen }) => {
             mb="2vh"
             src={
               pet.image
-                ? "data:image/png;base64," + pet.image.picture
+                ? `data:image/png;base64,${pet.image.picture}`
                 : baseDogPicture
             }
             alt="Your pets picture"
