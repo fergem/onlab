@@ -1,13 +1,11 @@
 import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import theme from "./utility/theme";
-
-const UserContext = createContext({ user: {} });
+import { MantineProvider } from "@mantine/core";
+import CustomMantineProvider from "./CustomMantineProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,11 +23,9 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ChakraProvider>
+      <BrowserRouter>
+        <CustomMantineProvider />
+      </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>
 );

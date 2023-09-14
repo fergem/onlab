@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DataAccess.Repositories
 {
@@ -89,6 +90,17 @@ namespace DataAccess.Repositories
             dbPet.Description = pet.Description;
             dbPet.Species = pet.Species;
             dbPet.Name = pet.Name;
+            if (pet.Image is not null)
+            {
+                var dbPetImage = new DbPetImage
+                {
+                    Picture = pet.Image.Picture,
+                    PetID = pet.ID,
+                };
+                dbPet.Image = dbPetImage;
+                await dbcontext.PetImages.AddAsync(dbPetImage);
+
+            }
 
             await dbcontext.SaveChangesAsync();
      

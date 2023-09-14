@@ -1,92 +1,59 @@
-import {
-  Button,
-  Card,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { Paper, Stack, TextInput, Button } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
-import { LoginModel } from "../models/User";
+import { useNotification } from "../hooks/useNotification";
+import { LoginModel, UserValidation } from "../models/User";
 
 export default function LoginForm() {
   let navigate: NavigateFunction = useNavigate();
   const { loginUser } = useAuth();
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginModel>();
+  const notification = useNotification();
+
+  const form = useForm({
+    initialValues: {
+      userName: "",
+      email: "",
+      password: "",
+    },
+    validate: {
+      userName: (val) => UserValidation.userNameValidation(val),
+      password: (val) => UserValidation.passwordValidation(val),
+    },
+  });
 
   const handleLogin = (loginModel: LoginModel) => {
-    loginUser(loginModel).then(
-      () => {
+    loginUser(loginModel)
+      .then(() => {
         navigate("/jobs");
-      },
-      (error) => {
+      })
+      .catch((error) => {
         const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
-    );
+          error?.response?.data?.message || error.message || error.toString();
+        notification.error(resMessage);
+      });
   };
 
   return (
-    <Flex justify="center" textAlign="center" alignItems="center">
-      <Card
-        boxShadow="dark-lg"
-        borderRadius="xl"
-        color="#505168"
-        boxSize="fit-content"
-        p="10%">
-        <form onSubmit={handleSubmit(handleLogin)}>
-          <Flex
-            direction="row"
-            alignItems="center"
-            justifyContent="space-evenly">
-            <Flex direction="column">
-              <FormControl isInvalid={!!errors.userName}>
-                <FormLabel>Username</FormLabel>
-                <Input
-                  id="userName"
-                  placeholder="Username"
-                  {...register("userName", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.userName && errors.userName.message}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.password}>
-                <FormLabel>Password</FormLabel>
-                <Input
-                  id="password"
-                  placeholder="Password"
-                  type="password"
-                  {...register("password", {
-                    required: "This is required",
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
-
-              <Button mt={4} type="submit" isLoading={isSubmitting}>
-                Submit
-              </Button>
-            </Flex>
-          </Flex>
-          <FormControl></FormControl>
-        </form>
-      </Card>
-    </Flex>
+    <Paper shadow="sm" p="xl">
+      <form onSubmit={form.onSubmit(handleLogin)}>
+        <Stack>
+          <TextInput
+            withAsterisk
+            label="Username"
+            placeholder="johndoe"
+            {...form.getInputProps("userName")}
+          />
+          <TextInput
+            withAsterisk
+            label="Password"
+            placeholder="blabla123"
+            type="password"
+            {...form.getInputProps("password")}
+          />
+          <Button type="submit">Submit</Button>
+        </Stack>
+      </form>
+    </Paper>
   );
 }

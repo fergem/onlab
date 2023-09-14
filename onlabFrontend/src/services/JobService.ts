@@ -39,7 +39,6 @@ const createJob = async ({
   minRequiredExperience,
   petIDs,
 }: JobWithPetIDs) => {
-  console.log({ hours, location, description, payment, petIDs });
   const response = await axios.post<any>("/api/jobs", {
     hours,
     location,

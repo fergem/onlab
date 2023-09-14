@@ -15,7 +15,6 @@ import {
 import { useApproveJob, useDeclineJob } from "../../hooks/JobHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
-import JobDialog from "./JobDialog";
 
 export interface IPropsJobApprovalCard {
   job: Job;
@@ -79,10 +78,10 @@ const JobApprovalCard: React.FC<IPropsJobApprovalCard> = ({ job }) => {
           </Flex>
 
           <Flex direction="column">
-            <Button m="5%" onClick={handleApproveJob}>
+            <Button>
               <CheckIcon></CheckIcon>
             </Button>
-            <Button m="5%">
+            <Button>
               <CloseIcon onClick={handleDeclineJob}></CloseIcon>
             </Button>
           </Flex>

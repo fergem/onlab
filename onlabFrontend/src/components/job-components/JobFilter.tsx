@@ -1,16 +1,18 @@
 import {
+  Box,
   Button,
-  Card,
-  CardBody,
+  Center,
+  Container,
+  MultiSelect,
+  Paper,
   RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
   Select,
+  Stack,
   Text,
-} from "@chakra-ui/react";
+} from "@mantine/core";
 import { useState } from "react";
 import { JobParameters } from "../../models/Job";
+import { getPetSpeciesValueLabel } from "../../models/Pet";
 import { StatusName } from "../../models/Status";
 
 interface IProp {
@@ -32,46 +34,61 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
       },
     });
   };
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue(event.target.value as StatusName);
+  const handleSelectChange = (event: string) => {
+    setValue(event as StatusName);
     setJobFilter({
       ...jobFilter,
-      statusName: event.target.value as StatusName,
+      statusName: event as StatusName,
     });
   };
   const handleFilters = () => {
     refetch();
   };
+  const selectData = [
+    { value: StatusName.Available, label: "Available" },
+    { value: StatusName.WaitingForApproval, label: "Waiting For Approval" },
+    { value: StatusName.Inprogress, label: "In Progress" },
+  ];
   return (
-    <Card boxSize="20%">
-      <CardBody>
-        <Text>
-          {range[0]}-{range[1]}
+    <Container>
+      <Paper shadow="sm" p="sm" withBorder>
+        <Text fz="md" align="left">
+          Search for:
         </Text>
-        <RangeSlider
-          aria-label={["min", "max"]}
-          defaultValue={[0, 12]}
-          min={0}
-          minStepsBetweenThumbs={1}
-          max={12}
-          step={1}
-          onChange={handleHoursRangeChange}>
-          <RangeSliderTrack>
-            <RangeSliderFilledTrack />
-          </RangeSliderTrack>
-          <RangeSliderThumb index={0} />
-          <RangeSliderThumb index={1} />
-        </RangeSlider>
-        <Select onChange={handleSelectChange} value={value}>
-          <option value={StatusName.Available}>Available</option>
-          <option value={StatusName.WaitingForApproval}>
-            Waiting For Approval
-          </option>
-          <option value={StatusName.Inprogress}>In Progress</option>
-        </Select>
-        <Button onClick={handleFilters}>Apply filters</Button>
-      </CardBody>
-    </Card>
+        <Stack justify="center" spacing="xl">
+          <Select
+            onChange={handleSelectChange}
+            data={selectData}
+            radius="md"
+            transitionProps={{
+              transition: "pop-top-left",
+              duration: 80,
+              timingFunction: "ease",
+            }}
+          />
+          <MultiSelect
+            data={getPetSpeciesValueLabel()}
+            label="Experience in"
+            placeholder="Pick animals"
+          />
+          <Box>
+            <Text fz="sm">Hours</Text>
+            <RangeSlider
+              defaultValue={[1, 12]}
+              marks={[
+                { value: 1, label: "1" },
+                { value: 12, label: "12" },
+              ]}
+              min={1}
+              max={12}
+              minRange={1}
+              onChange={handleHoursRangeChange}
+            />
+          </Box>
+          <Button onClick={handleFilters}>Apply filters</Button>
+        </Stack>
+      </Paper>
+    </Container>
   );
 };
 

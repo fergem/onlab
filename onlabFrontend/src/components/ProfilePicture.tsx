@@ -1,38 +1,44 @@
-import { Button, Flex, Image, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, FileInput, Stack, Image, rem, Paper } from "@mantine/core";
+import { IconUpload } from "@tabler/icons-react";
 import { useAuth } from "../hooks/AuthHooks";
 import { userProfilePictureUpload } from "../hooks/UserHooks";
 import { baseProfilePicture } from "../utility/constants";
 
 export default function ProfilePicture() {
   const { user } = useAuth();
-  const [fileSelected, setFileSelected, postProfilePicture] =
+  const { fileSelected, setFileSelected, postProfilePicture } =
     userProfilePictureUpload();
 
-  const saveFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files as FileList;
-    setFileSelected(selectedFiles?.[0]);
+  const saveFileSelected = (file: File | null) => {
+    setFileSelected(file);
   };
   const upload = () => {
-    postProfilePicture;
+    postProfilePicture();
   };
 
   return (
-    <Flex direction="column">
-      <Image
-        borderRadius="lg"
-        boxSize="300px"
-        objectFit="cover"
-        mr="3rem"
-        src={
-          user?.picture
-            ? "data:image/png;base64," + user.picture
-            : baseProfilePicture
-        }
-        alt="Your Profile Picture"
+    <Stack>
+      <Paper shadow="xs" p="md">
+        <Image
+          fit="contain"
+          radius="md"
+          maw="200px"
+          miw="200px"
+          height="200px"
+          src={
+            user?.picture
+              ? "data:image/png;base64," + user.picture
+              : baseProfilePicture
+          }
+          alt="Your Profile Picture"
+        />
+      </Paper>
+      <FileInput
+        placeholder="Pick file"
+        onChange={saveFileSelected}
+        icon={<IconUpload size={rem(14)} />}
       />
-      <input type="file" accept="image/*" onChange={saveFileSelected} />
-      <Button onClick={upload}>Upload picture</Button>
-    </Flex>
+      {fileSelected && <Button onClick={upload}>Upload picture</Button>}
+    </Stack>
   );
 }

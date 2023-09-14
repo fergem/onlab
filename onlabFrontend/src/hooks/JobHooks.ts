@@ -18,6 +18,7 @@ export const useGetJobs = (jobParameters: JobParameters) => {
       return data;
     },
     {
+      retry: false,
       refetchOnMount: true,
       refetchInterval: 6000,
       refetchOnWindowFocus: true,
@@ -100,12 +101,8 @@ export const useTakeJob = () => {
   } = useMutation<any, Error, number>(
     "mutate-takeJob",
     async (id: number) => {
-      console.log("asd", id);
       if (id !== null) {
-        console.log("asdasd");
-
         const asd = await JobService.takeJob(id);
-        console.log("asdasd", asd);
         return asd;
       }
     },
@@ -212,7 +209,7 @@ export const usePostJobs = () => {
       },
     }
   );
-  return [job, error, postJob] as const;
+  return { job, error, postJob };
 };
 
 export const useGetUserUnderTookJobs = () => {

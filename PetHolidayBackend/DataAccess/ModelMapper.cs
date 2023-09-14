@@ -88,14 +88,19 @@ namespace DataAccess
             {
                 pets.Add(ToPetModel(pet));
             }
-            var ownerProfile = new OwnerProfile()
+            var ownerProfile = new OwnerProfile();
+            if (user.OwnerProfile != null)
             {
-                ID = user.OwnerProfile.ID,
-                Description = user.OwnerProfile.Description,
-                MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
-                MinWage = user.OwnerProfile.MinWage,
-                UserID = user.OwnerProfile.UserID,
-            };
+                ownerProfile = new OwnerProfile()
+                {
+                    ID = user.OwnerProfile.ID,
+                    Description = user.OwnerProfile.Description,
+                    MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
+                    MinWage = user.OwnerProfile.MinWage,
+                    UserID = user.OwnerProfile.UserID,
+                };
+            }
+       
             return new User()
             {
                 ID = user.Id,
@@ -108,14 +113,14 @@ namespace DataAccess
                 Age = user.Age,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                OwnerProfile = ownerProfile != null ? ownerProfile : null,
+                OwnerProfile = ownerProfile,
             };
         }
         internal static Pet ToPetModel(DbPet pet)
         {
             //var images = new List<PetImage>();
             //foreach (var image in pet.Images)
-                //images.Add(ToPetImageModel(image));
+            //images.Add(ToPetImageModel(image));
 
             return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Image = ToPetImageModel(pet.Image)};
         }

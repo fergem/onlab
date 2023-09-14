@@ -1,15 +1,4 @@
-import {
-  Divider,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Modal } from "@mantine/core";
 import Pet from "../../models/Pet";
 import { baseDogPicture } from "../../utility/constants";
 
@@ -21,7 +10,7 @@ interface IPropsPetDialog {
 
 const PetDialog: React.FC<IPropsPetDialog> = ({ pet, onClose, isOpen }) => {
   return (
-    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal onClose={onClose} opened={isOpen} title="Add a new pet">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{pet.name}</ModalHeader>
@@ -51,7 +40,7 @@ const PetDialog: React.FC<IPropsPetDialog> = ({ pet, onClose, isOpen }) => {
           </Flex>
         </ModalBody>
         {/* <ModalFooter>
-    <Button onClick={onClose}>Close</Button>
+    <Button  > onClick={onClose}>Close</Button>
   </ModalFooter> */}
       </ModalContent>
     </Modal>
