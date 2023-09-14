@@ -56,6 +56,7 @@ export default function RegisterForm() {
             withAsterisk
             label="Password"
             placeholder="blabla123"
+            type="password"
             {...form.getInputProps("password")}
           />
 

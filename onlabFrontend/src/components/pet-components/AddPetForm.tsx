@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
-import { useNotification } from "../../hooks/useNotification";
+import useNotification from "../../hooks/useNotification";
 import { usePostUserPet } from "../../hooks/UserHooks";
 import Pet, {
   getPetSpeciesValueLabel,
@@ -60,7 +60,8 @@ export default function AddPetForm({ close }: IAddPetProps) {
       <Stack justify="space-evenly">
         <PetImageSelect
           petImage={petImage}
-          setPetimage={handleSetPetimage}></PetImageSelect>
+          setPetimage={handleSetPetimage}
+        ></PetImageSelect>
         <TextInput
           withAsterisk
           label="Name"

@@ -1,5 +1,7 @@
 import { useForm } from "@mantine/form";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useLocalStorage from "use-local-storage";
 import CreateJobDetailsForm from "../components/create-petsitter-job/CreateJobDetailsForm";
 import { CreateJobModel, JobValidation } from "../models/Job";
 import { usePostJobs } from "./JobHooks";
@@ -25,6 +27,15 @@ export default function useCreateJobDetailsForm(selectedPetIds: number[]) {
     },
     validateInputOnChange: true,
   });
+
+  const [formState, setFormState] = useLocalStorage<CreateJobModel>(
+    "job-details-form",
+    form.values
+  );
+
+  useEffect(() => {
+    setFormState(form.values);
+  }, []);
 
   const handleCreateJob = (jobToPost: CreateJobModel) => {
     postJob(

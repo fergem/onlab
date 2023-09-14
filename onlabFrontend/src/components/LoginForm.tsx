@@ -26,13 +26,14 @@ export default function LoginForm() {
     loginUser(loginModel)
       .then(() => {
         navigate("/jobs");
+        notification.success("Successful login");
       })
       .catch((error) => {
         const resMessage =
           error?.response?.data?.message || error.message || error.toString();
         notification.error(resMessage);
         form.setErrors({
-          userName: <p>Paragraph error</p>,
+          userName: "User does not exist",
           password: "User does not exist",
         });
       });

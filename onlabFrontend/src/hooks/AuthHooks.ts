@@ -56,7 +56,7 @@ export const useAuth = () => {
       addUser(contextUser);
       axios.defaults.headers.common.Authorization = `Bearer ${contextUser.bearer}`;
     }
-  }, [addUser, getItem, user]);
+  }, []);
 
   const registerUser = async (registerModel: RegisterModel) => {
     await AuthService.register(registerModel);
