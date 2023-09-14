@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 
@@ -10,6 +10,7 @@ const parseJwt = (token: string | undefined) => {
       return null;
     }
   }
+  return "";
 };
 
 export default function AuthVerify() {
@@ -26,7 +27,7 @@ export default function AuthVerify() {
         navigate("/");
       }
     }
-  }, [location, logoutUser]);
+  }, [location, logoutUser, navigate, user]);
 
-  return <></>;
+  return <div />;
 }

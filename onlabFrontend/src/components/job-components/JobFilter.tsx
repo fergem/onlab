@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Container,
   MultiSelect,
   Paper,
@@ -15,15 +14,18 @@ import { JobParameters } from "../../models/Job";
 import { getPetSpeciesValueLabel } from "../../models/Pet";
 import { StatusName } from "../../models/Status";
 
-interface IProp {
+interface IJobFilterProps {
   jobFilter: JobParameters;
   setJobFilter(jobParameter: JobParameters): void;
   refetch(): void;
 }
 
-const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
+export default function JobFilter({
+  jobFilter,
+  setJobFilter,
+  refetch,
+}: IJobFilterProps) {
   const [range, setRange] = useState<number[]>([0, 12]);
-  const [value, setValue] = useState(jobFilter.statusName);
   const handleHoursRangeChange = (val: number[]) => {
     setRange(val);
     setJobFilter({
@@ -35,7 +37,6 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
     });
   };
   const handleSelectChange = (event: string) => {
-    setValue(event as StatusName);
     setJobFilter({
       ...jobFilter,
       statusName: event as StatusName,
@@ -90,6 +91,4 @@ const JobFilter: React.FC<IProp> = ({ jobFilter, setJobFilter, refetch }) => {
       </Paper>
     </Container>
   );
-};
-
-export default JobFilter;
+}

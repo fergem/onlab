@@ -1,7 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { PetSelector } from "../components/create-petsitter-job/PetSelector";
-import Pet from "../models/Pet";
-import { useGetUserPets } from "./UserHooks";
+import PetSelector from "../components/create-petsitter-job/PetSelector";
 
 export interface IPropsPetSelectorHook {
   selectedPets: number[];
@@ -14,7 +11,7 @@ export const usePetSelector = ({
 }: IPropsPetSelectorHook) => {
   const stepDisabled = selectedPets?.length === 0;
   return {
-    stepDisabled: stepDisabled,
+    stepDisabled,
     title: "Please select pets",
     content: <PetSelector selectPets={handleSelectPets} />,
   };

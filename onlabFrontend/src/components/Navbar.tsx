@@ -1,6 +1,6 @@
-import NavButton from "./NavButton";
-import { useAuth } from "../hooks/AuthHooks";
 import { Button, Group } from "@mantine/core";
+import { useAuth } from "../hooks/AuthHooks";
+import NavButton from "./NavButton";
 
 function Navbar() {
   const { user, logoutUser } = useAuth();
@@ -14,7 +14,8 @@ function Navbar() {
         version="1.1"
         id="Capa_1"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="-64.07 -64.07 356.94 356.94">
+        viewBox="-64.07 -64.07 356.94 356.94"
+      >
         <g id="SVGRepo_bgCarrier" strokeWidth="0" />
         <g
           id="SVGRepo_tracerCarrier"
@@ -38,10 +39,8 @@ function Navbar() {
       {user && <NavButton name="Posted jobs" route="/postedjobs" />}
       {user && <NavButton name="Undertook jobs" route="/undertookjobs" />}
       {user && <NavButton name="Profile" route="/profile" />}
-      {!!user == false && (
-        <NavButton name="Register" route="/register"></NavButton>
-      )}
-      {!!user == false && <NavButton name="Login" route="/login" />}
+      {!!user === false && <NavButton name="Register" route="/register" />}
+      {!!user === false && <NavButton name="Login" route="/login" />}
       {user && <Button onClick={logoutUser}>Logout</Button>}
     </Group>
   );

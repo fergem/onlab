@@ -1,32 +1,33 @@
-import {
-  AppShell,
-  Center,
-  Container,
-  Flex,
-  Group,
-  Header,
-} from "@mantine/core";
-import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { AppShell, Header } from "@mantine/core";
+import { useMemo, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import AuthVerify from "./components/AuthVerify";
-import JobPage from "./components/job-components/JobPage";
 import Navbar from "./components/Navbar";
-import { AuthContext } from "./context/AuthContext";
+import JobPage from "./components/job-components/JobPage";
+import AuthContext from "./context/AuthContext";
 import User from "./models/User";
 import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
 import Login from "./pages/Login";
-import OwnerProfile from "./pages/PostedJobs";
 import PetSitterProfile from "./pages/PetSitterProfile";
+import OwnerProfile from "./pages/PostedJobs";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const val = useMemo(() => ({ user, setUser }), [user]);
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <AppShell header={<Header children={<Navbar />} height={"75px"} />}>
+    <AuthContext.Provider value={val}>
+      <AppShell
+        header={
+          <Header height="75px">
+            <Navbar />
+          </Header>
+        }
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<Jobs />} />
@@ -35,7 +36,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/postedjobs" element={<OwnerProfile />} />
           <Route path="/undertookjobs" element={<PetSitterProfile />} />
-          <Route path="/job" element={<JobPage></JobPage>} />
+          <Route path="/job" element={<JobPage />} />
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
       </AppShell>

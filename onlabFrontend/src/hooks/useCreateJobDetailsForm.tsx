@@ -1,16 +1,15 @@
 import { useForm } from "@mantine/form";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CreateJobDetailsForm } from "../components/create-petsitter-job/CreateJobDetailsForm";
+import CreateJobDetailsForm from "../components/create-petsitter-job/CreateJobDetailsForm";
 import { CreateJobModel, JobValidation } from "../models/Job";
 import { usePostJobs } from "./JobHooks";
-import { useNotification } from "./useNotification";
+import useNotification from "./useNotification";
 
-export const useCreateJobDetailsForm = (selectedPetIds: number[]) => {
+export default function useCreateJobDetailsForm(selectedPetIds: number[]) {
   const navigate = useNavigate();
   const notification = useNotification();
 
-  const { job, error, postJob } = usePostJobs();
+  const { isPostinJob, error, postJob } = usePostJobs();
 
   const form = useForm({
     initialValues: {
@@ -27,9 +26,9 @@ export const useCreateJobDetailsForm = (selectedPetIds: number[]) => {
     validateInputOnChange: true,
   });
 
-  const handleCreateJob = (job: CreateJobModel) => {
+  const handleCreateJob = (jobToPost: CreateJobModel) => {
     postJob(
-      { ...job, petIDs: selectedPetIds },
+      { ...jobToPost, petIDs: selectedPetIds },
       {
         onSuccess() {
           navigate("/postedjobs");
@@ -46,8 +45,8 @@ export const useCreateJobDetailsForm = (selectedPetIds: number[]) => {
   };
   return {
     stepDisabled: !form.isValid(),
-    onFinish: onFinish,
+    onFinish,
     title: "More information",
-    content: <CreateJobDetailsForm form={form}></CreateJobDetailsForm>,
+    content: <CreateJobDetailsForm form={form} />,
   };
-};
+}

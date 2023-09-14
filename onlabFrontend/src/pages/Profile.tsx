@@ -1,10 +1,8 @@
-import AddPet from "../components/pet-components/AddPet";
+import { Container, Group, Stack, Tabs, Text, Title } from "@mantine/core";
+import { IconBallFootball, IconPaw, IconUser } from "@tabler/icons-react";
 import ProfilePicture from "../components/ProfilePicture";
 import { useAuth } from "../hooks/AuthHooks";
 import PetList from "../components/pet-components/PetList";
-import { Container, Group, Stack, Tabs, Text, Title } from "@mantine/core";
-import { IconBallFootball, IconPaw, IconUser } from "@tabler/icons-react";
-import LoadingBoundary from "../components/LoadingBoundary";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -15,24 +13,23 @@ export default function Profile() {
         variant="outline"
         radius="md"
         defaultValue="profile"
-        orientation="vertical">
+        orientation="vertical"
+      >
         <Tabs.List>
-          <Tabs.Tab value="profile" icon={<IconUser></IconUser>}>
+          <Tabs.Tab value="profile" icon={<IconUser />}>
             Profile
           </Tabs.Tab>
-          <Tabs.Tab value="owner" icon={<IconPaw></IconPaw>}>
+          <Tabs.Tab value="owner" icon={<IconPaw />}>
             Owner Profile
           </Tabs.Tab>
-          <Tabs.Tab
-            value="petsiter"
-            icon={<IconBallFootball></IconBallFootball>}>
+          <Tabs.Tab value="petsiter" icon={<IconBallFootball />}>
             PetSitter Profile
           </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="profile">
           <Group align="center" position="center">
-            <ProfilePicture></ProfilePicture>
+            <ProfilePicture />
             <Stack>
               <Text size="xl">
                 <b> Username:</b>{" "}
@@ -76,7 +73,7 @@ export default function Profile() {
             <Title order={3} align="center">
               Your pets
             </Title>
-            <PetList isAddingPet></PetList>
+            <PetList isAddingPet />
           </Stack>
         </Tabs.Panel>
 

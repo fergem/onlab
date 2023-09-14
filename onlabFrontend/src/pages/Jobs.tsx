@@ -1,14 +1,14 @@
-import { Box, Container, Title, Text, Group, Stack, Grid } from "@mantine/core";
+import { Box, Grid, Stack, Text, Title } from "@mantine/core";
 import { useState } from "react";
 import JobFilter from "../components/job-components/JobFilter";
-import { JobList } from "../components/job-components/JobList";
+import JobList from "../components/job-components/JobList";
 import { useGetJobs } from "../hooks/JobHooks";
 import { DefaultJobParameters, JobParameters } from "../models/Job";
 
 export default function Jobs() {
   const [jobFilter, setJobFilter] =
     useState<JobParameters>(DefaultJobParameters);
-  const [jobs, error, loading, refetch] = useGetJobs(jobFilter);
+  const { jobs, error, loading, listJobs } = useGetJobs(jobFilter);
 
   return (
     <Stack>
@@ -29,7 +29,7 @@ export default function Jobs() {
           <JobFilter
             jobFilter={jobFilter}
             setJobFilter={setJobFilter}
-            refetch={refetch}
+            refetch={listJobs}
           />
         </Grid.Col>
         <Grid.Col span={6}>
@@ -41,7 +41,8 @@ export default function Jobs() {
               jobs={jobs}
               loading={loading}
               error={error}
-              refetch={refetch}></JobList>
+              refetch={listJobs}
+            />
           </Stack>
         </Grid.Col>
       </Grid>

@@ -1,19 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/AuthHooks";
-import { usePostJobs } from "../../hooks/JobHooks";
-import Job, { CreateJobModel, JobValidation } from "../../models/Job";
-
-import {
-  Button,
-  Grid,
-  NumberInput,
-  Paper,
-  Stack,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { useNotification } from "../../hooks/useNotification";
-import { useForm, UseFormReturnType } from "@mantine/form";
+import { Grid, NumberInput, Stack, Textarea, TextInput } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { CreateJobModel } from "../../models/Job";
 
 export type CreateJobForm = UseFormReturnType<
   CreateJobModel,
@@ -24,7 +11,7 @@ interface IProps {
   form: CreateJobForm;
 }
 
-export const CreateJobDetailsForm: React.FC<IProps> = ({ form }) => {
+export default function CreateJobDetailsForm({ form }: IProps) {
   return (
     <form>
       <Stack justify="space-evenly">
@@ -74,4 +61,4 @@ export const CreateJobDetailsForm: React.FC<IProps> = ({ form }) => {
       </Stack>
     </form>
   );
-};
+}

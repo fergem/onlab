@@ -1,10 +1,9 @@
-import { Center, Container, Paper } from "@mantine/core";
-import { useCallback } from "react";
+import { Center, Paper } from "@mantine/core";
 import { useState } from "react";
-import { CustomStepper } from "../components/CustomStepper";
+import CustomStepper from "../components/CustomStepper";
 
-import { useCreateJobDetailsForm } from "../hooks/useCreateJobDetailsForm";
-import { IPropsPetSelectorHook, usePetSelector } from "../hooks/usePetSelector";
+import useCreateJobDetailsForm from "../hooks/useCreateJobDetailsForm";
+import { usePetSelector } from "../hooks/usePetSelector";
 
 export default function CreatePetSitterJob() {
   const [selectedPets, setSelectedPets] = useState<number[]>([]);
@@ -26,8 +25,7 @@ export default function CreatePetSitterJob() {
   return (
     <Center mih="80vh">
       <Paper shadow="sm" p="xl">
-        <CustomStepper
-          steps={[petSelectorStep, createJobDetailsFormStep]}></CustomStepper>
+        <CustomStepper steps={[petSelectorStep, createJobDetailsFormStep]} />
       </Paper>
     </Center>
   );

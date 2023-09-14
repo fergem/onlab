@@ -1,9 +1,7 @@
-import { JobParameters, JobWithPetIDs } from "./../models/Job";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { JobService } from "../services/JobService";
-import Job from "../models/Job";
-import { useToast } from "@chakra-ui/toast";
+import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
+import JobService from "../services/JobService";
 
 export const useGetJobs = (jobParameters: JobParameters) => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -30,15 +28,15 @@ export const useGetJobs = (jobParameters: JobParameters) => {
     }
   );
 
-  return [jobs, error, loading, listJobs] as const;
+  return { jobs, error, loading, listJobs };
 };
 
 export const useGetApprovals = () => {
   const [approvals, setApprovals] = useState<Job[]>([]);
   const {
-    isLoading: loading,
+    isLoading: approvalsLoading,
     refetch: listApprovals,
-    isError: error,
+    isError: approvalsError,
   } = useQuery<Job[], Error>(
     "query-approvals",
     async () => {
@@ -57,7 +55,12 @@ export const useGetApprovals = () => {
     }
   );
 
-  return [approvals, error, loading, listApprovals] as const;
+  return {
+    approvals,
+    approvalsLoading,
+    approvalsError,
+    listApprovals,
+  } as const;
 };
 
 export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
@@ -84,7 +87,7 @@ export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
     }
   );
 
-  return [jobs, error, loading, listJobs] as const;
+  return { jobs, error, loading, listJobs } as const;
 };
 
 const fortmatResponse = (res: any) => {
@@ -93,7 +96,6 @@ const fortmatResponse = (res: any) => {
 
 export const useTakeJob = () => {
   const [putResult, setPutResult] = useState<string | null>(null);
-  const toast = useToast({ duration: 5000, isClosable: true });
   const {
     isLoading: isTakingJob,
     mutate: takeJob,
@@ -107,25 +109,12 @@ export const useTakeJob = () => {
       }
     },
     {
-      onSuccess: (res) => {
-        toast({
-          title: "Job taken",
-          description: `You have taken the job`,
-          status: "success",
-        });
-      },
-      onError: (err: any) => {
-        const desc = fortmatResponse(err.response?.data || err);
-        toast({
-          title: "Job not taken",
-          description: err.response.data,
-          status: "error",
-        });
-      },
+      onSuccess: (res) => {},
+      onError: (err: any) => {},
     }
   );
 
-  return [takeJob, isTakingJob, error] as const;
+  return { takeJob, isTakingJob, error } as const;
 };
 
 export const useApproveJob = () => {
@@ -134,12 +123,11 @@ export const useApproveJob = () => {
     isLoading: isApproveingJob,
     mutate: approveJob,
     isError: error,
-  } = useMutation<any, Error, number>(
+  } = useMutation<any, Error, number | undefined>(
     "mutate-approveJob",
-    async (id: number) => {
-      if (id !== null) {
-        const asd = await JobService.approveJob(id);
-        return asd;
+    async (id: number | undefined) => {
+      if (id) {
+        return JobService.approveJob(id);
       }
     },
     {
@@ -150,7 +138,7 @@ export const useApproveJob = () => {
     }
   );
 
-  return [approveJob, isApproveingJob, error] as const;
+  return { approveJob, isApproveingJob, error };
 };
 
 export const useDeclineJob = () => {
@@ -159,12 +147,11 @@ export const useDeclineJob = () => {
     isLoading: isDecliningJob,
     mutate: declineJob,
     isError: error,
-  } = useMutation<any, Error, number>(
+  } = useMutation<any, Error, number | undefined>(
     "mutate-approveJob",
-    async (id: number) => {
-      if (id !== null) {
-        const asd = await JobService.declineJob(id);
-        return asd;
+    async (id: number | undefined) => {
+      if (id) {
+        return JobService.declineJob(id);
       }
     },
     {
@@ -175,7 +162,7 @@ export const useDeclineJob = () => {
     }
   );
 
-  return [declineJob, isDecliningJob, error] as const;
+  return { declineJob, isDecliningJob, error };
 };
 
 export const usePostJobs = () => {
@@ -194,13 +181,13 @@ export const usePostJobs = () => {
       minRequiredExperience,
       petIDs,
     }: JobWithPetIDs) => {
-      return await JobService.createJob({
-        hours: hours,
-        location: location,
-        description: description,
-        payment: payment,
-        minRequiredExperience: minRequiredExperience,
-        petIDs: petIDs,
+      return JobService.createJob({
+        hours,
+        location,
+        description,
+        payment,
+        minRequiredExperience,
+        petIDs,
       } as JobWithPetIDs);
     },
     {
@@ -237,5 +224,5 @@ export const useGetUserUnderTookJobs = () => {
     }
   );
 
-  return [jobs, error, loading, listJobs] as const;
+  return { jobs, error, loading, listJobs };
 };

@@ -1,19 +1,19 @@
-import { Paper, Stack, TextInput, Button } from "@mantine/core";
+import { Button, Paper, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
-import { useNotification } from "../hooks/useNotification";
+import useNotification from "../hooks/useNotification";
 import { LoginModel, UserValidation } from "../models/User";
 
 export default function LoginForm() {
-  let navigate: NavigateFunction = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
   const { loginUser } = useAuth();
   const notification = useNotification();
+  // const formStorage = useFormStorage();
 
   const form = useForm({
     initialValues: {
       userName: "",
-      email: "",
       password: "",
     },
     validate: {
@@ -31,6 +31,10 @@ export default function LoginForm() {
         const resMessage =
           error?.response?.data?.message || error.message || error.toString();
         notification.error(resMessage);
+        form.setErrors({
+          userName: <p>Paragraph error</p>,
+          password: "User does not exist",
+        });
       });
   };
 

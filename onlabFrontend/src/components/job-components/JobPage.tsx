@@ -1,20 +1,19 @@
 import {
-  Container,
-  Stack,
-  Title,
-  Text,
-  Image,
-  Group,
   Button,
-  Flex,
-  Paper,
+  Container,
   Grid,
+  Group,
+  Image,
+  Paper,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { useTakeJob } from "../../hooks/JobHooks";
-import { useNotification } from "../../hooks/useNotification";
+import useNotification from "../../hooks/useNotification";
 import Job from "../../models/Job";
 import Pet from "../../models/Pet";
 import { baseDogPicture, baseProfilePicture } from "../../utility/constants";
@@ -22,7 +21,7 @@ import { baseDogPicture, baseProfilePicture } from "../../utility/constants";
 function JobPage() {
   const { state } = useLocation();
   const [job, setJob] = useState(state.job as Job);
-  const [takeJob, error, loading] = useTakeJob();
+  const { takeJob, error, loading } = useTakeJob();
   const { user } = useAuth();
   const notifications = useNotification();
   const handleTakeJob = () => {
@@ -47,7 +46,7 @@ function JobPage() {
               height="200px"
               src={
                 job.ownerUserInformation?.picture
-                  ? "data:image/png;base64," + job.ownerUserInformation.picture
+                  ? `data:image/png;base64,${job.ownerUserInformation.picture}`
                   : baseProfilePicture
               }
               alt="Your picture"
@@ -89,7 +88,7 @@ export interface IPetsProps {
   pet: Pet;
 }
 
-export const PetDescription: React.FC<IPetsProps> = ({ pet }) => {
+export function PetDescription({ pet }: IPetsProps) {
   return (
     <Paper shadow="sm" withBorder>
       <Stack align="center">
@@ -100,12 +99,13 @@ export const PetDescription: React.FC<IPetsProps> = ({ pet }) => {
           miw="175px"
           height="175px"
           src={
-            pet.image ? "data:image/png;base64," + pet.image : baseDogPicture
-          }></Image>
+            pet.image ? `data:image/png;base64,${pet.image}` : baseDogPicture
+          }
+        />
         <Text>{pet.name}</Text>
       </Stack>
     </Paper>
   );
-};
+}
 
 export default JobPage;

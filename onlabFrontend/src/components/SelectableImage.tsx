@@ -1,7 +1,6 @@
-import { Box, Center, createStyles, Flex, Image } from "@mantine/core";
-import { transitions } from "@mantine/core/lib/Transition/transitions";
+import { Flex, Image } from "@mantine/core";
 import { useState } from "react";
-import { baseDogPicture, basePetPicture } from "../utility/constants";
+import { basePetPicture } from "../utility/constants";
 
 export interface IPropsSelectableImage {
   onClick(id: number): void;
@@ -37,7 +36,8 @@ export default function SelectableImage({
         transition: "background-color 0.3s ease",
       })}
       w="125px"
-      h="125px">
+      h="125px"
+    >
       <Image
         width="75px"
         height="75px"

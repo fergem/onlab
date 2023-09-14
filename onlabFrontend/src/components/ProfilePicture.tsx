@@ -1,19 +1,20 @@
-import { Button, FileInput, Stack, Image, rem, Paper } from "@mantine/core";
+import { Button, FileInput, Image, Paper, Stack, rem } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import { useState } from "react";
 import { useAuth } from "../hooks/AuthHooks";
-import { userProfilePictureUpload } from "../hooks/UserHooks";
+import { useUserProfilePictureUpload } from "../hooks/UserHooks";
 import { baseProfilePicture } from "../utility/constants";
 
 export default function ProfilePicture() {
   const { user } = useAuth();
-  const { fileSelected, setFileSelected, postProfilePicture } =
-    userProfilePictureUpload();
+  const { postProfilePicture } = useUserProfilePictureUpload();
+  const [fileSelected, setFileSelected] = useState<File | null>(null);
 
   const saveFileSelected = (file: File | null) => {
-    setFileSelected(file);
+    if (file) setFileSelected(file);
   };
   const upload = () => {
-    postProfilePicture();
+    if (fileSelected) postProfilePicture(fileSelected);
   };
 
   return (
@@ -27,7 +28,7 @@ export default function ProfilePicture() {
           height="200px"
           src={
             user?.picture
-              ? "data:image/png;base64," + user.picture
+              ? `data:image/png;base64,${user.picture}`
               : baseProfilePicture
           }
           alt="Your Profile Picture"

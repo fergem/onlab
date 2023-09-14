@@ -1,7 +1,6 @@
-import App from "./App";
-
-import { Tuple, DefaultMantineColor, MantineProvider } from "@mantine/core";
+import { DefaultMantineColor, MantineProvider, Tuple } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import App from "./App";
 
 type ExtendedCustomColors =
   | "grey"
@@ -25,19 +24,20 @@ export default function CustomMantineProvider() {
       theme={{
         components: {
           Button: {
-            defaultProps: (theme) => ({
+            defaultProps: () => ({
               variant: "filled",
               color: "blue",
               size: "md",
             }),
           },
           RangeSlider: {
-            defaultProps: (theme) => ({
+            defaultProps: () => ({
               color: "blue",
             }),
           },
         },
-      }}>
+      }}
+    >
       <Notifications />
       <App />
     </MantineProvider>

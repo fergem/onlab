@@ -11,7 +11,7 @@ export interface IProps {
   steps: StepPropsWithContent[];
 }
 
-export const CustomStepper: React.FC<IProps> = ({ steps }) => {
+export default function CustomStepper({ steps }: IProps) {
   const [activeStep, setActiveStep] = useState(0);
   const nextStep = () =>
     setActiveStep((current) =>
@@ -28,7 +28,8 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
         breakpoint="sm"
         allowNextStepsSelect={false}
         color="indigo"
-        iconSize={32}>
+        iconSize={32}
+      >
         {steps.map((s) => (
           <Stepper.Step key={s.title} label={s.title}>
             {s.content}
@@ -46,11 +47,12 @@ export const CustomStepper: React.FC<IProps> = ({ steps }) => {
         ) : (
           <Button
             onClick={steps[activeStep].onFinish}
-            disabled={steps[activeStep].stepDisabled}>
+            disabled={steps[activeStep].stepDisabled}
+          >
             Finish
           </Button>
         )}
       </Group>
     </Stack>
   );
-};
+}

@@ -1,7 +1,7 @@
 import { useMantineTheme } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { CiSquareCheck } from "react-icons/ci";
-export const useNotification = () => {
+
+const useNotification = () => {
   const theme = useMantineTheme();
 
   const success = (message: string) =>
@@ -9,10 +9,10 @@ export const useNotification = () => {
       withCloseButton: true,
       autoClose: 4000,
       title: "Success! :)",
-      message: message,
+      message,
       loading: false,
       withBorder: true,
-      styles: (theme) => ({
+      styles: () => ({
         root: {
           "&::before": { backgroundColor: theme.colors.green },
         },
@@ -24,10 +24,10 @@ export const useNotification = () => {
       withCloseButton: true,
       autoClose: 4000,
       title: "Error. :(",
-      message: message,
+      message,
       loading: false,
       withBorder: true,
-      styles: (theme) => ({
+      styles: () => ({
         root: {
           "&::before": { backgroundColor: theme.colors.red },
         },
@@ -39,10 +39,10 @@ export const useNotification = () => {
       withCloseButton: true,
       autoClose: 4000,
       title: "Information. ",
-      message: message,
+      message,
       loading: false,
       withBorder: true,
-      styles: (theme) => ({
+      styles: () => ({
         root: {
           "&::before": { backgroundColor: theme.colors.blue },
         },
@@ -51,3 +51,5 @@ export const useNotification = () => {
 
   return { success, error, information };
 };
+
+export default useNotification;

@@ -1,22 +1,22 @@
 import axios from "axios";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import AuthContext from "../context/AuthContext";
 import User, { LoginModel, RegisterModel } from "../models/User";
-import { AuthService } from "../services/AuthService";
+import AuthService from "../services/AuthService";
 
 export const useLocalStorage = () => {
   const [value, setValue] = useState<string | null>(null);
 
-  const setItem = (key: string, value: string) => {
-    localStorage.setItem(key, value);
-    setValue(value);
+  const setItem = (key: string, itemValue: string) => {
+    localStorage.setItem(key, itemValue);
+    setValue(itemValue);
   };
 
   const getItem = (key: string) => {
-    const value = localStorage.getItem(key);
-    setValue(value);
-    return value;
+    const itemValue = localStorage.getItem(key);
+    setValue(itemValue);
+    return itemValue;
   };
 
   const removeItem = (key: string) => {
@@ -31,9 +31,9 @@ export const useUser = () => {
   const { user, setUser } = useContext(AuthContext);
   const { setItem, removeItem } = useLocalStorage();
 
-  const addUser = (user: User) => {
-    setUser(user);
-    setItem("user", JSON.stringify(user));
+  const addUser = (userAdded: User) => {
+    setUser(userAdded);
+    setItem("user", JSON.stringify(userAdded));
   };
 
   const removeUser = () => {
@@ -50,14 +50,13 @@ export const useAuth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = getItem("user");
+    const userToGet = getItem("user");
     if (user) {
-      const contextUser = JSON.parse(user);
+      const contextUser = JSON.parse(userToGet ?? "");
       addUser(contextUser);
-      axios.defaults.headers.common["Authorization"] =
-        "Bearer " + contextUser.bearer;
+      axios.defaults.headers.common.Authorization = `Bearer ${contextUser.bearer}`;
     }
-  }, []);
+  }, [addUser, getItem, user]);
 
   const registerUser = async (registerModel: RegisterModel) => {
     await AuthService.register(registerModel);
@@ -72,7 +71,7 @@ export const useAuth = () => {
 
   const logoutUser = async () => {
     if (user)
-      //await AuthService.logout(authHeader());
+      // await AuthService.logout(authHeader());
       removeUser();
     navigate("/");
   };

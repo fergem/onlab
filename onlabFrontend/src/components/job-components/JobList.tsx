@@ -1,18 +1,4 @@
-import {
-  Alert,
-  Button,
-  Container,
-  Group,
-  Loader,
-  Stack,
-  Title,
-  Text,
-  Image,
-  Paper,
-  Grid,
-  Box,
-} from "@mantine/core";
-import { IconAlertCircle, IconCurrencyDollar } from "@tabler/icons-react";
+import { Box, Grid, Image, Paper, Stack, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
@@ -22,38 +8,15 @@ export interface IPropsJobCard {
   job: Job;
 }
 
-export interface IPropsJobList {
-  jobs: Job[];
-  loading: boolean;
-  error: boolean;
-  refetch(): void;
-}
-
-export const JobList: React.FC<IPropsJobList> = ({
-  jobs,
-  loading,
-  error,
-  refetch,
-}) => {
-  return (
-    <LoadingBoundary loading={loading} error={error} refetch={refetch}>
-      <Stack justify="center">
-        {jobs.map((x) => (
-          <JobCard key={x.id} job={x} />
-        ))}
-      </Stack>
-    </LoadingBoundary>
-  );
-};
-
-const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
+export function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
   return (
     <Paper
       shadow="sm"
       p="sm"
       withBorder
-      onClick={() => navigate("/job", { state: { job } })}>
+      onClick={() => navigate("/job", { state: { job } })}
+    >
       <Stack align="left" justify="center">
         <Grid justify="center">
           <Grid.Col span={4}>
@@ -63,8 +26,7 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
                 radius="md"
                 src={
                   job?.ownerUserInformation?.picture
-                    ? "data:image/png;base64," +
-                      job.ownerUserInformation.picture
+                    ? `data:image/png;base64,${job.ownerUserInformation.picture}`
                     : baseProfilePicture
                 }
                 alt="Job picture"
@@ -84,4 +46,28 @@ const JobCard: React.FC<IPropsJobCard> = ({ job }) => {
       </Stack>
     </Paper>
   );
-};
+}
+
+export interface IPropsJobList {
+  jobs: Job[];
+  loading: boolean;
+  error: boolean;
+  refetch(): void;
+}
+
+export default function JobList({
+  jobs,
+  loading,
+  error,
+  refetch,
+}: IPropsJobList) {
+  return (
+    <LoadingBoundary loading={loading} error={error} refetch={refetch}>
+      <Stack justify="center">
+        {jobs.map((x) => (
+          <JobCard key={x.id} job={x} />
+        ))}
+      </Stack>
+    </LoadingBoundary>
+  );
+}

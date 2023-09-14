@@ -2,8 +2,8 @@ import { Button, Paper, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
-import { useNotification } from "../hooks/useNotification";
-import User, { RegisterModel, UserValidation } from "../models/User";
+import useNotification from "../hooks/useNotification";
+import { RegisterModel, UserValidation } from "../models/User";
 
 export default function RegisterForm() {
   const navigate: NavigateFunction = useNavigate();

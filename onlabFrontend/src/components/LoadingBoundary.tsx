@@ -1,14 +1,5 @@
-import {
-  Box,
-  Button,
-  Group,
-  Loader,
-  LoadingOverlay,
-  Paper,
-  Stack,
-  Text,
-} from "@mantine/core";
-import { IconExclamationCircle, IconLoader } from "@tabler/icons-react";
+import { Button, Loader, Paper, Stack, Text } from "@mantine/core";
+import { IconExclamationCircle } from "@tabler/icons-react";
 
 export interface IPropsLoadingBoundary {
   children: React.ReactNode;
@@ -35,7 +26,7 @@ export default function LoadingBoundary({
     return (
       <Paper shadow="sm" p="xl">
         <Stack align="center" justify="center ">
-          <IconExclamationCircle size={48}></IconExclamationCircle>
+          <IconExclamationCircle size={48} />
           <Text> Sorry a problem happened</Text>
           <Button onClick={refetch}>Try again!</Button>
         </Stack>

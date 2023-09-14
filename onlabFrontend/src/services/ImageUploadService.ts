@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const uploadPetPictures = async (ID: number, file: File) => {
-  let formData = new FormData();
+  const formData = new FormData();
 
   formData.append("file", file);
 
@@ -20,8 +20,8 @@ const uploadPetPictures = async (ID: number, file: File) => {
 };
 
 const uploadProfilePicture = async (file: File | undefined) => {
-  let formData = new FormData();
-  if (file != undefined) formData.append("file", file);
+  const formData = new FormData();
+  if (file !== undefined) formData.append("file", file);
 
   const response = await axios.post<string>(
     "/api/users/addpetimage",

@@ -1,6 +1,5 @@
-import { JobParameters, JobWithPetIDs } from "./../models/Job";
 import axios from "axios";
-import Job from "../models/Job";
+import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
 import Status from "../models/Status";
 
 const list = async (jobParameters: JobParameters) => {
@@ -51,26 +50,26 @@ const createJob = async ({
 };
 
 const getJobStatus = async (id: number) => {
-  const response = await axios.get<Status>("/api/jobs/status/" + id);
+  const response = await axios.get<Status>(`/api/jobs/status/${id}`);
   return response.data;
 };
 
 const takeJob = async (id: number) => {
-  const response = await axios.put<Job>("/api/jobs/takejob/" + id);
+  const response = await axios.put<Job>(`/api/jobs/takejob/${id}`);
   return response.data;
 };
 
 const approveJob = async (id: number) => {
-  const response = await axios.put<Job>("/api/jobs/approvejob/" + id);
+  const response = await axios.put<Job>(`/api/jobs/approvejob/${id}`);
   return response.data;
 };
 
 const declineJob = async (id: number) => {
-  const response = await axios.put<Job>("/api/jobs/declineUser/" + id);
+  const response = await axios.put<Job>(`/api/jobs/declineUser/${id}`);
   return response.data;
 };
 
-export const JobService = {
+const JobService = {
   list,
   createJob,
   listUsersPostedJobs,
@@ -81,3 +80,5 @@ export const JobService = {
   declineJob,
   listApprovals,
 };
+
+export default JobService;

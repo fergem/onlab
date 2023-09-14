@@ -13,7 +13,7 @@ const insertPet = ({
   age,
   picture,
 }: PetInsertModel) => {
-  return axios.post<any>("/api/users/addpet", {
+  return axios.post<PetInsertModel>("/api/users/addpet", {
     name,
     description,
     species,
@@ -21,7 +21,8 @@ const insertPet = ({
   });
 };
 
-export const UserService = {
+const UserService = {
   insertPet,
   getUserPets,
 };
+export default UserService;

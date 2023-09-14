@@ -1,10 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { AuthContext } from "../context/AuthContext";
-import Pet from "../models/Pet";
+import Pet, { PetImageUploadModel, PetInsertModel } from "../models/Pet";
 import ImageUploadService from "../services/ImageUploadService";
-import { UserService } from "../services/UserService";
-import { useAuth } from "./AuthHooks";
+import UserService from "../services/UserService";
 
 export const useGetUserPets = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -12,7 +10,7 @@ export const useGetUserPets = () => {
     isLoading: loading,
     refetch: listPets,
     isError: error,
-  } = useQuery<any, Error>(
+  } = useQuery<Pet[], Error>(
     "query-pets",
     async () => {
       const data = await UserService.getUserPets();
@@ -28,27 +26,30 @@ export const useGetUserPets = () => {
       },
     }
   );
-  return [pets, error, loading, listPets] as const;
+  return { pets, error, loading, listPets };
 };
 
 export const usePostUserPet = () => {
-  const { mutate: postPet, isError: error } = useMutation<any, Error, Pet>(
+  const { mutate: postPet, isError: error } = useMutation<any, Error, PetInsertModel>(
     "mutate-postPet",
-    async (pet: Pet) => {
-      return await UserService.insertPet(pet);
+    async (pet: PetInsertModel) => {
+      return UserService.insertPet(pet);
     }
   );
   return { error, postPet };
 };
 
-export const petImageUpload = (petID: number, file: File) => {
+export const usePetImageUpload = () => {
   const {
     isLoading: loading,
     mutate: postPetPicture,
     isError: error,
-  } = useMutation<any, Error>(
-    async () => {
-      const data = await ImageUploadService.uploadPetPictures(petID, file);
+  } = useMutation(
+    async (uploadData: PetImageUploadModel) => {
+      const data = await ImageUploadService.uploadPetPictures(
+        uploadData.petID,
+        uploadData.file
+      );
       return data;
     },
     {
@@ -59,21 +60,20 @@ export const petImageUpload = (petID: number, file: File) => {
   return { postPetPicture };
 };
 
-export const userProfilePictureUpload = () => {
-  const [fileSelected, setFileSelected] = useState<File | null>(null);
+export const useUserProfilePictureUpload = () => {
   const {
     isLoading: loading,
     mutate: postProfilePicture,
     isError: error,
-  } = useMutation<any, Error>(
-    async () => {
+  } = useMutation(
+    async (fileSelected: File) => {
       if (fileSelected)
-        return await ImageUploadService.uploadProfilePicture(fileSelected);
+        return ImageUploadService.uploadProfilePicture(fileSelected);
     },
     {
       onSuccess: (res) => {},
       onError: (err: any) => {},
     }
   );
-  return { fileSelected, setFileSelected, postProfilePicture };
+  return { postProfilePicture };
 };

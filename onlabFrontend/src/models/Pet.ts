@@ -15,6 +15,11 @@ export interface PetInsertModel {
   picture: File;
 }
 
+export interface PetImageUploadModel {
+  petID: number;
+  file: File;
+}
+
 export enum PetSpecies {
   Dog = "Dog",
   Cat = "Cat",
@@ -28,6 +33,7 @@ export enum PetSpecies {
 
 export function getPetSpeciesValueLabel() {
   const petSpecies = [];
+  // eslint-disable-next-line no-restricted-syntax
   for (const [key, value] of Object.entries(PetSpecies)) {
     petSpecies.push({ value: key, label: value });
   }

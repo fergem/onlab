@@ -1,11 +1,9 @@
-import React, { createContext } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import "./index.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { MantineProvider } from "@mantine/core";
+import { BrowserRouter } from "react-router-dom";
 import CustomMantineProvider from "./CustomMantineProvider";
+import "./index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
