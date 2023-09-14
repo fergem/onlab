@@ -47,6 +47,21 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [Authorize]
+        [HttpGet("undertook")]
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobParameters jobParameters)
+        {
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                return BadRequest("There is no such user with this Bearer");
+            if (!jobParameters.ValidHoursRange)
+                return BadRequest("Max hours cannot be less than min hours");
+            if (!jobParameters.ValidJobStatus)
+                return BadRequest("Requested status doesnt exist");
+
+            return Ok(await jobService.ListUnderTookJobs(userID));
+        }
+
+        [Authorize]
         [HttpGet("approvals")]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> ListApprovals()
         {
@@ -54,16 +69,6 @@ namespace PetHolidayWebApi.Controllers
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             return Ok(await jobService.ListApprovals(userID));
-        }
-
-        [Authorize]
-        [HttpGet("undertook")]
-        public async Task<IReadOnlyCollection<Job>> ListUndertookJobs()
-        {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            return await jobService.ListUnderTookJobs(userID);
         }
 
         [HttpGet("{jobID}")]

@@ -92,25 +92,14 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost("addpet")]
-        public async Task<ActionResult<Pet>> InsertPet([FromForm] IFormFile file)
+        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 BadRequest();
-            /*if (file != null)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    await file.CopyToAsync(stream);
-                    var fileData = stream.ToArray();
-                    pet.Image = new PetImage()
-                    {
-                        Picture = fileData,
-                    };
-                }
-            }
-            var created = await userService.InsertPet(pet, userID);*/
-            return CreatedAtAction(nameof(FindPetByID), new { petID = 5 }, 5);
+            
+            var created = await userService.InsertPet(pet, userID);
+            return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
         }
 
         [Authorize]
