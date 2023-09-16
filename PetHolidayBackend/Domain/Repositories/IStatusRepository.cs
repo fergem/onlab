@@ -10,7 +10,7 @@ namespace Domain.Repositories
     public interface IStatusRepository
     {
         //Task<IReadOnlyCollection<Pet>> List();
-        Task<Status> FindById(int statusID);
+        Task<Status> FindByName(StatusName name);
         //Task<Status> Update(Status status);
     }
 }

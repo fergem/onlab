@@ -80,25 +80,16 @@ namespace PetHolidayWebApi.Controllers
             return value != null ? Ok() : NotFound(); ;
         }
 
-
-        [HttpGet("status/{statusID}")]
-        public async Task<ActionResult<User>> FindStatusById([FromRoute] int statusID)
-        {
-            var value = await jobService.FindStatusById(statusID);
-            return value != null ? Ok(value) : NotFound(); ;
-        }
-
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Job>> InsertJob([FromBody] InsertJobModel job)
+        public async Task<ActionResult<int>> InsertJob([FromBody] InsertJobModel job)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 BadRequest();
             var created = await jobService.Insert(job, userID);
-            return CreatedAtAction(nameof(FindById), new { jobID = created.ID }, created);
+            return CreatedAtAction(nameof(FindById), new { jobID = created }, created);
         }
-
 
         [Authorize]
         [HttpPut("takejob/{jobID}")]
@@ -150,6 +141,45 @@ namespace PetHolidayWebApi.Controllers
 
                 var job = await jobService.DeclineUser(jobID);
                 return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("finishjob/{jobID}")]
+        public async Task<ActionResult<Job>> FinishJob([FromRoute] int jobID)
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                if (!foundUser)
+                    return BadRequest("There is no such user with this Bearer");
+
+                var job = await jobService.FinishJob(jobID);
+                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpDelete("deletejob/{jobID}")]
+        public async Task<ActionResult<Job>> DeleteJob([FromRoute] int jobID)
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                if (!foundUser)
+                    return BadRequest("There is no such user with this Bearer");
+
+                 await jobService.DeleteJob(jobID);
+                return Ok();
             }
             catch (Exception e)
             {

@@ -15,10 +15,12 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);
-        Task<Job> Insert(InsertJobModel job, int userID);
+        Task<int> Insert(InsertJobModel job, int userID);
         Task<Job> TakeJob(int jobID, int userID);
         Task<Job> ApproveUser(int jobID);
         Task<Job> DeclineUser(int jobID);
+        Task<Job> FinishJob(int jobID);
+        Task DeleteJob(int jobID);
 
     }
 }

@@ -14,10 +14,9 @@ namespace DataAccess.Repositories
             this.dbcontext = dbcontext;
         }
 
-        public async Task<Status> FindById(int statusID)
+        public async Task<Status> FindByName(StatusName name)
         {
-            //var status = await dbcontext.Statuses.Where(s => s.ID == statusID).SingleAsync();
-            var status = await dbcontext.Statuses.FindAsync(statusID);
+            var status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == name);
             if (status == null)
                 throw new Exception("Status doesnt exist");
             return ModelMapper.ToStatusModel(status);

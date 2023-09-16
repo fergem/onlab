@@ -92,14 +92,14 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost("addpet")]
-        public async Task<ActionResult<Pet>> InsertPet([FromBody] Pet pet)
+        public async Task<ActionResult<int>> InsertPet([FromBody] Pet pet)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 BadRequest();
             
             var created = await userService.InsertPet(pet, userID);
-            return CreatedAtAction(nameof(FindPetByID), new { petID = created.ID }, created);
+            return CreatedAtAction(nameof(FindPetByID), new { petID = created }, created);
         }
 
         [Authorize]
@@ -110,7 +110,6 @@ namespace PetHolidayWebApi.Controllers
             return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
         }
 
-        //outdated
         [Authorize]
         [HttpPost("addpetimage")]
         public async Task<ActionResult<Pet>> AddPetImage([FromHeader] int petID,[FromForm] IFormFile file)

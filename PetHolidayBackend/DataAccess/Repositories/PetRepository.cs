@@ -52,7 +52,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToPetModel(pet);
         }
 
-        public async Task<Pet> Insert(Pet pet, int userID)
+        public async Task<int> Insert(Pet pet, int userID)
         {
             var insertPet = new DbPet()
             {
@@ -62,22 +62,10 @@ namespace DataAccess.Repositories
                 Age = pet.Age,
                 UserID = userID
             };
-            if(pet.Image != null)
-            {
-                //foreach (var image in pet.Images)
-                //{
-                    var dbImage = new DbPetImage()
-                    {
-                        PetID = insertPet.ID,
-                        Picture = pet.Image.Picture,
-                    };
-                    await dbcontext.PetImages.AddAsync(dbImage);
-                //}
-            }
             
             await dbcontext.Pets.AddAsync(insertPet);
             await dbcontext.SaveChangesAsync();
-            return ModelMapper.ToPetModel(insertPet);
+            return insertPet.ID;
         }
 
         public async Task<Pet> Update(Pet pet)

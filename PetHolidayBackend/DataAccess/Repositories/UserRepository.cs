@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -70,6 +71,10 @@ namespace DataAccess.Repositories
             if (user == null)
                 throw new Exception("User not exists");
             user.Picture = file;
+
+            await userManager.UpdateAsync(user);
+            await signInManager.RefreshSignInAsync(user);
+
             await dbContext.SaveChangesAsync();
             return ModelMapper.ToUserModel(user);
         }

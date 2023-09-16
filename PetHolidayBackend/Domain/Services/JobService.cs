@@ -36,7 +36,7 @@ namespace Domain.Services
         {
             return await jobRepository.ListUnderTookJobs(userID);
         }
-        public async Task<Job> Insert(InsertJobModel job, int userID)
+        public async Task<int> Insert(InsertJobModel job, int userID)
         {
             return await jobRepository.Insert(job, userID);
         }
@@ -46,9 +46,9 @@ namespace Domain.Services
             return await jobRepository.FindById(jobID);
         }
 
-        public async Task<Status> FindStatusById(int statusID)
+        public async Task<Status> FindStatusByName(StatusName name)
         {
-            return await statusRepository.FindById(statusID);
+            return await statusRepository.FindByName(name);
         }
 
         public async Task<Job> TakeJob(int jobID, int userID)
@@ -63,6 +63,14 @@ namespace Domain.Services
         public async Task<Job> DeclineUser(int jobID)
         {
             return await jobRepository.DeclineUser(jobID);
+        }
+        public async Task<Job> FinishJob(int jobID)
+        {
+            return await jobRepository.FinishJob(jobID);
+        }
+        public async Task DeleteJob(int jobID)
+        {
+            await jobRepository.DeleteJob(jobID);
         }
     }
 }

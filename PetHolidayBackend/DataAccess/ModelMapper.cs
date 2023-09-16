@@ -137,7 +137,7 @@ namespace DataAccess
 
         internal static Status ToStatusModel(DbStatus status)
         {
-            return new Status() { ID = status.ID, Name = (StatusName)Enum.Parse(typeof(StatusName), status.Name.ToString()) };
+            return new Status() { ID = status.ID, Name = status.Name };
         }
     }
 }

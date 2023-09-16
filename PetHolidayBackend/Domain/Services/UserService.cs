@@ -47,7 +47,7 @@ namespace Domain.Services
             return await petRepository.FindById(ID);
         }
 
-        public async Task<Pet> InsertPet(Pet pet, int userID)
+        public async Task<int> InsertPet(Pet pet, int userID)
         {
             return await petRepository.Insert(pet, userID);
         }

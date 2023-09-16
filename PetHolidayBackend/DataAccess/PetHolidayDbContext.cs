@@ -35,6 +35,7 @@ namespace DataAccess
             //modelBuilder.Entity<DbJob>().Navigation(s => s.Pets).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Job).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Pet).AutoInclude();
+            modelBuilder.Entity<DbPet>().Navigation(s => s.Image).AutoInclude();
 
             modelBuilder.Entity<DbPetJob>(entity =>
             {
@@ -83,7 +84,7 @@ namespace DataAccess
             {
                 entity.ToTable("Statuses");
                 entity.HasKey(s => s.ID);
-                entity.Property(s => s.Name).HasConversion(new EnumToStringConverter<DbStatusName>());
+                entity.Property(s => s.Name).HasConversion(new EnumToStringConverter<StatusName>());
             });
 
             modelBuilder.Entity<DbPetImage>(entity =>
@@ -274,22 +275,22 @@ namespace DataAccess
                     new DbStatus()
                     {
                         ID = 1,
-                        Name = DbStatusName.Available 
+                        Name = StatusName.Available 
                     },
                     new DbStatus()
                     {
                         ID = 2,
-                        Name = DbStatusName.WaitingForApproval
+                        Name = StatusName.WaitingForApproval
                     },
                     new DbStatus()
                     {
                         ID = 3,
-                        Name = DbStatusName.Inprogress
+                        Name = StatusName.Inprogress
                     },
                     new DbStatus()
                     {
                         ID = 4,
-                        Name = DbStatusName.Done
+                        Name = StatusName.Done
                     }
                 );
             modelBuilder.Entity<DbJob>()

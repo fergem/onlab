@@ -17,7 +17,7 @@ namespace DataAccess.DataObjects
         public required int Hours { get; set; }
         public required string Description { get; set; }
         public required int Payment { get; set; }
-        public required int StatusID { get; set; }
+        public int? StatusID { get; set; }
         public required int MinRequiredExperience { get; set; }
         public virtual DbStatus Status { get; set; } = null!;
         public required int OwnerUserID { get; set; }
