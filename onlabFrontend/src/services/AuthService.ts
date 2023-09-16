@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginModel, RegisterModel } from "../models/User";
+import User, { LoginModel, RegisterModel } from "../models/User";
 
 const login = async (loginModel: LoginModel) => {
   return axios
@@ -14,7 +14,7 @@ const login = async (loginModel: LoginModel) => {
 };
 
 const register = async (registerModel: RegisterModel) => {
-  return axios.post<any>("/api/users/register", {
+  return axios.post<User>("/api/users/register", {
     email: registerModel.email,
     username: registerModel.userName,
     password: registerModel.password,

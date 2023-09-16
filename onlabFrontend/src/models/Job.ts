@@ -3,7 +3,7 @@ import Status, { StatusName } from "./Status";
 import { UserInformation } from "./User";
 
 export default interface Job {
-  id?: number;
+  id: number;
   hours?: number;
   location?: string;
   description?: string;

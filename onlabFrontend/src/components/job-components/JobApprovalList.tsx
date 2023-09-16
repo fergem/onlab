@@ -10,8 +10,8 @@ export interface IPropsJobApprovalCard {
 }
 
 export function JobApprovalCard({ job }: IPropsJobApprovalCard) {
-  const { approveJob, isApproveing, error } = useApproveJob();
-  const { declineJob, isDeciling, errorr } = useDeclineJob();
+  const { approveJob } = useApproveJob();
+  const { declineJob } = useDeclineJob();
 
   const handleApproveJob = () => {
     approveJob(job.id);
@@ -23,9 +23,8 @@ export function JobApprovalCard({ job }: IPropsJobApprovalCard) {
   return (
     <Paper shadow="sm" p="sm" withBorder>
       <Group>
-        <Box maw="50px" mah="50px">
+        <Box maw="100px">
           <Image
-            fit="contain"
             radius="md"
             src={
               job.petSitterUserInformation?.picture
@@ -36,15 +35,15 @@ export function JobApprovalCard({ job }: IPropsJobApprovalCard) {
           />
         </Box>
 
-        <Text size="sm">
+        <Text size="xs">
           {job.petSitterUserInformation?.userName} wants to apply for your job
         </Text>
 
         <Stack>
-          <Button>
-            <IconCheck onClick={handleApproveJob} />
+          <Button size="xs" onClick={handleApproveJob}>
+            <IconCheck />
           </Button>
-          <Button onClick={handleDeclineJob}>
+          <Button size="xs" onClick={handleDeclineJob}>
             <IconX />
           </Button>
         </Stack>

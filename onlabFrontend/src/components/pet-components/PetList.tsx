@@ -12,12 +12,7 @@ interface IPropsPetList {
 export default function PetList({ isAddingPet = false }: IPropsPetList) {
   const { pets, error, loading, listPets } = useGetUserPets();
   return (
-    <LoadingBoundary
-      loading={loading}
-      error={error}
-      refetch={listPets}
-      isEmpty={pets.length === 0}
-    >
+    <LoadingBoundary loading={loading} error={error} refetch={listPets}>
       <Grid justify="center">
         {pets.map((x) => (
           <Grid.Col span={2} key={x.id}>

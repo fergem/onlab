@@ -9,19 +9,19 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { useTakeJob } from "../../hooks/JobHooks";
 import useNotification from "../../hooks/useNotification";
 import Job from "../../models/Job";
 import Pet from "../../models/Pet";
+import { StatusName } from "../../models/Status";
 import { baseDogPicture, baseProfilePicture } from "../../utility/constants";
 
 function JobPage() {
   const { state } = useLocation();
-  const [job, setJob] = useState(state.job as Job);
-  const { takeJob, error, loading } = useTakeJob();
+  const job = state.job as Job;
+  const { takeJob, error } = useTakeJob();
   const { user } = useAuth();
   const notifications = useNotification();
   const handleTakeJob = () => {
@@ -40,10 +40,8 @@ function JobPage() {
         <Paper shadow="sm" p="sm" withBorder>
           <Stack align="center" justify="center">
             <Image
-              fit="contain"
-              radius="md"
-              maw="200px"
-              miw="200px"
+              radius="sm"
+              width="200px"
               height="200px"
               src={
                 job.ownerUserInformation?.picture
@@ -76,9 +74,14 @@ function JobPage() {
               </Grid.Col>
             ))}
           </Grid>
-          {user?.userName !== job.ownerUserInformation?.userName && (
-            <Button onClick={handleTakeJob}>Take Job</Button>
-          )}
+          {user?.id !== job.ownerUserInformation?.id &&
+            job.status?.name === StatusName.Available && (
+              <Button onClick={handleTakeJob}>Take Job</Button>
+            )}
+          {user?.id === job.ownerUserInformation?.id &&
+            job.status?.name === StatusName.Inprogress && (
+              <Button onClick={handleTakeJob}>Finish job</Button>
+            )}
         </Stack>
       </Group>
     </Container>
@@ -92,15 +95,15 @@ export interface IPetsProps {
 export function PetDescription({ pet }: IPetsProps) {
   return (
     <Paper shadow="sm" withBorder>
-      <Stack align="center">
+      <Stack align="center" justify="center" p="15px">
         <Image
-          fit="contain"
-          radius="md"
-          maw="175px"
-          miw="175px"
-          height="175px"
+          radius="sm"
+          height="170px"
+          width="170px"
           src={
-            pet.image ? `data:image/png;base64,${pet.image}` : baseDogPicture
+            pet.image
+              ? `data:image/png;base64,${pet.image.picture}`
+              : baseDogPicture
           }
         />
         <Text>{pet.name}</Text>

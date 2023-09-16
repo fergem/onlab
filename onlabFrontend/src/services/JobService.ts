@@ -38,7 +38,7 @@ const createJob = async ({
   minRequiredExperience,
   petIDs,
 }: JobWithPetIDs) => {
-  const response = await axios.post<any>("/api/jobs", {
+  const response = await axios.post<Job>("/api/jobs", {
     hours,
     location,
     description,
@@ -69,6 +69,15 @@ const declineJob = async (id: number) => {
   return response.data;
 };
 
+const finishJob = async (id: number) => {
+  const response = await axios.put<Job>(`/api/jobs/finishjob/${id}`);
+  return response.data;
+};
+const deleteJob = async (id: number) => {
+  const response = await axios.delete<Job>(`/api/jobs/deletejob/${id}`);
+  return response.data;
+};
+
 const JobService = {
   list,
   createJob,
@@ -79,6 +88,8 @@ const JobService = {
   approveJob,
   declineJob,
   listApprovals,
+  finishJob,
+  deleteJob,
 };
 
 export default JobService;

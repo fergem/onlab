@@ -18,8 +18,8 @@ export default function OwnerProfile() {
   };
   return (
     <Stack align="center" justify="center">
-      <Grid w="95%" align="center" justify="center">
-        <Grid.Col span={5}>
+      <Grid w="90%" justify="center">
+        <Grid.Col span={4}>
           <Title align="center" order={2} mb={10}>
             Approvals
           </Title>
@@ -31,7 +31,7 @@ export default function OwnerProfile() {
           />
         </Grid.Col>
         <Grid.Col span={7}>
-          <Group align="center" position="center" mb={10}>
+          <Group align="center" position="center" mb={3}>
             <Tooltip label="Post new job">
               <Button variant="subtle" color="dark" onClick={handleAdd}>
                 <IconPlus />

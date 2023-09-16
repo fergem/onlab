@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 
 const parseJwt = (token: string | undefined) => {
@@ -14,9 +14,8 @@ const parseJwt = (token: string | undefined) => {
 };
 
 export default function AuthVerify() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { user, logoutUser, loginUser } = useAuth();
+  const { user, logoutUser } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -25,11 +24,10 @@ export default function AuthVerify() {
       if (decodedJwt.exp * 1000 < Date.now()) {
         logoutUser();
         navigate("/");
-      } else {
-        loginUser(user);
       }
     }
-  }, [location, loginUser, logoutUser, navigate, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <div />;
 }

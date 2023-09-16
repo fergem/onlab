@@ -18,7 +18,6 @@ import UndertookJobs from "./pages/UndertookJobs";
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const val = useMemo(() => ({ user, setUser }), [user]);
-
   return (
     <AuthContext.Provider value={val}>
       <AppShell

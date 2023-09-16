@@ -51,7 +51,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     const userToGet = getItem("user");
-    if (user) {
+    if (userToGet) {
       const contextUser = JSON.parse(userToGet ?? "");
       addUser(contextUser);
       axios.defaults.headers.common.Authorization = `Bearer ${contextUser.bearer}`;

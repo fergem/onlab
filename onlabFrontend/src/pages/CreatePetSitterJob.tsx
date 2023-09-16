@@ -24,7 +24,7 @@ export default function CreatePetSitterJob() {
 
   return (
     <Center mih="80vh">
-      <Paper shadow="sm" p="xl">
+      <Paper shadow="sm" p="xl" w="50%">
         <CustomStepper steps={[petSelectorStep, createJobDetailsFormStep]} />
       </Paper>
     </Center>

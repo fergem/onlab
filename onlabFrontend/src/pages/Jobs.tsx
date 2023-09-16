@@ -11,7 +11,7 @@ export default function Jobs() {
   const { jobs, error, loading, listJobs } = useGetJobs(jobFilter);
 
   return (
-    <Stack>
+    <Stack justify="center">
       <Stack align="center" justify="center">
         <Title order={1}>How does it work?</Title>
         <Box px="10%">

@@ -1,4 +1,4 @@
-import { Center, Image } from "@mantine/core";
+import { Flex, Image } from "@mantine/core";
 import { useState } from "react";
 import { basePetPicture } from "../utility/constants";
 
@@ -22,7 +22,10 @@ export default function SelectableImage({
     onClick(id);
   };
   return (
-    <Center
+    <Flex
+      align="center"
+      justify="center"
+      p="15px"
       onClick={handleClick}
       bg={selected ? "indigo.2" : "white"}
       sx={(theme) => ({
@@ -34,11 +37,12 @@ export default function SelectableImage({
       })}
     >
       <Image
-        fit="contain"
+        height="125px"
+        width="125px"
         radius="md"
-        src={source ?? basePetPicture}
-        alt="Pet picture"
+        src={`data:image/png;base64,${source}` ?? basePetPicture}
+        alt={title}
       />
-    </Center>
+    </Flex>
   );
 }

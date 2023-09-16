@@ -19,7 +19,6 @@ export const useGetJobs = (jobParameters: JobParameters) => {
       onSuccess: (res) => {
         setJobs(res);
       },
-      onError: (err) => {},
     }
   );
 
@@ -46,7 +45,6 @@ export const useGetApprovals = () => {
       onSuccess: (res) => {
         setApprovals(res);
       },
-      onError: (err) => {},
     }
   );
 
@@ -55,7 +53,7 @@ export const useGetApprovals = () => {
     approvalsLoading,
     approvalsError,
     listApprovals,
-  } as const;
+  };
 };
 
 export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
@@ -78,71 +76,99 @@ export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
       onSuccess: (res) => {
         setJobs(res);
       },
-      onError: (err) => {},
     }
   );
 
-  return { jobs, error, loading, listJobs } as const;
-};
-
-const fortmatResponse = (res: any) => {
-  return JSON.stringify(res, null, 2);
+  return { jobs, error, loading, listJobs };
 };
 
 export const useTakeJob = () => {
-  const [putResult, setPutResult] = useState<string | null>(null);
-  const {
-    isLoading: isTakingJob,
-    mutate: takeJob,
-    isError: error,
-  } = useMutation<any, Error, number>(
+  const queryClient = useQueryClient();
+
+  const { mutate: takeJob, isError: error } = useMutation(
     "mutate-takeJob",
     async (id: number) => {
       if (id !== null) {
-        const asd = await JobService.takeJob(id);
-        return asd;
+        return JobService.takeJob(id);
       }
     },
     {
-      onSuccess: (res) => {},
-      onError: (err: any) => {},
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["query-jobs", "query-postedJobs"],
+        });
+      },
     }
   );
 
-  return { takeJob, isTakingJob, error } as const;
+  return { takeJob, error };
+};
+
+export const useFinishJob = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: takeJob, isError: error } = useMutation(
+    "mutate-finishJob",
+    async (id: number) => {
+      if (id !== null) {
+        return JobService.finishJob(id);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["query-jobs", "query-postedJobs"],
+        });
+      },
+    }
+  );
+
+  return { takeJob, error };
+};
+
+export const useDeleteJob = () => {
+  const queryClient = useQueryClient();
+  const { mutate: takeJob, isError: error } = useMutation(
+    "mutate-takeJob",
+    async (id: number) => {
+      if (id !== null) {
+        return JobService.takeJob(id);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["query-jobs", "query-postedJobs"],
+        });
+      },
+    }
+  );
+
+  return { takeJob, error };
 };
 
 export const useApproveJob = () => {
   const queryClient = useQueryClient();
-  const {
-    isLoading: isApproveingJob,
-    mutate: approveJob,
-    isError: error,
-  } = useMutation<any, Error, number | undefined>(
+  const { mutate: approveJob, isError: error } = useMutation(
     "mutate-approveJob",
-    async (id: number | undefined) => {
+    async (id: number) => {
       if (id) {
         return JobService.approveJob(id);
       }
     },
     {
-      onSuccess: (res) => {
+      onSuccess: () => {
         queryClient.invalidateQueries("query-approvals");
       },
-      onError: (err: any) => {},
     }
   );
 
-  return { approveJob, isApproveingJob, error };
+  return { approveJob, error };
 };
 
 export const useDeclineJob = () => {
   const queryClient = useQueryClient();
-  const {
-    isLoading: isDecliningJob,
-    mutate: declineJob,
-    isError: error,
-  } = useMutation<any, Error, number | undefined>(
+  const { mutate: declineJob, isError: error } = useMutation(
     "mutate-approveJob",
     async (id: number | undefined) => {
       if (id) {
@@ -150,23 +176,20 @@ export const useDeclineJob = () => {
       }
     },
     {
-      onSuccess: (res) => {
-        queryClient.invalidateQueries("query-approvals");
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["query-jobs", "query-postedJobs", "query-approvals"],
+        });
       },
-      onError: (err: any) => {},
     }
   );
 
-  return { declineJob, isDecliningJob, error };
+  return { declineJob, error };
 };
 
 export const usePostJobs = () => {
-  const [job, setJob] = useState<JobWithPetIDs>();
-  const {
-    isLoading: isPostingJob,
-    mutate: postJob,
-    isError: error,
-  } = useMutation<any, Error, JobWithPetIDs>(
+  const [job, setJob] = useState<Job>();
+  const { mutate: postJob, isError: error } = useMutation(
     "mutate-postJob",
     async ({
       hours,
@@ -196,7 +219,6 @@ export const usePostJobs = () => {
 
 export const useGetUserUnderTookJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
-
   const {
     isLoading: loading,
     refetch: listJobs,
@@ -215,7 +237,6 @@ export const useGetUserUnderTookJobs = () => {
       onSuccess: (res) => {
         setJobs(res);
       },
-      onError: (err) => {},
     }
   );
 
