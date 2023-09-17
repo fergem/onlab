@@ -1,6 +1,7 @@
 ﻿
 using Domain.Models;
 using Domain.Models.AuthHelpers;
+using Domain.Models.QueryHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -79,13 +80,13 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("pets")]
-        public async Task<ActionResult<User>> ListPets()
+        public async Task<ActionResult<User>> ListPets([FromQuery] PetFilterParameters filter)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 BadRequest();
 
-            var value = await userService.ListUsersPets(userID);
+            var value = await userService.ListUsersPets(userID, filter);
             return Ok(value);
         }
 

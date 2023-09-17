@@ -19,7 +19,10 @@ namespace DataAccess.Repositories
 
         public async Task<Job> FindById(int jobID)
         {
-            var job = await dbcontext.Jobs.FindAsync(jobID);
+            var job = await dbcontext.Jobs.Include(s => s.Status)
+                .Include(s => s.OwnerUser)
+                .Include(s => s.PetSitterUser)
+                .Include(s => s.Pets).FirstOrDefaultAsync(s => s.ID == jobID);
             if (job == null)
                 throw new Exception("Job doesnt exist");
             return ModelMapper.ToJobModel(job);
@@ -185,6 +188,17 @@ namespace DataAccess.Repositories
 
             dbcontext.Remove(jobToDelete);
             await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task<Job> UpdateJob(int jobID)
+        {
+            var jobToUpdate = await dbcontext.Jobs
+              .Include(s => s.Status)
+              .Include(s => s.OwnerUser)
+              .Include(s => s.PetSitterUser)
+              .FirstAsync(s => s.ID == jobID);
+
+            throw new NotImplementedException();
         }
     } 
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DataObjects;
 using Domain.Models;
+using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -32,7 +33,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToPetModel(pet);
         }
 
-        public async Task<IReadOnlyCollection<Pet>> List(int userID)
+        public async Task<IReadOnlyCollection<Pet>> List(int userID, PetFilterParameters filter)
         {
             return await dbcontext.Pets
                 .Include(s => s.Image)

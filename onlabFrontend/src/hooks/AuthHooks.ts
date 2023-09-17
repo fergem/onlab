@@ -41,11 +41,11 @@ export const useUser = () => {
     removeItem("user");
   };
 
-  return [user, addUser, removeUser] as const;
+  return { user, addUser, removeUser };
 };
 
 export const useAuth = () => {
-  const [user, addUser, removeUser] = useUser();
+  const { user, addUser, removeUser } = useUser();
   const { getItem } = useLocalStorage();
   const navigate = useNavigate();
 

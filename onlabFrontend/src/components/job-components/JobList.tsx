@@ -1,5 +1,6 @@
 import { Center, Grid, Image, Paper, Stack, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/AuthHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
@@ -39,12 +40,13 @@ export interface IPropsJobCard {
 
 export function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
+  const { user } = useUser();
   return (
     <Paper
       shadow="sm"
-      p="sm"
+      p="md"
       withBorder
-      onClick={() => navigate("/job", { state: { job } })}
+      onClick={() => navigate(`/jobs/${job.id}`, { state: { job } })}
     >
       <Stack align="left" justify="center">
         <Grid justify="center" align="center">
@@ -65,7 +67,11 @@ export function JobCard({ job }: IPropsJobCard) {
 
           <Grid.Col span={8}>
             <Stack justify="top">
-              <Title order={3}>{job?.ownerUserInformation?.userName}</Title>
+              <Title order={3}>
+                {job?.ownerUserInformation?.id === user?.id
+                  ? "Your job"
+                  : `${job?.ownerUserInformation?.userName}'s job`}
+              </Title>
               <Text size="sm">${job.payment}/hours</Text>
               <Text size="sm">{job.location}</Text>
               <Text lineClamp={2}>{job.description}</Text>

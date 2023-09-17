@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Text, Title } from "@mantine/core";
+import { Grid, Stack, Title } from "@mantine/core";
 import { useState } from "react";
 import JobFilter from "../components/job-components/JobFilter";
 import JobList from "../components/job-components/JobList";
@@ -12,18 +12,9 @@ export default function Jobs() {
 
   return (
     <Stack justify="center">
-      <Stack align="center" justify="center">
-        <Title order={1}>How does it work?</Title>
-        <Box px="10%">
-          <Text fz="lg">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Provident iusto
-            quibusdam, fugiat eius, similique accusantium possimus alias neque
-            cupiditate porro molestiae dolore sunt!
-          </Text>
-        </Box>
-      </Stack>
-
+      <Title order={1} align="center">
+        Available jobs
+      </Title>
       <Grid align="top" justify="center" mt="2%">
         <Grid.Col span={3}>
           <JobFilter
@@ -33,17 +24,12 @@ export default function Jobs() {
           />
         </Grid.Col>
         <Grid.Col span={7}>
-          <Stack justify="center">
-            <Title order={2} align="center">
-              Available jobs
-            </Title>
-            <JobList
-              jobs={jobs}
-              loading={loading}
-              error={error}
-              refetch={listJobs}
-            />
-          </Stack>
+          <JobList
+            jobs={jobs}
+            loading={loading}
+            error={error}
+            refetch={listJobs}
+          />
         </Grid.Col>
       </Grid>
     </Stack>

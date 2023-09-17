@@ -1,8 +1,12 @@
 import axios from "axios";
-import Pet, { PetInsertModel } from "../models/Pet";
+import Pet, { PetFilter, PetInsertModel } from "../models/Pet";
 
-const getUserPets = async () => {
-  const response = await axios.get<Pet[]>("/api/users/pets");
+const getUserPets = async (filter?: PetFilter) => {
+  const response = await axios.get<Pet[]>("/api/users/pets", {
+    params: {
+      petIDs: filter?.petIDs?.join(","),
+    },
+  });
   return response.data;
 };
 

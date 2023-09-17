@@ -1,31 +1,31 @@
-import { Center, Grid, Image, Paper, Stack, Text } from "@mantine/core";
+import { Grid, Image, Paper, Stack, Text } from "@mantine/core";
 import { useGetUserPets } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
 import { baseDogPicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
-import AddPet from "./AddPet";
 
-interface IPropsPetList {
-  isAddingPet: boolean;
+interface IPropsPetGrid {
+  pets?: Pet[];
 }
 
-export default function PetList({ isAddingPet = false }: IPropsPetList) {
+export default function PetListLoadingPets() {
   const { pets, error, loading, listPets } = useGetUserPets();
   return (
     <LoadingBoundary loading={loading} error={error} refetch={listPets}>
-      <Grid justify="center">
-        {pets.map((x) => (
-          <Grid.Col span={2} key={x.id}>
-            <PetCard pet={x} />
-          </Grid.Col>
-        ))}
-        {isAddingPet && !loading && (
-          <Grid.Col span={pets.length > 0 ? 2 : 12}>
-            <AddPet />
-          </Grid.Col>
-        )}
-      </Grid>
+      <PetGrid pets={pets} />
     </LoadingBoundary>
+  );
+}
+
+export function PetGrid({ pets }: IPropsPetGrid) {
+  return (
+    <Grid justify="center">
+      {pets?.map((x) => (
+        <Grid.Col span="content" key={x.id}>
+          <PetCard pet={x} />
+        </Grid.Col>
+      ))}
+    </Grid>
   );
 }
 
@@ -35,22 +35,21 @@ interface IPropsPetCard {
 
 export function PetCard({ pet }: IPropsPetCard) {
   return (
-    <Stack justify="center" align="center">
+    <Stack justify="center" align="center" h="100%">
       <Paper shadow="xs" p="md" withBorder>
-        <Center>
-          <Image
-            fit="contain"
-            radius="md"
-            src={
-              pet.image
-                ? `data:image/png;base64,${pet.image.picture}`
-                : baseDogPicture
-            }
-            alt="Green double couch with wooden legs"
-          />
-        </Center>
+        <Image
+          height="7vw"
+          width="7vw"
+          radius="md"
+          src={
+            pet.image
+              ? `data:image/png;base64,${pet.image.picture}`
+              : baseDogPicture
+          }
+          alt="Green double couch with wooden legs"
+        />
 
-        <Text size="lg" align="center" mt="sm">
+        <Text size="sm" align="center" mt="sm">
           {pet.name}
         </Text>
         {/* <PetDialog pet={pet} onClose={onClose} isOpen={isOpen}></PetDialog> */}

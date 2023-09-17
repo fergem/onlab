@@ -16,6 +16,6 @@ namespace Domain.Models.QueryHelpers
 
         public bool ValidHoursRange => MaxHours > MinHours;
 
-        public bool ValidJobStatus => JobStatus != null ? Enum.IsDefined(typeof(StatusName), JobStatus) : true;
+        public bool ValidJobStatus => JobStatus == null || Enum.IsDefined(typeof(StatusName), JobStatus);
     }
 }

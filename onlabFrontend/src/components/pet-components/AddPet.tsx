@@ -10,13 +10,7 @@ export default function AddPet() {
     <>
       <Stack justify="center" align="center" onClick={open}>
         <Paper shadow="xs" p="md">
-          <Image
-            fit="contain"
-            radius="md"
-            maw="100px"
-            height="100px"
-            src={addPetImage}
-          />
+          <Image height="7vw" width="7vw" radius="md" src={addPetImage} />
           <Text size="lg" align="center" mt="sm">
             Add pet
           </Text>

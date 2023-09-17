@@ -4,7 +4,7 @@ import { basePetPicture } from "../utility/constants";
 
 export interface IPropsSelectableImage {
   onClick(id: number): void;
-  source: string;
+  source?: string;
   title: string;
   id: number | null;
 }
@@ -40,8 +40,9 @@ export default function SelectableImage({
         height="125px"
         width="125px"
         radius="md"
-        src={`data:image/png;base64,${source}` ?? basePetPicture}
+        src={source ? `data:image/png;base64,${source}` : basePetPicture}
         alt={title}
+        caption={title}
       />
     </Flex>
   );

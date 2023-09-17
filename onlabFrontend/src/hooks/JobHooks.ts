@@ -2,6 +2,28 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
 import JobService from "../services/JobService";
+import useNotification from "./useNotification";
+
+export const useGetJob = (id?: string) => {
+  const [job, setJobs] = useState<Job>();
+  const {
+    isLoading: loading,
+    refetch: getJob,
+    isError: error,
+  } = useQuery<Job, Error>(
+    "query-jobs",
+    async () => {
+      return JobService.get(id);
+    },
+    {
+      onSuccess: (res) => {
+        setJobs(res);
+      },
+    }
+  );
+
+  return { job, error, loading, getJob };
+};
 
 export const useGetJobs = (jobParameters: JobParameters) => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -84,8 +106,8 @@ export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
 
 export const useTakeJob = () => {
   const queryClient = useQueryClient();
-
-  const { mutate: takeJob, isError: error } = useMutation(
+  const notifications = useNotification();
+  const { mutate: takeJob } = useMutation(
     "mutate-takeJob",
     async (id: number) => {
       if (id !== null) {
@@ -98,16 +120,18 @@ export const useTakeJob = () => {
           queryKey: ["query-jobs", "query-postedJobs"],
         });
       },
+      onError: (error: Error) => notifications.error(error.message),
     }
   );
 
-  return { takeJob, error };
+  return { takeJob };
 };
 
 export const useFinishJob = () => {
   const queryClient = useQueryClient();
+  const notifications = useNotification();
 
-  const { mutate: takeJob, isError: error } = useMutation(
+  const { mutate: finishJob } = useMutation(
     "mutate-finishJob",
     async (id: number) => {
       if (id !== null) {
@@ -120,19 +144,22 @@ export const useFinishJob = () => {
           queryKey: ["query-jobs", "query-postedJobs"],
         });
       },
+      onError: (error: Error) => notifications.error(error.message),
     }
   );
 
-  return { takeJob, error };
+  return { finishJob };
 };
 
 export const useDeleteJob = () => {
   const queryClient = useQueryClient();
-  const { mutate: takeJob, isError: error } = useMutation(
+  const notifications = useNotification();
+
+  const { mutate: deleteJob } = useMutation(
     "mutate-takeJob",
     async (id: number) => {
       if (id !== null) {
-        return JobService.takeJob(id);
+        return JobService.deleteJob(id);
       }
     },
     {
@@ -141,15 +168,18 @@ export const useDeleteJob = () => {
           queryKey: ["query-jobs", "query-postedJobs"],
         });
       },
+      onError: (error: Error) => notifications.error(error.message),
     }
   );
 
-  return { takeJob, error };
+  return { deleteJob };
 };
 
 export const useApproveJob = () => {
   const queryClient = useQueryClient();
-  const { mutate: approveJob, isError: error } = useMutation(
+  const notifications = useNotification();
+
+  const { mutate: approveJob } = useMutation(
     "mutate-approveJob",
     async (id: number) => {
       if (id) {
@@ -160,15 +190,18 @@ export const useApproveJob = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("query-approvals");
       },
+      onError: (error: Error) => notifications.error(error.message),
     }
   );
 
-  return { approveJob, error };
+  return { approveJob };
 };
 
 export const useDeclineJob = () => {
   const queryClient = useQueryClient();
-  const { mutate: declineJob, isError: error } = useMutation(
+  const notifications = useNotification();
+
+  const { mutate: declineJob } = useMutation(
     "mutate-approveJob",
     async (id: number | undefined) => {
       if (id) {
@@ -181,10 +214,21 @@ export const useDeclineJob = () => {
           queryKey: ["query-jobs", "query-postedJobs", "query-approvals"],
         });
       },
+      onError: (error: Error) => notifications.error(error.message),
     }
   );
 
-  return { declineJob, error };
+  return { declineJob };
+};
+
+export const useProgressJob = () => {
+  const { declineJob } = useDeclineJob();
+  const { approveJob } = useApproveJob();
+  const { deleteJob } = useDeleteJob();
+  const { finishJob } = useFinishJob();
+  const { takeJob } = useTakeJob();
+
+  return { takeJob, approveJob, declineJob, finishJob, deleteJob };
 };
 
 export const usePostJobs = () => {

@@ -1,6 +1,10 @@
 import axios from "axios";
 import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
-import Status from "../models/Status";
+
+const get = async (id?: string) => {
+  const response = await axios.get<Job>(`/api/jobs/${id}`);
+  return response.data;
+};
 
 const list = async (jobParameters: JobParameters) => {
   const response = await axios.get<Job[]>(
@@ -49,11 +53,6 @@ const createJob = async ({
   return response.data;
 };
 
-const getJobStatus = async (id: number) => {
-  const response = await axios.get<Status>(`/api/jobs/status/${id}`);
-  return response.data;
-};
-
 const takeJob = async (id: number) => {
   const response = await axios.put<Job>(`/api/jobs/takejob/${id}`);
   return response.data;
@@ -79,11 +78,11 @@ const deleteJob = async (id: number) => {
 };
 
 const JobService = {
+  get,
   list,
   createJob,
   listUsersPostedJobs,
   listUsersUndertookJobs,
-  getJobStatus,
   takeJob,
   approveJob,
   declineJob,

@@ -1,6 +1,14 @@
-import { Box, Button, Group, Image, Paper, Stack, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Grid,
+  Image,
+  Paper,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import { useApproveJob, useDeclineJob } from "../../hooks/JobHooks";
+import { useProgressJob } from "../../hooks/JobHooks";
 import Job from "../../models/Job";
 import { baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
@@ -10,8 +18,7 @@ export interface IPropsJobApprovalCard {
 }
 
 export function JobApprovalCard({ job }: IPropsJobApprovalCard) {
-  const { approveJob } = useApproveJob();
-  const { declineJob } = useDeclineJob();
+  const { approveJob, declineJob } = useProgressJob();
 
   const handleApproveJob = () => {
     approveJob(job.id);
@@ -21,33 +28,47 @@ export function JobApprovalCard({ job }: IPropsJobApprovalCard) {
   };
 
   return (
-    <Paper shadow="sm" p="sm" withBorder>
-      <Group>
-        <Box maw="100px">
-          <Image
-            radius="md"
-            src={
-              job.petSitterUserInformation?.picture
-                ? `data:image/png;base64,${job.petSitterUserInformation.picture}`
-                : baseProfilePicture
-            }
-            alt="Job picture"
-          />
-        </Box>
-
-        <Text size="xs">
-          {job.petSitterUserInformation?.userName} wants to apply for your job
-        </Text>
-
-        <Stack>
-          <Button size="xs" onClick={handleApproveJob}>
-            <IconCheck />
-          </Button>
-          <Button size="xs" onClick={handleDeclineJob}>
-            <IconX />
-          </Button>
-        </Stack>
-      </Group>
+    <Paper shadow="sm" p="md" withBorder>
+      <Grid align="center" justify="center">
+        <Grid.Col span={4}>
+          <Box maw="100px">
+            <Image
+              radius="md"
+              src={
+                job.petSitterUserInformation?.picture
+                  ? `data:image/png;base64,${job.petSitterUserInformation.picture}`
+                  : baseProfilePicture
+              }
+              alt="Job picture"
+            />
+          </Box>
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <Text size="xs">
+            {job.petSitterUserInformation?.userName} wants to apply for your job
+          </Text>
+        </Grid.Col>
+        <Grid.Col span={2}>
+          <Stack align="center" justify="center">
+            <ActionIcon
+              color="green"
+              size="lg"
+              variant="filled"
+              onClick={handleApproveJob}
+            >
+              <IconCheck />
+            </ActionIcon>
+            <ActionIcon
+              color="red"
+              size="lg"
+              variant="filled"
+              onClick={handleDeclineJob}
+            >
+              <IconX />
+            </ActionIcon>
+          </Stack>
+        </Grid.Col>
+      </Grid>
     </Paper>
   );
 }

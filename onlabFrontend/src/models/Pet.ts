@@ -1,5 +1,5 @@
 export default interface Pet {
-  id?: number;
+  id: number;
   name: string;
   description: string;
   species: PetSpecies;
@@ -20,15 +20,16 @@ export interface PetImageUploadModel {
   file: File;
 }
 
+export interface PetFilter {
+  petIDs?: number[];
+}
+
 export enum PetSpecies {
   Dog = "Dog",
   Cat = "Cat",
   Bird = "Bird",
-  Horse = "Horse",
-  Fish = "Fish",
   SmallMammal = "Small Mammal",
   Lizard = "Lizard",
-  Exotic = "Exotic",
 }
 
 export function getPetSpeciesValueLabel() {

@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthVerify from "./components/AuthVerify";
 import Navbar from "./components/Navbar";
-import JobPage from "./components/job-components/JobPage";
+import JobDetail from "./components/job-components/JobDetail";
 import AuthContext from "./context/AuthContext";
 import User from "./models/User";
 import CreatePetSitterJob from "./pages/CreatePetSitterJob";
@@ -35,7 +35,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/postedjobs" element={<OwnerProfile />} />
           <Route path="/undertookjobs" element={<UndertookJobs />} />
-          <Route path="/job" element={<JobPage />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/createpetsitterjob" element={<CreatePetSitterJob />} />
         </Routes>
       </AppShell>

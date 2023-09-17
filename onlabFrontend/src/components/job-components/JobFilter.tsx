@@ -1,18 +1,15 @@
 import {
-  Box,
   Button,
   Container,
   MultiSelect,
   Paper,
-  RangeSlider,
   Select,
   Stack,
   Text,
 } from "@mantine/core";
 import { useState } from "react";
-import { JobParameters } from "../../models/Job";
-import { getPetSpeciesValueLabel } from "../../models/Pet";
-import { StatusName } from "../../models/Status";
+import { JobParameters, JobType, getJobTypes } from "../../models/Job";
+import { PetSpecies, getPetSpeciesValueLabel } from "../../models/Pet";
 
 interface IJobFilterProps {
   jobFilter: JobParameters;
@@ -25,41 +22,33 @@ export default function JobFilter({
   setJobFilter,
   refetch,
 }: IJobFilterProps) {
-  const [range, setRange] = useState<number[]>([0, 12]);
-  const handleHoursRangeChange = (val: number[]) => {
-    setRange(val);
-    setJobFilter({
-      ...jobFilter,
-      jobHoursRange: {
-        minHours: range[0],
-        maxHours: range[1],
-      },
-    });
-  };
-  const handleSelectChange = (event: string) => {
-    setJobFilter({
-      ...jobFilter,
-      statusName: event as StatusName,
-    });
-  };
+  const [species, setSpecies] = useState<PetSpecies[]>([]);
+  const [jobType, setJobType] = useState<JobType>();
   const handleFilters = () => {
     refetch();
   };
-  const selectData = [
-    { value: StatusName.Available, label: "Available" },
-    { value: StatusName.WaitingForApproval, label: "Waiting For Approval" },
-    { value: StatusName.Inprogress, label: "In Progress" },
-  ];
+
+  const handleSpeciesFilter = (data: PetSpecies[]) => {
+    setSpecies(data);
+  };
+
+  const handleJobTypeFilter = (data: string) => {
+    setJobType(data as JobType);
+  };
+
   return (
     <Container>
       <Paper shadow="sm" p="sm" withBorder>
         <Text fz="md" align="left">
           Search for:
         </Text>
+
         <Stack justify="center" spacing="xl">
-          <Select
-            onChange={handleSelectChange}
-            data={selectData}
+          <MultiSelect
+            onChange={handleSpeciesFilter}
+            data={getPetSpeciesValueLabel()}
+            label="Service for:"
+            placeholder="Pick animals"
             radius="md"
             transitionProps={{
               transition: "pop-top-left",
@@ -67,25 +56,18 @@ export default function JobFilter({
               timingFunction: "ease",
             }}
           />
-          <MultiSelect
-            data={getPetSpeciesValueLabel()}
-            label="Experience in"
-            placeholder="Pick animals"
+          <Select
+            onChange={handleJobTypeFilter}
+            data={getJobTypes()}
+            label="Type of job"
+            placeholder="Pick type"
+            radius="md"
+            transitionProps={{
+              transition: "pop-top-left",
+              duration: 80,
+              timingFunction: "ease",
+            }}
           />
-          <Box>
-            <Text fz="sm">Hours</Text>
-            <RangeSlider
-              defaultValue={[1, 12]}
-              marks={[
-                { value: 1, label: "1" },
-                { value: 12, label: "12" },
-              ]}
-              min={1}
-              max={12}
-              minRange={1}
-              onChange={handleHoursRangeChange}
-            />
-          </Box>
           <Button onClick={handleFilters}>Apply filters</Button>
         </Stack>
       </Paper>

@@ -77,7 +77,7 @@ namespace PetHolidayWebApi.Controllers
         public async Task<ActionResult<User>> FindById([FromRoute] int jobID) 
         {
             var value = await jobService.FindById(jobID);
-            return value != null ? Ok() : NotFound(); ;
+            return value != null ? Ok(value) : NotFound(); ;
         }
 
         [Authorize]

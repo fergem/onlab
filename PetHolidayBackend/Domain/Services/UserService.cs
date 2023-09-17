@@ -1,5 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Models.AuthHelpers;
+using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using System.Security.Claims;
 
@@ -37,9 +38,9 @@ namespace Domain.Services
             return await userRepository.AddProfilePicture(userID, file);
         }
 
-        public async Task<IReadOnlyCollection<Pet>> ListUsersPets(int userID)
+        public async Task<IReadOnlyCollection<Pet>> ListUsersPets(int userID, PetFilterParameters filter)
         {
-            return await petRepository.List(userID);
+            return await petRepository.List(userID, filter);
         }
 
         public async Task<Pet> FindPetByID(int ID)

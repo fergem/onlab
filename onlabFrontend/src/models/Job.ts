@@ -1,5 +1,5 @@
 import Pet from "./Pet";
-import Status, { StatusName } from "./Status";
+import Status from "./Status";
 import { UserInformation } from "./User";
 
 export default interface Job {
@@ -12,18 +12,29 @@ export default interface Job {
   petSitterUserInformation?: UserInformation;
   minRequiredExperience?: number;
   status?: Status;
+  type?: JobType;
+  repeated?: boolean;
+  dateStart?: Date;
+  dateEnd?: Date;
   pets?: Pet[];
 }
 
-export const JobValidation = {
-  validateLocation(val: string) {
-    if (val.length === 0) return "Location is required";
-    return null;
-  },
-  validateDescription(val: string) {
-    if (val.length === 0) return "Description is required";
-  },
-};
+export enum JobType {
+  Sitting = "Sitting",
+  Boarding = "Boarding",
+  Walking = "Walking",
+  Visit = "Visit",
+}
+
+export function getJobTypes() {
+  const types = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(JobType)) {
+    types.push({ value: key, label: value });
+  }
+  return types;
+}
+
 export interface JobWithPetIDs extends Job {
   petIDs: number[];
 }
@@ -41,15 +52,16 @@ export interface JobHoursRange {
   maxHours?: number;
 }
 
-export interface JobParameters {
-  jobHoursRange?: JobHoursRange;
-  statusName?: StatusName;
-}
+export interface JobParameters {}
 
-export const DefaultJobParameters: JobParameters = {
-  jobHoursRange: {
-    minHours: 0,
-    maxHours: 12,
+export const DefaultJobParameters: JobParameters = {};
+
+export const JobValidation = {
+  validateLocation(val: string) {
+    if (val.length === 0) return "Location is required";
+    return null;
   },
-  statusName: StatusName.Available,
+  validateDescription(val: string) {
+    if (val.length === 0) return "Description is required";
+  },
 };
