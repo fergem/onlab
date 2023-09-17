@@ -23,9 +23,6 @@ namespace DataAccess
                 Age = job.OwnerUser.Age,
                 Email = job.OwnerUser.Email,
             };
-            var status = ToStatusModel(job.Status);
-            if (status == null)
-                throw new Exception("Status doesnt exist");
 
             var pets = new List<Pet>();
             foreach (var petJob in job.Pets)
@@ -53,9 +50,13 @@ namespace DataAccess
                     OwnerUserInformation = ownerUserInformation,
                     Payment = job.Payment,
                     PetSitterUserInformation = petSitterInformation,
-                    Status = status,
+                    Status = job.Status,
                     MinRequiredExperience = job.MinRequiredExperience,
                     Pets = pets,
+                    Repeated = job.Repeated,
+                    StartDate = job.StartDate,
+                    EndDate = job.EndDate,
+                    Days = ToJobDays(job.Days)
                 };
             }
             return new Job()
@@ -66,9 +67,13 @@ namespace DataAccess
                 Location = job.Location,
                 Payment = job.Payment,
                 OwnerUserInformation = ownerUserInformation,
-                Status = status,
+                Status = job.Status,
                 MinRequiredExperience = job.MinRequiredExperience,
                 Pets = pets,
+                Repeated = job.Repeated,
+                StartDate = job.StartDate,
+                EndDate = job.EndDate,
+                Days = ToJobDays(job.Days)
             };
         }
         internal static User ToUserModel(DbUser user)
@@ -135,9 +140,10 @@ namespace DataAccess
             };
         }
 
-        internal static Status ToStatusModel(DbStatus status)
+        internal static IReadOnlyCollection<Days>? ToJobDays(string days)
         {
-            return new Status() { ID = status.ID, Name = status.Name };
+            
+            return days is not null ? Array.ConvertAll(days.Split(';'), Enum.Parse<Days>) : null;
         }
     }
 }

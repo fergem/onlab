@@ -4,6 +4,7 @@ using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net;
 
 namespace PetHolidayWebApi.Controllers
@@ -22,41 +23,35 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> List([FromQuery] JobParameters jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> List([FromQuery] JobFilter jobParameters)
         {
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
-            if (!jobParameters.ValidJobStatus)
-                return BadRequest("Requested status doesnt exist");
 
             return Ok(await jobService.List(jobParameters));
         }
 
         [Authorize]
         [HttpGet("posted")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobParameters jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobFilter jobParameters)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
-            if (!jobParameters.ValidJobStatus)
-                return BadRequest("Requested status doesnt exist");
             return Ok(await jobService.ListPostedJobs(userID, jobParameters));
         }
 
         [Authorize]
         [HttpGet("undertook")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobParameters jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobFilter jobParameters)
         {
             var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             if (!jobParameters.ValidHoursRange)
                 return BadRequest("Max hours cannot be less than min hours");
-            if (!jobParameters.ValidJobStatus)
-                return BadRequest("Requested status doesnt exist");
 
             return Ok(await jobService.ListUnderTookJobs(userID));
         }
@@ -185,6 +180,11 @@ namespace PetHolidayWebApi.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpGet("asd")]
+        public IReadOnlyList<Days> GetDay()
+        {
+            return new List<Days>() { Days.Sun, Days.Mon };
         }
     }
 }

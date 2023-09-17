@@ -9,7 +9,6 @@ namespace DataAccess.DataObjects
 {
     public class DbPetJob
     {
-
         public int JobID { get; set; }
         public virtual DbJob? Job { get; set; }
         public int PetID { get; set; }

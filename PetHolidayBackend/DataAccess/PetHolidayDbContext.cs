@@ -19,10 +19,10 @@ namespace DataAccess
         public DbSet<DbPet> Pets { get; set; }
         public DbSet<DbPetSitterProfile> SitterProfiles { get; set; }
         public DbSet<DbOwnerProfile> OwnerProfiles { get; set; }
-        public DbSet<DbStatus> Statuses { get; set; }
         public DbSet<DbJob> Jobs { get; set; }
         public DbSet<DbPetImage> PetImages { get; set; }
         public DbSet<DbPetJob> PetJobs { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,11 +31,10 @@ namespace DataAccess
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Entity<DbUser>().Navigation(s => s.OwnerProfile).AutoInclude();
-            //modelBuilder.Entity<DbPet>().Navigation(s => s.Jobs).AutoInclude();
-            //modelBuilder.Entity<DbJob>().Navigation(s => s.Pets).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Job).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Pet).AutoInclude();
             modelBuilder.Entity<DbPet>().Navigation(s => s.Image).AutoInclude();
+
 
             modelBuilder.Entity<DbPetJob>(entity =>
             {
@@ -78,13 +77,7 @@ namespace DataAccess
                 entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Hours);
                 entity.Property(s => s.Location).HasMaxLength(50).IsUnicode(unicode: true);
-            });
-
-            modelBuilder.Entity<DbStatus>(entity =>
-            {
-                entity.ToTable("Statuses");
-                entity.HasKey(s => s.ID);
-                entity.Property(s => s.Name).HasConversion(new EnumToStringConverter<StatusName>());
+                entity.Property(s => s.Days);
             });
 
             modelBuilder.Entity<DbPetImage>(entity =>
@@ -103,11 +96,6 @@ namespace DataAccess
 
         private void OneToManyRelationshipConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbStatus>()
-                .HasMany(c => c.Jobs)
-                .WithOne(s => s.Status)
-                .IsRequired();
-
             modelBuilder.Entity<DbUser>()
                 .HasMany(c => c.Pets)
                 .WithOne(s => s.User)
@@ -270,29 +258,6 @@ namespace DataAccess
                         PetID = 3,
                     }
                  );
-            modelBuilder.Entity<DbStatus>()
-                .HasData(
-                    new DbStatus()
-                    {
-                        ID = 1,
-                        Name = StatusName.Available 
-                    },
-                    new DbStatus()
-                    {
-                        ID = 2,
-                        Name = StatusName.WaitingForApproval
-                    },
-                    new DbStatus()
-                    {
-                        ID = 3,
-                        Name = StatusName.Inprogress
-                    },
-                    new DbStatus()
-                    {
-                        ID = 4,
-                        Name = StatusName.Done
-                    }
-                );
             modelBuilder.Entity<DbJob>()
                 .HasData(
                     new DbJob()
@@ -301,11 +266,14 @@ namespace DataAccess
                         Hours = 4,
                         Location = "Szeged",
                         Description = "Kutyára kell vigyázni",
-                        StatusID = 1,
+                        Status = Status.Available,
                         OwnerUserID = 1,
                         PetSitterUserID = null,
                         Payment = 10,
                         MinRequiredExperience = 0,
+                        Repeated = true,
+                        StartDate = DateTime.Now.AddDays(2),
+                        EndDate = DateTime.Now.AddDays(4),
                     },
                     new DbJob()
                     {
@@ -313,11 +281,13 @@ namespace DataAccess
                         Hours = 3,
                         Location = "Szolnok",
                         Description = "Cicára kell vigyázni",
-                        StatusID = 1,
+                        Status = Status.Available,
                         OwnerUserID = 2,
                         PetSitterUserID = null,
                         Payment = 20,
                         MinRequiredExperience = 1,
+                        Repeated = false,
+                        StartDate = DateTime.Now.AddDays(4),
                     },
                     new DbJob()
                     {
@@ -325,11 +295,13 @@ namespace DataAccess
                         Hours = 7,
                         Location = "Jászkarajenő",
                         Description = "Teknőcre kell vigyázni",
-                        StatusID = 1,
+                        Status = Status.Available,
                         OwnerUserID = 3,
                         PetSitterUserID = null,
                         Payment = 30,
                         MinRequiredExperience = 3,
+                        Repeated = false,
+                        StartDate = DateTime.Now.AddDays(3),
                     }
                 );
         }
