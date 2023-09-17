@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -16,19 +17,25 @@ namespace Domain.Models
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }
         public required bool Repeated {  get; set; }
-        public required Status Status { get; set; }
-        public required DateTime StartDate { get; set; }
-        public required UserInformation OwnerUserInformation { get; set; }
-        public required ICollection<Pet> Pets { get; set; }
 
+        public required Status Status { get; set; }
+
+        public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public Days? Days { get; set; }
+
+        public required UserInformation OwnerUserInformation { get; set; }
         public UserInformation? PetSitterUserInformation { get; set; }
+
+        public required IReadOnlyCollection<Pet> Pets { get; set; }
+
+        public required IReadOnlyCollection<Days> Days { get; set; }
+
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Days
     {
+        [Description("Mon")]
         Mon,
         Tue,
         Wed,
@@ -43,7 +50,7 @@ namespace Domain.Models
     {
         Empty,
         Available,
-        WaitingForApproval,
+        Pending,
         Inprogress,
         Done,
     }

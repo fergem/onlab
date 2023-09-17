@@ -14,5 +14,10 @@ namespace Domain.Models.QueryHelpers
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }
         public required List<int> petIDs { get; set; }
+        public required DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public List<Days>? Days { get; set; }
+        public required bool Repeated { get; set; }
+
     }
 }

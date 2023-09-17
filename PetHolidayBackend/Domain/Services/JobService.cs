@@ -13,18 +13,16 @@ namespace Domain.Services
     public class JobService
     {
         private readonly IJobRepository jobRepository;
-        private readonly IStatusRepository statusRepository;
 
-        public JobService(IJobRepository jobRepository, IStatusRepository statusRepository)
+        public JobService(IJobRepository jobRepository)
         {
             this.jobRepository = jobRepository;
-            this.statusRepository = statusRepository;
         }
-        public async Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters)
+        public async Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters)
         {
             return await jobRepository.List(jobParameters);
         }
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobParameters jobParameters)
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters)
         {
             return await jobRepository.ListPostedJobs(userID, jobParameters);
         }
@@ -44,11 +42,6 @@ namespace Domain.Services
         public async Task<Job> FindById(int jobID)
         {
             return await jobRepository.FindById(jobID);
-        }
-
-        public async Task<Status> FindStatusByName(Status name)
-        {
-            return await statusRepository.FindByName(name);
         }
 
         public async Task<Job> TakeJob(int jobID, int userID)

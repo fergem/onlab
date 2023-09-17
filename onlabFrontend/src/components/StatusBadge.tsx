@@ -1,25 +1,25 @@
 import { Badge } from "@mantine/core";
-import { StatusName } from "../models/Status";
+import { Status } from "../models/Job";
 
 interface IPropsStatusBadge {
-  status: StatusName;
+  status: Status;
 }
 
 export default function StatusBadge({ status }: IPropsStatusBadge) {
   switch (status) {
-    case StatusName.WaitingForApproval:
+    case Status.WaitingForApproval:
       return (
         <Badge color="cyan" size="xl" variant="filled">
-          Waiting for Approoval
+          Waiting for Approval
         </Badge>
       );
-    case StatusName.Inprogress:
+    case Status.Inprogress:
       return (
         <Badge color="indigo" size="xl" variant="filled">
           In Progress
         </Badge>
       );
-    case StatusName.Done:
+    case Status.Done:
       return (
         <Badge color="green" size="xl" variant="filled">
           Done

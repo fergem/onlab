@@ -2,7 +2,7 @@ import { Grid, Stack, Title } from "@mantine/core";
 import StatusBadge from "../components/StatusBadge";
 import JobList from "../components/job-components/JobList";
 import { useGetUserUnderTookJobs } from "../hooks/JobHooks";
-import { StatusName } from "../models/Status";
+import { Status } from "../models/Job";
 
 export default function UndertookJobs() {
   const { jobs, error, loading, listJobs } = useGetUserUnderTookJobs();
@@ -13,11 +13,9 @@ export default function UndertookJobs() {
       <Grid w="95%">
         <Grid.Col span={4}>
           <Stack>
-            <StatusBadge status={StatusName.WaitingForApproval} />
+            <StatusBadge status={Status.WaitingForApproval} />
             <JobList
-              jobs={jobs.filter(
-                (s) => s.status?.name === StatusName.WaitingForApproval
-              )}
+              jobs={jobs.filter((s) => s.status === Status.WaitingForApproval)}
               loading={loading}
               error={error}
               refetch={listJobs}
@@ -26,11 +24,9 @@ export default function UndertookJobs() {
         </Grid.Col>
         <Grid.Col span={4}>
           <Stack>
-            <StatusBadge status={StatusName.Inprogress} />
+            <StatusBadge status={Status.Inprogress} />
             <JobList
-              jobs={jobs.filter(
-                (s) => s.status?.name === StatusName.Inprogress
-              )}
+              jobs={jobs.filter((s) => s.status === Status.Inprogress)}
               loading={loading}
               error={error}
               refetch={listJobs}
@@ -39,9 +35,9 @@ export default function UndertookJobs() {
         </Grid.Col>
         <Grid.Col span={4}>
           <Stack>
-            <StatusBadge status={StatusName.Done} />
+            <StatusBadge status={Status.Done} />
             <JobList
-              jobs={jobs.filter((s) => s.status?.name === StatusName.Done)}
+              jobs={jobs.filter((s) => s.status === Status.Done)}
               loading={loading}
               error={error}
               refetch={listJobs}

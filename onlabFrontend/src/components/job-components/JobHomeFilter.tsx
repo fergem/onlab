@@ -43,8 +43,17 @@ export default function JobHomeFilter() {
   const [days, setDays] = useState<Days[]>([]);
 
   const handleSelectDays = (values: string[]) => setDays(values as Days[]);
-  const handleSelectJobType = (value: string) =>
-    setSelectedJobType(value as JobType);
+
+  const handleSelectJobType = (value: string) => {
+    const jobType = value as JobType;
+    setSelectedJobType(jobType);
+
+    if (
+      (jobType === JobType.Boarding || jobType === JobType.Sitting) &&
+      repeatable
+    )
+      setRepeatable((t) => !t);
+  };
 
   const handleSelectPetSpecies = (value: string[]) =>
     setSpeciesService(value as PetSpecies[]);
@@ -63,11 +72,9 @@ export default function JobHomeFilter() {
       setDateRangeValue([value, dateRangeValue[1]]);
     }
   };
-
   const handleOnSearch = () => {
     navigate("/jobs");
   };
-
   return (
     <Paper shadow="sm" p="xl" radius="md">
       <Stack w="100%">

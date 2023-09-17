@@ -10,8 +10,8 @@ namespace Domain.Repositories
 {
     public interface IJobRepository
     {
-        Task<IReadOnlyCollection<Job>> List(JobParameters jobParameters);
-        Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobParameters jobParameters);
+        Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters);
+        Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters);
         Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID);
         Task<Job> FindById(int jobID);

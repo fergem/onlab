@@ -12,8 +12,8 @@ import {
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { useGetJob, useProgressJob } from "../../hooks/JobHooks";
+import { Status } from "../../models/Job";
 import Pet from "../../models/Pet";
-import { StatusName } from "../../models/Status";
 import { baseDogPicture, baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
 import { PetGrid } from "../pet-components/PetList";
@@ -56,7 +56,7 @@ function JobDetail() {
             <Title order={5}>Description: </Title>
             <Text>{job?.description}</Text>{" "}
             <Title order={5}>Current status: </Title>
-            <Text>{job?.status?.name ?? "No"}</Text>
+            <Text>{job?.status ?? "No"}</Text>
             <Title order={5}>Location: </Title>
             <Text>{job?.location ?? "No"}</Text>
             <Title order={5}>Min. experience: </Title>
@@ -71,11 +71,11 @@ function JobDetail() {
               <PetGrid pets={job?.pets} />
             </Grid>
             {user?.id !== job?.ownerUserInformation?.id &&
-              job?.status?.name === StatusName.Available && (
+              job?.status === Status.Available && (
                 <Button onClick={handleTakeJob}>Take Job</Button>
               )}
             {user?.id === job?.ownerUserInformation?.id &&
-              job?.status?.name === StatusName.Inprogress && (
+              job?.status === Status.Inprogress && (
                 <Button onClick={handleFinishJob}>Finish job</Button>
               )}
           </Stack>
