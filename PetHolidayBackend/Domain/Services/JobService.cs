@@ -46,7 +46,7 @@ namespace Domain.Services
             return await jobRepository.FindById(jobID);
         }
 
-        public async Task<Status> FindStatusByName(StatusName name)
+        public async Task<Status> FindStatusByName(Status name)
         {
             return await statusRepository.FindByName(name);
         }

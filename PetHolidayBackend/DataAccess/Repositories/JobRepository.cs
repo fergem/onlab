@@ -36,7 +36,7 @@ namespace DataAccess.Repositories
                 Location = job.Location,
                 Description = job.Description,
                 OwnerUserID = userID,
-                StatusID = (int)StatusName.Available,
+                StatusID = (int)Status.Available,
                 Payment = job.Payment,
                 MinRequiredExperience = job.MinRequiredExperience
             };
@@ -59,7 +59,7 @@ namespace DataAccess.Repositories
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
                 .Include(s => s.Pets)
-                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == jobParameters.JobStatus)
+                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours && s.Status.Name == jobParameters.Status)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
@@ -81,7 +81,7 @@ namespace DataAccess.Repositories
                .Include(s => s.Status)
                .Include(s => s.OwnerUser)
                .Include(s => s.PetSitterUser)
-               .Where(s => s.OwnerUserID == userID && s.Status.Name == StatusName.WaitingForApproval && s.PetSitterUserID != null)
+               .Where(s => s.OwnerUserID == userID && s.Status.Name == Status.WaitingForApproval && s.PetSitterUserID != null)
                .Select(s => ModelMapper.ToJobModel(s))
                .ToListAsync();
         }
@@ -111,7 +111,7 @@ namespace DataAccess.Repositories
             if (jobToTake.PetSitterUser != null)
                 throw new Exception("Job is already taken");
 
-            jobToTake.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == StatusName.WaitingForApproval) ?? throw new Exception("No status like this ");
+            jobToTake.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == Status.WaitingForApproval) ?? throw new Exception("No status like this ");
             jobToTake.PetSitterUserID = userID;
 
             dbcontext.Update(jobToTake);
@@ -131,7 +131,7 @@ namespace DataAccess.Repositories
             if (jobToApprove == null)
                 throw new Exception("There is no such job that you want to undertake");
 
-            jobToApprove.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == StatusName.Inprogress) ?? throw new Exception("No status like this ");
+            jobToApprove.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == Status.Inprogress) ?? throw new Exception("No status like this ");
 
             dbcontext .Update(jobToApprove);
             await dbcontext.SaveChangesAsync();
@@ -150,7 +150,7 @@ namespace DataAccess.Repositories
             if (jobToDecline == null)
                 throw new Exception("There is no such job that you want to undertake");
 
-            jobToDecline.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == StatusName.Available) ?? throw new Exception("No status like this ");
+            jobToDecline.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == Status.Available) ?? throw new Exception("No status like this ");
             jobToDecline.PetSitterUser = null;
 
             dbcontext.Update(jobToDecline);
@@ -170,7 +170,7 @@ namespace DataAccess.Repositories
             if (jobToFinish == null)
                 throw new Exception("There is no such job that you want to undertake");
 
-            jobToFinish.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == StatusName.Done) ?? throw new Exception("No status like this ");
+            jobToFinish.Status = await dbcontext.Statuses.FirstOrDefaultAsync(s => s.Name == Status.Done) ?? throw new Exception("No status like this ");
 
             dbcontext.Update(jobToFinish);
             await dbcontext.SaveChangesAsync();

@@ -1,5 +1,4 @@
 import Pet from "./Pet";
-import Status from "./Status";
 import { UserInformation } from "./User";
 
 export default interface Job {
@@ -12,18 +11,38 @@ export default interface Job {
   petSitterUserInformation?: UserInformation;
   minRequiredExperience?: number;
   status?: Status;
-  type?: JobType;
+
+  pets?: Pet[];
+
   repeated?: boolean;
+  days?: Days[];
+  type?: JobType;
   dateStart?: Date;
   dateEnd?: Date;
-  pets?: Pet[];
+}
+
+export enum Days {
+  Mon = "Mon",
+  Tue = "Tue",
+  Wed = "Wed",
+  Thu = "Thu",
+  Fri = "Fri",
+  Sat = "Sat",
+  Sun = "Sun",
 }
 
 export enum JobType {
-  Sitting = "Sitting",
+  Sitting = "House Sitting",
   Boarding = "Boarding",
   Walking = "Walking",
-  Visit = "Visit",
+  Visit = "Drop-In Visits",
+}
+export enum Status {
+  Empty = "Empty",
+  Available = "Available",
+  WaitingForApproval = "WaitingForApproval",
+  Inprogress = "Inprogress",
+  Done = "Done",
 }
 
 export function getJobTypes() {

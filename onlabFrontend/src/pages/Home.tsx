@@ -1,13 +1,5 @@
-import {
-  BackgroundImage,
-  Center,
-  Group,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import NavButton from "../components/NavButton";
+import { BackgroundImage, Center, Stack, Title } from "@mantine/core";
+import JobHomeFilter from "../components/job-components/JobHomeFilter";
 import { useUser } from "../hooks/AuthHooks";
 
 export default function Home() {
@@ -18,36 +10,12 @@ export default function Home() {
       radius="md"
     >
       <Center mih="80vh">
-        <Group position="center" noWrap m="5%" spacing="xl">
-          <Paper shadow="sm" p="xl" radius="md">
-            <Stack align="center">
-              <Title order={2}>Do you want your pet to be sitted?</Title>
-              <Text py="2" mx="4%">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                dolorum ex ullam modi, tenetur animi, quidem numquam nihil vel
-                illo possimus fuga quam eum ipsum expedita, sint distinctio
-              </Text>
-              <NavButton
-                name="Be a pet owner!"
-                route={user !== null ? "/" : "/register"}
-              />
-            </Stack>
-          </Paper>
-          <Paper shadow="sm" p="xl" radius="md">
-            <Stack align="center">
-              <Title order={2}>Do you want to be a petsitter?</Title>
-              <Text py="2" mx="4%">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                dolorum ex ullam modi, tenetur animi, quidem numquam nihil vel
-                illo possimus fuga quam eum ipsum expedita, sint distinctio
-              </Text>
-              <NavButton
-                name="Be a petsitter!"
-                route={user !== null ? "/" : "/register"}
-              />
-            </Stack>
-          </Paper>
-        </Group>
+        <Stack align="center">
+          <Title order={2} color="white">
+            Give your pet a lovely holiday when you are not around
+          </Title>
+          <JobHomeFilter />
+        </Stack>
       </Center>
     </BackgroundImage>
   );

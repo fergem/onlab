@@ -12,7 +12,7 @@ import { useState } from "react";
 import useNotification from "../../hooks/useNotification";
 import { usePostUserPet } from "../../hooks/UserHooks";
 import Pet, {
-  getPetSpeciesValueLabel,
+  getPetSpeciesTpye,
   PetSpecies,
   PetValidation,
 } from "../../models/Pet";
@@ -71,7 +71,7 @@ export default function AddPetForm({ close }: IAddPetProps) {
             <Select
               label="Species"
               withAsterisk
-              data={getPetSpeciesValueLabel()}
+              data={getPetSpeciesTpye()}
               {...form.getInputProps("species")}
             />
           </Grid.Col>

@@ -27,9 +27,6 @@ export interface PetFilter {
 export enum PetSpecies {
   Dog = "Dog",
   Cat = "Cat",
-  Bird = "Bird",
-  SmallMammal = "Small Mammal",
-  Lizard = "Lizard",
 }
 
 export function getPetSpeciesValueLabel() {

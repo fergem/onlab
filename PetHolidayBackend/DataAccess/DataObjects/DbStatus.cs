@@ -14,8 +14,9 @@ namespace DataAccess.DataObjects
             this.Jobs = new HashSet<DbJob>();
         }
         public int ID { get; set; }
-        public required StatusName Name { get; set; }
+        public required Status Name { get; set; }
 
         public virtual ICollection<DbJob> Jobs { get; set; }
     }
 }
+ 

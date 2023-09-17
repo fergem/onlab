@@ -1,15 +1,7 @@
-import {
-  Button,
-  Container,
-  MultiSelect,
-  Paper,
-  Select,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Button, Container, Paper, Select, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { JobParameters, JobType, getJobTypes } from "../../models/Job";
-import { PetSpecies, getPetSpeciesValueLabel } from "../../models/Pet";
+import { PetSpecies } from "../../models/Pet";
 
 interface IJobFilterProps {
   jobFilter: JobParameters;
@@ -44,18 +36,6 @@ export default function JobFilter({
         </Text>
 
         <Stack justify="center" spacing="xl">
-          <MultiSelect
-            onChange={handleSpeciesFilter}
-            data={getPetSpeciesValueLabel()}
-            label="Service for:"
-            placeholder="Pick animals"
-            radius="md"
-            transitionProps={{
-              transition: "pop-top-left",
-              duration: 80,
-              timingFunction: "ease",
-            }}
-          />
           <Select
             onChange={handleJobTypeFilter}
             data={getJobTypes()}
