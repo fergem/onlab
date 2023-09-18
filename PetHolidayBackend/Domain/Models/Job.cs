@@ -18,7 +18,10 @@ namespace Domain.Models
         public required int MinRequiredExperience { get; set; }
         public required bool Repeated {  get; set; }
 
+        public required string Title { get; set; }
+
         public required Status Status { get; set; }
+        public required JobType Type { get; set; }
 
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -28,7 +31,7 @@ namespace Domain.Models
 
         public required IReadOnlyCollection<Pet> Pets { get; set; }
 
-        public required IReadOnlyCollection<Days> Days { get; set; }
+        public required IReadOnlyCollection<Days>? Days { get; set; }
 
     }
 
@@ -53,5 +56,14 @@ namespace Domain.Models
         Pending,
         Inprogress,
         Done,
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum JobType
+    {
+        Sitting,
+        Boarding,
+        Walking,
+        Visit,
     }
 }

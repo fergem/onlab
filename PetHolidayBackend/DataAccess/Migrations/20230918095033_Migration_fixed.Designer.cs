@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20230917203405_Added_Info_For_Jobs")]
-    partial class Added_Info_For_Jobs
+    [Migration("20230918095033_Migration_fixed")]
+    partial class Migration_fixed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,9 +38,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -75,6 +74,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("OwnerUserID");
@@ -87,42 +95,49 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 1,
-                            Description = "Kutyára kell vigyázni",
-                            EndDate = new DateTime(2023, 9, 21, 22, 34, 5, 351, DateTimeKind.Local).AddTicks(1178),
+                            Days = "Mon,Wed,Fri",
+                            Description = "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!",
                             Hours = 4,
                             Location = "Szeged",
                             MinRequiredExperience = 0,
                             OwnerUserID = 1,
                             Payment = 10,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 9, 19, 22, 34, 5, 351, DateTimeKind.Local).AddTicks(1117),
-                            Status = 1
+                            StartDate = new DateTime(2023, 9, 20, 11, 50, 33, 247, DateTimeKind.Local).AddTicks(9009),
+                            Status = 1,
+                            Title = "Looking for a weekly walk buddy for Milio!",
+                            Type = 2
                         },
                         new
                         {
                             ID = 2,
-                            Description = "Cicára kell vigyázni",
+                            Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
+                            EndDate = new DateTime(2023, 9, 22, 11, 50, 33, 247, DateTimeKind.Local).AddTicks(9778),
                             Hours = 3,
                             Location = "Szolnok",
                             MinRequiredExperience = 1,
                             OwnerUserID = 2,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 21, 22, 34, 5, 351, DateTimeKind.Local).AddTicks(1185),
-                            Status = 1
+                            StartDate = new DateTime(2023, 9, 22, 11, 50, 33, 247, DateTimeKind.Local).AddTicks(9763),
+                            Status = 1,
+                            Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
+                            Type = 0
                         },
                         new
                         {
                             ID = 3,
-                            Description = "Teknőcre kell vigyázni",
+                            Description = "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!",
                             Hours = 7,
                             Location = "Jászkarajenő",
                             MinRequiredExperience = 3,
                             OwnerUserID = 3,
                             Payment = 30,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 20, 22, 34, 5, 351, DateTimeKind.Local).AddTicks(1188),
-                            Status = 1
+                            StartDate = new DateTime(2023, 9, 21, 11, 50, 33, 247, DateTimeKind.Local).AddTicks(9825),
+                            Status = 1,
+                            Title = "Boarding Bliss: Jason and David's Canine Vacation",
+                            Type = 1
                         });
                 });
 
@@ -398,14 +413,14 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "127aaa48-53e1-45a5-b0f9-6c92ff649828",
+                            ConcurrencyStamp = "9d75cd1e-2fa6-4ac9-84fe-010ddb5f725b",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             NormalizedUserName = "KISSJANOS",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPtsV/Ai0XsSFgo/109FC6ro04iHaG8uCQvKmhdMlcNIcI4s0dGgQtZ/7dpI/DFZlA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEI3PEqBtx0H+LiWQn9z+r9t/Ky8mAC99qGScd9L5qeuM7kNcjwRU8K6yMVh1qdHTaQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos"
@@ -415,14 +430,14 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "affb714e-5c8a-4e0b-8189-9e51c5609707",
+                            ConcurrencyStamp = "93949c59-89f4-428d-a8b9-8a441978387f",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             NormalizedUserName = "NAGYFERO",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFhD/MD2MubUgoinmNVrzXIMfLsmiAa8PSWUkBZY2KrNF6a3gp3qEfP59KNGRWMJ+Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGXYdlxZPWpPD9XfaQlr3FV7FxQyBc2LbNw0mkvhgcFcBRGyM2fKdQjy6D5bYg4OmQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero"
@@ -432,14 +447,14 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "cd14dbbc-6755-4a87-839c-af4af0d1294b",
+                            ConcurrencyStamp = "2deff03a-a673-4f48-940a-bb2be839b648",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             NormalizedUserName = "VICCELEK",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOgPx4EGQ24ganOQVCNwBCaiNKLdvKyx9bcjYpz4+wdFZC7mKQ0junvDvhAeZyhv+w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAQL8ghf/YiRaO4UV3M4FHkiNumE2URx14dRWCzFJQlpKf2GOrKQ0pf1kTOwTjzfKQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek"
@@ -449,14 +464,14 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "32dd683e-c65b-4f09-8f6d-0a0451826296",
+                            ConcurrencyStamp = "ff4aec86-9f59-4713-9438-55c315755a3a",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             NormalizedUserName = "MAKULATLAN",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEABn+48qD1Jo5KKCXyTGon0Wq2NJrqq36+QlHp7S8lFZHoU13YMKmp1fEQ4LEXwzjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOAczVuNW1ocVmQQ13xVg9pIzqaEWxfblouM7/15Il4OTkuTGGayDz4vPgqwqR7muA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan"
@@ -484,13 +499,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3589a754-952c-46f4-b874-ae22171fffa8",
+                            Id = "fa6bf0e5-c863-4d89-8513-f576b4bc9a52",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "c2881fa1-ce19-4eb5-9e6a-c4063585fb12",
+                            Id = "b6737beb-ff76-4b4d-a2cc-ba2b9a219514",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });

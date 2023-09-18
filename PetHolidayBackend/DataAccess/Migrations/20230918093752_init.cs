@@ -75,19 +75,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Statuses",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Statuses", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -194,6 +181,43 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Hours = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Payment = table.Column<int>(type: "int", nullable: false),
+                    MinRequiredExperience = table.Column<int>(type: "int", nullable: false),
+                    Repeated = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Days = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    OwnerUserID = table.Column<int>(type: "int", nullable: false),
+                    PetSitterUserID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Jobs_AspNetUsers_OwnerUserID",
+                        column: x => x.OwnerUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Jobs_AspNetUsers_PetSitterUserID",
+                        column: x => x.PetSitterUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OwnerProfiles",
                 columns: table => new
                 {
@@ -262,50 +286,13 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Jobs",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Hours = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Payment = table.Column<int>(type: "int", nullable: false),
-                    StatusID = table.Column<int>(type: "int", nullable: false),
-                    MinRequiredExperience = table.Column<int>(type: "int", nullable: false),
-                    OwnerUserID = table.Column<int>(type: "int", nullable: false),
-                    PetSitterUserID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Jobs", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Jobs_AspNetUsers_OwnerUserID",
-                        column: x => x.OwnerUserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Jobs_AspNetUsers_PetSitterUserID",
-                        column: x => x.PetSitterUserID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Jobs_Statuses_StatusID",
-                        column: x => x.StatusID,
-                        principalTable: "Statuses",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PetImages",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PetID = table.Column<int>(type: "int", nullable: false),
-                    Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PetID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -347,10 +334,10 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "Location", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, 23, "55f94064-1cdc-4d84-8c2c-e95e824f8647", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAENRbwaF8ab4MqhLwtmcyKDlppWinVLmQmb7/Q1Jy8FeqR4Xcec9yIaQmIvC0UBNdBw==", null, false, null, null, false, "kissjanos" },
-                    { 2, 0, 32, "33bee131-5408-4cb7-91ac-c62ed21fe775", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAELWsv3IrKZQZ4PStvtD/eobfbhwedSm4mTE1Uw8QUcWt1Dy1U+Ew6wzw68wAjytb3Q==", null, false, null, null, false, "nagyfero" },
-                    { 3, 0, 43, "39086d70-1cbe-4275-85da-71e673b528ff", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEP88WfoKDpWZUDaBoaXHso/fIdLfX/MZYOFPw1V5QI3CcXymGGj4Fk3XU0vsQTuwqA==", null, false, null, null, false, "viccelek" },
-                    { 4, 0, 17, "99331f77-33cf-4e27-8525-cff64cade158", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEJzRgXulmDqmIdBd0y0VPlDByUG7cU/7gyt1m992KFYQekymVI3/qJUclab0C3ACpg==", null, false, null, null, false, "makulatlan" }
+                    { 1, 0, 23, "30135e11-c193-41e3-9334-0c26d2551d43", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEKoug6cKOUFbf9E+aMlyj+qrHe7tqJGTlYcX1SJMSa7KUEcEkU9HXJ5H3l02Ja4hwQ==", null, false, null, null, false, "kissjanos" },
+                    { 2, 0, 32, "8710f9e5-3372-4891-a2b7-dd8f1010dd7d", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAENxv7er/xC/JIJflwfcVRM+4V1K9Pljl+F301H02poP+uiuTMmN2VoWzcf9xNKjnBQ==", null, false, null, null, false, "nagyfero" },
+                    { 3, 0, 43, "7440dae1-1250-4b3c-ba1e-7a89d5161add", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEEP7weuWH/mZPuCenrbT6DnCsEez+Y9iTV3AnmRbsP7R96HvN0YYVlYWw4Wi+BS+gw==", null, false, null, null, false, "viccelek" },
+                    { 4, 0, 17, "1121e639-68bb-462d-9d23-1f267a6919da", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEPpDI7C/B2HEcIIMC3adjX8COEuXJtwPuvtDqf9jf3QVbVi8VslbF7IB8jJo66oafA==", null, false, null, null, false, "makulatlan" }
                 });
 
             migrationBuilder.InsertData(
@@ -358,29 +345,18 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "561689a6-af94-4aa0-be5c-f3ee46886e18", null, "PetSitter", "PETSITTER" },
-                    { "9edb45f8-3b53-4482-8a46-1070ac2340d6", null, "Owner", "OWNER" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Statuses",
-                columns: new[] { "ID", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Available" },
-                    { 2, "WaitingForApproval" },
-                    { 3, "Inprogress" },
-                    { 4, "Done" }
+                    { "99a302e7-f776-429f-a137-65592442393d", null, "Owner", "OWNER" },
+                    { "ba4297d3-7acb-45af-8978-2b6482761231", null, "PetSitter", "PETSITTER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Jobs",
-                columns: new[] { "ID", "Description", "Hours", "Location", "MinRequiredExperience", "OwnerUserID", "Payment", "PetSitterUserID", "StatusID" },
+                columns: new[] { "ID", "Days", "Description", "EndDate", "Hours", "Location", "MinRequiredExperience", "OwnerUserID", "Payment", "PetSitterUserID", "Repeated", "StartDate", "Status", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, "Kutyára kell vigyázni", 4, "Szeged", 0, 1, 10, null, 1 },
-                    { 2, "Cicára kell vigyázni", 3, "Szolnok", 1, 2, 20, null, 1 },
-                    { 3, "Teknőcre kell vigyázni", 7, "Jászkarajenő", 3, 3, 30, null, 1 }
+                    { 1, "Mon,Wen,Fri", "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!", null, 4, "Szeged", 0, 1, 10, null, true, new DateTime(2023, 9, 20, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9638), 1, "Looking for a weekly walk buddy for Milio!", 2 },
+                    { 2, null, "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!", new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9698), 3, "Szolnok", 1, 2, 20, null, false, new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9696), 1, "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!", 0 },
+                    { 3, null, "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!", null, 7, "Jászkarajenő", 3, 3, 30, null, false, new DateTime(2023, 9, 21, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9704), 1, "Boarding Bliss: Jason and David's Canine Vacation", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -453,11 +429,6 @@ namespace DataAccess.Migrations
                 column: "PetSitterUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Jobs_StatusID",
-                table: "Jobs",
-                column: "StatusID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OwnerProfiles_UserID",
                 table: "OwnerProfiles",
                 column: "UserID",
@@ -527,9 +498,6 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Pets");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

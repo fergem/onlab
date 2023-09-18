@@ -74,10 +74,12 @@ namespace DataAccess
             {
                 entity.ToTable("Jobs");
                 entity.HasKey(s => s.ID);
-                entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Description).IsUnicode(unicode: true);
                 entity.Property(s => s.Hours);
                 entity.Property(s => s.Location).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Days);
+                entity.Property(s => s.Title).HasMaxLength(100).IsUnicode(unicode: true);
+
             });
 
             modelBuilder.Entity<DbPetImage>(entity =>
@@ -265,7 +267,7 @@ namespace DataAccess
                         ID = 1,
                         Hours = 4,
                         Location = "Szeged",
-                        Description = "Kutyára kell vigyázni",
+                        Description = "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!",
                         Status = Status.Available,
                         OwnerUserID = 1,
                         PetSitterUserID = null,
@@ -273,14 +275,16 @@ namespace DataAccess
                         MinRequiredExperience = 0,
                         Repeated = true,
                         StartDate = DateTime.Now.AddDays(2),
-                        EndDate = DateTime.Now.AddDays(4),
+                        Title = "Looking for a weekly walk buddy for Milio!",
+                        Days = string.Join(",", new List<Days>() { Days.Mon, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                        Type = JobType.Walking,
                     },
                     new DbJob()
                     {
                         ID = 2,
                         Hours = 3,
                         Location = "Szolnok",
-                        Description = "Cicára kell vigyázni",
+                        Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
                         Status = Status.Available,
                         OwnerUserID = 2,
                         PetSitterUserID = null,
@@ -288,13 +292,16 @@ namespace DataAccess
                         MinRequiredExperience = 1,
                         Repeated = false,
                         StartDate = DateTime.Now.AddDays(4),
+                        EndDate = DateTime.Now.AddDays(4),
+                        Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
+                        Type = JobType.Sitting,
                     },
                     new DbJob()
                     {
                         ID = 3,
                         Hours = 7,
                         Location = "Jászkarajenő",
-                        Description = "Teknőcre kell vigyázni",
+                        Description = "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!",
                         Status = Status.Available,
                         OwnerUserID = 3,
                         PetSitterUserID = null,
@@ -302,6 +309,8 @@ namespace DataAccess
                         MinRequiredExperience = 3,
                         Repeated = false,
                         StartDate = DateTime.Now.AddDays(3),
+                        Title = "Boarding Bliss: Jason and David's Canine Vacation",
+                        Type = JobType.Boarding,
                     }
                 );
         }

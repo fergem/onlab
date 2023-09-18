@@ -17,8 +17,9 @@ export default interface Job {
   repeated?: boolean;
   days?: Days[];
   type?: JobType;
-  dateStart?: Date;
-  dateEnd?: Date;
+  startDate?: Date;
+  endDate?: Date;
+  title?: string;
 }
 
 export enum Days {
@@ -32,10 +33,10 @@ export enum Days {
 }
 
 export enum JobType {
-  Sitting = "House Sitting",
+  Sitting = "Sitting",
   Boarding = "Boarding",
   Walking = "Walking",
-  Visit = "Drop-In Visits",
+  Visit = "Visit",
 }
 export enum Status {
   Empty = "Empty",

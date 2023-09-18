@@ -3,6 +3,7 @@ import { useGetUserPets } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
 import { baseDogPicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
+import AddPet from "./AddPet";
 
 interface IPropsPetGrid {
   pets?: Pet[];
@@ -25,6 +26,9 @@ export function PetGrid({ pets }: IPropsPetGrid) {
           <PetCard pet={x} />
         </Grid.Col>
       ))}
+      <Grid.Col span={pets ? 2 : 12}>
+        <AddPet />
+      </Grid.Col>
     </Grid>
   );
 }

@@ -42,7 +42,9 @@ namespace DataAccess.Repositories
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Status = Status.Available,
-                Days = job.Days is not null ? string.Join(";", job.Days.Select(p => p.ToString()).ToArray()) : null
+                Days = job.Days is not null ? string.Join(",", job.Days.Select(p => p.ToString()).ToArray()) : null,
+                Title = job.Title,
+                Type = job.Type,
             };
 
             var petJobs = new List<DbPetJob>();

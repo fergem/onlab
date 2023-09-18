@@ -7,20 +7,12 @@ const get = async (id?: string) => {
 };
 
 const list = async (jobParameters: JobParameters) => {
-  const response = await axios.get<Job[]>(
-    `/api/jobs?minhours=${
-      jobParameters?.jobHoursRange?.minHours ?? 0
-    }&maxhours=${jobParameters?.jobHoursRange?.maxHours ?? 12}&jobstatus=${
-      jobParameters.statusName
-    }`
-  );
+  const response = await axios.get<Job[]>(`/api/jobs?`);
   return response.data;
 };
 
 const listUsersPostedJobs = async (jobParameters: JobParameters) => {
-  const response = await axios.get<Job[]>(
-    `/api/jobs/posted?minhours=${jobParameters?.jobHoursRange?.minHours}&maxhours=${jobParameters?.jobHoursRange?.maxHours}&jobstatus=${jobParameters.statusName}`
-  );
+  const response = await axios.get<Job[]>(`/api/jobs/posted?`);
   return response.data;
 };
 

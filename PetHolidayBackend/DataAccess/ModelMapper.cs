@@ -54,9 +54,11 @@ namespace DataAccess
                     MinRequiredExperience = job.MinRequiredExperience,
                     Pets = pets,
                     Repeated = job.Repeated,
-                    StartDate = job.StartDate,
+                    StartDate = job.StartDate.ToUniversalTime(),
                     EndDate = job.EndDate,
-                    Days = ToJobDays(job.Days)
+                    Days = ToJobDays(job.Days),
+                    Title = job.Title,
+                    Type = job.Type,
                 };
             }
             return new Job()
@@ -71,9 +73,11 @@ namespace DataAccess
                 MinRequiredExperience = job.MinRequiredExperience,
                 Pets = pets,
                 Repeated = job.Repeated,
-                StartDate = job.StartDate,
+                StartDate = job.StartDate.ToUniversalTime(),
                 EndDate = job.EndDate,
-                Days = ToJobDays(job.Days)
+                Days = ToJobDays(job.Days),
+                Title = job.Title,
+                Type = job.Type,
             };
         }
         internal static User ToUserModel(DbUser user)
@@ -140,10 +144,9 @@ namespace DataAccess
             };
         }
 
-        internal static IReadOnlyCollection<Days>? ToJobDays(string days)
+        internal static IReadOnlyCollection<Days>? ToJobDays(string? days)
         {
-            
-            return days is not null ? Array.ConvertAll(days.Split(';'), Enum.Parse<Days>) : null;
+            return days is not null ? Array.ConvertAll(days.Split(','), Enum.Parse<Days>).ToList() : null;
         }
     }
 }

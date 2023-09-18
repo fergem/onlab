@@ -1,4 +1,4 @@
-import { Button, FileInput, Image, Transition, rem } from "@mantine/core";
+import { FileInput, Image, Transition, rem } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
 import { useAuth } from "../hooks/AuthHooks";
@@ -8,7 +8,6 @@ import { baseProfilePicture } from "../utility/constants";
 export default function ProfilePicture() {
   const { user } = useAuth();
   const { postProfilePicture } = useUserProfilePictureUpload();
-  const [fileSelected, setFileSelected] = useState<File | null>(null);
   const [hoveredProfile, setHoveredProfile] = useState(false);
   const [hoveredFileInput, setHoveredFileInput] = useState(false);
 
@@ -27,11 +26,11 @@ export default function ProfilePicture() {
   };
 
   const saveFileSelected = (file: File | null) => {
-    if (file) setFileSelected(file);
+    if (file) {
+      postProfilePicture(file);
+    }
   };
-  const upload = () => {
-    if (fileSelected) postProfilePicture(fileSelected);
-  };
+
   return (
     <div
       style={{
@@ -77,8 +76,6 @@ export default function ProfilePicture() {
           />
         )}
       </Transition>
-
-      {fileSelected && <Button onClick={upload}>Upload picture</Button>}
     </div>
   );
 }

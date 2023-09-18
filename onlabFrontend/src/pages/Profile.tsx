@@ -3,9 +3,11 @@ import { IconBallFootball, IconPaw, IconUser } from "@tabler/icons-react";
 import ProfilePicture from "../components/ProfilePicture";
 import PetListLoadingPets from "../components/pet-components/PetList";
 import { useAuth } from "../hooks/AuthHooks";
+import { usePostUserPet } from "../hooks/UserHooks";
 
 export default function Profile() {
   const { user } = useAuth();
+  const { postPet } = usePostUserPet();
 
   return (
     <Stack h="100%" justify="center" ml="5%" mr="10%">

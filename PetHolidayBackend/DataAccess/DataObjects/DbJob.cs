@@ -22,10 +22,13 @@ namespace DataAccess.DataObjects
         public required int MinRequiredExperience { get; set; }
         public required bool Repeated { get; set; }
         public required Status Status { get; set; }
+        public required JobType Type { get; set; }
+
         public string? Days { get; set; }
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public required string Title { get; set; }
 
 
 

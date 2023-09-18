@@ -7,6 +7,7 @@ export interface IPropsLoadingBoundary {
   error: boolean;
   isEmpty?: boolean;
   refetch(): void;
+  errorNode?: React.ReactNode;
 }
 
 export default function LoadingBoundary({
