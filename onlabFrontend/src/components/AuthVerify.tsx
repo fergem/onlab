@@ -16,12 +16,10 @@ const parseJwt = (token: string | undefined) => {
 export default function AuthVerify() {
   const navigate = useNavigate();
   const { user, logoutUser } = useAuth();
-
   useEffect(() => {
     if (user) {
       const decodedJwt = parseJwt(user?.bearer);
-
-      if (decodedJwt.exp * 1000 < Date.now()) {
+      if (decodedJwt.exp * 1000 < Date.now() || !user.bearer) {
         logoutUser();
         navigate("/");
       }

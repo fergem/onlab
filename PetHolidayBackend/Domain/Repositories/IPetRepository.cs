@@ -15,6 +15,6 @@ namespace Domain.Repositories
         Task<int> Insert(Pet pet, int userID);
         Task<Pet> Update(Pet pet);
         Task<Pet> AddImage(int ID, byte[] file);
-        Task<Pet> Delete(int petID);
+        Task Delete(int petID);
     }
 }

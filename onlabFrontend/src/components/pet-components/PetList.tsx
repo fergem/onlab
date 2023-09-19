@@ -1,9 +1,10 @@
 import { Grid, Image, Paper, Stack, Text } from "@mantine/core";
+import { useState } from "react";
 import { useGetUserPets } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
 import { baseDogPicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
-import AddPet from "./AddPet";
+import EditPet from "./EditPet";
 
 interface IPropsPetGrid {
   pets?: Pet[];
@@ -19,17 +20,32 @@ export default function PetListLoadingPets() {
 }
 
 export function PetGrid({ pets }: IPropsPetGrid) {
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+  const handleSelectPet = (pet: Pet | null) => {
+    setSelectedPet(pet);
+  };
+
+  const handleDeselectPet = () => {
+    setSelectedPet(null);
+  };
+
   return (
-    <Grid justify="center">
-      {pets?.map((x) => (
-        <Grid.Col span="content" key={x.id}>
-          <PetCard pet={x} />
-        </Grid.Col>
-      ))}
-      <Grid.Col span={pets ? 2 : 12}>
-        <AddPet />
-      </Grid.Col>
-    </Grid>
+    <>
+      {!selectedPet && (
+        <Grid justify="center">
+          {pets?.map((x) => (
+            <Grid.Col
+              span="content"
+              key={x.id}
+              onClick={() => handleSelectPet(x)}
+            >
+              <PetCard pet={x} />
+            </Grid.Col>
+          ))}
+        </Grid>
+      )}
+      {selectedPet && <EditPet pet={selectedPet} back={handleDeselectPet} />}
+    </>
   );
 }
 
@@ -56,7 +72,6 @@ export function PetCard({ pet }: IPropsPetCard) {
         <Text size="sm" align="center" mt="sm">
           {pet.name}
         </Text>
-        {/* <PetDialog pet={pet} onClose={onClose} isOpen={isOpen}></PetDialog> */}
       </Paper>
     </Stack>
   );

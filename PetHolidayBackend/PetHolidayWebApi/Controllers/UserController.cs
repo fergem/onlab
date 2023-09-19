@@ -62,7 +62,7 @@ namespace PetHolidayWebApi.Controllers
             });
         }
 
-       
+
 
         //[HttpGet("/list/{userName}")]
         //public async Task<ActionResult<User>> FindByUsername([FromRoute] string userName)
@@ -71,12 +71,24 @@ namespace PetHolidayWebApi.Controllers
         //    return value != null ? Ok() : NotFound();
         //}
 
-        [HttpGet("/pets/{petID}")]
+        [Authorize]
+        [HttpDelete("/pets/{petID}")]
         public async Task<ActionResult<User>> FindPetByID([FromRoute] int petID)
         {
-            var value = await userService.FindPetByID(petID);
-            return value != null ? Ok() : NotFound(); ;
+            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            try
+            {
+                await userService.DeletePet(petID);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);                    
+            }
+            return Ok();
         }
+
 
         [Authorize]
         [HttpGet("pets")]

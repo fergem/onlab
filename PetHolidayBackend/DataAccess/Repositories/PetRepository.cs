@@ -23,14 +23,13 @@ namespace DataAccess.Repositories
         {
             this.dbcontext = dbcontext;
         }
-        public async Task<Pet> Delete(int petID)
+        public async Task Delete(int petID)
         {
             var pet = await dbcontext.Pets.FindAsync(petID);
             if (pet == null)
                 throw new Exception("Pet wanted to be deleted doesnt exists");
             dbcontext.Remove(pet);
             await dbcontext.SaveChangesAsync();
-            return ModelMapper.ToPetModel(pet);
         }
 
         public async Task<IReadOnlyCollection<Pet>> List(int userID, PetFilterParameters filter)

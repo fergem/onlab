@@ -2,13 +2,14 @@ import { Center, FileInput, Image, Paper } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 
 interface IProps {
-  petImage: File | null;
+  petImage?: File;
   setPetimage(image: File): void;
 }
 export default function PetImageSelect({ petImage, setPetimage }: IProps) {
   const upload = (file: File) => {
     setPetimage(file);
   };
+  console.log(petImage);
 
   return (
     <>

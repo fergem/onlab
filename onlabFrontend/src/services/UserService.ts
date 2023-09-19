@@ -17,7 +17,7 @@ const insertPet = async ({
   age,
   picture,
 }: PetInsertModel) => {
-  const result = await axios.post<Pet>("/api/users/addpet", {
+  const result = await axios.post<number>("/api/users/addpet", {
     name,
     description,
     species,
@@ -27,23 +27,27 @@ const insertPet = async ({
   const formData = new FormData();
 
   if (picture) formData.append("file", picture);
-
   const endresult = await axios.post<string>(
     "/api/users/addpetimage",
     formData,
     {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        petID: result.data.id,
+        petID: result.data,
       },
     }
   );
+  return endresult;
+};
 
-  return endresult.data;
+const deletePet = async (id: number) => {
+  const result = await axios.delete(`/api/users/deletepet/${id}`);
+  return result;
 };
 
 const UserService = {
   insertPet,
   getUserPets,
+  deletePet,
 };
 export default UserService;

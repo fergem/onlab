@@ -129,9 +129,7 @@ function JobDetail() {
               <Title order={3} align="center">
                 Pets that you will have to look for
               </Title>
-              <Grid gutter="lg">
-                <PetGrid pets={job?.pets} />
-              </Grid>
+              <PetGrid pets={job?.pets} />
             </Stack>
           </Grid.Col>
         </Grid>

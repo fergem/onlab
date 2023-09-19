@@ -1,13 +1,20 @@
-import { Grid, ScrollArea, Stack, Tabs, Text, Title } from "@mantine/core";
+import {
+  Grid,
+  Group,
+  ScrollArea,
+  Stack,
+  Tabs,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconBallFootball, IconPaw, IconUser } from "@tabler/icons-react";
 import ProfilePicture from "../components/ProfilePicture";
+import AddPet from "../components/pet-components/AddPet";
 import PetListLoadingPets from "../components/pet-components/PetList";
 import { useAuth } from "../hooks/AuthHooks";
-import { usePostUserPet } from "../hooks/UserHooks";
 
 export default function Profile() {
   const { user } = useAuth();
-  const { postPet } = usePostUserPet();
 
   return (
     <Stack h="100%" justify="center" ml="5%" mr="10%">
@@ -76,9 +83,13 @@ export default function Profile() {
         >
           <Grid align="center" justify="center" gutter="lg" h="100%">
             <Grid.Col span={8} h="100%">
-              <Title order={3} align="center">
-                Your pets
-              </Title>
+              <Group align="center" position="center" mb="5px">
+                <Title order={3} align="center">
+                  Your pets
+                </Title>
+                <AddPet />
+              </Group>
+
               <ScrollArea h="100%" offsetScrollbars>
                 <PetListLoadingPets />
               </ScrollArea>
@@ -86,7 +97,7 @@ export default function Profile() {
             <Grid.Col span="auto">
               <Stack>
                 <Text size="xl">
-                  <b> Description:</b>{" "}
+                  <b> Description:</b>
                   {user?.ownerProfile?.minWage ??
                     "You've got no name consider adding one"}
                 </Text>

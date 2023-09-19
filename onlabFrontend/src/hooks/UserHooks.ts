@@ -78,3 +78,11 @@ export const useUserProfilePictureUpload = () => {
   );
   return { postProfilePicture, errorUpload };
 };
+
+export const useDeletePet = () => {
+  const { mutate: deletePet } = useMutation(async (id: number) => {
+    return UserService.deletePet(id);
+  });
+
+  return { deletePet };
+};

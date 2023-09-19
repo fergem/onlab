@@ -62,5 +62,10 @@ namespace Domain.Services
         {
             return await petRepository.AddImage(ID, file);
         }
+
+        public async Task DeletePet(int ID)
+        {
+            await petRepository.Delete(ID);
+        }
     }
 }
