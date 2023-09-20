@@ -1,4 +1,4 @@
-import Pet from "./Pet";
+import Pet, { PetSpecies } from "./Pet";
 import { UserInformation } from "./User";
 
 export default interface Job {
@@ -15,14 +15,14 @@ export default interface Job {
   pets?: Pet[];
 
   repeated?: boolean;
-  days?: Days[];
+  days?: Day[];
   type?: JobType;
   startDate?: Date;
   endDate?: Date;
   title?: string;
 }
 
-export enum Days {
+export enum Day {
   Mon = "Mon",
   Tue = "Tue",
   Wed = "Wed",
@@ -72,9 +72,35 @@ export interface JobHoursRange {
   maxHours?: number;
 }
 
-export interface JobParameters {}
+export interface JobFilter {
+  type: JobType;
+  species?: PetSpecies[];
+  startDate: Date;
+  endDate?: Date;
+  repeated: boolean;
+  days?: Day[];
+}
 
-export const DefaultJobParameters: JobParameters = {};
+const getDatePlusThreeDays = () => {
+  const today = new Date();
+  const newDate = new Date(today);
+  newDate.setDate(newDate.getDate() + 10);
+  return newDate;
+};
+
+export const DefaultJobFilter: JobFilter = {
+  type: JobType.Sitting,
+  species: [PetSpecies.Dog, PetSpecies.Cat],
+  startDate: new Date(),
+  endDate: getDatePlusThreeDays(),
+  repeated: false,
+  days: undefined,
+};
+
+export enum Frequency {
+  Once = "Once",
+  Repeat = "Repeat",
+}
 
 export const JobValidation = {
   validateLocation(val: string) {

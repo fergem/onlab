@@ -3,7 +3,9 @@ using Domain.Models;
 using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text.Json.Serialization;
 
@@ -58,15 +60,81 @@ namespace DataAccess.Repositories
             return insertJob.ID;
         }
 
-        public async Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters)
+        public async Task<IReadOnlyCollection<Job>> List(JobFilter filter)
         {
-            return await dbcontext.Jobs
+            IQueryable<DbJob> query = dbcontext.Jobs
+                    .Include(s => s.OwnerUser)
+                    .Include(s => s.PetSitterUser)
+                    .Include(s => s.Pets);
+
+
+            //Filtering továbbfejesztése vagy lecserélése
+            switch(filter.Type)
+            {
+                // itt szűrés majd tovább szűrés
+            }
+
+            if (!filter.Repeated)
+            {
+                query = query
+                    .Where(job =>
+                        ((job.Pets != null && job.Pets.Count > 0) && job.Pets.All(s => filter.Species.Contains(s.Pet.Species))) &&
+                        job.StartDate > filter.StartDate &&
+                        ((filter.Type == JobType.Sitting && filter.Type == JobType.Boarding) ? job.EndDate < filter.EndDate : true) &&
+                        job.Type == filter.Type
+                    );
+            }
+            else
+            {
+                query = query
+                    .Where(job =>
+                        ((job.Pets != null && job.Pets.Count > 0) && job.Pets.All(s => filter.Species.Contains(s.Pet.Species))) &&
+                        (filter.Days == null || job.Days != null && filter.Days.Any(fd => ModelMapper.ToJobDays(job.Days).Contains(fd))) &&
+                        job.StartDate > filter.StartDate &&
+                        job.Type == filter.Type
+                    );
+            }
+
+            return await query.Select(s => ModelMapper.ToJobModel(s)).ToListAsync();
+        }
+ 
+        private bool getPredicate(DbJob job, JobFilter filter)
+        {
+            if (!filter.Repeated)
+            {
+                var speciesInJob = job.Pets.Select(s =>  s!.Pet!.Species ).Distinct().ToList();
+                var jobContainsSpecies = speciesInJob.Intersect(filter.Species ?? speciesInJob);
+
+                if (jobContainsSpecies is not null && job.StartDate > filter.StartDate && job.EndDate < filter.EndDate && job.Type == filter.Type)
+                    return true;
+            }
+            else
+            {
+                var speciesInJob = job.Pets.Select(s => s!.Pet!.Species).Distinct().ToList();
+                var jobContainsSpecies = speciesInJob.Intersect(filter.Species ?? speciesInJob);
+                var jobArray = ModelMapper.ToJobDays(job.Days)?.Intersect(filter.Days ?? Enum.GetValues(typeof(Days)).Cast<Days>().ToList());
+
+                if(jobArray is not null && job.StartDate > filter.StartDate)
+                    return true;
+            }
+
+            //should not happen
+            return false;
+        }
+
+        public IQueryable<Job> ListASd(JobFilter filter)
+        {
+            IQueryable<DbJob> query = dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
-                .Include(s => s.Pets)
-                .Where(s => s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
-                .Select(s => ModelMapper.ToJobModel(s))
-                .ToListAsync();
+                .Include(s => s.Pets);
+
+            if (!filter.Repeated)
+            {
+                query = query.Where(job => getPredicate(job, filter));
+            }
+
+            return query.Select(s => ModelMapper.ToJobModel(s));
         }
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters)
@@ -75,7 +143,6 @@ namespace DataAccess.Repositories
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
                 .Include(s => s.Pets)
-                .Where(s => s.OwnerUserID == userID && s.Hours >= jobParameters.MinHours && s.Hours <= jobParameters.MaxHours)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }

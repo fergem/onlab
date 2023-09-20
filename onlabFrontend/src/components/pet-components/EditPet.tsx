@@ -1,4 +1,4 @@
-import { ActionIcon, Image, Stack, Tooltip } from "@mantine/core";
+import { ActionIcon, Image, Paper, Stack, Text, Tooltip } from "@mantine/core";
 import { IconArrowBack } from "@tabler/icons-react";
 import Pet from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
@@ -10,7 +10,7 @@ interface IPropsPetModal {
 
 export default function EditPetModal({ pet, back }: IPropsPetModal) {
   return (
-    <Fieldset legend="Pet information" radius="md">
+    <Paper radius="md" shadow="sm" withBorder>
       <Tooltip label="Back">
         <ActionIcon
           variant="subtle"
@@ -18,6 +18,7 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
           onClick={back}
           radius="md"
           size="lg"
+          m="sm"
         >
           <IconArrowBack />
         </ActionIcon>
@@ -34,7 +35,10 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
           }
           alt="Green double couch with wooden legs"
         />
+        <Text>{pet.name}</Text>
+        <Text>{pet.age}</Text>
+        <Text>{pet.description}</Text>
       </Stack>
-    </Fieldset>
+    </Paper>
   );
 }

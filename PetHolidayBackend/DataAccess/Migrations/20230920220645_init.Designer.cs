@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20230918093752_init")]
+    [Migration("20230920220645_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -95,7 +95,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 1,
-                            Days = "Mon,Wen,Fri",
+                            Days = "Mon,Wed,Fri",
                             Description = "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!",
                             Hours = 4,
                             Location = "Szeged",
@@ -103,7 +103,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 10,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 9, 20, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9638),
+                            StartDate = new DateTime(2023, 9, 23, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4757),
                             Status = 1,
                             Title = "Looking for a weekly walk buddy for Milio!",
                             Type = 2
@@ -112,14 +112,14 @@ namespace DataAccess.Migrations
                         {
                             ID = 2,
                             Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
-                            EndDate = new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9698),
+                            EndDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4910),
                             Hours = 3,
                             Location = "Szolnok",
                             MinRequiredExperience = 1,
                             OwnerUserID = 2,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9696),
+                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4908),
                             Status = 1,
                             Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
                             Type = 0
@@ -127,17 +127,65 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 3,
-                            Description = "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!",
+                            Days = "Tue,Wed,Fri",
+                            Description = "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!",
                             Hours = 7,
                             Location = "Jászkarajenő",
                             MinRequiredExperience = 3,
                             OwnerUserID = 3,
                             Payment = 30,
-                            Repeated = false,
-                            StartDate = new DateTime(2023, 9, 21, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9704),
+                            Repeated = true,
+                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4917),
                             Status = 1,
-                            Title = "Boarding Bliss: Jason and David's Canine Vacation",
-                            Type = 1
+                            Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
+                            Type = 2
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Days = "Mon,Wed,Fri",
+                            Description = "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!",
+                            Hours = 5,
+                            Location = "Debrecen",
+                            MinRequiredExperience = 0,
+                            OwnerUserID = 1,
+                            Payment = 15,
+                            Repeated = true,
+                            StartDate = new DateTime(2023, 9, 24, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4995),
+                            Status = 1,
+                            Title = "Daily Adventures with Luna!",
+                            Type = 2
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
+                            EndDate = new DateTime(2023, 9, 29, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5004),
+                            Hours = 4,
+                            Location = "Budapest",
+                            MinRequiredExperience = 2,
+                            OwnerUserID = 2,
+                            Payment = 25,
+                            Repeated = false,
+                            StartDate = new DateTime(2023, 9, 26, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5003),
+                            Status = 1,
+                            Title = "Senior Cat Care: Whiskers' Comfort Companion",
+                            Type = 0
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Description = "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!",
+                            Hours = 2,
+                            Location = "Pécs",
+                            MinRequiredExperience = 4,
+                            OwnerUserID = 3,
+                            Payment = 20,
+                            Repeated = false,
+                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5007),
+                            Status = 1,
+                            Title = "Weekly Labrador Love: Max and Bella's Pawsome Playdates",
+                            Type = 3
                         });
                 });
 
@@ -186,9 +234,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .IsUnicode(true)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -212,29 +259,65 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 1,
-                            Age = 2,
-                            Description = "Szep kutya",
-                            Name = "Vakarcs",
+                            Age = 7,
+                            Description = "Milio, the seven-year-old dog, boasts a heartwarming mix of wisdom and playfulness, his tail wagging through years of cherished adventures and companionship. His loyal eyes and graying fur tell a tale of unwavering friendship and boundless joy.",
+                            Name = "Milio",
                             Species = 0,
-                            UserID = 3
+                            UserID = 1
                         },
                         new
                         {
                             ID = 2,
                             Age = 3,
-                            Description = "Szep cica",
-                            Name = "Miu",
+                            Description = "Randy, the three-year-old cat, exudes youthful energy and curiosity in every graceful leap and stealthy pounce. With his sleek coat and bright, inquisitive eyes, he's a charming feline companion who brings a sense of enchantment to each day.",
+                            Name = "Randy",
                             Species = 1,
-                            UserID = 3
+                            UserID = 2
                         },
                         new
                         {
                             ID = 3,
-                            Age = 7,
-                            Description = "Egy nagyon nagy ló",
-                            Name = "Ló rider",
-                            Species = 3,
+                            Age = 2,
+                            Description = "Luna, the two-year-old pup, radiates youthful exuberance, bringing endless energy and an infectious spirit to every moment. With her vibrant personality and sparkling eyes, she's a delightful and energetic companion for any adventure.",
+                            Name = "Luna",
+                            Species = 0,
                             UserID = 3
+                        },
+                        new
+                        {
+                            ID = 4,
+                            Age = 3,
+                            Description = "Whiskers, the three-year-old cat, exudes a graceful charm and inquisitive nature. With a glossy fur coat and sparkling eyes, Whiskers is a delightful feline companion who adds a touch of enchantment to every day.",
+                            Name = "Whiskers",
+                            Species = 1,
+                            UserID = 2
+                        },
+                        new
+                        {
+                            ID = 5,
+                            Age = 4,
+                            Description = "Rusty, the four-year-old dog, emanates loyalty and playful energy. With a warm, russet-colored coat and soulful eyes, Rusty is a cherished canine companion who brings joy and adventure to each day.",
+                            Name = "Rusty",
+                            Species = 0,
+                            UserID = 3
+                        },
+                        new
+                        {
+                            ID = 6,
+                            Age = 4,
+                            Description = "Max, the energetic four-year-old Labrador, radiates boundless enthusiasm and a love for play. With a sleek, chocolate-colored coat and an ever-wagging tail, Max is a cherished canine companion who brings joy and adventure to every moment.",
+                            Name = "Max",
+                            Species = 0,
+                            UserID = 1
+                        },
+                        new
+                        {
+                            ID = 7,
+                            Age = 4,
+                            Description = "Bella, the vivacious four-year-old Labrador, exudes charm and a zest for life. With a shiny, golden coat and bright, sparkling eyes, Bella is a beloved canine companion who adds a touch of sunshine to every day.",
+                            Name = "Bella",
+                            Species = 0,
+                            UserID = 1
                         });
                 });
 
@@ -289,6 +372,31 @@ namespace DataAccess.Migrations
                         {
                             PetID = 3,
                             JobID = 3
+                        },
+                        new
+                        {
+                            PetID = 3,
+                            JobID = 4
+                        },
+                        new
+                        {
+                            PetID = 5,
+                            JobID = 4
+                        },
+                        new
+                        {
+                            PetID = 4,
+                            JobID = 5
+                        },
+                        new
+                        {
+                            PetID = 6,
+                            JobID = 6
+                        },
+                        new
+                        {
+                            PetID = 7,
+                            JobID = 6
                         });
                 });
 
@@ -413,14 +521,14 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "30135e11-c193-41e3-9334-0c26d2551d43",
+                            ConcurrencyStamp = "42ebb43a-11ea-45e0-a392-2a839463fb33",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             NormalizedUserName = "KISSJANOS",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKoug6cKOUFbf9E+aMlyj+qrHe7tqJGTlYcX1SJMSa7KUEcEkU9HXJ5H3l02Ja4hwQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPBPjxvH884iPmv9SXFYkdJqsdf92UYDW2rk0xQGedBA0RUgjNqkiV61BjzqkVtFtA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos"
@@ -430,14 +538,14 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "8710f9e5-3372-4891-a2b7-dd8f1010dd7d",
+                            ConcurrencyStamp = "46a1d512-9eda-4051-ac7a-6fd1d8a10f86",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             NormalizedUserName = "NAGYFERO",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAENxv7er/xC/JIJflwfcVRM+4V1K9Pljl+F301H02poP+uiuTMmN2VoWzcf9xNKjnBQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAfqR+iJLTjRhcb9suWuulLAKwQRZFn1QRTz/NJy+31JP3jnF84L2uLMKVVYYRhanQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero"
@@ -447,14 +555,14 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "7440dae1-1250-4b3c-ba1e-7a89d5161add",
+                            ConcurrencyStamp = "fc420dc5-6e5a-44fc-9e1c-7ac5ed733077",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             NormalizedUserName = "VICCELEK",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEP7weuWH/mZPuCenrbT6DnCsEez+Y9iTV3AnmRbsP7R96HvN0YYVlYWw4Wi+BS+gw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJmPqNY7z1p8GV4V5qBKm1eSXThSioQb5eupxgc9hZSnWt6r5y6Z1U7jjCgMKFx6UQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek"
@@ -464,14 +572,14 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "1121e639-68bb-462d-9d23-1f267a6919da",
+                            ConcurrencyStamp = "89b644cb-fcb6-4927-be90-e1eba03ec4ee",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             NormalizedUserName = "MAKULATLAN",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPpDI7C/B2HEcIIMC3adjX8COEuXJtwPuvtDqf9jf3QVbVi8VslbF7IB8jJo66oafA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOhT+6IR02traTnGzmBuP+wwr6QwH3CRksB/sOU0XKQ5o1/hu0jUzxqpEmGl8aqwQQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan"
@@ -499,13 +607,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ba4297d3-7acb-45af-8978-2b6482761231",
+                            Id = "95b85288-e390-403a-b2eb-522165eb4262",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "99a302e7-f776-429f-a137-65592442393d",
+                            Id = "a3200571-17b7-448d-85d6-97dec17b2e29",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });

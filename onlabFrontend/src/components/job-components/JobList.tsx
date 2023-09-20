@@ -70,7 +70,7 @@ export function JobCard({ job }: IPropsJobCard) {
               <Title order={3}>
                 {job?.ownerUserInformation?.id === user?.id
                   ? "Your job"
-                  : `${job?.ownerUserInformation?.userName}'s job`}
+                  : job?.title}
               </Title>
               <Text size="sm">${job.payment}/hours</Text>
               <Text size="sm">{job.location}</Text>

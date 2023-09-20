@@ -9,11 +9,18 @@ namespace Domain.Models.QueryHelpers
 {
     public class JobFilter
     {
-        public uint MinHours { get; set; }
-        public uint MaxHours { get; set; } = 12;
+        public JobType Type { get; set; }
         public List<PetSpecies>? Species { get; set; }
 
-        public bool ValidHoursRange => MaxHours > MinHours;
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
+        public bool Repeated { get; set; }
+
+        public List<Days>? Days { get; set; }
+
+        public bool ValidRepeated => (Type == JobType.Visit || Type == JobType.Walking) && EndDate is null;
+
+        public bool ValidOnce => EndDate is not null;
     }
 }

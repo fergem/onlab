@@ -25,21 +25,23 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> List([FromQuery] JobFilter jobParameters)
         {
-            if (!jobParameters.ValidHoursRange)
-                return BadRequest("Max hours cannot be less than min hours");
+            if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
+                return BadRequest("Filter is not good");
+            else if (!jobParameters.ValidRepeated && jobParameters.ValidRepeated)
+                return BadRequest("Filter is not good");
 
-            return Ok(await jobService.List(jobParameters));
+            var result = await jobService.List(jobParameters);
+            return Ok(result);
         }
 
         [Authorize]
         [HttpGet("posted")]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobFilter jobParameters)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            if (!jobParameters.ValidHoursRange)
-                return BadRequest("Max hours cannot be less than min hours");
+            
             return Ok(await jobService.ListPostedJobs(userID, jobParameters));
         }
 
@@ -47,11 +49,10 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet("undertook")]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobFilter jobParameters)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            if (!jobParameters.ValidHoursRange)
-                return BadRequest("Max hours cannot be less than min hours");
+            
 
             return Ok(await jobService.ListUnderTookJobs(userID));
         }
@@ -60,7 +61,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet("approvals")]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> ListApprovals()
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             return Ok(await jobService.ListApprovals(userID));
@@ -79,7 +80,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> InsertJob([FromBody] InsertJobModel job)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
             var created = await jobService.Insert(job, userID);
@@ -92,7 +93,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
                     return BadRequest("There is no such user with this Bearer");
 
@@ -111,7 +112,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
                     return BadRequest("There is no such user with this Bearer");
 
@@ -130,7 +131,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
                     return BadRequest("There is no such user with this Bearer");
 
@@ -149,7 +150,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
                     return BadRequest("There is no such user with this Bearer");
 
@@ -169,7 +170,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
                     return BadRequest("There is no such user with this Bearer");
 

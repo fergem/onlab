@@ -75,7 +75,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpDelete("/pets/{petID}")]
         public async Task<ActionResult<User>> FindPetByID([FromRoute] int petID)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
             try
@@ -94,7 +94,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet("pets")]
         public async Task<ActionResult<User>> ListPets([FromQuery] PetFilterParameters filter)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
 
@@ -107,7 +107,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost("addpet")]
         public async Task<ActionResult<int>> InsertPet([FromBody] Pet pet)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
             
@@ -144,7 +144,7 @@ namespace PetHolidayWebApi.Controllers
         [HttpPost("addprofilepicture")]
         public async Task<ActionResult<Pet>> AddProfilePicture([FromForm] IFormFile file)
         {
-            var foundUser = Int32.TryParse(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "ID").Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
             if (file != null)

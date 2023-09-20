@@ -1,17 +1,22 @@
 import axios from "axios";
-import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
+import Job, { JobFilter, JobWithPetIDs } from "../models/Job";
 
 const get = async (id?: string) => {
   const response = await axios.get<Job>(`/api/jobs/${id}`);
   return response.data;
 };
 
-const list = async (jobParameters: JobParameters) => {
-  const response = await axios.get<Job[]>(`/api/jobs?`);
+const list = async (filter: JobFilter) => {
+  const response = await axios.get<Job[]>(`/api/jobs?`, {
+    params: filter,
+    paramsSerializer: {
+      indexes: true,
+    },
+  });
   return response.data;
 };
 
-const listUsersPostedJobs = async (jobParameters: JobParameters) => {
+const listUsersPostedJobs = async (filter: JobFilter) => {
   const response = await axios.get<Job[]>(`/api/jobs/posted?`);
   return response.data;
 };

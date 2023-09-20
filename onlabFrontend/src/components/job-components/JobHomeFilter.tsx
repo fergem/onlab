@@ -9,7 +9,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { DatePickerInput, DateValue, DatesRangeValue } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import {
   IconBed,
   IconCalendarEvent,
@@ -21,67 +21,42 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Days, JobType } from "../../models/Job";
+import useJobFilter from "../../hooks/useJobFilter";
+import {
+  Day,
+  DefaultJobFilter,
+  Frequency,
+  JobFilter,
+  JobType,
+} from "../../models/Job";
 import { PetSpecies } from "../../models/Pet";
 
 export default function JobHomeFilter() {
   const navigate = useNavigate();
-
-  const [dateRangeValue, setDateRangeValue] = useState<
-    [Date | null, Date | null]
-  >([null, null]);
-
-  const [speciesService, setSpeciesService] = useState<PetSpecies[]>([
-    PetSpecies.Dog,
-  ]);
-
-  const [selectedJobType, setSelectedJobType] = useState<JobType>(
-    JobType.Sitting
-  );
-  const [repeatable, setRepeatable] = useState<boolean>(false);
-
-  const [days, setDays] = useState<Days[]>([]);
-
-  const handleSelectDays = (values: string[]) => setDays(values as Days[]);
-
-  const handleSelectJobType = (value: string) => {
-    const jobType = value as JobType;
-    setSelectedJobType(jobType);
-
-    if (
-      (jobType === JobType.Boarding || jobType === JobType.Sitting) &&
-      repeatable
-    )
-      setRepeatable((t) => !t);
+  const [jobFilter, setJobFilter] = useState(DefaultJobFilter);
+  const handleSetJobFilter = (filter: JobFilter) => {
+    setJobFilter(filter);
   };
 
-  const handleSelectPetSpecies = (value: string[]) =>
-    setSpeciesService(value as PetSpecies[]);
+  const {
+    handleSelectDays,
+    handleSelectJobType,
+    handleSelectRepeatable,
+    handleSelectPetSpecies,
+    handleSelectDate,
+  } = useJobFilter({ jobFilter, setJobFilter: handleSetJobFilter });
 
-  const handleSelectRepeatable = (value: string) => {
-    const realValue = value as Frequency;
-    if (realValue === Frequency.Once) setRepeatable(false);
-    else if (realValue === Frequency.Repeat) {
-      setRepeatable(true);
-    }
-  };
-  const handleSelectDate = (value: DatesRangeValue | DateValue) => {
-    if (Array.isArray(value) && value.length === 2) {
-      setDateRangeValue(value);
-    } else if (!Array.isArray(value)) {
-      setDateRangeValue([value, dateRangeValue[1]]);
-    }
-  };
   const handleOnSearch = () => {
     navigate("/jobs");
   };
+
   return (
     <Paper shadow="sm" p="xl" radius="md">
       <Stack w="100%">
         <Group w="100%">
           <Title order={4}>I want to have service for: </Title>
           <Checkbox.Group
-            defaultValue={speciesService}
+            defaultValue={jobFilter.species}
             onChange={handleSelectPetSpecies}
           >
             <Group>
@@ -105,7 +80,7 @@ export default function JobHomeFilter() {
           </Group>
 
           <Chip.Group
-            defaultValue={selectedJobType}
+            defaultValue={jobFilter.type}
             onChange={handleSelectJobType}
           >
             <Group position="center">
@@ -122,14 +97,14 @@ export default function JobHomeFilter() {
         <Group position="center" align="flex-end" grow>
           <ChipFrequency
             handleSetRepeatable={handleSelectRepeatable}
-            jobType={selectedJobType}
+            jobType={jobFilter.type}
           />
-          {repeatable ? (
+          {jobFilter.repeated ? (
             <DatePickerInput
               type="default"
               label="Start date"
               placeholder="Start date"
-              value={dateRangeValue[0]}
+              value={jobFilter.startDate}
               onChange={handleSelectDate}
               mx="auto"
               maw={300}
@@ -139,14 +114,14 @@ export default function JobHomeFilter() {
               type="range"
               label="For these days"
               placeholder="Start date - End date"
-              value={dateRangeValue}
+              value={[jobFilter.startDate, jobFilter.endDate ?? null]}
               onChange={handleSelectDate}
               mx="auto"
               maw={300}
             />
           )}
         </Group>
-        {repeatable && <ChipDays handleSetDays={handleSelectDays} />}
+        {jobFilter.repeated && <ChipDays handleSetDays={handleSelectDays} />}
         <Button onClick={handleOnSearch}>Search</Button>
       </Stack>
     </Paper>
@@ -196,7 +171,7 @@ export function ChipDays({ handleSetDays }: IChipDaysProps) {
           How often do you need this service?
         </Text>
         <Group position="center" align="center">
-          {Object.values(Days).map((s) => (
+          {Object.values(Day).map((s) => (
             <Chip value={s} key={s} size="md" radius="sm">
               {s}
             </Chip>
@@ -205,11 +180,6 @@ export function ChipDays({ handleSetDays }: IChipDaysProps) {
       </Stack>
     </Chip.Group>
   );
-}
-
-enum Frequency {
-  Once = "Once",
-  Repeat = "Repeat",
 }
 
 interface IChipWithIconProps {

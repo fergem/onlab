@@ -247,7 +247,7 @@ namespace DataAccess.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Species = table.Column<int>(type: "int", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
@@ -334,10 +334,10 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "Location", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, 23, "30135e11-c193-41e3-9334-0c26d2551d43", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEKoug6cKOUFbf9E+aMlyj+qrHe7tqJGTlYcX1SJMSa7KUEcEkU9HXJ5H3l02Ja4hwQ==", null, false, null, null, false, "kissjanos" },
-                    { 2, 0, 32, "8710f9e5-3372-4891-a2b7-dd8f1010dd7d", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAENxv7er/xC/JIJflwfcVRM+4V1K9Pljl+F301H02poP+uiuTMmN2VoWzcf9xNKjnBQ==", null, false, null, null, false, "nagyfero" },
-                    { 3, 0, 43, "7440dae1-1250-4b3c-ba1e-7a89d5161add", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEEP7weuWH/mZPuCenrbT6DnCsEez+Y9iTV3AnmRbsP7R96HvN0YYVlYWw4Wi+BS+gw==", null, false, null, null, false, "viccelek" },
-                    { 4, 0, 17, "1121e639-68bb-462d-9d23-1f267a6919da", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEPpDI7C/B2HEcIIMC3adjX8COEuXJtwPuvtDqf9jf3QVbVi8VslbF7IB8jJo66oafA==", null, false, null, null, false, "makulatlan" }
+                    { 1, 0, 23, "42ebb43a-11ea-45e0-a392-2a839463fb33", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEPBPjxvH884iPmv9SXFYkdJqsdf92UYDW2rk0xQGedBA0RUgjNqkiV61BjzqkVtFtA==", null, false, null, null, false, "kissjanos" },
+                    { 2, 0, 32, "46a1d512-9eda-4051-ac7a-6fd1d8a10f86", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAEAfqR+iJLTjRhcb9suWuulLAKwQRZFn1QRTz/NJy+31JP3jnF84L2uLMKVVYYRhanQ==", null, false, null, null, false, "nagyfero" },
+                    { 3, 0, 43, "fc420dc5-6e5a-44fc-9e1c-7ac5ed733077", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEJmPqNY7z1p8GV4V5qBKm1eSXThSioQb5eupxgc9hZSnWt6r5y6Z1U7jjCgMKFx6UQ==", null, false, null, null, false, "viccelek" },
+                    { 4, 0, 17, "89b644cb-fcb6-4927-be90-e1eba03ec4ee", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEOhT+6IR02traTnGzmBuP+wwr6QwH3CRksB/sOU0XKQ5o1/hu0jUzxqpEmGl8aqwQQ==", null, false, null, null, false, "makulatlan" }
                 });
 
             migrationBuilder.InsertData(
@@ -345,8 +345,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "99a302e7-f776-429f-a137-65592442393d", null, "Owner", "OWNER" },
-                    { "ba4297d3-7acb-45af-8978-2b6482761231", null, "PetSitter", "PETSITTER" }
+                    { "95b85288-e390-403a-b2eb-522165eb4262", null, "PetSitter", "PETSITTER" },
+                    { "a3200571-17b7-448d-85d6-97dec17b2e29", null, "Owner", "OWNER" }
                 });
 
             migrationBuilder.InsertData(
@@ -354,9 +354,12 @@ namespace DataAccess.Migrations
                 columns: new[] { "ID", "Days", "Description", "EndDate", "Hours", "Location", "MinRequiredExperience", "OwnerUserID", "Payment", "PetSitterUserID", "Repeated", "StartDate", "Status", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, "Mon,Wen,Fri", "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!", null, 4, "Szeged", 0, 1, 10, null, true, new DateTime(2023, 9, 20, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9638), 1, "Looking for a weekly walk buddy for Milio!", 2 },
-                    { 2, null, "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!", new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9698), 3, "Szolnok", 1, 2, 20, null, false, new DateTime(2023, 9, 22, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9696), 1, "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!", 0 },
-                    { 3, null, "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!", null, 7, "Jászkarajenő", 3, 3, 30, null, false, new DateTime(2023, 9, 21, 11, 37, 52, 676, DateTimeKind.Local).AddTicks(9704), 1, "Boarding Bliss: Jason and David's Canine Vacation", 1 }
+                    { 1, "Mon,Wed,Fri", "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!", null, 4, "Szeged", 0, 1, 10, null, true, new DateTime(2023, 9, 23, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4757), 1, "Looking for a weekly walk buddy for Milio!", 2 },
+                    { 2, null, "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!", new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4910), 3, "Szolnok", 1, 2, 20, null, false, new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4908), 1, "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!", 0 },
+                    { 3, "Tue,Wed,Fri", "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!", null, 7, "Jászkarajenő", 3, 3, 30, null, true, new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4917), 1, "Weekly Dog Walking Opportunity for Luna and Rusty", 2 },
+                    { 4, "Mon,Wed,Fri", "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!", null, 5, "Debrecen", 0, 1, 15, null, true, new DateTime(2023, 9, 24, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4995), 1, "Daily Adventures with Luna!", 2 },
+                    { 5, null, "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!", new DateTime(2023, 9, 29, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5004), 4, "Budapest", 2, 2, 25, null, false, new DateTime(2023, 9, 26, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5003), 1, "Senior Cat Care: Whiskers' Comfort Companion", 0 },
+                    { 6, null, "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!", null, 2, "Pécs", 4, 3, 20, null, false, new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5007), 1, "Weekly Labrador Love: Max and Bella's Pawsome Playdates", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -364,9 +367,13 @@ namespace DataAccess.Migrations
                 columns: new[] { "ID", "Age", "Description", "Name", "Species", "UserID" },
                 values: new object[,]
                 {
-                    { 1, 2, "Szep kutya", "Vakarcs", 0, 3 },
-                    { 2, 3, "Szep cica", "Miu", 1, 3 },
-                    { 3, 7, "Egy nagyon nagy ló", "Ló rider", 3, 3 }
+                    { 1, 7, "Milio, the seven-year-old dog, boasts a heartwarming mix of wisdom and playfulness, his tail wagging through years of cherished adventures and companionship. His loyal eyes and graying fur tell a tale of unwavering friendship and boundless joy.", "Milio", 0, 1 },
+                    { 2, 3, "Randy, the three-year-old cat, exudes youthful energy and curiosity in every graceful leap and stealthy pounce. With his sleek coat and bright, inquisitive eyes, he's a charming feline companion who brings a sense of enchantment to each day.", "Randy", 1, 2 },
+                    { 3, 2, "Luna, the two-year-old pup, radiates youthful exuberance, bringing endless energy and an infectious spirit to every moment. With her vibrant personality and sparkling eyes, she's a delightful and energetic companion for any adventure.", "Luna", 0, 3 },
+                    { 4, 3, "Whiskers, the three-year-old cat, exudes a graceful charm and inquisitive nature. With a glossy fur coat and sparkling eyes, Whiskers is a delightful feline companion who adds a touch of enchantment to every day.", "Whiskers", 1, 2 },
+                    { 5, 4, "Rusty, the four-year-old dog, emanates loyalty and playful energy. With a warm, russet-colored coat and soulful eyes, Rusty is a cherished canine companion who brings joy and adventure to each day.", "Rusty", 0, 3 },
+                    { 6, 4, "Max, the energetic four-year-old Labrador, radiates boundless enthusiasm and a love for play. With a sleek, chocolate-colored coat and an ever-wagging tail, Max is a cherished canine companion who brings joy and adventure to every moment.", "Max", 0, 1 },
+                    { 7, 4, "Bella, the vivacious four-year-old Labrador, exudes charm and a zest for life. With a shiny, golden coat and bright, sparkling eyes, Bella is a beloved canine companion who adds a touch of sunshine to every day.", "Bella", 0, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -376,7 +383,12 @@ namespace DataAccess.Migrations
                 {
                     { 1, 1 },
                     { 2, 2 },
-                    { 3, 3 }
+                    { 3, 3 },
+                    { 4, 3 },
+                    { 5, 4 },
+                    { 4, 5 },
+                    { 6, 6 },
+                    { 6, 7 }
                 });
 
             migrationBuilder.CreateIndex(

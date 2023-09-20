@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import Job, { JobParameters, JobWithPetIDs } from "../models/Job";
+import Job, { JobFilter, JobWithPetIDs } from "../models/Job";
 import JobService from "../services/JobService";
 import useNotification from "./useNotification";
 
@@ -25,7 +25,7 @@ export const useGetJob = (id?: string) => {
   return { job, error, loading, getJob };
 };
 
-export const useGetJobs = (jobParameters: JobParameters) => {
+export const useGetJobs = (jobParameters: JobFilter) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const {
     isLoading: loading,
@@ -78,7 +78,7 @@ export const useGetApprovals = () => {
   };
 };
 
-export const useGetUserPostedJobs = (jobParameters: JobParameters) => {
+export const useGetUserPostedJobs = (jobParameters: JobFilter) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const {
     isLoading: loading,

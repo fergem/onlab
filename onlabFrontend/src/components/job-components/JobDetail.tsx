@@ -23,7 +23,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { useGetJob, useProgressJob } from "../../hooks/JobHooks";
-import { Days, JobType, Status } from "../../models/Job";
+import { Day, JobType, Status } from "../../models/Job";
 import Pet, { PetSpecies } from "../../models/Pet";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
@@ -42,6 +42,7 @@ function JobDetail() {
   const handleFinishJob = () => {
     if (job) finishJob(job.id);
   };
+  console.log(job);
   return (
     <Stack align="center" justify="center">
       <LoadingBoundary loading={loading} error={error} refetch={getJob}>
@@ -188,7 +189,7 @@ export function PetCountWithIcon({ pets }: IPetCountWithProps) {
 }
 
 interface IBadgeDaysProps {
-  days?: Days[];
+  days?: Day[];
 }
 
 export function ChipDays({ days }: IBadgeDaysProps) {

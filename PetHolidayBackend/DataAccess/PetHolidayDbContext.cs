@@ -1,4 +1,5 @@
-﻿using DataAccess.DataObjects;
+﻿using Azure;
+using DataAccess.DataObjects;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -67,7 +68,7 @@ namespace DataAccess
                 entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Age);
                 entity.Property(s => s.Species);
-                entity.Property(s => s.Description).HasMaxLength(50).IsUnicode(unicode: true);
+                entity.Property(s => s.Description).IsUnicode(unicode: true);
             });
 
             modelBuilder.Entity<DbJob>(entity =>
@@ -218,29 +219,65 @@ namespace DataAccess
                     new DbPet()
                     {
                         ID = 1,
-                        Name = "Vakarcs",
-                        Description = "Szep kutya",
+                        Name = "Milio",
+                        Description = "Milio, the seven-year-old dog, boasts a heartwarming mix of wisdom and playfulness, his tail wagging through years of cherished adventures and companionship. His loyal eyes and graying fur tell a tale of unwavering friendship and boundless joy.",
+                        Species = PetSpecies.Dog,
+                        Age = 7,
+                        UserID = 1,
+                    },
+                    new DbPet()
+                    {
+                        ID = 2,
+                        Name = "Randy",
+                        Description = "Randy, the three-year-old cat, exudes youthful energy and curiosity in every graceful leap and stealthy pounce. With his sleek coat and bright, inquisitive eyes, he's a charming feline companion who brings a sense of enchantment to each day.",
+                        Species = PetSpecies.Cat,
+                        Age = 3,
+                        UserID = 2,
+                    },
+                    new DbPet()
+                    {
+                        ID = 3,
+                        Name = "Luna",
+                        Description = "Luna, the two-year-old pup, radiates youthful exuberance, bringing endless energy and an infectious spirit to every moment. With her vibrant personality and sparkling eyes, she's a delightful and energetic companion for any adventure.",
                         Species = PetSpecies.Dog,
                         Age = 2,
                         UserID = 3,
                     },
                     new DbPet()
                     {
-                        ID = 2,
-                        Name = "Miu",
-                        Description = "Szep cica",
+                        ID = 4,
+                        Name = "Whiskers",
+                        Description = "Whiskers, the three-year-old cat, exudes a graceful charm and inquisitive nature. With a glossy fur coat and sparkling eyes, Whiskers is a delightful feline companion who adds a touch of enchantment to every day.",
                         Species = PetSpecies.Cat,
                         Age = 3,
+                        UserID = 2,
+                    },
+                    new DbPet()
+                    {
+                        ID = 5,
+                        Name = "Rusty",
+                        Description = "Rusty, the four-year-old dog, emanates loyalty and playful energy. With a warm, russet-colored coat and soulful eyes, Rusty is a cherished canine companion who brings joy and adventure to each day.",
+                        Species = PetSpecies.Dog,
+                        Age = 4,
                         UserID = 3,
                     },
                     new DbPet()
                     {
-                        ID = 3,
-                        Name = "Ló rider",
-                        Description = "Egy nagyon nagy ló",
-                        Species = PetSpecies.Horse,
-                        Age = 7,
-                        UserID = 3,
+                        ID = 6,
+                        Name = "Max",
+                        Description = "Max, the energetic four-year-old Labrador, radiates boundless enthusiasm and a love for play. With a sleek, chocolate-colored coat and an ever-wagging tail, Max is a cherished canine companion who brings joy and adventure to every moment.",
+                        Species = PetSpecies.Dog,
+                        Age = 4,
+                        UserID = 1,
+                    },
+                    new DbPet()
+                    {
+                        ID = 7,
+                        Name = "Bella",
+                        Description = "Bella, the vivacious four-year-old Labrador, exudes charm and a zest for life. With a shiny, golden coat and bright, sparkling eyes, Bella is a beloved canine companion who adds a touch of sunshine to every day.",
+                        Species = PetSpecies.Dog,
+                        Age = 4,
+                        UserID = 1,
                     }
                 );
             modelBuilder.Entity<DbPetJob>()
@@ -258,6 +295,28 @@ namespace DataAccess
                     {
                         JobID = 3,
                         PetID = 3,
+                    },
+                    new DbPetJob()
+                    {
+                        JobID = 4,
+                        PetID = 3,
+                    },
+                    new DbPetJob()
+                    {
+                        JobID = 4,
+                        PetID = 5,
+                    }, new DbPetJob()
+                    {
+                        JobID = 5,
+                        PetID = 4,
+                    }, new DbPetJob()
+                    {
+                        JobID = 6,
+                        PetID = 6,
+                    }, new DbPetJob()
+                    {
+                        JobID = 6,
+                        PetID = 7,
                     }
                  );
             modelBuilder.Entity<DbJob>()
@@ -301,16 +360,67 @@ namespace DataAccess
                         ID = 3,
                         Hours = 7,
                         Location = "Jászkarajenő",
-                        Description = "Are you ready for a tail-wagging adventure? Jason and David, our dynamic doggy duo, are in need of a loving pet sitter to provide them with a fantastic boarding experience. As their dedicated caretaker, you'll enjoy the company of these friendly pups in your own cozy home. Expect lots of cuddles, playtime, and long walks as you make their stay as enjoyable as possible. Join us for a memorable dog-sitting experience, and be a part of Jason and David's unforgettable vacation!",
+                        Description = "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!",
                         Status = Status.Available,
                         OwnerUserID = 3,
                         PetSitterUserID = null,
                         Payment = 30,
                         MinRequiredExperience = 3,
-                        Repeated = false,
+                        Repeated = true,
+                        StartDate = DateTime.Now.AddDays(4),
+                        Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
+                        Type = JobType.Walking,
+                        Days = string.Join(",", new List<Days>() { Days.Tue, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                    },
+                    new DbJob()
+                    {
+                        ID = 4,
+                        Hours = 5,
+                        Location = "Debrecen",
+                        Description = "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!",
+                        Status = Status.Available,
+                        OwnerUserID = 1,
+                        PetSitterUserID = null,
+                        Payment = 15,
+                        MinRequiredExperience = 0,
+                        Repeated = true,
                         StartDate = DateTime.Now.AddDays(3),
-                        Title = "Boarding Bliss: Jason and David's Canine Vacation",
-                        Type = JobType.Boarding,
+                        Title = "Daily Adventures with Luna!",
+                        Days = string.Join(",", new List<Days>() { Days.Mon, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                        Type = JobType.Walking,
+                    },
+                    new DbJob()
+                    {
+                        ID = 5,
+                        Hours = 4,
+                        Location = "Budapest",
+                        Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
+                        Status = Status.Available,
+                        OwnerUserID = 2,
+                        PetSitterUserID = null,
+                        Payment = 25,
+                        MinRequiredExperience = 2,
+                        Repeated = false,
+                        StartDate = DateTime.Now.AddDays(5),
+                        EndDate = DateTime.Now.AddDays(8),
+                        Title = "Senior Cat Care: Whiskers' Comfort Companion",
+                        Type = JobType.Sitting,
+                    },
+                    new DbJob()
+                    {
+                        ID = 6,
+                        Hours = 2,
+                        Location = "Pécs",
+                        Description = "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!",
+                        Status = Status.Available,
+                        OwnerUserID = 3,
+                        PetSitterUserID = null,
+                        Payment = 20,
+                        MinRequiredExperience = 4,
+                        Repeated = false,
+                        StartDate = DateTime.Now.AddDays(4),
+                        Title = "Weekly Labrador Love: Max and Bella's Pawsome Playdates",
+                        Type = JobType.Visit,
                     }
                 );
         }
