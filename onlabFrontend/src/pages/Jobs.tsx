@@ -1,17 +1,27 @@
 import { Grid, Stack, Title } from "@mantine/core";
-import { useState } from "react";
+import { useLocalStorage } from "@mantine/hooks";
+import { useEffect } from "react";
+import { JobFilterLocalStorageKey } from "../components/job-components/JobHomeFilter";
 import JobList from "../components/job-components/JobList";
 import JobPageFilter from "../components/job-components/JobPageFilter";
 import { useGetJobs } from "../hooks/JobHooks";
-import { DefaultJobFilter, JobFilter } from "../models/Job";
+import { DefaultJobFilter, JobFilter, JobFunctions } from "../models/Job";
 
 export default function Jobs() {
-  const [jobFilter, setJobFilter] = useState<JobFilter>(DefaultJobFilter);
+  const [jobFilter, setJobFilter] = useLocalStorage<JobFilter>({
+    key: JobFilterLocalStorageKey,
+    defaultValue: DefaultJobFilter,
+    deserialize: JobFunctions.deserializeJobFromStorage,
+  });
   const { jobs, error, loading, listJobs } = useGetJobs(jobFilter);
 
   const handleSetJobFilter = (filter: JobFilter) => {
     setJobFilter(filter);
   };
+  useEffect(() => {
+    listJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobFilter]);
 
   return (
     <Stack justify="center">
@@ -23,7 +33,6 @@ export default function Jobs() {
           <JobPageFilter
             jobFilter={jobFilter}
             setJobFilter={handleSetJobFilter}
-            refetch={listJobs}
           />
         </Grid.Col>
         <Grid.Col span={7}>

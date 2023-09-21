@@ -18,12 +18,6 @@ namespace Domain.Models
         public required PetSpecies Species { get; set; }
         public int Age { get; set; }
         //public ICollection<PetImage>? Images { get; set; }
-        public PetImage? Image { get; set; }
-    }
-
-    public class PetImage
-    {
-        public int ID { get; set; }
-        public byte[]? Picture { get; set; }
+        public List<byte[]>? Images { get; set; }
     }
 }

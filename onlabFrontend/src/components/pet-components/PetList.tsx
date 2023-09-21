@@ -2,7 +2,7 @@ import { Grid, Image, Paper, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { useGetUserPets } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
-import { baseDogPicture } from "../../utility/constants";
+import { basePetPicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
 import EditPet from "./EditPet";
 
@@ -62,9 +62,9 @@ export function PetCard({ pet }: IPropsPetCard) {
           width="7vw"
           radius="md"
           src={
-            pet.image
-              ? `data:image/png;base64,${pet.image.picture}`
-              : baseDogPicture
+            pet.images && pet.images.length > 0
+              ? `data:image/png;base64,${pet?.images[0]}`
+              : basePetPicture
           }
           alt="Green double couch with wooden legs"
         />

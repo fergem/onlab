@@ -4,7 +4,7 @@ export default interface Pet {
   description: string;
   species: PetSpecies;
   age: number;
-  image?: PetImage;
+  images?: string[];
 }
 
 export interface PetInsertModel {
@@ -12,7 +12,7 @@ export interface PetInsertModel {
   description: string;
   species: PetSpecies;
   age: number;
-  picture?: File;
+  images?: File[];
 }
 
 export interface PetUpdateModel {
@@ -22,11 +22,6 @@ export interface PetUpdateModel {
   species: PetSpecies;
   age: number;
   picture?: File;
-}
-
-export interface PetImageUploadModel {
-  petID: number;
-  file: File;
 }
 
 export interface PetFilter {

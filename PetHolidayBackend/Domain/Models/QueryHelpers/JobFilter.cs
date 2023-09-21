@@ -17,7 +17,7 @@ namespace Domain.Models.QueryHelpers
 
         public bool Repeated { get; set; }
 
-        public List<Days>? Days { get; set; }
+        public ICollection<DaysOfWeek>? Days { get; set; }
 
         public bool ValidRepeated => (Type == JobType.Visit || Type == JobType.Walking) && EndDate is null;
 

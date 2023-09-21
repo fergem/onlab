@@ -56,7 +56,7 @@ namespace DataAccess
                     Repeated = job.Repeated,
                     StartDate = job.StartDate.ToUniversalTime(),
                     EndDate = job.EndDate,
-                    Days = ToJobDays(job.Days),
+                    Days = job.Days,
                     Title = job.Title,
                     Type = job.Type,
                 };
@@ -75,7 +75,7 @@ namespace DataAccess
                 Repeated = job.Repeated,
                 StartDate = job.StartDate.ToUniversalTime(),
                 EndDate = job.EndDate,
-                Days = ToJobDays(job.Days),
+                Days = job.Days,
                 Title = job.Title,
                 Type = job.Type,
             };
@@ -131,22 +131,27 @@ namespace DataAccess
             //foreach (var image in pet.Images)
             //images.Add(ToPetImageModel(image));
 
-            return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Image = ToPetImageModel(pet.Image)};
+            return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Images = ToPetImagesModel(pet.Images.ToList())};
         }
-        internal static PetImage? ToPetImageModel(DbPetImage image)
+        internal static List<byte[]>? ToPetImagesModel(List<DbPetImage>? images)
         {
-            if (image == null)
+            if (images == null)
                 return null;
-            return new PetImage()
+            var result = new List<byte[]>();
+
+            foreach(var image in images)
             {
-                ID = image.ID,
-                Picture = image.Picture,
-            };
+                if (image != null && image.Picture != null)
+                {
+                    result.Add(image.Picture);
+                }
+            }
+            return result;
         }
 
-        internal static IReadOnlyCollection<Days>? ToJobDays(string? days)
+        internal static List<DaysOfWeek> ToJobDays(string? days)
         {
-            return days is not null ? Array.ConvertAll(days.Split(','), Enum.Parse<Days>).ToList() : null;
+            return days is not null ? Array.ConvertAll(days.Split(','), Enum.Parse<DaysOfWeek>).ToList() : Enum.GetValues<DaysOfWeek>().ToList();
         }
     }
 }

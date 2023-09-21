@@ -6,7 +6,7 @@ namespace DataAccess.DataObjects
     {
         public DbPet()
         {
-            //Images = new HashSet<DbPetImage>();
+            Images = new HashSet<DbPetImage>();
             Jobs = new HashSet<DbPetJob>();
 
         }
@@ -23,7 +23,8 @@ namespace DataAccess.DataObjects
 
         public required int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;
-        public virtual DbPetImage Image { get; set;}
+
+        public virtual ICollection<DbPetImage> Images { get; set;}
         public virtual ICollection<DbPetJob> Jobs { get; set; }
     }
 }

@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import Pet, {
-  PetFilter,
-  PetImageUploadModel,
-  PetInsertModel,
-} from "../models/Pet";
+import Pet, { PetFilter, PetInsertModel } from "../models/Pet";
 import ImageUploadService from "../services/ImageUploadService";
 import UserService from "../services/UserService";
 import { useUser } from "./AuthHooks";
@@ -50,18 +46,18 @@ export const usePostUserPet = () => {
   return { error, postPet };
 };
 
-export const usePetImageUpload = () => {
-  const { mutate: postPetPicture, isError: errorUpload } = useMutation(
-    async (uploadData: PetImageUploadModel) => {
-      const data = await ImageUploadService.uploadPetPictures(
-        uploadData.petID,
-        uploadData.file
-      );
-      return data;
-    }
-  );
-  return { errorUpload, postPetPicture };
-};
+// export const usePetImageUpload = () => {
+//   const { mutate: postPetPicture, isError: errorUpload } = useMutation(
+//     async (uploadData: PetImageUploadModel) => {
+//       const data = await ImageUploadService.uploadPetPictures(
+//         uploadData.petID,
+//         uploadData.file
+//       );
+//       return data;
+//     }
+//   );
+//   return { errorUpload, postPetPicture };
+// };
 
 export const useUserProfilePictureUpload = () => {
   const { addUser } = useUser();

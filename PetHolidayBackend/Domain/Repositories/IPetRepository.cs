@@ -14,7 +14,7 @@ namespace Domain.Repositories
         Task<Pet> FindById(int petID);
         Task<int> Insert(Pet pet, int userID);
         Task<Pet> Update(Pet pet);
-        Task<Pet> AddImage(int ID, byte[] file);
+        Task<Pet> AddImages(int ID, List<byte[]> files);
         Task Delete(int petID);
     }
 }

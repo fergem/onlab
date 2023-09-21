@@ -31,21 +31,8 @@ namespace Domain.Models
 
         public required IReadOnlyCollection<Pet> Pets { get; set; }
 
-        public required IReadOnlyCollection<Days>? Days { get; set; }
+        public required ICollection<DaysOfWeek>? Days { get; set; }
 
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Days
-    {
-        [Description("Mon")]
-        Mon,
-        Tue,
-        Wed,
-        Thu,
-        Fri,
-        Sat,
-        Sun,
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

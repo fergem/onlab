@@ -10,6 +10,7 @@ import {
   Title,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconBed,
   IconCalendarEvent,
@@ -19,7 +20,6 @@ import {
   IconPaw,
   IconX,
 } from "@tabler/icons-react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useJobFilter from "../../hooks/useJobFilter";
 import {
@@ -27,13 +27,21 @@ import {
   DefaultJobFilter,
   Frequency,
   JobFilter,
+  JobFunctions,
   JobType,
 } from "../../models/Job";
 import { PetSpecies } from "../../models/Pet";
 
+export const JobFilterLocalStorageKey = "job_filter_key";
+
 export default function JobHomeFilter() {
   const navigate = useNavigate();
-  const [jobFilter, setJobFilter] = useState(DefaultJobFilter);
+  const [jobFilter, setJobFilter] = useLocalStorage<JobFilter>({
+    key: JobFilterLocalStorageKey,
+    defaultValue: DefaultJobFilter,
+    deserialize: JobFunctions.deserializeJobFromStorage,
+  });
+
   const handleSetJobFilter = (filter: JobFilter) => {
     setJobFilter(filter);
   };
@@ -43,7 +51,8 @@ export default function JobHomeFilter() {
     handleSelectJobType,
     handleSelectRepeatable,
     handleSelectPetSpecies,
-    handleSelectDate,
+    handleSelectStartDate,
+    handleSelectEndDate,
   } = useJobFilter({ jobFilter, setJobFilter: handleSetJobFilter });
 
   const handleOnSearch = () => {
@@ -56,7 +65,7 @@ export default function JobHomeFilter() {
         <Group w="100%">
           <Title order={4}>I want to have service for: </Title>
           <Checkbox.Group
-            defaultValue={jobFilter.species}
+            value={jobFilter.species}
             onChange={handleSelectPetSpecies}
           >
             <Group>
@@ -79,10 +88,7 @@ export default function JobHomeFilter() {
             </Text>
           </Group>
 
-          <Chip.Group
-            defaultValue={jobFilter.type}
-            onChange={handleSelectJobType}
-          >
+          <Chip.Group value={jobFilter.type} onChange={handleSelectJobType}>
             <Group position="center">
               {Object.values(JobType).map((s) => (
                 <Chip value={s} size="md" radius="sm" key={s}>
@@ -98,28 +104,31 @@ export default function JobHomeFilter() {
           <ChipFrequency
             handleSetRepeatable={handleSelectRepeatable}
             jobType={jobFilter.type}
+            repeated={jobFilter.repeated}
           />
-          {jobFilter.repeated ? (
+          <Group position="center" align="center" noWrap>
             <DatePickerInput
               type="default"
               label="Start date"
               placeholder="Start date"
               value={jobFilter.startDate}
-              onChange={handleSelectDate}
+              onChange={handleSelectStartDate}
               mx="auto"
               maw={300}
             />
-          ) : (
-            <DatePickerInput
-              type="range"
-              label="For these days"
-              placeholder="Start date - End date"
-              value={[jobFilter.startDate, jobFilter.endDate ?? null]}
-              onChange={handleSelectDate}
-              mx="auto"
-              maw={300}
-            />
-          )}
+            <Text>-</Text>
+            {!jobFilter.repeated && (
+              <DatePickerInput
+                type="default"
+                label="End date"
+                placeholder="End date"
+                value={jobFilter.endDate}
+                onChange={handleSelectEndDate}
+                mx="auto"
+                maw={300}
+              />
+            )}
+          </Group>
         </Group>
         {jobFilter.repeated && <ChipDays handleSetDays={handleSelectDays} />}
         <Button onClick={handleOnSearch}>Search</Button>
@@ -129,17 +138,22 @@ export default function JobHomeFilter() {
 }
 
 interface IChipFrequencyProps {
+  repeated: boolean;
   jobType: JobType;
   handleSetRepeatable(value: string): void;
 }
 
 export function ChipFrequency({
+  repeated,
   jobType,
   handleSetRepeatable,
 }: IChipFrequencyProps) {
   if (jobType === JobType.Boarding || jobType === JobType.Sitting) return;
   return (
-    <Chip.Group defaultValue={Frequency.Once} onChange={handleSetRepeatable}>
+    <Chip.Group
+      value={repeated === false ? Frequency.Once : Frequency.Repeat}
+      onChange={handleSetRepeatable}
+    >
       <Stack spacing={3}>
         <Text fz="sm" fw={500} align="center">
           How often do you need this service?

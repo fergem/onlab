@@ -24,8 +24,7 @@ export default function AuthVerify() {
         navigate("/");
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [logoutUser, navigate, user]);
 
   return <div />;
 }

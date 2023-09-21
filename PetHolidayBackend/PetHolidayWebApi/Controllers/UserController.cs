@@ -125,17 +125,22 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost("addpetimage")]
-        public async Task<ActionResult<Pet>> AddPetImage([FromHeader] int petID,[FromForm] IFormFile file)
+        public async Task<ActionResult<Pet>> AddPetImage([FromHeader] int petID, [FromForm] List<IFormFile> file)
         {
             if (file != null)
             {
-                using (var stream = new MemoryStream())
+                var files = new List<byte[]>();
+                foreach (var item in file)
                 {
-                    await file.CopyToAsync(stream);
-                    var fileData = stream.ToArray();
-                    var updatedPet = await userService.AddPetImage(petID, fileData);
-                    return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                    using (var stream = new MemoryStream())
+                    {
+                        await item.CopyToAsync(stream);
+                        var fileData = stream.ToArray();
+                        files.Add(fileData);
+                    }
                 }
+                var updatedPet = await userService.AddPetImages(petID, files);
+                return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
             }
             return BadRequest();
         }

@@ -15,7 +15,7 @@ const insertPet = async ({
   description,
   species,
   age,
-  picture,
+  images,
 }: PetInsertModel) => {
   const result = await axios.post<number>("/api/users/addpet", {
     name,
@@ -26,13 +26,18 @@ const insertPet = async ({
 
   const formData = new FormData();
 
-  if (picture) formData.append("file", picture);
+  if (images) {
+    images.forEach((e) => {
+      formData.append("file", e);
+    });
+  }
+
   const endresult = await axios.post<string>(
     "/api/users/addpetimage",
     formData,
     {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "multipart/form-data",
         petID: result.data,
       },
     }

@@ -21,8 +21,6 @@ import PetImageSelect from "./PetImageSelect";
 interface IAddPetProps {
   onCancel(): void;
   onConfirm(pet: PetInsertModel): void;
-  pet?: Pet;
-  petPicture?: File;
 }
 
 const defaultPet = {
@@ -32,19 +30,15 @@ const defaultPet = {
   age: 1,
 } as Pet;
 
-export default function PetForm({
-  pet,
-  petPicture,
-  onCancel,
-  onConfirm,
-}: IAddPetProps) {
-  const [petImage, setPetImage] = useState<File | undefined>(petPicture);
-  const handleSetPetimage = (file: File) => {
-    setPetImage(file);
+export default function PetForm({ onCancel, onConfirm }: IAddPetProps) {
+  const [petImage, setPetImage] = useState<File[] | undefined>();
+
+  const handleSetPetimage = (files: File[]) => {
+    setPetImage(files);
   };
 
   const form = useForm({
-    initialValues: pet ?? defaultPet,
+    initialValues: defaultPet,
     validate: {
       name: (val) => PetValidation.validateName(val),
       description: (val) => PetValidation.validateDescription(val),
@@ -53,14 +47,16 @@ export default function PetForm({
   });
 
   const handleOnConfirm = (valuePet: Pet) => {
-    onConfirm({ ...valuePet, picture: petImage });
+    onConfirm({ ...valuePet, images: petImage });
   };
-
   return (
-    <>
+    <Stack>
       <form onSubmit={form.onSubmit(handleOnConfirm)}>
         <Stack justify="space-evenly">
-          <PetImageSelect petImage={petImage} setPetimage={handleSetPetimage} />
+          <PetImageSelect
+            petImage={petImage}
+            setPetImageFiles={handleSetPetimage}
+          />
           <TextInput
             withAsterisk
             label="Name"
@@ -92,13 +88,13 @@ export default function PetForm({
             {...form.getInputProps("description")}
           />
         </Stack>
+        <Group grow>
+          <Button variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit">Confirm</Button>
+        </Group>
       </form>
-      <Group grow>
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit">Confirm</Button>
-      </Group>
-    </>
+    </Stack>
   );
 }

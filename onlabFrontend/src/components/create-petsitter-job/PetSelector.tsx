@@ -35,7 +35,7 @@ export default function PetSelector({ selectPets }: IProps) {
               key={s.id}
               id={s.id}
               onClick={handleSelectPets}
-              source={s.image?.picture}
+              source={s.images && s.images[1]}
               title={s.name}
             />
           ))}

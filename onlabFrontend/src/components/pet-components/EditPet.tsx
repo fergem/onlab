@@ -1,3 +1,4 @@
+import { Carousel } from "@mantine/carousel";
 import { ActionIcon, Image, Paper, Stack, Text, Tooltip } from "@mantine/core";
 import { IconArrowBack } from "@tabler/icons-react";
 import Pet from "../../models/Pet";
@@ -9,6 +10,8 @@ interface IPropsPetModal {
 }
 
 export default function EditPetModal({ pet, back }: IPropsPetModal) {
+  const withIndicatorAndControls = !!pet.images && pet.images.length > 1;
+
   return (
     <Paper radius="md" shadow="sm" withBorder>
       <Tooltip label="Back">
@@ -24,17 +27,35 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
         </ActionIcon>
       </Tooltip>
       <Stack align="center">
-        <Image
-          height="10vw"
-          width="10vw"
-          radius="md"
-          src={
-            pet.image
-              ? `data:image/png;base64,${pet.image.picture}`
-              : basePetPicture
-          }
-          alt="Green double couch with wooden legs"
-        />
+        <Carousel
+          w="17vw"
+          height="17vw"
+          mx="auto"
+          withIndicators={withIndicatorAndControls}
+          withControls={withIndicatorAndControls}
+        >
+          {pet.images && pet.images.length > 0 ? (
+            pet.images.map((s) => (
+              <Carousel.Slide key={s}>
+                <Image
+                  src={`data:image/png;base64,${s}`}
+                  radius="md"
+                  width="17vw"
+                  height="17vw"
+                  alt={pet.name}
+                />
+              </Carousel.Slide>
+            ))
+          ) : (
+            <Image
+              src={basePetPicture}
+              radius="md"
+              width="17vw"
+              height="17vw"
+              alt={pet.name}
+            />
+          )}
+        </Carousel>
         <Text>{pet.name}</Text>
         <Text>{pet.age}</Text>
         <Text>{pet.description}</Text>

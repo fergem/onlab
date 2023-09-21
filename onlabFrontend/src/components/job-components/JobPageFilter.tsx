@@ -1,45 +1,40 @@
 import {
-  Button,
   Checkbox,
   Container,
   Group,
+  MultiSelect,
   Paper,
   Select,
   Stack,
   Text,
 } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { DatePickerInput } from "@mantine/dates";
 import useJobFilter from "../../hooks/useJobFilter";
-import { JobFilter, getJobTypes } from "../../models/Job";
+import { Day, JobFilter, getJobTypes } from "../../models/Job";
 import { PetSpecies } from "../../models/Pet";
 import { ChipFrequency } from "./JobHomeFilter";
 
 interface IJobFilterProps {
   jobFilter: JobFilter;
   setJobFilter(jobFilter: JobFilter): void;
-  refetch(): void;
 }
 
 export default function JobPageFilter({
   jobFilter,
-  refetch,
   setJobFilter,
 }: IJobFilterProps) {
-  const navigate = useNavigate();
-
   const {
     handleSelectDays,
     handleSelectJobType,
     handleSelectRepeatable,
     handleSelectPetSpecies,
-    handleSelectDate,
-  } = useJobFilter({ jobFilter, setJobFilter });
+    handleSelectStartDate,
+    handleSelectEndDate,
+  } = useJobFilter({
+    jobFilter,
+    setJobFilter,
+  });
 
-  const handleFilter = () => {
-    refetch();
-  };
-
-  console.log(jobFilter);
   return (
     <Container>
       <Paper shadow="sm" p="sm" withBorder>
@@ -49,7 +44,7 @@ export default function JobPageFilter({
 
         <Stack justify="center" spacing="xl">
           <Checkbox.Group
-            defaultValue={jobFilter.species}
+            value={jobFilter.species}
             onChange={handleSelectPetSpecies}
           >
             <Group>
@@ -59,6 +54,7 @@ export default function JobPageFilter({
             </Group>
           </Checkbox.Group>
           <Select
+            value={jobFilter.type}
             onChange={handleSelectJobType}
             data={getJobTypes()}
             label="Type of job"
@@ -70,14 +66,55 @@ export default function JobPageFilter({
               timingFunction: "ease",
             }}
           />
-          <Stack>
-            <ChipFrequency
-              handleSetRepeatable={handleSelectRepeatable}
-              jobType={jobFilter.type}
+          <ChipFrequency
+            handleSetRepeatable={handleSelectRepeatable}
+            jobType={jobFilter.type}
+            repeated={jobFilter.repeated}
+          />
+          {jobFilter.repeated && (
+            <MultiSelect
+              data={Object.entries(Day).map((s) => ({
+                value: s[0],
+                label: s[1],
+              }))}
+              value={jobFilter.days}
+              onChange={handleSelectDays}
+              label="Days of the week "
+              placeholder="Pick type"
+              radius="md"
+              transitionProps={{
+                transition: "pop-top-left",
+                duration: 80,
+                timingFunction: "ease",
+              }}
             />
-          </Stack>
+          )}
+          <Group position="center" align="center" noWrap>
+            <DatePickerInput
+              type="default"
+              label="Start date"
+              placeholder="Start date"
+              value={jobFilter.startDate}
+              onChange={handleSelectStartDate}
+              mx="auto"
+              maw={300}
+            />
 
-          <Button onClick={handleFilter}>Apply filters</Button>
+            {!jobFilter.repeated && (
+              <>
+                <Text>-</Text>
+                <DatePickerInput
+                  type="default"
+                  label="End date"
+                  placeholder="End date"
+                  value={jobFilter.endDate}
+                  onChange={handleSelectEndDate}
+                  mx="auto"
+                  maw={300}
+                />
+              </>
+            )}
+          </Group>
         </Stack>
       </Paper>
     </Container>

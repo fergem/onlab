@@ -35,7 +35,7 @@ namespace DataAccess.Repositories
         public async Task<IReadOnlyCollection<Pet>> List(int userID, PetFilterParameters filter)
         {
             return await dbcontext.Pets
-                .Include(s => s.Image)
+                .Include(s => s.Images)
                 .Include(s => s.User)
                 .Where(s => s.UserID == userID)
                 .Select(s => ModelMapper.ToPetModel(s))
@@ -78,36 +78,41 @@ namespace DataAccess.Repositories
             dbPet.Description = pet.Description;
             dbPet.Species = pet.Species;
             dbPet.Name = pet.Name;
-            if (pet.Image is not null)
+            if (pet.Images is not null)
             {
-                var dbPetImage = new DbPetImage
+                var dbImagesToAdd = new List<DbPetImage>();
+                foreach (var image in pet.Images)
                 {
-                    Picture = pet.Image.Picture,
-                    PetID = pet.ID,
-                };
-                dbPet.Image = dbPetImage;
-                await dbcontext.PetImages.AddAsync(dbPetImage);
-
+                    dbImagesToAdd.Add(new DbPetImage
+                    {
+                        Picture = image,
+                    });   
+                }
+                await dbcontext.AddRangeAsync(dbImagesToAdd);
+                dbPet.Images = dbImagesToAdd;
             }
 
             await dbcontext.SaveChangesAsync();
-     
             return ModelMapper.ToPetModel(dbPet);
         }
 
-        public async Task<Pet> AddImage(int ID, byte[] file)
+        public async Task<Pet> AddImages(int ID, List<byte[]> files)
         {
-            var dbPet = await dbcontext.Pets.Include(s => s.Image).FirstOrDefaultAsync(s => s.ID == ID);
+            var dbPet = await dbcontext.Pets.Include(s => s.Images).FirstOrDefaultAsync(s => s.ID == ID);
             if (dbPet == null)
                 throw new Exception("Nincs ilyen pet");
-            var dbImage = new DbPetImage()
+            var dbImagesToAdd = new List<DbPetImage>();
+            foreach (var image in files)
             {
-                PetID = dbPet.ID,
-                Picture = file,
-            };
+                dbImagesToAdd.Add(new DbPetImage
+                {
+                    Picture = image,
+                });
+            }
+            await dbcontext.AddRangeAsync(dbImagesToAdd);
+            dbPet.Images = dbImagesToAdd;
 
-            dbPet.Image = dbImage;
-            await dbcontext.PetImages.AddAsync(dbImage);
+            await dbcontext.PetImages.AddRangeAsync(dbImagesToAdd);
             await dbcontext.SaveChangesAsync();
             return ModelMapper.ToPetModel(dbPet);
         }

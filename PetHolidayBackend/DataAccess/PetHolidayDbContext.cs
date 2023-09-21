@@ -1,9 +1,11 @@
 ﻿using Azure;
 using DataAccess.DataObjects;
 using Domain.Models;
+using Domain.Models.AuthHelpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +36,7 @@ namespace DataAccess
             modelBuilder.Entity<DbUser>().Navigation(s => s.OwnerProfile).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Job).AutoInclude();
             modelBuilder.Entity<DbPetJob>().Navigation(s => s.Pet).AutoInclude();
-            modelBuilder.Entity<DbPet>().Navigation(s => s.Image).AutoInclude();
+            modelBuilder.Entity<DbPet>().Navigation(s => s.Images).AutoInclude();
 
 
             modelBuilder.Entity<DbPetJob>(entity =>
@@ -71,6 +73,9 @@ namespace DataAccess
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
             });
 
+            var converter = new EnumCollectionJsonValueConverter<DaysOfWeek>();
+            var comparer = new CollectionValueComparer<DaysOfWeek>();
+
             modelBuilder.Entity<DbJob>(entity =>
             {
                 entity.ToTable("Jobs");
@@ -78,9 +83,9 @@ namespace DataAccess
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
                 entity.Property(s => s.Hours);
                 entity.Property(s => s.Location).HasMaxLength(50).IsUnicode(unicode: true);
-                entity.Property(s => s.Days);
-                entity.Property(s => s.Title).HasMaxLength(100).IsUnicode(unicode: true);
-
+                entity.Property(s => s.Days).IsRequired(false)
+                                             .HasConversion(converter)
+                                             .Metadata.SetValueComparer(comparer);
             });
 
             modelBuilder.Entity<DbPetImage>(entity =>
@@ -121,11 +126,11 @@ namespace DataAccess
                 .WithOne(s => s.PetSitterUser)
                 .HasForeignKey(e => e.PetSitterUserID);*/
 
-            /*modelBuilder.Entity<DbPet>()
+            modelBuilder.Entity<DbPet>()
                 .HasMany(c => c.Images)
                 .WithOne(s => s.Pet)
                 .HasForeignKey(e => e.PetID)
-                .IsRequired();*/
+                .IsRequired();
         }
 
         private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)
@@ -140,10 +145,10 @@ namespace DataAccess
                 .WithOne(s => s.User)
                 .HasForeignKey<DbPetSitterProfile>(b => b.UserID);
 
-            modelBuilder.Entity<DbPet>()
+            /*modelBuilder.Entity<DbPet>()
                 .HasOne(c => c.Image)
                 .WithOne(s => s.Pet)
-                .HasForeignKey<DbPetImage>(e => e.PetID);
+                .HasForeignKey<DbPetImage>(e => e.PetID);*/
         }
 
         private void ManyToManyRelationshipConfiguration(ModelBuilder modelBuilder)
@@ -335,7 +340,7 @@ namespace DataAccess
                         Repeated = true,
                         StartDate = DateTime.Now.AddDays(2),
                         Title = "Looking for a weekly walk buddy for Milio!",
-                        Days = string.Join(",", new List<Days>() { Days.Mon, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                        Days = new List<DaysOfWeek>() { DaysOfWeek.Mon, DaysOfWeek.Wed, DaysOfWeek.Fri },
                         Type = JobType.Walking,
                     },
                     new DbJob()
@@ -370,7 +375,7 @@ namespace DataAccess
                         StartDate = DateTime.Now.AddDays(4),
                         Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
                         Type = JobType.Walking,
-                        Days = string.Join(",", new List<Days>() { Days.Tue, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                        Days = new List<DaysOfWeek>() { DaysOfWeek.Tue, DaysOfWeek.Wed, DaysOfWeek.Fri }
                     },
                     new DbJob()
                     {
@@ -386,7 +391,7 @@ namespace DataAccess
                         Repeated = true,
                         StartDate = DateTime.Now.AddDays(3),
                         Title = "Daily Adventures with Luna!",
-                        Days = string.Join(",", new List<Days>() { Days.Mon, Days.Wed, Days.Fri }.Select(p => p.ToString()).ToArray()),
+                        Days =new List<DaysOfWeek>() { DaysOfWeek.Mon, DaysOfWeek.Wed, DaysOfWeek.Fri },
                         Type = JobType.Walking,
                     },
                     new DbJob()

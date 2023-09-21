@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20230920220645_init")]
+    [Migration("20230921192641_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -76,9 +76,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -95,7 +93,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 1,
-                            Days = "Mon,Wed,Fri",
+                            Days = "[\"Mon\",\"Wed\",\"Fri\"]",
                             Description = "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!",
                             Hours = 4,
                             Location = "Szeged",
@@ -103,7 +101,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 10,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 9, 23, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4757),
+                            StartDate = new DateTime(2023, 9, 23, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7365),
                             Status = 1,
                             Title = "Looking for a weekly walk buddy for Milio!",
                             Type = 2
@@ -112,14 +110,14 @@ namespace DataAccess.Migrations
                         {
                             ID = 2,
                             Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
-                            EndDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4910),
+                            EndDate = new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7469),
                             Hours = 3,
                             Location = "Szolnok",
                             MinRequiredExperience = 1,
                             OwnerUserID = 2,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4908),
+                            StartDate = new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7467),
                             Status = 1,
                             Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
                             Type = 0
@@ -127,7 +125,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 3,
-                            Days = "Tue,Wed,Fri",
+                            Days = "[\"Tue\",\"Wed\",\"Fri\"]",
                             Description = "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!",
                             Hours = 7,
                             Location = "Jászkarajenő",
@@ -135,7 +133,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 30,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4917),
+                            StartDate = new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7478),
                             Status = 1,
                             Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
                             Type = 2
@@ -143,7 +141,7 @@ namespace DataAccess.Migrations
                         new
                         {
                             ID = 4,
-                            Days = "Mon,Wed,Fri",
+                            Days = "[\"Mon\",\"Wed\",\"Fri\"]",
                             Description = "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!",
                             Hours = 5,
                             Location = "Debrecen",
@@ -151,7 +149,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 15,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 9, 24, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(4995),
+                            StartDate = new DateTime(2023, 9, 24, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7484),
                             Status = 1,
                             Title = "Daily Adventures with Luna!",
                             Type = 2
@@ -160,14 +158,14 @@ namespace DataAccess.Migrations
                         {
                             ID = 5,
                             Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
-                            EndDate = new DateTime(2023, 9, 29, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5004),
+                            EndDate = new DateTime(2023, 9, 29, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7522),
                             Hours = 4,
                             Location = "Budapest",
                             MinRequiredExperience = 2,
                             OwnerUserID = 2,
                             Payment = 25,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 26, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5003),
+                            StartDate = new DateTime(2023, 9, 26, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7510),
                             Status = 1,
                             Title = "Senior Cat Care: Whiskers' Comfort Companion",
                             Type = 0
@@ -182,7 +180,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 9, 25, 0, 6, 45, 287, DateTimeKind.Local).AddTicks(5007),
+                            StartDate = new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7526),
                             Status = 1,
                             Title = "Weekly Labrador Love: Max and Bella's Pawsome Playdates",
                             Type = 3
@@ -337,8 +335,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("PetID")
-                        .IsUnique();
+                    b.HasIndex("PetID");
 
                     b.ToTable("PetImages", (string)null);
                 });
@@ -521,14 +518,14 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "42ebb43a-11ea-45e0-a392-2a839463fb33",
+                            ConcurrencyStamp = "52dbad8b-ae66-4bb7-b775-26e724878534",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
                             LockoutEnabled = false,
                             NormalizedUserName = "KISSJANOS",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPBPjxvH884iPmv9SXFYkdJqsdf92UYDW2rk0xQGedBA0RUgjNqkiV61BjzqkVtFtA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKAxrRqfz5ACKaQOA49fHoohDY/eB0C4GQEKTMSpwb9pCviWsCPlAuPKxYzE0Y7RJw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "kissjanos"
@@ -538,14 +535,14 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "46a1d512-9eda-4051-ac7a-6fd1d8a10f86",
+                            ConcurrencyStamp = "fff3f9f9-9542-4f4c-99ba-dc8599a736f2",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
                             LockoutEnabled = false,
                             NormalizedUserName = "NAGYFERO",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAfqR+iJLTjRhcb9suWuulLAKwQRZFn1QRTz/NJy+31JP3jnF84L2uLMKVVYYRhanQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPNlGU5iikuIwVNhLw5GZyoY9GRS+KGt27oE2zDM8BJL2v5UxUCsDudKswjYf2tmXw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "nagyfero"
@@ -555,14 +552,14 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "fc420dc5-6e5a-44fc-9e1c-7ac5ed733077",
+                            ConcurrencyStamp = "115915ab-2b49-4918-85e9-cd5e95c3c926",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
                             LockoutEnabled = false,
                             NormalizedUserName = "VICCELEK",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJmPqNY7z1p8GV4V5qBKm1eSXThSioQb5eupxgc9hZSnWt6r5y6Z1U7jjCgMKFx6UQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEgNf/5xnyzREp4FBb802kHD+bqNLGD0+391q5/wdGzxlu6EPL9qpsZTBXucGATvaQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "viccelek"
@@ -572,14 +569,14 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "89b644cb-fcb6-4927-be90-e1eba03ec4ee",
+                            ConcurrencyStamp = "b0a9ca6b-5f08-40dc-83a8-18c8963afdfd",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",
                             LockoutEnabled = false,
                             NormalizedUserName = "MAKULATLAN",
                             Password = "asd",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOhT+6IR02traTnGzmBuP+wwr6QwH3CRksB/sOU0XKQ5o1/hu0jUzxqpEmGl8aqwQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMNPn1ltNh72yjYnmFpqL34bSROdGj/EEt1TrwevPS6k6Q0elxEx09/sNRtvmLDLig==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "makulatlan"
@@ -607,13 +604,13 @@ namespace DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "95b85288-e390-403a-b2eb-522165eb4262",
+                            Id = "7c80ab50-a546-43c9-9028-ae1e6ac1585d",
                             Name = "PetSitter",
                             NormalizedName = "PETSITTER"
                         },
                         new
                         {
-                            Id = "a3200571-17b7-448d-85d6-97dec17b2e29",
+                            Id = "bdfdca8d-f5fb-4162-9dfe-f5289bfdcaa8",
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         });
@@ -794,8 +791,8 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.DataObjects.DbPetImage", b =>
                 {
                     b.HasOne("DataAccess.DataObjects.DbPet", "Pet")
-                        .WithOne("Image")
-                        .HasForeignKey("DataAccess.DataObjects.DbPetImage", "PetID")
+                        .WithMany("Images")
+                        .HasForeignKey("PetID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -890,8 +887,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.DataObjects.DbPet", b =>
                 {
-                    b.Navigation("Image")
-                        .IsRequired();
+                    b.Navigation("Images");
 
                     b.Navigation("Jobs");
                 });

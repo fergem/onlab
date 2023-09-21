@@ -1,4 +1,4 @@
-import { DatesRangeValue, DateValue } from "@mantine/dates";
+import { DateValue } from "@mantine/dates";
 import { Day, Frequency, JobFilter, JobType } from "../models/Job";
 import { PetSpecies } from "../models/Pet";
 
@@ -30,19 +30,24 @@ export default function useJobFilter({
 
   const handleSelectRepeatable = (value: string) => {
     const realValue = value as Frequency;
-    if (realValue === Frequency.Once) {
-      setJobFilter({ ...jobFilter, repeated: false, days: [] });
-    } else if (realValue === Frequency.Repeat) {
-      setJobFilter({ ...jobFilter, repeated: true });
+    switch (realValue) {
+      case Frequency.Once:
+        setJobFilter({ ...jobFilter, repeated: false, days: [] });
+        break;
+      case Frequency.Repeat:
+        setJobFilter({ ...jobFilter, repeated: true });
+        break;
+      default: // should not happen
+        break;
     }
   };
 
-  const handleSelectDate = (value: DatesRangeValue | DateValue) => {
-    if (Array.isArray(value) && value.length === 2 && value[0] && value[1]) {
-      setJobFilter({ ...jobFilter, startDate: value[0], endDate: value[1] });
-    } else if (!Array.isArray(value) && value) {
-      setJobFilter({ ...jobFilter, startDate: value, endDate: undefined });
-    }
+  const handleSelectStartDate = (value: DateValue) => {
+    if (value) setJobFilter({ ...jobFilter, startDate: value });
+  };
+
+  const handleSelectEndDate = (value: DateValue) => {
+    setJobFilter({ ...jobFilter, endDate: value ?? undefined });
   };
 
   return {
@@ -50,6 +55,7 @@ export default function useJobFilter({
     handleSelectJobType,
     handleSelectRepeatable,
     handleSelectPetSpecies,
-    handleSelectDate,
+    handleSelectStartDate,
+    handleSelectEndDate,
   };
 }

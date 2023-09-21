@@ -12,7 +12,6 @@ namespace DataAccess.DataObjects
     {
         public DbJob() {
             Pets = new HashSet<DbPetJob>();
-           // Days = new HashSet<DbJobDay>();
         }
         public int ID { get; set; }
         public required string Location { get; set; }
@@ -24,7 +23,7 @@ namespace DataAccess.DataObjects
         public required Status Status { get; set; }
         public required JobType Type { get; set; }
 
-        public string? Days { get; set; }
+        public ICollection<DaysOfWeek>? Days { get; set; }
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 

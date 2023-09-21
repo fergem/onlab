@@ -43,8 +43,9 @@ export default function ProfilePicture() {
       <Image
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
-        fit="contain"
         radius="md"
+        width="15vw"
+        height="15vw"
         src={
           user?.picture
             ? `data:image/png;base64,${user.picture}`
@@ -64,12 +65,11 @@ export default function ProfilePicture() {
               ...styles,
               position: "absolute",
               bottom: 0,
-              left: 0,
-              right: 0,
             }}
             onMouseOver={handleMouseOverFileInput}
             onMouseLeave={handleMouseLeaveFileInput}
             radius="md"
+            w="15vw"
             placeholder="Pick file"
             onChange={saveFileSelected}
             icon={<IconUpload size={rem(14)} />}

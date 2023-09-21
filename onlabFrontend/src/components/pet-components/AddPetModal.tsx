@@ -12,10 +12,11 @@ export default function AddPetModal({ opened, onClose }: IPropsPetModal) {
   const { postPet } = usePostUserPet();
 
   const handleCreatePet = (petToInsert: PetInsertModel) => {
+    console.log("asd");
     postPet(petToInsert);
     onClose();
   };
-
+  console.log(opened);
   return (
     <Modal
       opened={opened}

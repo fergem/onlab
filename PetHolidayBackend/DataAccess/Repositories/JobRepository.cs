@@ -44,7 +44,7 @@ namespace DataAccess.Repositories
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Status = Status.Available,
-                Days = job.Days is not null ? string.Join(",", job.Days.Select(p => p.ToString()).ToArray()) : null,
+                Days = job.Days,
                 Title = job.Title,
                 Type = job.Type,
             };
@@ -65,76 +65,38 @@ namespace DataAccess.Repositories
             IQueryable<DbJob> query = dbcontext.Jobs
                     .Include(s => s.OwnerUser)
                     .Include(s => s.PetSitterUser)
-                    .Include(s => s.Pets);
+                    .Include(s => s.Pets)
+                    .Where(s => s.Repeated == filter.Repeated);
 
 
-            //Filtering továbbfejesztése vagy lecserélése
-            switch(filter.Type)
+            //Filter by type
+            switch (filter.Type)
             {
-                // itt szűrés majd tovább szűrés
+                case JobType.Boarding:
+                    query = query.Where(s => s.Type == JobType.Boarding);
+                    break;
+                case JobType.Walking:
+                    query = query.Where(s => s.Type == JobType.Walking);
+                    break;
+                case JobType.Sitting:
+                    query = query.Where(s => s.Type == JobType.Sitting);
+                    break;
+                case JobType.Visit:
+                    query = query.Where(s => s.Type == JobType.Visit);
+                    break;
+                default:
+                    break;
             }
 
-            if (!filter.Repeated)
-            {
-                query = query
-                    .Where(job =>
-                        ((job.Pets != null && job.Pets.Count > 0) && job.Pets.All(s => filter.Species.Contains(s.Pet.Species))) &&
-                        job.StartDate > filter.StartDate &&
-                        ((filter.Type == JobType.Sitting && filter.Type == JobType.Boarding) ? job.EndDate < filter.EndDate : true) &&
-                        job.Type == filter.Type
-                    );
-            }
-            else
-            {
-                query = query
-                    .Where(job =>
-                        ((job.Pets != null && job.Pets.Count > 0) && job.Pets.All(s => filter.Species.Contains(s.Pet.Species))) &&
-                        (filter.Days == null || job.Days != null && filter.Days.Any(fd => ModelMapper.ToJobDays(job.Days).Contains(fd))) &&
-                        job.StartDate > filter.StartDate &&
-                        job.Type == filter.Type
-                    );
-            }
+           if(filter.Species is not null && filter.Species.Count > 0) query = query.Where(job => job.Pets.Any(petJob => filter.Species.Contains(petJob.Pet.Species)));
+           // if (filter.Repeated && filter.Days is not null) query = query.Where(job => job.Days.ToList().Any(day => filter.Days.ToList().Contains(day)));
 
-            return await query.Select(s => ModelMapper.ToJobModel(s)).ToListAsync();
-        }
- 
-        private bool getPredicate(DbJob job, JobFilter filter)
-        {
-            if (!filter.Repeated)
-            {
-                var speciesInJob = job.Pets.Select(s =>  s!.Pet!.Species ).Distinct().ToList();
-                var jobContainsSpecies = speciesInJob.Intersect(filter.Species ?? speciesInJob);
+           var asd = await query.ToListAsync();
 
-                if (jobContainsSpecies is not null && job.StartDate > filter.StartDate && job.EndDate < filter.EndDate && job.Type == filter.Type)
-                    return true;
-            }
-            else
-            {
-                var speciesInJob = job.Pets.Select(s => s!.Pet!.Species).Distinct().ToList();
-                var jobContainsSpecies = speciesInJob.Intersect(filter.Species ?? speciesInJob);
-                var jobArray = ModelMapper.ToJobDays(job.Days)?.Intersect(filter.Days ?? Enum.GetValues(typeof(Days)).Cast<Days>().ToList());
+           if (filter.Repeated && filter.Days is not null) asd = asd.Where(s => s.Days.Any(day => filter.Days.Contains(day))).ToList();
 
-                if(jobArray is not null && job.StartDate > filter.StartDate)
-                    return true;
-            }
 
-            //should not happen
-            return false;
-        }
-
-        public IQueryable<Job> ListASd(JobFilter filter)
-        {
-            IQueryable<DbJob> query = dbcontext.Jobs
-                .Include(s => s.OwnerUser)
-                .Include(s => s.PetSitterUser)
-                .Include(s => s.Pets);
-
-            if (!filter.Repeated)
-            {
-                query = query.Where(job => getPredicate(job, filter));
-            }
-
-            return query.Select(s => ModelMapper.ToJobModel(s));
+            return asd.Select(s => ModelMapper.ToJobModel(s)).ToList();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters)

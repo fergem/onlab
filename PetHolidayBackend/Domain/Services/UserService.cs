@@ -58,9 +58,9 @@ namespace Domain.Services
             return await petRepository.Update(pet);
         }
 
-        public async Task<Pet> AddPetImage(int ID, byte[] file)
+        public async Task<Pet> AddPetImages(int ID, List<byte[]> files)
         {
-            return await petRepository.AddImage(ID, file);
+            return await petRepository.AddImages(ID, files);
         }
 
         public async Task DeletePet(int ID)

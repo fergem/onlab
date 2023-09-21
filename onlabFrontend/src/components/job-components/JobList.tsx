@@ -26,9 +26,7 @@ export default function JobList({
       isEmpty={jobs.length === 0}
     >
       <Stack justify="center">
-        {jobs.map((x) => (
-          <JobCard key={x.id} job={x} />
-        ))}
+        {jobs.length > 0 && jobs.map((x) => <JobCard key={x.id} job={x} />)}
       </Stack>
     </LoadingBoundary>
   );

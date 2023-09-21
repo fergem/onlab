@@ -1,32 +1,44 @@
-import { Center, FileInput, Image, Paper } from "@mantine/core";
+import { Carousel } from "@mantine/carousel";
+import { FileInput, Image } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import { basePetPicture } from "../../utility/constants";
 
 interface IProps {
-  petImage?: File;
-  setPetimage(image: File): void;
+  petImage?: File[];
+  setPetImageFiles(image: File[]): void;
 }
-export default function PetImageSelect({ petImage, setPetimage }: IProps) {
-  const upload = (file: File) => {
-    setPetimage(file);
+export default function PetImageSelect({ petImage, setPetImageFiles }: IProps) {
+  const upload = (files: File[]) => {
+    setPetImageFiles(files);
   };
-  console.log(petImage);
 
+  const withIndicatorAndControls = !!petImage && petImage.length > 1;
   return (
     <>
-      {petImage && (
-        <Center>
-          <Paper shadow="xs" p="md">
-            <Image
-              src={URL.createObjectURL(petImage)}
-              fit="contain"
-              radius="md"
-              width="170px"
-              alt="Your pets image"
-            />
-          </Paper>
-        </Center>
+      {!!petImage && petImage.length > 0 && (
+        <Carousel
+          w="17vw"
+          height="17vw"
+          mx="auto"
+          withIndicators={withIndicatorAndControls}
+          withControls={withIndicatorAndControls}
+        >
+          {petImage?.map((s) => (
+            <Carousel.Slide key={s.name}>
+              <Image
+                src={s ? URL.createObjectURL(s) : basePetPicture}
+                radius="md"
+                width="17vw"
+                height="17vw"
+                alt={s.name}
+              />
+            </Carousel.Slide>
+          ))}
+        </Carousel>
       )}
+
       <FileInput
+        multiple
         onChange={upload}
         placeholder="Select image"
         label="Image"

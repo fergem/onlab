@@ -183,9 +183,9 @@ namespace PetHolidayWebApi.Controllers
             }
         }
         [HttpGet("asd")]
-        public IReadOnlyList<Days> GetDay()
+        public IReadOnlyList<DaysOfWeek> GetDay()
         {
-            return new List<Days>() { Days.Sun, Days.Mon };
+            return new List<DaysOfWeek>() { DaysOfWeek.Sun, DaysOfWeek.Mon };
         }
     }
 }

@@ -22,6 +22,17 @@ export default interface Job {
   title?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const JobFunctions = {
+  deserializeJobFromStorage(localStorageValue: string) {
+    const value = JSON.parse(localStorageValue) as JobFilter;
+    const startDate = new Date(value.startDate);
+    const endDate = value.endDate ? new Date(value.endDate) : undefined;
+
+    return { ...value, startDate, endDate };
+  },
+};
+
 export enum Day {
   Mon = "Mon",
   Tue = "Tue",
@@ -59,14 +70,6 @@ export interface JobWithPetIDs extends Job {
   petIDs: number[];
 }
 
-export interface CreateJobModel {
-  hours: number;
-  location: string;
-  description: string;
-  minRequiredExperience: number;
-  payment: number;
-}
-
 export interface JobHoursRange {
   minHours?: number;
   maxHours?: number;
@@ -100,6 +103,22 @@ export const DefaultJobFilter: JobFilter = {
 export enum Frequency {
   Once = "Once",
   Repeat = "Repeat",
+}
+
+export interface CreateJobModel {
+  hours: number;
+  location: string;
+  description: string;
+  minRequiredExperience: number;
+  payment: number;
+
+  title: string;
+
+  repeated: boolean;
+  days?: Day[];
+  type: JobType;
+  startDate: Date;
+  endDate?: Date;
 }
 
 export const JobValidation = {
