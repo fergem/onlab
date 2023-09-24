@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import Job, { JobFilter, JobWithPetIDs } from "../models/Job";
+import Job, { CreateJobModel, JobFilter } from "../models/Job";
 import JobService from "../services/JobService";
 import useNotification from "./useNotification";
 
@@ -235,22 +235,8 @@ export const usePostJobs = () => {
   const [job, setJob] = useState<Job>();
   const { mutate: postJob, isError: error } = useMutation(
     "mutate-postJob",
-    async ({
-      hours,
-      location,
-      description,
-      payment,
-      minRequiredExperience,
-      petIDs,
-    }: JobWithPetIDs) => {
-      return JobService.createJob({
-        hours,
-        location,
-        description,
-        payment,
-        minRequiredExperience,
-        petIDs,
-      } as JobWithPetIDs);
+    async (jobModel: CreateJobModel) => {
+      return JobService.createJob(jobModel);
     },
     {
       onSuccess: (res) => {

@@ -1,27 +1,6 @@
 import Pet, { PetSpecies } from "./Pet";
 import { UserInformation } from "./User";
 
-export default interface Job {
-  id: number;
-  hours?: number;
-  location?: string;
-  description?: string;
-  payment?: number;
-  ownerUserInformation?: UserInformation;
-  petSitterUserInformation?: UserInformation;
-  minRequiredExperience?: number;
-  status?: Status;
-
-  pets?: Pet[];
-
-  repeated?: boolean;
-  days?: Day[];
-  type?: JobType;
-  startDate?: Date;
-  endDate?: Date;
-  title?: string;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const JobFunctions = {
   deserializeJobFromStorage(localStorageValue: string) {
@@ -75,15 +54,6 @@ export interface JobHoursRange {
   maxHours?: number;
 }
 
-export interface JobFilter {
-  type: JobType;
-  species?: PetSpecies[];
-  startDate: Date;
-  endDate?: Date;
-  repeated: boolean;
-  days?: Day[];
-}
-
 const getDatePlusThreeDays = () => {
   const today = new Date();
   const newDate = new Date(today);
@@ -105,21 +75,39 @@ export enum Frequency {
   Repeat = "Repeat",
 }
 
-export interface CreateJobModel {
-  hours: number;
+export interface CreateJobDetailsModel {
   location: string;
   description: string;
   minRequiredExperience: number;
   payment: number;
 
   title: string;
+}
 
+export interface JobFilter {
+  type: JobType;
+  species?: PetSpecies[];
+  startDate: Date;
+  endDate?: Date;
+  repeated: boolean;
+  days?: Day[];
+}
+
+export interface CreateJobServiceModel {
   repeated: boolean;
   days?: Day[];
   type: JobType;
   startDate: Date;
   endDate?: Date;
 }
+
+export interface CreateJobPetSelectorModel {
+  petIDs: number[];
+}
+
+export type CreateJobModel = CreateJobDetailsModel &
+  CreateJobServiceModel &
+  CreateJobPetSelectorModel;
 
 export const JobValidation = {
   validateLocation(val: string) {
@@ -129,4 +117,38 @@ export const JobValidation = {
   validateDescription(val: string) {
     if (val.length === 0) return "Description is required";
   },
+};
+
+export default interface Job {
+  id: number;
+  location?: string;
+  description?: string;
+  payment?: number;
+  ownerUserInformation?: UserInformation;
+  petSitterUserInformation?: UserInformation;
+  minRequiredExperience?: number;
+  status?: Status;
+
+  pets?: Pet[];
+
+  repeated?: boolean;
+  days?: Day[];
+  type?: JobType;
+  startDate?: Date;
+  endDate?: Date;
+  title?: string;
+}
+
+export const Defaultjob: CreateJobModel = {
+  petIDs: [],
+  type: JobType.Sitting,
+  startDate: new Date(),
+  endDate: undefined,
+  repeated: false,
+  days: undefined,
+  location: "",
+  description: "",
+  minRequiredExperience: 0,
+  payment: 0,
+  title: "",
 };

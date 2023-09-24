@@ -34,7 +34,7 @@ namespace DataAccess.Repositories
         {
             var insertJob = new DbJob()
             {
-                Hours = job.Hours,
+                Hours = 0,
                 Location = job.Location,
                 Description = job.Description,
                 OwnerUserID = userID,
@@ -66,7 +66,8 @@ namespace DataAccess.Repositories
                     .Include(s => s.OwnerUser)
                     .Include(s => s.PetSitterUser)
                     .Include(s => s.Pets)
-                    .Where(s => s.Repeated == filter.Repeated);
+                    .Where(s => s.Repeated == filter.Repeated)
+                    .Where(s => s.Status == Status.Available);
 
 
             //Filter by type

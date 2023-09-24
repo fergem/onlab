@@ -1,5 +1,5 @@
 import axios from "axios";
-import Job, { JobFilter, JobWithPetIDs } from "../models/Job";
+import Job, { CreateJobModel, JobFilter } from "../models/Job";
 
 const get = async (id?: string) => {
   const response = await axios.get<Job>(`/api/jobs/${id}`);
@@ -31,22 +31,8 @@ const listApprovals = async () => {
   return response.data;
 };
 
-const createJob = async ({
-  hours,
-  location,
-  description,
-  payment,
-  minRequiredExperience,
-  petIDs,
-}: JobWithPetIDs) => {
-  const response = await axios.post<Job>("/api/jobs", {
-    hours,
-    location,
-    description,
-    payment,
-    minRequiredExperience,
-    petIDs,
-  });
+const createJob = async (jobModel: CreateJobModel) => {
+  const response = await axios.post<Job>("/api/jobs", jobModel);
   return response.data;
 };
 

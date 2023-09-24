@@ -1,10 +1,16 @@
 import { DateValue } from "@mantine/dates";
-import { Day, Frequency, JobFilter, JobType } from "../models/Job";
+import {
+  CreateJobServiceModel,
+  Day,
+  Frequency,
+  JobFilter,
+  JobType,
+} from "../models/Job";
 import { PetSpecies } from "../models/Pet";
 
 interface IPropsJobFilterHooks {
-  jobFilter: JobFilter;
-  setJobFilter(jobFilter: JobFilter): void;
+  jobFilter: JobFilter | CreateJobServiceModel;
+  setJobFilter(jobFilter: JobFilter | CreateJobServiceModel): void;
 }
 
 export default function useJobFilter({

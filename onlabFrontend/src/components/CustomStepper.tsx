@@ -4,22 +4,30 @@ import React, { useState } from "react";
 export interface StepPropsWithContent {
   title: string;
   content: React.ReactNode;
-  stepDisabled: boolean;
+  stepDisabled?: boolean;
+  onNext?: () => void;
   onFinish?: () => void;
 }
 export interface IProps {
   steps: StepPropsWithContent[];
+  onFinal: () => void;
 }
 
-export default function CustomStepper({ steps }: IProps) {
+export default function CustomStepper({ steps, onFinal }: IProps) {
   const [activeStep, setActiveStep] = useState(0);
-  const nextStep = () =>
+  const nextStep = () => {
+    steps[activeStep].onNext?.();
     setActiveStep((current) =>
       current < steps.length ? current + 1 : current
     );
+  };
   const prevStep = () =>
     setActiveStep((current) => (current > 0 ? current - 1 : current));
 
+  const handleOnFinish = () => {
+    steps[activeStep].onFinish?.();
+    onFinal();
+  };
   return (
     <Stack spacing="xs">
       <Stepper
@@ -46,8 +54,8 @@ export default function CustomStepper({ steps }: IProps) {
           </Button>
         ) : (
           <Button
-            onClick={steps[activeStep].onFinish}
-            disabled={steps[activeStep].stepDisabled}
+            onClick={handleOnFinish}
+            disabled={steps[activeStep].stepDisabled ?? false}
           >
             Finish
           </Button>

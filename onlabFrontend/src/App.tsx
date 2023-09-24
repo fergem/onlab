@@ -1,8 +1,8 @@
-import { AppShell, Header } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthVerify from "./components/AuthVerify";
-import Navbar from "./components/Navbar";
+import HeaderPetHoliday from "./components/HeaderPetHoliday";
 import JobDetail from "./components/job-components/JobDetail";
 import AuthContext from "./context/AuthContext";
 import User from "./models/User";
@@ -20,13 +20,7 @@ function App() {
   const val = useMemo(() => ({ user, setUser }), [user]);
   return (
     <AuthContext.Provider value={val}>
-      <AppShell
-        header={
-          <Header height="75px">
-            <Navbar />
-          </Header>
-        }
-      >
+      <AppShell navbarOffsetBreakpoint="sm" header={<HeaderPetHoliday />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/jobs" element={<Jobs />} />

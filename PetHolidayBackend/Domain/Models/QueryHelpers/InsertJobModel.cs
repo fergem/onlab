@@ -9,7 +9,6 @@ namespace Domain.Models.QueryHelpers
     public class InsertJobModel
     {
         public required string Location { get; set; }
-        public required int Hours { get; set; }
         public required string Description { get; set; }
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }

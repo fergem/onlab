@@ -42,7 +42,6 @@ function JobDetail() {
   const handleFinishJob = () => {
     if (job) finishJob(job.id);
   };
-  console.log(job);
   return (
     <Stack align="center" justify="center">
       <LoadingBoundary loading={loading} error={error} refetch={getJob}>
@@ -95,7 +94,6 @@ function JobDetail() {
                   direction="row"
                   wrap="wrap"
                 >
-                  <Text>{job?.hours} hours of work</Text>
                   <Text>{job?.payment}$/hours</Text>
                   <Title order={5}>Location: </Title>
                   <Text>{job?.location ?? "No"}</Text>
@@ -152,8 +150,8 @@ export function PetDescription({ pet }: IPetsProps) {
           height="10vw"
           width="10vw"
           src={
-            pet.image
-              ? `data:image/png;base64,${pet.image.picture}`
+            pet.images
+              ? `data:image/png;base64,${pet.images[0]}`
               : basePetPicture
           }
         />

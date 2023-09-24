@@ -78,12 +78,12 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> InsertJob([FromBody] InsertJobModel job)
+        public async Task<ActionResult<int>> InsertJob([FromBody] InsertJobModel jobModel)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
-            var created = await jobService.Insert(job, userID);
+            var created = await jobService.Insert(jobModel, userID);
             return CreatedAtAction(nameof(FindById), new { jobID = created }, created);
         }
 

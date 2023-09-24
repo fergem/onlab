@@ -1,36 +1,34 @@
 import { Grid, NumberInput, Stack, Textarea, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
-import { CreateJobModel } from "../../models/Job";
+import { CreateJobDetailsModel } from "../../models/Job";
 
-export type CreateJobForm = UseFormReturnType<
-  CreateJobModel,
-  (values: CreateJobModel) => CreateJobModel
+export type CreateJobDetailsFormType = UseFormReturnType<
+  CreateJobDetailsModel,
+  (values: CreateJobDetailsModel) => CreateJobDetailsModel
 >;
 
 interface IProps {
-  form: CreateJobForm;
+  form: CreateJobDetailsFormType;
 }
 
 export default function CreateJobDetailsForm({ form }: IProps) {
   return (
     <form>
       <Stack justify="space-evenly">
-        <Grid>
-          <Grid.Col span={4}>
-            <NumberInput
-              label="Hours"
-              withAsterisk
-              {...form.getInputProps("hours")}
-            />
-          </Grid.Col>
-          <Grid.Col span={4}>
+        <TextInput
+          label="Title"
+          withAsterisk
+          {...form.getInputProps("title")}
+        />
+        <Grid align="center" justify="center">
+          <Grid.Col span={5}>
             <NumberInput
               label="Min experience"
               withAsterisk
               {...form.getInputProps("minRequiredExperience")}
             />
           </Grid.Col>
-          <Grid.Col span={4}>
+          <Grid.Col span={5}>
             <NumberInput
               label="Payment by hours"
               withAsterisk
