@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace DataAccess.Repositories
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Status = Status.Available,
-                Days = job.Days,
+                Days = !job.Days.IsNullOrEmpty() ? job.Days : Enum.GetValues<DaysOfWeek>(),
                 Title = job.Title,
                 Type = job.Type,
             };

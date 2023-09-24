@@ -30,7 +30,7 @@ export function PetGrid({ pets }: IPropsPetGrid) {
   };
 
   return (
-    <>
+    <Stack align="center">
       {!selectedPet && (
         <Grid justify="center">
           {pets?.map((x) => (
@@ -45,7 +45,7 @@ export function PetGrid({ pets }: IPropsPetGrid) {
         </Grid>
       )}
       {selectedPet && <EditPet pet={selectedPet} back={handleDeselectPet} />}
-    </>
+    </Stack>
   );
 }
 

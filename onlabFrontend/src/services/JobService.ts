@@ -32,7 +32,7 @@ const listApprovals = async () => {
 };
 
 const createJob = async (jobModel: CreateJobModel) => {
-  const response = await axios.post<Job>("/api/jobs", jobModel);
+  const response = await axios.post("/api/jobs", jobModel);
   return response.data;
 };
 

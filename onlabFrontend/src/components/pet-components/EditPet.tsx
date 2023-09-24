@@ -13,7 +13,7 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
   const withIndicatorAndControls = !!pet.images && pet.images.length > 1;
 
   return (
-    <Paper radius="md" shadow="sm" withBorder>
+    <Paper radius="md" shadow="sm" withBorder w="50%">
       <Tooltip label="Back">
         <ActionIcon
           variant="subtle"
@@ -26,10 +26,10 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
           <IconArrowBack />
         </ActionIcon>
       </Tooltip>
-      <Stack align="center">
+      <Stack align="center" justify="space-evenly" spacing={5}>
         <Carousel
-          w="17vw"
-          height="17vw"
+          w="12vw"
+          height="12vw"
           mx="auto"
           withIndicators={withIndicatorAndControls}
           withControls={withIndicatorAndControls}
@@ -40,8 +40,8 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
                 <Image
                   src={`data:image/png;base64,${s}`}
                   radius="md"
-                  width="17vw"
-                  height="17vw"
+                  width="12vw"
+                  height="12vw"
                   alt={pet.name}
                 />
               </Carousel.Slide>
@@ -50,15 +50,18 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
             <Image
               src={basePetPicture}
               radius="md"
-              width="17vw"
-              height="17vw"
+              width="12vw"
+              height="12vw"
               alt={pet.name}
             />
           )}
         </Carousel>
-        <Text>{pet.name}</Text>
-        <Text>{pet.age}</Text>
-        <Text>{pet.description}</Text>
+        <Text fw="bold">
+          {pet.name} ({pet.age} years)
+        </Text>
+        <Text p="lg" pt={0}>
+          {pet.description}
+        </Text>
       </Stack>
     </Paper>
   );

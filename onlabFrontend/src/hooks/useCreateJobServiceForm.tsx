@@ -21,10 +21,11 @@ export default function useCreateJobServiceForm({
 
   const handleUpdateServiceModel = (model: CreateJobServiceModel) => {
     setServiceModel(model);
+    handleSetNewJob({ ...newJob, ...model });
   };
 
   const onFinish = () => {
-    handleSetNewJob({ ...newJob, ...serviceModel });
+    console.log({ ...newJob, ...serviceModel });
   };
 
   return {

@@ -67,7 +67,7 @@ export function JobCard({ job }: IPropsJobCard) {
             <Stack justify="top">
               <Title order={3}>
                 {job?.ownerUserInformation?.id === user?.id
-                  ? "Your job"
+                  ? `${job?.title} (Your job)`
                   : job?.title}
               </Title>
               <Text size="sm">${job.payment}/hours</Text>

@@ -232,19 +232,21 @@ export const useProgressJob = () => {
 };
 
 export const usePostJobs = () => {
-  const [job, setJob] = useState<Job>();
-  const { mutate: postJob, isError: error } = useMutation(
+  const queryClient = useQueryClient();
+  const { mutate: postJob } = useMutation(
     "mutate-postJob",
     async (jobModel: CreateJobModel) => {
       return JobService.createJob(jobModel);
     },
     {
-      onSuccess: (res) => {
-        setJob(res);
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["query-jobs", "query-postedJobs", "query-approvals"],
+        });
       },
     }
   );
-  return { job, error, postJob };
+  return { postJob };
 };
 
 export const useGetUserUnderTookJobs = () => {

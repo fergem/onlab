@@ -1,9 +1,9 @@
 import { Chip, Group, Stack, Text } from "@mantine/core";
 import { IconCalendarEvent, IconCalendarRepeat } from "@tabler/icons-react";
-import { JobType } from "../../models/Job";
+import { Frequency, JobType } from "../../models/Job";
 import { IChipFrequencyProps } from "./JobHomeFilter";
 
-export function ChipFrequency({
+export default function ChipFrequency({
   jobType,
   handleSetRepeatable,
 }: IChipFrequencyProps) {

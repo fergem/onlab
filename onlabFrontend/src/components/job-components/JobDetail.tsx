@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Flex,
   Grid,
   Group,
   Image,
@@ -20,7 +19,7 @@ import {
   IconPaw,
   IconX,
 } from "@tabler/icons-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
 import { useGetJob, useProgressJob } from "../../hooks/JobHooks";
 import { Day, JobType, Status } from "../../models/Job";
@@ -34,9 +33,13 @@ function JobDetail() {
   const { job, error, loading, getJob } = useGetJob(id);
   const { takeJob, finishJob } = useProgressJob();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleTakeJob = () => {
-    if (job) takeJob(job.id);
+    if (job) {
+      takeJob(job.id);
+      navigate("/postedjobs");
+    }
   };
 
   const handleFinishJob = () => {
@@ -52,8 +55,8 @@ function JobDetail() {
                 <Group>
                   <Image
                     radius="sm"
-                    width="5vw"
-                    height="5vw"
+                    width="7vw"
+                    height="7vw"
                     src={
                       job?.ownerUserInformation?.picture
                         ? `data:image/png;base64,${job?.ownerUserInformation.picture}`
@@ -69,37 +72,39 @@ function JobDetail() {
                   </Box>
                 </Group>
                 <JobTypeBadge jobType={job?.type} />
-                <Box>
-                  <Text fz="sm" fw={500}>
-                    Date
-                  </Text>
-                  <Text>
-                    {
-                      new Date(job?.startDate ?? "")
-                        .toLocaleString()
-                        .split(",")[0]
-                    }
-                    {job?.endDate
-                      ? `-${
-                          new Date(job?.endDate).toLocaleString().split(",")[0]
-                        }`
-                      : ""}
-                  </Text>
-                </Box>
+                <Group position="center" align="center">
+                  <Box>
+                    <Text fw={700}>Start date</Text>
+                    <Text>
+                      {
+                        new Date(job?.startDate ?? "")
+                          .toLocaleString()
+                          .split(",")[0]
+                      }
+                    </Text>
+                  </Box>
+                  {job?.endDate && (
+                    <Box>
+                      <Text fw={700}>End date</Text>
+                      <Text>
+                        {new Date(job?.endDate).toLocaleString().split(",")[0]}
+                      </Text>
+                    </Box>
+                  )}
+                  <Box>
+                    <Text fw={700}>Payment:</Text>
+                    <Text>{job?.payment}$/hours</Text>
+                  </Box>
+                  <Box>
+                    <Text>
+                      <Text fw={700}>Min. experience: </Text>
+                      {job?.minRequiredExperience ?? "No"} years
+                    </Text>
+                  </Box>
+                </Group>
+
                 {job?.repeated && <ChipDays days={job?.days} />}
-                <Flex
-                  gap="md"
-                  justify="center"
-                  align="center"
-                  direction="row"
-                  wrap="wrap"
-                >
-                  <Text>{job?.payment}$/hours</Text>
-                  <Title order={5}>Location: </Title>
-                  <Text>{job?.location ?? "No"}</Text>
-                  <Title order={5}>Min. experience: </Title>
-                  <Text>{job?.minRequiredExperience ?? "No"} years</Text>
-                </Flex>
+
                 {user?.id !== job?.ownerUserInformation?.id &&
                   job?.status === Status.Available && (
                     <Button onClick={handleTakeJob}>Take Job</Button>
@@ -147,8 +152,8 @@ export function PetDescription({ pet }: IPetsProps) {
       <Stack align="center" justify="center" p="15px">
         <Image
           radius="sm"
-          height="10vw"
-          width="10vw"
+          height="5vw"
+          width="5vw"
           src={
             pet.images
               ? `data:image/png;base64,${pet.images[0]}`
@@ -206,7 +211,6 @@ export function ChipDays({ days }: IBadgeDaysProps) {
 interface IBadgeJobType {
   jobType?: JobType;
 }
-
 export function JobTypeBadge({ jobType }: IBadgeJobType) {
   switch (jobType) {
     case JobType.Boarding:
