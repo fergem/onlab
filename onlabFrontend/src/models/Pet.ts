@@ -1,7 +1,6 @@
 export default interface Pet {
   id: number;
   name: string;
-  description: string;
   species: PetSpecies;
   age: number;
   images?: string[];
@@ -9,7 +8,6 @@ export default interface Pet {
 
 export interface PetInsertModel {
   name: string;
-  description: string;
   species: PetSpecies;
   age: number;
   images?: File[];
@@ -18,7 +16,6 @@ export interface PetInsertModel {
 export interface PetUpdateModel {
   id: number;
   name: string;
-  description: string;
   species: PetSpecies;
   age: number;
   picture?: File;

@@ -72,8 +72,8 @@ namespace PetHolidayWebApi.Controllers
         //}
 
         [Authorize]
-        [HttpDelete("/pets/{petID}")]
-        public async Task<ActionResult<User>> FindPetByID([FromRoute] int petID)
+        [HttpDelete("deletepet/{petID}")]
+        public async Task<ActionResult<User>> Deletepet([FromRoute] int petID)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -112,7 +112,7 @@ namespace PetHolidayWebApi.Controllers
                 BadRequest();
             
             var created = await userService.InsertPet(pet, userID);
-            return CreatedAtAction(nameof(FindPetByID), new { petID = created }, created);
+            return CreatedAtAction(nameof(InsertPet), new { petID = created }, created);
         }
 
         [Authorize]
@@ -120,7 +120,7 @@ namespace PetHolidayWebApi.Controllers
         public async Task<ActionResult<Pet>> UpdatePet([FromBody] Pet pet)
         {
             var updatedPet = await userService.UpdatePet(pet);
-            return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+            return CreatedAtAction(nameof(UpdatePet), new { petID = updatedPet.ID }, updatedPet);
         }
 
         [Authorize]
@@ -140,14 +140,14 @@ namespace PetHolidayWebApi.Controllers
                     }
                 }
                 var updatedPet = await userService.AddPetImages(petID, files);
-                return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                return CreatedAtAction(nameof(AddPetImage), new { petID = updatedPet.ID }, updatedPet);
             }
             return BadRequest();
         }
 
         [Authorize]
         [HttpPost("addprofilepicture")]
-        public async Task<ActionResult<Pet>> AddProfilePicture([FromForm] IFormFile file)
+        public async Task<ActionResult<UserInformation>> AddProfilePicture([FromForm] IFormFile file)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -159,10 +159,32 @@ namespace PetHolidayWebApi.Controllers
                     await file.CopyToAsync(stream);
                     var fileData = stream.ToArray();
                     var updatedPet = await userService.AddProfilePicture(userID, fileData);
-                    return CreatedAtAction(nameof(FindPetByID), new { petID = updatedPet.ID }, updatedPet);
+                    return CreatedAtAction(nameof(AddProfilePicture), updatedPet);
                 }
             }
             return BadRequest();
+        }
+
+        [Authorize]
+        [HttpPatch("updateprofile")]
+        public async Task<ActionResult<User>> UpdateProfile(UpdateProfileModel updateProfileModel)
+        {
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            var updatedUser = await userService.UpdateProfile(userID, updateProfileModel);
+            return Ok(updatedUser);
+        }
+
+        [Authorize]
+        [HttpPatch("changepassword")]
+        public async Task<ActionResult<User>> ChangePassword(ChangePasswordModel model)
+        {
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+            if (!foundUser)
+                BadRequest();
+            var updatedUser = await userService.ChangePassword(userID, model);
+            return Ok(updatedUser);
         }
     }
 }

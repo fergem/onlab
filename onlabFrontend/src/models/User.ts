@@ -2,20 +2,29 @@ import OwnerProfile from "./OwnerProfile";
 import Pet from "./Pet";
 
 export default interface User extends UserInformation {
+  id: number;
+  userName?: string;
   pets?: Pet[];
   bearer?: string;
   ownerProfile?: OwnerProfile;
+  picture?: string;
 }
 
 export interface UserInformation {
-  id: number;
   firstName?: string;
   lastName?: string;
-  userName?: string;
   age?: number;
   email?: string;
   location?: string;
-  picture?: BinaryData[];
+  phoneNumber?: string;
+}
+
+export interface UpdateUserModel {
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  email?: string;
+  location?: string;
 }
 
 export interface RegisterModel {
@@ -44,5 +53,9 @@ export const UserValidation = {
 
   emailValidation(val: string) {
     return /^\S+@\S+$/.test(val) ? null : "Invalid email";
+  },
+
+  passwordSameValidation(val1: string, val2: string) {
+    if (val2 !== val1) return "Passwords are not identical!";
   },
 };

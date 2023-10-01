@@ -28,12 +28,14 @@ export enum JobType {
   Walking = "Walking",
   Visit = "Visit",
 }
+
 export enum Status {
   Empty = "Empty",
   Available = "Available",
-  WaitingForApproval = "WaitingForApproval",
-  Inprogress = "Inprogress",
+  Approving = "Approving",
+  Upcoming = "Upcoming",
   Done = "Done",
+  Canceled = "Canceled ",
 }
 
 export function getJobTypes() {
@@ -83,6 +85,20 @@ export interface CreateJobDetailsModel {
 
   title: string;
 }
+
+export const JobFilterParticipantData = [
+  { value: Status.Approving, label: Status.Approving },
+  { value: Status.Upcoming, label: Status.Upcoming },
+  { value: Status.Done, label: Status.Done },
+  { value: Status.Canceled, label: Status.Canceled },
+];
+
+export interface JobFilterParticipant {
+  status: Status;
+}
+export const DefaultJobFilterParticipant = {
+  status: Status.Upcoming,
+};
 
 export interface JobFilter {
   type: JobType;

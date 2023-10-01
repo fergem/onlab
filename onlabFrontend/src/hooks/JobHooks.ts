@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import Job, { CreateJobModel, JobFilter } from "../models/Job";
+import Job, {
+  CreateJobModel,
+  JobFilter,
+  JobFilterParticipant,
+} from "../models/Job";
 import JobService from "../services/JobService";
 import useNotification from "./useNotification";
 
@@ -78,7 +82,7 @@ export const useGetApprovals = () => {
   };
 };
 
-export const useGetUserPostedJobs = (jobParameters: JobFilter) => {
+export const useGetUserPostedJobs = (filter: JobFilterParticipant) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const {
     isLoading: loading,
@@ -87,7 +91,7 @@ export const useGetUserPostedJobs = (jobParameters: JobFilter) => {
   } = useQuery<Job[], Error>(
     "query-postedJobs",
     async () => {
-      const data = JobService.listUsersPostedJobs(jobParameters);
+      const data = JobService.listUsersPostedJobs(filter);
       return data;
     },
     {
@@ -249,7 +253,7 @@ export const usePostJobs = () => {
   return { postJob };
 };
 
-export const useGetUserUnderTookJobs = () => {
+export const useGetUserUnderTookJobs = (filter: JobFilterParticipant) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const {
     isLoading: loading,
@@ -258,14 +262,10 @@ export const useGetUserUnderTookJobs = () => {
   } = useQuery<Job[], Error>(
     "query-undertookJobs",
     async () => {
-      const data = JobService.listUsersUndertookJobs();
+      const data = JobService.listUsersUndertookJobs(filter);
       return data;
     },
     {
-      refetchOnMount: true,
-      refetchInterval: 6000,
-      refetchOnWindowFocus: true,
-
       onSuccess: (res) => {
         setJobs(res);
       },

@@ -40,9 +40,10 @@ namespace Domain.Models
     {
         Empty,
         Available,
-        Pending,
-        Inprogress,
+        Approving,
+        Upcoming,
         Done,
+        Canceled,
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models.QueryHelpers
 {
-    public enum PetSpecies
+    public class JobFilterParticipant
     {
-        Dog,
-        Cat,
+        public Status Status { get; set; }
     }
 }

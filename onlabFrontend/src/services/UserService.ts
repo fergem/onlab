@@ -1,5 +1,6 @@
 import axios from "axios";
 import Pet, { PetFilter, PetInsertModel } from "../models/Pet";
+import { UserInformation } from "../models/User";
 
 const getUserPets = async (filter?: PetFilter) => {
   const response = await axios.get<Pet[]>("/api/users/pets", {
@@ -10,16 +11,27 @@ const getUserPets = async (filter?: PetFilter) => {
   return response.data;
 };
 
-const insertPet = async ({
-  name,
-  description,
-  species,
-  age,
-  images,
-}: PetInsertModel) => {
+const updateUser = async (info: UserInformation) => {
+  const response = await axios.patch<UserInformation>(
+    "api/users/updateprofile",
+    info
+  );
+  return response.data;
+};
+
+const updatePassword = async (password: string) => {
+  const response = await axios.patch<UserInformation>(
+    "api/users/changepassword",
+    {
+      Password: password,
+    }
+  );
+  return response.data;
+};
+
+const insertPet = async ({ name, species, age, images }: PetInsertModel) => {
   const result = await axios.post<number>("/api/users/addpet", {
     name,
-    description,
     species,
     age,
   });
@@ -54,5 +66,7 @@ const UserService = {
   insertPet,
   getUserPets,
   deletePet,
+  updateUser,
+  updatePassword,
 };
 export default UserService;

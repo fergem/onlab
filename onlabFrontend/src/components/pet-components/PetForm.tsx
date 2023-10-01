@@ -25,7 +25,6 @@ interface IAddPetProps {
 
 const defaultPet = {
   name: "",
-  description: "",
   species: PetSpecies.Dog,
   age: 1,
 } as Pet;
@@ -41,7 +40,6 @@ export default function PetForm({ onCancel, onConfirm }: IAddPetProps) {
     initialValues: defaultPet,
     validate: {
       name: (val) => PetValidation.validateName(val),
-      description: (val) => PetValidation.validateDescription(val),
     },
     validateInputOnChange: true,
   });

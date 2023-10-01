@@ -101,12 +101,14 @@ namespace DataAccess.Repositories
             return asd.Select(s => ModelMapper.ToJobModel(s)).ToList();
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters)
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
         { 
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
                 .Include(s => s.Pets)
+                .Where(s => s.OwnerUserID == userID)
+                .Where(s => s.Status == filter.Status)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
@@ -115,18 +117,20 @@ namespace DataAccess.Repositories
             return await dbcontext.Jobs
                .Include(s => s.OwnerUser)
                .Include(s => s.PetSitterUser)
-               .Where(s => s.OwnerUserID == userID && s.Status == Status.Pending && s.PetSitterUserID != null)
+               .Where(s => s.OwnerUserID == userID && s.Status == Status.Approving && s.PetSitterUserID != null)
                .Select(s => ModelMapper.ToJobModel(s))
                .ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
+        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.PetSitterUser)
                 .Include(s => s.Pets)
                 .Where(d => d.PetSitterUserID == userID)
+                .Where(s => s.Status == filter.Status)
+                .OrderByDescending(s => filter.Status == Status.Upcoming ? s.StartDate : s.EndDate)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
@@ -143,7 +147,7 @@ namespace DataAccess.Repositories
             if (jobToTake.PetSitterUser != null)
                 throw new Exception("Job is already taken");
 
-            jobToTake.Status = Status.Pending;
+            jobToTake.Status = Status.Approving;
             jobToTake.PetSitterUserID = userID;
 
             dbcontext.Update(jobToTake);
@@ -162,7 +166,7 @@ namespace DataAccess.Repositories
             if (jobToApprove == null)
                 throw new Exception("There is no such job that you want to undertake");
 
-            jobToApprove.Status = Status.Inprogress;
+            jobToApprove.Status = Status.Upcoming;
 
             dbcontext .Update(jobToApprove);
             await dbcontext.SaveChangesAsync();
@@ -216,6 +220,18 @@ namespace DataAccess.Repositories
 
             dbcontext.Remove(jobToDelete);
             await dbcontext.SaveChangesAsync();
+        }
+
+        public async Task RemoveJobsDependentOnPet(int petID)
+        {
+            var dbPet = await dbcontext.Pets.FirstOrDefaultAsync(s=> s.ID == petID);
+            if (dbPet == null)
+                throw new Exception("Pet not found");
+
+            var jobs = await dbcontext.Jobs
+                .Include(s => s.Pets)
+                .Where(s => s.Pets.Count == 1)
+                .SelectMany(s => s.Pets.Where(s => s.PetID == petID)).ToListAsync();
         }
 
         public async Task<Job> UpdateJob(int jobID)

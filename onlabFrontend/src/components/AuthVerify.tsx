@@ -20,6 +20,8 @@ export default function AuthVerify() {
     if (user) {
       const decodedJwt = parseJwt(user?.bearer);
       if (decodedJwt.exp * 1000 < Date.now() || !user.bearer) {
+        console.log("bent");
+        console.log(user);
         logoutUser();
         navigate("/");
       }

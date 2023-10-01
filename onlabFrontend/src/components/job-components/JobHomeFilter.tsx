@@ -137,7 +137,7 @@ export default function JobHomeFilter() {
   );
 }
 
-interface IChipFrequencyProps {
+export interface IChipFrequencyProps {
   repeated: boolean;
   jobType: JobType;
   handleSetRepeatable(value: string): void;

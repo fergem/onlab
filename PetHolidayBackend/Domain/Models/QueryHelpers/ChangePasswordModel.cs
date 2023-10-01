@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models.QueryHelpers
 {
-    public enum PetSpecies
+    public class ChangePasswordModel
     {
-        Dog,
-        Cat,
+        public required string Password { get; set; }
     }
 }

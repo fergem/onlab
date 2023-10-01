@@ -1,6 +1,7 @@
 ﻿using DataAccess.DataObjects;
 using Domain.Models;
 using Domain.Models.AuthHelpers;
+using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserModel(appUser);
         }
 
-        public async Task<User> AddProfilePicture(int userID, byte[] file)
+        public async Task<UserInformation> AddProfilePicture(int userID, byte[] file)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
@@ -76,7 +77,43 @@ namespace DataAccess.Repositories
             await signInManager.RefreshSignInAsync(user);
 
             await dbContext.SaveChangesAsync();
-            return ModelMapper.ToUserModel(user);
+            return ModelMapper.ToUserInformationModel(user);
+        }
+
+        public async Task<UserInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
+        {
+            var user = await userManager.FindByIdAsync(userID.ToString());
+            if (user == null)
+                throw new Exception("User not exists");
+
+            user.Location = updateProfileModel?.Location ?? user.Location;
+            user.FirstName = updateProfileModel?.FirstName ?? user.FirstName;
+            user.LastName = updateProfileModel?.LastName ?? user.LastName;
+            user.Email = updateProfileModel?.Email ?? user.Email;
+            user.Age = updateProfileModel?.Age ?? user.Age;
+            user.PhoneNumber = updateProfileModel?.PhoneNumber ?? user.PhoneNumber;
+
+            await userManager.UpdateAsync(user);
+            await signInManager.RefreshSignInAsync(user);
+
+            await dbContext.SaveChangesAsync();
+            return ModelMapper.ToUserInformationModel(user);
+
+        }
+
+        public async Task<UserInformation> ChangePassword(int userID, ChangePasswordModel password)
+        {
+            var user = await userManager.FindByIdAsync(userID.ToString());
+            if (user == null)
+                throw new Exception("User not exists");
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            await userManager.ResetPasswordAsync(user, token, password.Password ?? user.Password);
+
+            await signInManager.RefreshSignInAsync(user);
+            await dbContext.SaveChangesAsync();
+            return ModelMapper.ToUserInformationModel(user);
         }
     }
 }

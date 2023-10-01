@@ -17,7 +17,6 @@ namespace Domain.Models
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public required PetSpecies Species { get; set; }
         public int Age { get; set; }
-        //public ICollection<PetImage>? Images { get; set; }
         public List<byte[]>? Images { get; set; }
     }
 }

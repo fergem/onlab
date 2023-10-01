@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Box,
   Button,
@@ -9,6 +10,7 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconBed,
@@ -110,7 +112,7 @@ function JobDetail() {
                     <Button onClick={handleTakeJob}>Take Job</Button>
                   )}
                 {user?.id === job?.ownerUserInformation?.id &&
-                  job?.status === Status.Inprogress && (
+                  job?.status === Status.Upcoming && (
                     <Button onClick={handleFinishJob}>Finish job</Button>
                   )}
               </Stack>
@@ -120,9 +122,23 @@ function JobDetail() {
           <Grid.Col span={7}>
             <Stack align="top" justify="top">
               <Box>
-                <Title order={2} mb="sm">
-                  {job?.title}{" "}
-                </Title>
+                <Group position="left" align="center" spacing={1} mb="sm">
+                  <Title order={2}>{job?.title} </Title>
+                  {user?.id === job?.ownerUserInformation?.id && (
+                    <Tooltip label="Delete">
+                      <ActionIcon
+                        variant="subtle"
+                        color="dark"
+                        onClick={() => {}}
+                        radius="md"
+                        size="lg"
+                      >
+                        <IconX />
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </Group>
+
                 <Text fz="md" fw={500} mb="xs">
                   {job?.location}{" "}
                 </Text>

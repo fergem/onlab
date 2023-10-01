@@ -58,8 +58,8 @@ export function PetCard({ pet }: IPropsPetCard) {
     <Stack justify="center" align="center" h="100%">
       <Paper shadow="xs" p="md" withBorder>
         <Image
-          height="7vw"
-          width="7vw"
+          height="8vw"
+          width="8vw"
           radius="md"
           src={
             pet.images && pet.images.length > 0

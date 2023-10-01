@@ -2,7 +2,11 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import User, { LoginModel, RegisterModel } from "../models/User";
+import User, {
+  LoginModel,
+  RegisterModel,
+  UserInformation,
+} from "../models/User";
 import AuthService from "../services/AuthService";
 
 export const useLocalStorage = () => {
@@ -41,7 +45,18 @@ export const useUser = () => {
     removeItem("user");
   };
 
-  return { user, addUser, removeUser };
+  const updateProfile = (updatedUser: UserInformation | undefined) => {
+    if (updatedUser && user) {
+      console.log(user);
+      console.log(updatedUser);
+      console.log({ ...updatedUser, ...user });
+      console.log({ ...user, ...updatedUser });
+      setUser({ ...user, ...updatedUser });
+      setItem("user", JSON.stringify({ ...user, ...updatedUser }));
+    }
+  };
+
+  return { user, addUser, removeUser, updateProfile };
 };
 
 export const useAuth = () => {

@@ -28,7 +28,6 @@ export default function CreateJobServiceForm({
     jobFilter: serviceModel,
     setJobFilter: handleUpdateServiceModel,
   });
-  console.log(serviceModel);
   return (
     <Stack w="100%">
       <Stack spacing={3}>

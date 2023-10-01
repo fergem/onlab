@@ -15,13 +15,14 @@ namespace DataAccess
         {
             var ownerUserInformation = new UserInformation()
             {
-                ID = job.OwnerUser.Id,
-                UserName = job.OwnerUser.UserName,
+                UserName = job.OwnerUser.UserName ?? "",
                 Picture = job.OwnerUser.Picture,
-                FirstName = job.OwnerUser.FirstName,
-                LastName = job.OwnerUser.LastName,
+                FirstName = job.OwnerUser.FirstName ?? "",
+                LastName = job.OwnerUser.LastName ?? "",
                 Age = job.OwnerUser.Age,
-                Email = job.OwnerUser.Email,
+                Email = job.OwnerUser.Email ?? "",
+                Location = job.OwnerUser.Location ?? "",
+                PhoneNumber = job.OwnerUser.PhoneNumber ?? ""
             };
 
             var pets = new List<Pet>();
@@ -33,13 +34,13 @@ namespace DataAccess
             {
                 var petSitterInformation = new UserInformation()
                 {
-                    ID = job.PetSitterUser.Id,
-                    UserName = job.PetSitterUser.UserName,
+                    UserName = job.PetSitterUser.UserName ?? "",
                     Picture = job.PetSitterUser.Picture,
-                    FirstName = job.PetSitterUser.FirstName,
-                    LastName = job.PetSitterUser.LastName,
+                    FirstName = job.PetSitterUser.FirstName ?? "",
+                    LastName = job.PetSitterUser.LastName ?? "",
                     Age = job.PetSitterUser.Age,
-                    Email = job.PetSitterUser.Email,
+                    Email = job.PetSitterUser.Email ?? "",
+                    PhoneNumber = job.OwnerUser.PhoneNumber ?? ""
                 };
                 return new Job()
                 {
@@ -82,16 +83,6 @@ namespace DataAccess
         }
         internal static User ToUserModel(DbUser user)
         {
-            var jobAdvertisements = new List<Job>();
-            foreach (var jobAds in user.JobAdvertisements)
-            {
-                jobAdvertisements.Add(ToJobModel(jobAds));
-            }
-            var jobAplications = new List<Job>();
-            foreach(var jobApl in user.JobApplications)
-            {
-                jobAplications.Add(ToJobModel(jobApl));
-            }
             var pets = new List<Pet>();
             foreach(var pet in user.Pets)
             {
@@ -103,7 +94,7 @@ namespace DataAccess
                 ownerProfile = new OwnerProfile()
                 {
                     ID = user.OwnerProfile.ID,
-                    Description = user.OwnerProfile.Description,
+                    Description = user.OwnerProfile.Description ?? "",
                     MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
                     MinWage = user.OwnerProfile.MinWage,
                     UserID = user.OwnerProfile.UserID,
@@ -113,24 +104,20 @@ namespace DataAccess
             return new User()
             {
                 ID = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                JobAdvertisements = jobAdvertisements,
-                JobApplications = jobAplications,
+                UserName = user.UserName ?? "",
+                Email = user.Email ?? "",
                 Pets = pets,
                 Picture = user.Picture,
                 Age = user.Age,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FirstName = user.FirstName ?? "",
+                LastName = user.LastName ?? "",
                 OwnerProfile = ownerProfile,
+                PhoneNumber = user.PhoneNumber ?? "",
+                Location = user.Location ?? "",
             };
         }
         internal static Pet ToPetModel(DbPet pet)
         {
-            //var images = new List<PetImage>();
-            //foreach (var image in pet.Images)
-            //images.Add(ToPetImageModel(image));
-
             return new Pet{Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Images = ToPetImagesModel(pet.Images.ToList())};
         }
         internal static List<byte[]>? ToPetImagesModel(List<DbPetImage>? images)
@@ -149,9 +136,19 @@ namespace DataAccess
             return result;
         }
 
-        internal static List<DaysOfWeek> ToJobDays(string? days)
+        internal static UserInformation ToUserInformationModel(DbUser user)
         {
-            return days is not null ? Array.ConvertAll(days.Split(','), Enum.Parse<DaysOfWeek>).ToList() : Enum.GetValues<DaysOfWeek>().ToList();
+            return new UserInformation()
+            {
+                UserName = user.UserName ?? "",
+                Picture = user.Picture,
+                FirstName = user.FirstName ?? "",
+                LastName = user.LastName ?? "",
+                Age = user.Age,
+                Email = user.Email ?? "",
+                Location = user.Location ?? "",
+                PhoneNumber = user.PhoneNumber ?? ""
+            };
         }
     }
 }

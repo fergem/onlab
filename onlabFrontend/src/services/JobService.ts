@@ -1,5 +1,9 @@
 import axios from "axios";
-import Job, { CreateJobModel, JobFilter } from "../models/Job";
+import Job, {
+  CreateJobModel,
+  JobFilter,
+  JobFilterParticipant,
+} from "../models/Job";
 
 const get = async (id?: string) => {
   const response = await axios.get<Job>(`/api/jobs/${id}`);
@@ -16,13 +20,17 @@ const list = async (filter: JobFilter) => {
   return response.data;
 };
 
-const listUsersPostedJobs = async (filter: JobFilter) => {
-  const response = await axios.get<Job[]>(`/api/jobs/posted?`);
+const listUsersPostedJobs = async (filter: JobFilterParticipant) => {
+  const response = await axios.get<Job[]>(`/api/jobs/posted?`, {
+    params: filter,
+  });
   return response.data;
 };
 
-const listUsersUndertookJobs = async () => {
-  const response = await axios.get<Job[]>("/api/jobs/undertook");
+const listUsersUndertookJobs = async (filter: JobFilterParticipant) => {
+  const response = await axios.get<Job[]>("/api/jobs/undertook", {
+    params: filter,
+  });
   return response.data;
 };
 

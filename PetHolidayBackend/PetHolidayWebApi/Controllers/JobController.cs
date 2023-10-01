@@ -36,25 +36,25 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("posted")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobFilter jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobFilterParticipant filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             
-            return Ok(await jobService.ListPostedJobs(userID, jobParameters));
+            return Ok(await jobService.ListPostedJobs(userID, filter));
         }
 
         [Authorize]
         [HttpGet("undertook")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobFilter jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobFilterParticipant filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             
 
-            return Ok(await jobService.ListUnderTookJobs(userID));
+            return Ok(await jobService.ListUnderTookJobs(userID, filter));
         }
 
         [Authorize]

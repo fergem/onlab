@@ -1,6 +1,18 @@
 import { Carousel } from "@mantine/carousel";
-import { ActionIcon, Image, Paper, Stack, Text, Tooltip } from "@mantine/core";
-import { IconArrowBack } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Image,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconArrowBack, IconX } from "@tabler/icons-react";
+import { useDeletePet } from "../../hooks/UserHooks";
 import Pet from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
 
@@ -12,57 +24,95 @@ interface IPropsPetModal {
 export default function EditPetModal({ pet, back }: IPropsPetModal) {
   const withIndicatorAndControls = !!pet.images && pet.images.length > 1;
 
+  const { deletePet } = useDeletePet();
+
+  const handleDelete = () => {
+    deletePet(pet.id);
+    close();
+  };
+  const [opened, { open, close }] = useDisclosure(false);
   return (
-    <Paper radius="md" shadow="sm" withBorder w="50%">
-      <Tooltip label="Back">
-        <ActionIcon
-          variant="subtle"
-          color="dark"
-          onClick={back}
-          radius="md"
-          size="lg"
-          m="sm"
-        >
-          <IconArrowBack />
-        </ActionIcon>
-      </Tooltip>
-      <Stack align="center" justify="space-evenly" spacing={5}>
-        <Carousel
-          w="12vw"
-          height="12vw"
-          mx="auto"
-          withIndicators={withIndicatorAndControls}
-          withControls={withIndicatorAndControls}
-        >
-          {pet.images && pet.images.length > 0 ? (
-            pet.images.map((s) => (
-              <Carousel.Slide key={s}>
-                <Image
-                  src={`data:image/png;base64,${s}`}
-                  radius="md"
-                  width="12vw"
-                  height="12vw"
-                  alt={pet.name}
-                />
-              </Carousel.Slide>
-            ))
-          ) : (
-            <Image
-              src={basePetPicture}
+    <>
+      <Modal opened={opened} onClose={close} withCloseButton={false} centered>
+        <Stack>
+          <Text>
+            Are you sure you want to delete {pet.name}? If you do so this change
+            is not revertable.
+          </Text>
+          <Group position="apart">
+            <Button size="sm" onClick={close}>
+              No, go back!
+            </Button>
+            <Button size="sm" color="red" onClick={handleDelete}>
+              Yes.
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      <Paper radius="md" shadow="sm" withBorder w="50%">
+        <Group position="apart">
+          <Tooltip label="Back">
+            <ActionIcon
+              variant="subtle"
+              color="dark"
+              onClick={back}
               radius="md"
-              width="12vw"
-              height="12vw"
-              alt={pet.name}
-            />
-          )}
-        </Carousel>
-        <Text fw="bold">
-          {pet.name} ({pet.age} years)
-        </Text>
-        <Text p="lg" pt={0}>
-          {pet.description}
-        </Text>
-      </Stack>
-    </Paper>
+              size="lg"
+              m="sm"
+            >
+              <IconArrowBack />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Delete pet">
+            <ActionIcon
+              variant="subtle"
+              color="dark"
+              onClick={open}
+              radius="md"
+              size="lg"
+              m="sm"
+            >
+              <IconX />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+
+        <Stack align="center" justify="space-evenly" spacing={5}>
+          <Carousel
+            w="13vw"
+            height="13vw"
+            mx="auto"
+            withIndicators={withIndicatorAndControls}
+            withControls={withIndicatorAndControls}
+          >
+            {pet.images && pet.images.length > 0 ? (
+              pet.images.map((s) => (
+                <Carousel.Slide key={s}>
+                  <Image
+                    src={`data:image/png;base64,${s}`}
+                    radius="md"
+                    width="13vw"
+                    height="13vw"
+                    alt={pet.name}
+                  />
+                </Carousel.Slide>
+              ))
+            ) : (
+              <Image
+                src={basePetPicture}
+                radius="md"
+                width="13vw"
+                height="13vw"
+                alt={pet.name}
+              />
+            )}
+          </Carousel>
+          <Text fw="bold">
+            {pet.name} ({pet.age} years)
+          </Text>
+        </Stack>
+      </Paper>
+    </>
   );
 }

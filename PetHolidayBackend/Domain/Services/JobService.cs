@@ -22,17 +22,17 @@ namespace Domain.Services
         {
             return await jobRepository.List(jobParameters);
         }
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilter jobParameters)
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
         {
-            return await jobRepository.ListPostedJobs(userID, jobParameters);
+            return await jobRepository.ListPostedJobs(userID, filter);
         }
         public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
         {
             return await jobRepository.ListApprovals(userID);
         }
-        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID)
+        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
-            return await jobRepository.ListUnderTookJobs(userID);
+            return await jobRepository.ListUnderTookJobs(userID, filter);
         }
         public async Task<int> Insert(InsertJobModel job, int userID)
         {
