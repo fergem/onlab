@@ -1,5 +1,7 @@
-﻿using Domain.Models;
-using Domain.Models.QueryHelpers;
+﻿using Domain.Common;
+using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
+using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;

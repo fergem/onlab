@@ -30,6 +30,9 @@ builder.Services.AddIdentity<DbUser, IdentityRole<int>>(x =>
        .AddEntityFrameworkStores<PetHolidayDbContext>()
        .AddDefaultTokenProviders();
 
+
+builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+builder.Services.AddScoped<IJobApplicationCommentRepository, JobApplicationCommentRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService, UserService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();

@@ -1,5 +1,6 @@
 ﻿using Azure;
 using DataAccess.DataObjects;
+using Domain.Common;
 using Domain.Models;
 using Domain.Models.AuthHelpers;
 using Microsoft.AspNetCore.Identity;

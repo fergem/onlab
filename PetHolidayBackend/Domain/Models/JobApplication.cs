@@ -8,9 +8,9 @@ namespace Domain.Models
 {
     public class JobApplication
     {
+        public int ID { get; set; }
         public bool IsApproved { get; set; }
         public IReadOnlyCollection<JobApplicationComment>? Comments { get; set; }
-
         public int ApplicantUserID { get; set; }
 
     }

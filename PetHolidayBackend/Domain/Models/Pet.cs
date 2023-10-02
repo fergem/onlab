@@ -14,7 +14,6 @@ namespace Domain.Models
         public required string Name { get; set; }
         public required string Description { get; set; }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
         public required PetSpecies Species { get; set; }
         public int Age { get; set; }
         public List<byte[]>? Images { get; set; }

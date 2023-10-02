@@ -1,6 +1,6 @@
-﻿using Domain.Models;
-using Domain.Models.AuthHelpers;
-using Domain.Models.QueryHelpers;
+﻿using Domain.Common.AuthHelpers;
+using Domain.Common.QueryHelpers;
+using Domain.Models;
 using Domain.Repositories;
 using System.Security.Claims;
 
@@ -35,7 +35,7 @@ namespace Domain.Services
             }
         }
 
-        public async Task<UserInformation> AddProfilePicture(int userID, byte[] file)
+        public async Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file)
         {
             return await userRepository.AddProfilePicture(userID, file);
         }
@@ -71,11 +71,11 @@ namespace Domain.Services
             await jobRepository.RemoveJobsDependentOnPet(ID);
         }
 
-        public async Task<UserInformation> UpdateProfile(int userID, UpdateProfileModel model)
+        public async Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel model)
         {
             return await userRepository.UpdateProfile(userID, model);
         }
-        public async Task<UserInformation> ChangePassword(int userID, ChangePasswordModel password)
+        public async Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password)
         {
             return await userRepository.ChangePassword(userID, password);
         }

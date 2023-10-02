@@ -1,11 +1,13 @@
-﻿using Microsoft.Identity.Client;
+﻿using Domain.Common;
+using Domain.Models;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models.QueryHelpers
+namespace Domain.Common.QueryHelpers
 {
     public class JobFilter
     {

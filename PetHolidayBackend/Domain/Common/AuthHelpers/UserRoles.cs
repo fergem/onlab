@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.AuthHelpers
+﻿namespace Domain.Common.AuthHelpers
 {
     public static class UserRoles
     {

@@ -1,5 +1,6 @@
-﻿using Domain.Models;
-using Domain.Models.QueryHelpers;
+﻿using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
+using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Domain.Common;
 
 namespace Domain.Models
 {
@@ -12,8 +13,7 @@ namespace Domain.Models
     {
         public int ID { get; set; }
         public required string Location { get; set; }
-        public required bool Repeated {  get; set; }
-
+        public required bool Repeated { get; set; }
 
         public required string Title { get; set; }
         public required JobType Type { get; set; }
@@ -21,31 +21,16 @@ namespace Domain.Models
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public required string Description { get; set; }
+        public required int Payment { get; set; }
+        public required int MinRequiredExperience { get; set; }
 
-        public byte[]? OwnerPicture { get; set; }
-        public byte[]? DisplayPetPicture { get; set; }
+        public ICollection<JobApplication>? JobApplications { get; set; }
+        public required UserBaseInformation OwnerUserInformation { get; set; }
+        public UserBaseInformation? PetSitterUserInformation { get; set; }
 
+        public required IReadOnlyCollection<Pet> Pets { get; set; }
         public required ICollection<DaysOfWeek>? Days { get; set; }
-
     }
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Status
-    {
-        Empty,
-        Available,
-        Approving,
-        Upcoming,
-        Done,
-        Canceled,
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum JobType
-    {
-        Sitting,
-        Boarding,
-        Walking,
-        Visit,
-    }
 }

@@ -5,12 +5,15 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Common
 {
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum PetSpecies
+    public enum JobType
     {
-        Dog,
-        Cat,
+        Sitting,
+        Boarding,
+        Walking,
+        Visit,
     }
 }

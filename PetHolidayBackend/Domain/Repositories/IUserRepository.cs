@@ -1,6 +1,6 @@
-﻿using Domain.Models;
-using Domain.Models.AuthHelpers;
-using Domain.Models.QueryHelpers;
+﻿using Domain.Common.AuthHelpers;
+using Domain.Common.QueryHelpers;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +14,8 @@ namespace Domain.Repositories
     {
         Task<User> Register(RegisterModel registerModel);
         Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel);
-        Task<UserInformation> AddProfilePicture(int userID, byte[] file);
-        Task<UserInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel);
-        Task<UserInformation> ChangePassword(int userID, ChangePasswordModel password);
+        Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file);
+        Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel);
+        Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using DataAccess.DataObjects;
+using Domain.Common;
+using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
-using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -35,7 +37,6 @@ namespace DataAccess.Repositories
         {
             var insertJob = new DbJob()
             {
-                Hours = 0,
                 Location = job.Location,
                 Description = job.Description,
                 OwnerUserID = userID,

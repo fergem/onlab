@@ -1,7 +1,8 @@
 ﻿
+using Domain.Common.AuthHelpers;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
 using Domain.Models.AuthHelpers;
-using Domain.Models.QueryHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -147,7 +148,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost("addprofilepicture")]
-        public async Task<ActionResult<UserInformation>> AddProfilePicture([FromForm] IFormFile file)
+        public async Task<ActionResult<UserBaseInformation>> AddProfilePicture([FromForm] IFormFile file)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)

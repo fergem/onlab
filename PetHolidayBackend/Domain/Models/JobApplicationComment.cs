@@ -8,6 +8,7 @@ namespace Domain.Models
 {
     public class JobApplicationComment
     {
+        public int ID {  get; set; }
         public string? CommentText { get; set; }
         public DateTime CommentDate { get; set; }
         public int SenderUserID { get; set; }

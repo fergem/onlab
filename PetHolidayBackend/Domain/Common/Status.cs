@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Common
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum DaysOfWeek
+    public enum Status
     {
-        [Description("Mon")]
-        Mon,
-        Tue,
-        Wed,
-        Thu,
-        Fri,
-        Sat,
-        Sun,
+        Empty,
+        Available,
+        Approving,
+        Upcoming,
+        Done,
+        Canceled,
     }
 }

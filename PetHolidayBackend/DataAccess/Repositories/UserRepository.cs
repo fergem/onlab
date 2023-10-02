@@ -1,7 +1,7 @@
 ﻿using DataAccess.DataObjects;
+using Domain.Common.AuthHelpers;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
-using Domain.Models.AuthHelpers;
-using Domain.Models.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +66,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserModel(appUser);
         }
 
-        public async Task<UserInformation> AddProfilePicture(int userID, byte[] file)
+        public async Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
@@ -80,7 +80,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserInformationModel(user);
         }
 
-        public async Task<UserInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
+        public async Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
@@ -101,7 +101,7 @@ namespace DataAccess.Repositories
 
         }
 
-        public async Task<UserInformation> ChangePassword(int userID, ChangePasswordModel password)
+        public async Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
