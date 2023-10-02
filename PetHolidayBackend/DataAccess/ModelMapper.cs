@@ -15,6 +15,7 @@ namespace DataAccess
         {
             var ownerUserInformation = new UserInformation()
             {
+                ID = job.OwnerUser.Id,
                 UserName = job.OwnerUser.UserName ?? "",
                 Picture = job.OwnerUser.Picture,
                 FirstName = job.OwnerUser.FirstName ?? "",
@@ -34,6 +35,8 @@ namespace DataAccess
             {
                 var petSitterInformation = new UserInformation()
                 {
+                    ID = job.PetSitterUser.Id,
+
                     UserName = job.PetSitterUser.UserName ?? "",
                     Picture = job.PetSitterUser.Picture,
                     FirstName = job.PetSitterUser.FirstName ?? "",
@@ -140,6 +143,7 @@ namespace DataAccess
         {
             return new UserInformation()
             {
+                ID = user.Id,
                 UserName = user.UserName ?? "",
                 Picture = user.Picture,
                 FirstName = user.FirstName ?? "",

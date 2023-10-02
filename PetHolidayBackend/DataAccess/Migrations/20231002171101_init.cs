@@ -271,7 +271,6 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AcquiredExperience = table.Column<int>(type: "int", nullable: false),
-                    MaxWage = table.Column<int>(type: "int", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -282,6 +281,33 @@ namespace DataAccess.Migrations
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobApplications",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    JobID = table.Column<int>(type: "int", nullable: false),
+                    ApplicantUserID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobApplications", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_JobApplications_AspNetUsers_ApplicantUserID",
+                        column: x => x.ApplicantUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobApplications_Jobs_JobID",
+                        column: x => x.JobID,
+                        principalTable: "Jobs",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -329,15 +355,37 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "JobApplicationComments",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CommentText = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CommentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SenderUserID = table.Column<int>(type: "int", nullable: false),
+                    JobApplicationID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobApplicationComments", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_JobApplicationComments_JobApplications_JobApplicationID",
+                        column: x => x.JobApplicationID,
+                        principalTable: "JobApplications",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Age", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "Location", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Picture", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, 23, "52dbad8b-ae66-4bb7-b775-26e724878534", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEKAxrRqfz5ACKaQOA49fHoohDY/eB0C4GQEKTMSpwb9pCviWsCPlAuPKxYzE0Y7RJw==", null, false, null, null, false, "kissjanos" },
-                    { 2, 0, 32, "fff3f9f9-9542-4f4c-99ba-dc8599a736f2", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAEPNlGU5iikuIwVNhLw5GZyoY9GRS+KGt27oE2zDM8BJL2v5UxUCsDudKswjYf2tmXw==", null, false, null, null, false, "nagyfero" },
-                    { 3, 0, 43, "115915ab-2b49-4918-85e9-cd5e95c3c926", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAEEgNf/5xnyzREp4FBb802kHD+bqNLGD0+391q5/wdGzxlu6EPL9qpsZTBXucGATvaQ==", null, false, null, null, false, "viccelek" },
-                    { 4, 0, 17, "b0a9ca6b-5f08-40dc-83a8-18c8963afdfd", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEMNPn1ltNh72yjYnmFpqL34bSROdGj/EEt1TrwevPS6k6Q0elxEx09/sNRtvmLDLig==", null, false, null, null, false, "makulatlan" }
+                    { 1, 0, 23, "b9484ccb-7b69-4fd2-8e1c-f4b485ac7c37", null, false, "Kiss", "Janos", null, false, null, null, "KISSJANOS", "asd", "AQAAAAIAAYagAAAAEEsfawwpVWnYjB9KMUWyvo0uNS5dp/hssQ6R7fb1W05uyYAWHE7o5pu83v2ZIXsWEg==", null, false, null, null, false, "kissjanos" },
+                    { 2, 0, 32, "62ee74a2-398d-4820-920e-cc1f32bdecdd", null, false, "Nagy", "Feró", null, false, null, null, "NAGYFERO", "asd", "AQAAAAIAAYagAAAAEDCM56bsv2aGJXTqLjEj9ZAVhub/Up0rGQWbtfSJQAjDpvoPVbKyy/WL/mo1bNS01Q==", null, false, null, null, false, "nagyfero" },
+                    { 3, 0, 43, "76e6fec3-6c26-483d-9de8-7889a9ddea88", null, false, "Vicc", "Elek", null, false, null, null, "VICCELEK", "asd", "AQAAAAIAAYagAAAAECIgD3AqlvgyKJK4SvUQbtQuXJDWrxkdwJPiaSBPzkFPomxUaIfcf8jySsRS6zrbDg==", null, false, null, null, false, "viccelek" },
+                    { 4, 0, 17, "2afbbc62-5af1-4cbd-a188-c8a0c7b01bc3", null, false, "Maku", "Látlan", null, false, null, null, "MAKULATLAN", "asd", "AQAAAAIAAYagAAAAEJR1U7umO8JJr05Avju1iNaxTxsOV+O4ZWqaXrRAybyhXDeWLmYRhNvlsgYfpz24fQ==", null, false, null, null, false, "makulatlan" }
                 });
 
             migrationBuilder.InsertData(
@@ -345,8 +393,8 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7c80ab50-a546-43c9-9028-ae1e6ac1585d", null, "PetSitter", "PETSITTER" },
-                    { "bdfdca8d-f5fb-4162-9dfe-f5289bfdcaa8", null, "Owner", "OWNER" }
+                    { "7a5b1fd8-f43f-4b37-9fd7-8f25a597e077", null, "PetSitter", "PETSITTER" },
+                    { "a71e93b1-53d5-46cb-a03e-9ec25811c804", null, "Owner", "OWNER" }
                 });
 
             migrationBuilder.InsertData(
@@ -354,12 +402,12 @@ namespace DataAccess.Migrations
                 columns: new[] { "ID", "Days", "Description", "EndDate", "Hours", "Location", "MinRequiredExperience", "OwnerUserID", "Payment", "PetSitterUserID", "Repeated", "StartDate", "Status", "Title", "Type" },
                 values: new object[,]
                 {
-                    { 1, "[\"Mon\",\"Wed\",\"Fri\"]", "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!", null, 4, "Szeged", 0, 1, 10, null, true, new DateTime(2023, 9, 23, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7365), 1, "Looking for a weekly walk buddy for Milio!", 2 },
-                    { 2, null, "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!", new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7469), 3, "Szolnok", 1, 2, 20, null, false, new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7467), 1, "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!", 0 },
-                    { 3, "[\"Tue\",\"Wed\",\"Fri\"]", "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!", null, 7, "Jászkarajenő", 3, 3, 30, null, true, new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7478), 1, "Weekly Dog Walking Opportunity for Luna and Rusty", 2 },
-                    { 4, "[\"Mon\",\"Wed\",\"Fri\"]", "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!", null, 5, "Debrecen", 0, 1, 15, null, true, new DateTime(2023, 9, 24, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7484), 1, "Daily Adventures with Luna!", 2 },
-                    { 5, null, "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!", new DateTime(2023, 9, 29, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7522), 4, "Budapest", 2, 2, 25, null, false, new DateTime(2023, 9, 26, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7510), 1, "Senior Cat Care: Whiskers' Comfort Companion", 0 },
-                    { 6, null, "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!", null, 2, "Pécs", 4, 3, 20, null, false, new DateTime(2023, 9, 25, 21, 26, 41, 528, DateTimeKind.Local).AddTicks(7526), 1, "Weekly Labrador Love: Max and Bella's Pawsome Playdates", 3 }
+                    { 1, "[\"Mon\",\"Wed\",\"Fri\"]", "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!", null, 4, "Szeged", 0, 1, 10, null, true, new DateTime(2023, 10, 4, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1381), 1, "Looking for a weekly walk buddy for Milio!", 2 },
+                    { 2, null, "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!", new DateTime(2023, 10, 6, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1462), 3, "Szolnok", 1, 2, 20, null, false, new DateTime(2023, 10, 6, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1459), 1, "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!", 0 },
+                    { 3, "[\"Tue\",\"Wed\",\"Fri\"]", "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!", null, 7, "Jászkarajenő", 3, 3, 30, null, true, new DateTime(2023, 10, 6, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1469), 1, "Weekly Dog Walking Opportunity for Luna and Rusty", 2 },
+                    { 4, "[\"Mon\",\"Wed\",\"Fri\"]", "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!", null, 5, "Debrecen", 0, 1, 15, null, true, new DateTime(2023, 10, 5, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1475), 1, "Daily Adventures with Luna!", 2 },
+                    { 5, null, "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!", new DateTime(2023, 10, 10, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1507), 4, "Budapest", 2, 2, 25, null, false, new DateTime(2023, 10, 7, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1494), 1, "Senior Cat Care: Whiskers' Comfort Companion", 0 },
+                    { 6, null, "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!", null, 2, "Pécs", 4, 3, 20, null, false, new DateTime(2023, 10, 6, 19, 11, 0, 837, DateTimeKind.Local).AddTicks(1511), 1, "Weekly Labrador Love: Max and Bella's Pawsome Playdates", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -431,6 +479,21 @@ namespace DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JobApplicationComments_JobApplicationID",
+                table: "JobApplicationComments",
+                column: "JobApplicationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobApplications_ApplicantUserID",
+                table: "JobApplications",
+                column: "ApplicantUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobApplications_JobID",
+                table: "JobApplications",
+                column: "JobID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Jobs_OwnerUserID",
                 table: "Jobs",
                 column: "OwnerUserID");
@@ -490,6 +553,9 @@ namespace DataAccess.Migrations
                 name: "IdentityRole");
 
             migrationBuilder.DropTable(
+                name: "JobApplicationComments");
+
+            migrationBuilder.DropTable(
                 name: "OwnerProfiles");
 
             migrationBuilder.DropTable(
@@ -505,10 +571,13 @@ namespace DataAccess.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Jobs");
+                name: "JobApplications");
 
             migrationBuilder.DropTable(
                 name: "Pets");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

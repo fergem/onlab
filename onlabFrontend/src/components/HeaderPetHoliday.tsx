@@ -1,5 +1,12 @@
 import { Burger, Group, Header, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import {
+  IconBriefcase,
+  IconLogout,
+  IconNote,
+  IconShare,
+  IconUser,
+} from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/AuthHooks";
 
@@ -42,28 +49,28 @@ function HeaderPetHoliday() {
           </svg>
         </Link>
 
-        <Menu>
+        <Menu width="13vw">
           <Menu.Target>
             <Burger opened={opened} onClick={toggle} aria-label={label} />
           </Menu.Target>
           <Menu.Dropdown>
             {user && (
               <Link style={{ textDecoration: "none" }} to="/profile">
-                <Menu.Item>Profile</Menu.Item>
+                <Menu.Item icon={<IconUser />}>Profile</Menu.Item>
               </Link>
             )}
             <Link style={{ textDecoration: "none" }} to="/jobs">
-              <Menu.Item>Jobs</Menu.Item>
+              <Menu.Item icon={<IconBriefcase />}>Jobs</Menu.Item>
             </Link>
 
             {user && (
               <Link style={{ textDecoration: "none" }} to="/postedjobs">
-                <Menu.Item>Posted job</Menu.Item>
+                <Menu.Item icon={<IconShare />}>Posted job</Menu.Item>
               </Link>
             )}
             {user && (
               <Link style={{ textDecoration: "none" }} to="/undertookjobs">
-                <Menu.Item>Undertook jobs</Menu.Item>
+                <Menu.Item icon={<IconNote />}>Undertook jobs</Menu.Item>
               </Link>
             )}
 
@@ -78,7 +85,11 @@ function HeaderPetHoliday() {
                 <Menu.Item>Login</Menu.Item>
               </Link>
             )}
-            {user && <Menu.Item onClick={logoutUser}>Logout</Menu.Item>}
+            {user && (
+              <Menu.Item onClick={logoutUser} icon={<IconLogout />}>
+                Logout
+              </Menu.Item>
+            )}
           </Menu.Dropdown>
         </Menu>
       </Group>

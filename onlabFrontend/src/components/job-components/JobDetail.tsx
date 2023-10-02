@@ -68,7 +68,8 @@ function JobDetail() {
                   />
                   <Box>
                     <Title order={5} mb="3%">
-                      {job?.ownerUserInformation?.userName ?? ""}
+                      {job?.ownerUserInformation?.firstName ?? ""}
+                      {job?.ownerUserInformation?.lastName ?? ""}
                     </Title>
                     <Text>Pet parent</Text>
                   </Box>
@@ -113,7 +114,12 @@ function JobDetail() {
                   )}
                 {user?.id === job?.ownerUserInformation?.id &&
                   job?.status === Status.Upcoming && (
-                    <Button onClick={handleFinishJob}>Finish job</Button>
+                    <Group position="center" align="center">
+                      <Button onClick={handleFinishJob}>Finish job</Button>
+                      <Button onClick={() => {}} color="red">
+                        Cancel job
+                      </Button>
+                    </Group>
                   )}
               </Stack>
             </Paper>

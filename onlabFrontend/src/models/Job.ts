@@ -87,6 +87,7 @@ export interface CreateJobDetailsModel {
 }
 
 export const JobFilterParticipantData = [
+  { value: Status.Available, label: Status.Available },
   { value: Status.Approving, label: Status.Approving },
   { value: Status.Upcoming, label: Status.Upcoming },
   { value: Status.Done, label: Status.Done },
@@ -101,7 +102,7 @@ export const DefaultJobFilterParticipant = {
 };
 
 export interface JobFilter {
-  type: JobType;
+  type?: JobType;
   species?: PetSpecies[];
   startDate: Date;
   endDate?: Date;

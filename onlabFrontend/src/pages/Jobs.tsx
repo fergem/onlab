@@ -1,4 +1,4 @@
-import { Grid, Stack, Title } from "@mantine/core";
+import { Stack, Title } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { useEffect } from "react";
 import { JobFilterLocalStorageKey } from "../components/job-components/JobHomeFilter";
@@ -24,26 +24,20 @@ export default function Jobs() {
   }, [jobFilter]);
 
   return (
-    <Stack justify="center">
-      <Title order={1} align="center">
+    <Stack align="center">
+      <Title order={1} align="center" ml="240px">
         Available jobs
       </Title>
-      <Grid align="top" justify="center" mt="2%">
-        <Grid.Col span={3}>
-          <JobPageFilter
-            jobFilter={jobFilter}
-            setJobFilter={handleSetJobFilter}
-          />
-        </Grid.Col>
-        <Grid.Col span={7}>
-          <JobList
-            jobs={jobs}
-            loading={loading}
-            error={error}
-            refetch={listJobs}
-          />
-        </Grid.Col>
-      </Grid>
+      <JobPageFilter jobFilter={jobFilter} setJobFilter={handleSetJobFilter} />
+
+      <Stack w="70%" align="center" ml="240px">
+        <JobList
+          jobs={jobs}
+          loading={loading}
+          error={error}
+          refetch={listJobs}
+        />
+      </Stack>
     </Stack>
   );
 }

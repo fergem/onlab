@@ -10,11 +10,8 @@ import EditAdditionalInfo from "../components/EditAdditionalInfo";
 import EditUserForm from "../components/EditUserForm";
 import ProfilePets from "../components/ProfilePets";
 import AddPet from "../components/pet-components/AddPet";
-import { useAuth } from "../hooks/AuthHooks";
 
 export default function Profile() {
-  const { user } = useAuth();
-
   return (
     <Tabs defaultValue="profile">
       <Stack justify="center" ml="5%" mr="10%" align="center" spacing={0}>

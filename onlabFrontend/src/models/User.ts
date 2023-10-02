@@ -2,21 +2,21 @@ import OwnerProfile from "./OwnerProfile";
 import Pet from "./Pet";
 
 export default interface User extends UserInformation {
-  id: number;
   userName?: string;
   pets?: Pet[];
   bearer?: string;
   ownerProfile?: OwnerProfile;
-  picture?: string;
 }
 
 export interface UserInformation {
+  id: number;
   firstName?: string;
   lastName?: string;
   age?: number;
   email?: string;
   location?: string;
   phoneNumber?: string;
+  picture?: string;
 }
 
 export interface UpdateUserModel {

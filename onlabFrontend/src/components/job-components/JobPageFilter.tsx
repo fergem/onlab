@@ -1,6 +1,7 @@
 import {
   Checkbox,
   Container,
+  Divider,
   Group,
   MultiSelect,
   Paper,
@@ -36,12 +37,16 @@ export default function JobPageFilter({
   });
 
   return (
-    <Container>
+    <Container
+      sx={() => ({ position: "fixed", top: "150px", left: "50px" })}
+      w="25vw"
+      h="40vw"
+    >
       <Paper shadow="sm" p="sm" withBorder>
         <Text fz="md" align="left">
           Search for:
         </Text>
-
+        <Divider my="sm" />
         <Stack justify="center" spacing="xl">
           <Checkbox.Group
             value={jobFilter.species}

@@ -25,7 +25,8 @@ namespace DataAccess
         public DbSet<DbJob> Jobs { get; set; }
         public DbSet<DbPetImage> PetImages { get; set; }
         public DbSet<DbPetJob> PetJobs { get; set; }
-
+        public DbSet<DbJobApplication> JobApplications { get; set; }
+        public DbSet<DbJobApplicationComment> JobApplicationsComment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,7 +60,6 @@ namespace DataAccess
                 entity.ToTable("PetSitterProfiles");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
-                entity.Property(s => s.MaxWage);
                 entity.Property(s => s.AcquiredExperience);
             });
               
@@ -93,7 +93,24 @@ namespace DataAccess
                 entity.ToTable("PetImages");
                 entity.HasKey(s => s.ID);
             });
-                
+
+            modelBuilder.Entity<DbJobApplication>(entity =>
+            {
+                entity.ToTable("JobApplications");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.IsApproved);
+            });
+
+            modelBuilder.Entity<DbJobApplicationComment>(entity =>
+            {
+                entity.ToTable("JobApplicationComments");
+                entity.HasKey(s => s.ID);
+                entity.Property(s => s.CommentText).IsUnicode(unicode: true).HasMaxLength(200);
+                entity.Property(s => s.CommentDate);
+                entity.Property(s => s.SenderUserID);
+            });
+
+
             //Relationship configuration
             OneToOneRelationshipConfiguration(modelBuilder);
             OneToManyRelationshipConfiguration(modelBuilder);
@@ -131,6 +148,16 @@ namespace DataAccess
                 .WithOne(s => s.Pet)
                 .HasForeignKey(e => e.PetID)
                 .IsRequired();
+
+            modelBuilder.Entity<DbJob>()
+                .HasMany(j => j.JobApplications)
+                .WithOne(a => a.Job)
+                .HasForeignKey(a => a.JobID);
+
+            modelBuilder.Entity<DbJobApplication>()
+                .HasMany(j => j.Comments)
+                .WithOne(a => a.JobApplication)
+                .HasForeignKey(a => a.JobApplicationID);
         }
 
         private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)

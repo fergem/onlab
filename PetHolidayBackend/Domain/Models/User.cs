@@ -30,6 +30,7 @@ namespace Domain.Models
 
     public class UserInformation
     {
+        public required int ID { get; set; }
         public required string UserName { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

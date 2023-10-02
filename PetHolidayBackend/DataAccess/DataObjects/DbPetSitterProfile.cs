@@ -13,8 +13,6 @@ namespace DataAccess.DataObjects
 
         public int AcquiredExperience { get; set; }
 
-        public int MaxWage { get; set; }
-
         public int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;
     }
