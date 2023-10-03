@@ -22,8 +22,8 @@ namespace DataAccess.DataObjects
         public int Age { get; set; }
         public byte[]? Picture { get; set; }
         public string? Location { get; set; }
-        public virtual DbOwnerProfile OwnerProfile { get; set; } = null!;
 
+        public virtual DbOwnerProfile OwnerProfile { get; set; } = null!;
         public virtual DbPetSitterProfile PetSitterProfile { get; set; } = null!;
         
         public virtual ICollection<DbPet> Pets { get; set; }

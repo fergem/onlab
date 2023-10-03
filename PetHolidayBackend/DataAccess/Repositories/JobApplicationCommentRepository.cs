@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using Domain.Models;
+using Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public Task InsertApplicationComment(string text, int userID)
+        public Task<JobApplicationComment> InsertApplicationComment(string text, int userID)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateApplicationComment(string text, int userID)
+        public Task<JobApplicationComment> UpdateApplicationComment(string text, int userID)
         {
             throw new NotImplementedException();
         }

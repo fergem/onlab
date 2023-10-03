@@ -12,10 +12,10 @@ namespace Domain.Repositories
 {
     public interface IUserRepository
     {
-        Task<User> Register(RegisterModel registerModel);
-        Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel);
-        Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file);
-        Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel);
-        Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password);
+        Task<UserAdditionalInfo> Register(RegisterModel registerModel);
+        Task<(UserAdditionalInfo user, IList<string> userRoles)> Login(LoginModel loginModel);
+        Task<User> AddProfilePicture(int userID, byte[] file);
+        Task<User> UpdateProfile(int userID, UpdateProfileModel updateProfileModel);
+        Task<User> ChangePassword(int userID, ChangePasswordModel password);
     }
 }

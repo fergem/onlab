@@ -1,4 +1,5 @@
 ﻿using Domain.Common.InsertModels;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Domain.Repositories
 {
     public interface IJobApplicationCommentRepository
     {
-        Task InsertApplicationComment(string text, int userID);
-        Task UpdateApplicationComment(string text, int userID);
+        Task<JobApplicationComment> InsertApplicationComment(string text, int userID);
+        Task<JobApplicationComment> UpdateApplicationComment(string text, int userID);
         Task DeleteApplicationComment(int commentID);
     }
 }

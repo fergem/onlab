@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class UserBaseInformation
+    public class User
     {
         public required int ID { get; set; }
         public string? FirstName { get; set; }
@@ -19,13 +19,17 @@ namespace Domain.Models
         public string? Location { get; set; }
         public string? PhoneNumber { get; set; }
         public byte[]? Picture { get; set; }
+        public OwnerProfile? OwnerProfile { get; set; }
+        public PetSitterProfile? PetSitterProfile { get; set; }
+
     }
 
-    public class User: UserBaseInformation
+    public class UserAdditionalInfo: User
     {
         public required string UserName { get; set; }
         public string? Bearer { get; set; }
-        public virtual OwnerProfile OwnerProfile { get; set; } = null!;
+
         public required ICollection<Pet> Pets { get; set; }
-    }    
+
+    }
 }

@@ -59,7 +59,7 @@ namespace PetHolidayWebApi.Controllers
             return Ok(await jobService.ListUnderTookJobs(userID, filter));
         }
 
-        [Authorize]
+        /*[Authorize]
         [HttpGet("approvals")]
         public async Task<ActionResult<IReadOnlyCollection<Job>>> ListApprovals()
         {
@@ -67,12 +67,12 @@ namespace PetHolidayWebApi.Controllers
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             return Ok(await jobService.ListApprovals(userID));
-        }
+        }*/
 
         [HttpGet("{jobID}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> FindById([FromRoute] int jobID) 
+        public async Task<ActionResult<UserAdditionalInfo>> FindById([FromRoute] int jobID) 
         {
             var value = await jobService.FindById(jobID);
             return value != null ? Ok(value) : NotFound(); ;
@@ -89,7 +89,7 @@ namespace PetHolidayWebApi.Controllers
             return CreatedAtAction(nameof(FindById), new { jobID = created }, created);
         }
 
-        [Authorize]
+        /*[Authorize]
         [HttpPut("takejob/{jobID}")]
         public async Task<ActionResult<Job>> TakeJob([FromRoute] int jobID)
         {
@@ -107,8 +107,8 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        [Authorize]
+        */
+        /*[Authorize]
         [HttpPut("approvejob/{jobID}")]
         public async Task<ActionResult<Job>> ApproveUser([FromRoute] int jobID)
         {
@@ -125,9 +125,9 @@ namespace PetHolidayWebApi.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        }*/
 
-        [Authorize]
+        /*[Authorize]
         [HttpPut("declineuser/{jobID}")]
         public async Task<ActionResult<Job>> DeclineUser([FromRoute] int jobID)
         {
@@ -144,7 +144,7 @@ namespace PetHolidayWebApi.Controllers
             {
                 return BadRequest(e.Message);
             }
-        }
+        }*/
 
         [Authorize]
         [HttpPut("finishjob/{jobID}")]

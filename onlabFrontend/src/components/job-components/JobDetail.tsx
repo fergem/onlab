@@ -23,6 +23,7 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/AuthHooks";
+import { useGetApplicationsForJob } from "../../hooks/JobApplicationHooks";
 import { useGetJob, useProgressJob } from "../../hooks/JobHooks";
 import { Day, JobType, Status } from "../../models/Job";
 import Pet, { PetSpecies } from "../../models/Pet";
@@ -37,6 +38,13 @@ function JobDetail() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const {
+    loadingApplications,
+    errorApplications,
+    applications,
+    refetchApplications,
+  } = useGetApplicationsForJob(id);
+  console.log(applications);
   const handleTakeJob = () => {
     if (job) {
       takeJob(job.id);
@@ -48,7 +56,7 @@ function JobDetail() {
     if (job) finishJob(job.id);
   };
   return (
-    <Stack align="center" justify="center">
+    <Stack justify="center">
       <LoadingBoundary loading={loading} error={error} refetch={getJob}>
         <Grid w="85%" justify="space-around" gutter="xl">
           <Grid.Col span={4}>
@@ -159,6 +167,15 @@ function JobDetail() {
             </Stack>
           </Grid.Col>
         </Grid>
+      </LoadingBoundary>
+      <LoadingBoundary
+        loading={loadingApplications}
+        error={errorApplications}
+        refetch={refetchApplications}
+      >
+        <Paper p="md" shadow="sm" withBorder>
+          <Stack />
+        </Paper>
       </LoadingBoundary>
     </Stack>
   );

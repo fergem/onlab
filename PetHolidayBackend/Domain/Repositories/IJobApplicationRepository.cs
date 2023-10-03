@@ -10,8 +10,9 @@ namespace Domain.Repositories
 {
     public interface IJobApplicationRepository
     {
+        Task<IReadOnlyCollection<JobApplication>> GetAllForJob(int jobID);
         Task<JobApplication> InsertApplicationForJob(int jobID, int userID);
-        Task DeleteApplication(int jobID, int userID);
+        Task DeleteApplication(int applicationID);
         Task ApproveApplication(int applicationID);
     }
 }

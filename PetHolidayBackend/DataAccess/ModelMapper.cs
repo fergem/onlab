@@ -13,7 +13,7 @@ namespace DataAccess
     {
         internal static Job ToJobModel(DbJob job)
         {
-            var ownerUserInformation = new UserBaseInformation()
+            var ownerUser = new User()
             {
                 ID = job.OwnerUser.Id,
                 Picture = job.OwnerUser.Picture,
@@ -30,44 +30,13 @@ namespace DataAccess
                 if (petJob.Pet != null)
                     pets.Add(ToPetModel(petJob.Pet));
 
-            if (job.PetSitterUser != null)
-            {
-                var petSitterInformation = new UserBaseInformation()
-                {
-                    ID = job.PetSitterUser.Id,
-
-                    Picture = job.PetSitterUser.Picture,
-                    FirstName = job.PetSitterUser.FirstName ?? "",
-                    LastName = job.PetSitterUser.LastName ?? "",
-                    Age = job.PetSitterUser.Age,
-                    Email = job.PetSitterUser.Email ?? "",
-                    PhoneNumber = job.OwnerUser.PhoneNumber ?? ""
-                };
-                return new Job()
-                {
-                    ID = job.ID,
-                    Description = job.Description,
-                    Location = job.Location,
-                    OwnerUserInformation = ownerUserInformation,
-                    Payment = job.Payment,
-                    PetSitterUserInformation = petSitterInformation,
-                    MinRequiredExperience = job.MinRequiredExperience,
-                    Pets = pets,
-                    Repeated = job.Repeated,
-                    StartDate = job.StartDate.ToUniversalTime(),
-                    EndDate = job.EndDate,
-                    Days = job.Days,
-                    Title = job.Title,
-                    Type = job.Type,
-                };
-            }
             return new Job()
             {
                 ID = job.ID,
                 Description = job.Description,
                 Location = job.Location,
                 Payment = job.Payment,
-                OwnerUserInformation = ownerUserInformation,
+                OwnerUser = ownerUser,
                 MinRequiredExperience = job.MinRequiredExperience,
                 Pets = pets,
                 Repeated = job.Repeated,
@@ -78,7 +47,7 @@ namespace DataAccess
                 Type = job.Type,
             };
         }
-        internal static User ToUserModel(DbUser user)
+        internal static UserAdditionalInfo ToUserModel(DbUser user)
         {
             var pets = new List<Pet>();
             foreach (var pet in user.Pets)
@@ -97,7 +66,7 @@ namespace DataAccess
                 };
             }
 
-            return new User()
+            return new UserAdditionalInfo()
             {
                 ID = user.Id,
                 UserName = user.UserName ?? "",
@@ -132,9 +101,9 @@ namespace DataAccess
             return result;
         }
 
-        internal static UserBaseInformation ToUserInformationModel(DbUser user)
+        internal static User ToUserInformationModel(DbUser user)
         {
-            return new UserBaseInformation()
+            return new User()
             {
                 ID = user.Id,
                 Picture = user.Picture,
@@ -157,6 +126,5 @@ namespace DataAccess
                 ApplicantUserID = job.ApplicantUserID,
             };
         }
-
     }
 }

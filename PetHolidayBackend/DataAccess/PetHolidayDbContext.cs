@@ -2,14 +2,10 @@
 using DataAccess.DataObjects;
 using Domain.Common;
 using Domain.Models;
-using Domain.Models.AuthHelpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Configuration;
+
 
 namespace DataAccess
 {
@@ -82,7 +78,6 @@ namespace DataAccess
                 entity.ToTable("Jobs");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
-                entity.Property(s => s.Hours);
                 entity.Property(s => s.Location).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Days).IsRequired(false)
                                              .HasConversion(converter)
@@ -134,11 +129,6 @@ namespace DataAccess
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            modelBuilder.Entity<DbJob>()
-                .HasOne(s => s.PetSitterUser)
-                .WithMany(s => s.JobApplications)
-                .HasForeignKey(s => s.PetSitterUserID);
-
             /*modelBuilder.Entity<DbUser>()
                 .HasMany(c => c.JobApplications)
                 .WithOne(s => s.PetSitterUser)
@@ -173,10 +163,6 @@ namespace DataAccess
                 .WithOne(s => s.User)
                 .HasForeignKey<DbPetSitterProfile>(b => b.UserID);
 
-            /*modelBuilder.Entity<DbPet>()
-                .HasOne(c => c.Image)
-                .WithOne(s => s.Pet)
-                .HasForeignKey<DbPetImage>(e => e.PetID);*/
         }
 
         private void ManyToManyRelationshipConfiguration(ModelBuilder modelBuilder)
@@ -357,12 +343,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 1,
-                        Hours = 4,
                         Location = "Szeged",
                         Description = "Milio, the adorable four-legged companion, is in search of a caring pet sitter to take him on weekly adventures. As Milio's dedicated walker, you'll embark on leisurely strolls through the neighborhood, providing him with the exercise and social interaction he craves. Your bond with Milio will grow stronger with each outing, as you ensure he stays happy and healthy. Join Milio on his weekly walks and be part of his wagging tail tales!",
                         Status = Status.Available,
                         OwnerUserID = 1,
-                        PetSitterUserID = null,
                         Payment = 10,
                         MinRequiredExperience = 0,
                         Repeated = true,
@@ -374,12 +358,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 2,
-                        Hours = 3,
                         Location = "Szolnok",
                         Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
                         Status = Status.Available,
                         OwnerUserID = 2,
-                        PetSitterUserID = null,
                         Payment = 20,
                         MinRequiredExperience = 1,
                         Repeated = false,
@@ -391,12 +373,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 3,
-                        Hours = 7,
                         Location = "Jászkarajenő",
                         Description = "Are you a dog lover looking for a rewarding side gig? We have an exciting job for you! Join our team to take Luna and Rusty, a delightful pair of dogs (Luna, a charming female, and Rusty, an energetic male), on weekly walks. Enjoy the great outdoors while earning extra income and providing these furry friends with the exercise and companionship they adore. Join us in fostering healthy and happy dogs while making a furry duo's week brighter!",
                         Status = Status.Available,
                         OwnerUserID = 3,
-                        PetSitterUserID = null,
                         Payment = 30,
                         MinRequiredExperience = 3,
                         Repeated = true,
@@ -408,12 +388,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 4,
-                        Hours = 5,
                         Location = "Debrecen",
                         Description = "Join the adventure with Luna, the energetic pup! Luna is looking for an enthusiastic pet sitter to accompany her on daily escapades filled with fun and excitement. Your role includes playtime, exercise, and ensuring Luna's safety during your outings. Embrace the joy of being Luna's daily companion and make her tail wag with happiness!",
                         Status = Status.Available,
                         OwnerUserID = 1,
-                        PetSitterUserID = null,
                         Payment = 15,
                         MinRequiredExperience = 0,
                         Repeated = true,
@@ -425,12 +403,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 5,
-                        Hours = 4,
                         Location = "Budapest",
                         Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
                         Status = Status.Available,
                         OwnerUserID = 2,
-                        PetSitterUserID = null,
                         Payment = 25,
                         MinRequiredExperience = 2,
                         Repeated = false,
@@ -442,12 +418,10 @@ namespace DataAccess
                     new DbJob()
                     {
                         ID = 6,
-                        Hours = 2,
                         Location = "Pécs",
                         Description = "Calling all canine enthusiasts! Max and Bella, the lively Labrador duo, are seeking an experienced pet sitter to provide them with weekly visits filled with fun and care. As their dedicated caretaker, you'll enjoy their playful antics and cherish the moments spent together. Your responsibilities include feeding, exercise, and ensuring Max and Bella have a fantastic weekly routine. Join Max and Bella on this pawsome journey and create unforgettable memories!",
                         Status = Status.Available,
                         OwnerUserID = 3,
-                        PetSitterUserID = null,
                         Payment = 20,
                         MinRequiredExperience = 4,
                         Repeated = false,

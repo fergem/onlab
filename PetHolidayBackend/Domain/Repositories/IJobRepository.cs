@@ -1,4 +1,5 @@
-﻿using Domain.Common.QueryHelpers;
+﻿using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,12 @@ namespace Domain.Repositories
     {
         Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters);
         Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter);
-        Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
+        //Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter);
         Task<Job> FindById(int jobID);
         Task<int> Insert(InsertJobModel job, int userID);
         Task<Job> UpdateJob(int jobID);
-        Task<Job> TakeJob(int jobID, int userID);
-        Task<Job> ApproveUser(int jobID);
-        Task<Job> DeclineUser(int jobID);
+    
         Task<Job> FinishJob(int jobID);
         Task DeleteJob(int jobID);
         Task RemoveJobsDependentOnPet(int petID);

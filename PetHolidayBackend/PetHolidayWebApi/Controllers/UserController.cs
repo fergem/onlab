@@ -2,7 +2,6 @@
 using Domain.Common.AuthHelpers;
 using Domain.Common.QueryHelpers;
 using Domain.Models;
-using Domain.Models.AuthHelpers;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -74,7 +73,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpDelete("deletepet/{petID}")]
-        public async Task<ActionResult<User>> Deletepet([FromRoute] int petID)
+        public async Task<ActionResult<UserAdditionalInfo>> Deletepet([FromRoute] int petID)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -93,7 +92,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("pets")]
-        public async Task<ActionResult<User>> ListPets([FromQuery] PetFilterParameters filter)
+        public async Task<ActionResult<UserAdditionalInfo>> ListPets([FromQuery] PetFilterParameters filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -148,7 +147,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPost("addprofilepicture")]
-        public async Task<ActionResult<UserBaseInformation>> AddProfilePicture([FromForm] IFormFile file)
+        public async Task<ActionResult<User>> AddProfilePicture([FromForm] IFormFile file)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -168,7 +167,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPatch("updateprofile")]
-        public async Task<ActionResult<User>> UpdateProfile(UpdateProfileModel updateProfileModel)
+        public async Task<ActionResult<UserAdditionalInfo>> UpdateProfile(UpdateProfileModel updateProfileModel)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
@@ -179,7 +178,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPatch("changepassword")]
-        public async Task<ActionResult<User>> ChangePassword(ChangePasswordModel model)
+        public async Task<ActionResult<UserAdditionalInfo>> ChangePassword(ChangePasswordModel model)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)

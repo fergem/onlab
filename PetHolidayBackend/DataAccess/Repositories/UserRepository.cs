@@ -27,7 +27,7 @@ namespace DataAccess.Repositories
 
 
 
-        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
+        public async Task<(UserAdditionalInfo user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             var user = await userManager.FindByNameAsync(loginModel.Username);
             if (user == null)
@@ -46,7 +46,7 @@ namespace DataAccess.Repositories
             return (ModelMapper.ToUserModel(user), userRoles);
         }
 
-        public async Task<User> Register(RegisterModel registerModel)
+        public async Task<UserAdditionalInfo> Register(RegisterModel registerModel)
         {
             var IsExist = await userManager.FindByNameAsync(registerModel.Username);
             if (IsExist != null)
@@ -66,7 +66,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserModel(appUser);
         }
 
-        public async Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file)
+        public async Task<User> AddProfilePicture(int userID, byte[] file)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
@@ -80,7 +80,7 @@ namespace DataAccess.Repositories
             return ModelMapper.ToUserInformationModel(user);
         }
 
-        public async Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
+        public async Task<User> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)
@@ -101,7 +101,7 @@ namespace DataAccess.Repositories
 
         }
 
-        public async Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password)
+        public async Task<User> ChangePassword(int userID, ChangePasswordModel password)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)

@@ -29,17 +29,11 @@ namespace DataAccess.DataObjects
 
         public required string Title { get; set; }
 
-
-
         public required int OwnerUserID { get; set; }
         public virtual DbUser OwnerUser { get; set; } = null!;
 
-        public int? PetSitterUserID { get; set; } = null;
-        public virtual DbUser? PetSitterUser { get; set; } = null!;
 
         public virtual ICollection<DbPetJob> Pets { get; set; }
-
-
         public virtual ICollection<DbJobApplication> JobApplications { get; set; } = new List<DbJobApplication>();
     }
 }

@@ -3,7 +3,7 @@ import User, { LoginModel, RegisterModel } from "../models/User";
 
 const login = async (loginModel: LoginModel) => {
   return axios
-    .post<any>("/api/users/login", {
+    .post("/api/users/login", {
       username: loginModel.userName,
       password: loginModel.password,
     })

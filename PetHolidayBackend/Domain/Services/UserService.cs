@@ -18,11 +18,11 @@ namespace Domain.Services
             this.userRepository = userRepository;
             this.jobRepository = jobRepository;
         }
-        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
+        public async Task<(UserAdditionalInfo user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             return await userRepository.Login(loginModel);
         }
-        public async Task<User> Register(RegisterModel registerModel)
+        public async Task<UserAdditionalInfo> Register(RegisterModel registerModel)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace Domain.Services
             }
         }
 
-        public async Task<UserBaseInformation> AddProfilePicture(int userID, byte[] file)
+        public async Task<User> AddProfilePicture(int userID, byte[] file)
         {
             return await userRepository.AddProfilePicture(userID, file);
         }
@@ -71,11 +71,11 @@ namespace Domain.Services
             await jobRepository.RemoveJobsDependentOnPet(ID);
         }
 
-        public async Task<UserBaseInformation> UpdateProfile(int userID, UpdateProfileModel model)
+        public async Task<User> UpdateProfile(int userID, UpdateProfileModel model)
         {
             return await userRepository.UpdateProfile(userID, model);
         }
-        public async Task<UserBaseInformation> ChangePassword(int userID, ChangePasswordModel password)
+        public async Task<User> ChangePassword(int userID, ChangePasswordModel password)
         {
             return await userRepository.ChangePassword(userID, password);
         }

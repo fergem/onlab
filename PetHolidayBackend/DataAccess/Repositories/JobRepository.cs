@@ -26,7 +26,8 @@ namespace DataAccess.Repositories
         {
             var job = await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                .Include(s => s.PetSitterUser)
+                .Include(s => s.JobApplications)
+                //.ThenInclude(s => s.Comments)
                 .Include(s => s.Pets).FirstOrDefaultAsync(s => s.ID == jobID);
             if (job == null)
                 throw new Exception("Job doesnt exist");
@@ -46,7 +47,7 @@ namespace DataAccess.Repositories
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Status = Status.Available,
-                Days = !job.Days.IsNullOrEmpty() ? job.Days : Enum.GetValues<DaysOfWeek>(),
+                Days = job.Days,
                 Title = job.Title,
                 Type = job.Type,
             };
@@ -66,10 +67,9 @@ namespace DataAccess.Repositories
         {
             IQueryable<DbJob> query = dbcontext.Jobs
                     .Include(s => s.OwnerUser)
-                    .Include(s => s.PetSitterUser)
                     .Include(s => s.Pets)
                     .Where(s => s.Repeated == filter.Repeated)
-                    .Where(s => s.Status == Status.Available);
+                    .Where(s => s.Status == Status.Available || s.Status == Status.Approving);
 
 
             //Filter by type
@@ -106,37 +106,37 @@ namespace DataAccess.Repositories
         { 
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                .Include(s => s.PetSitterUser)
+                //.Include(s => s.JobApplications) 
                 .Include(s => s.Pets)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => s.Status == filter.Status)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
-        public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
+        /*public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
         {
             return await dbcontext.Jobs
                .Include(s => s.OwnerUser)
-               .Include(s => s.PetSitterUser)
+               //.Include(s => s.JobApplications) 
                .Where(s => s.OwnerUserID == userID && s.Status == Status.Approving && s.PetSitterUserID != null)
                .Select(s => ModelMapper.ToJobModel(s))
                .ToListAsync();
-        }
+        }*/
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                .Include(s => s.PetSitterUser)
+                //.Include(s => s.JobApplications) 
                 .Include(s => s.Pets)
-                .Where(d => d.PetSitterUserID == userID)
+                //.Include(s => s.JobApplications) 
                 .Where(s => s.Status == filter.Status)
                 .OrderByDescending(s => filter.Status == Status.Upcoming ? s.StartDate : s.EndDate)
                 .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
 
-        public async Task<Job> TakeJob(int jobID, int userID)
+        /*public async Task<Job> TakeJob(int jobID, int userID)
         {
             var jobToTake = await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
@@ -155,9 +155,9 @@ namespace DataAccess.Repositories
             await dbcontext.SaveChangesAsync();
 
             return ModelMapper.ToJobModel(jobToTake);
-        }
+        }*/
 
-        public async Task<Job> ApproveUser(int jobID)
+        /*public async Task<Job> ApproveUser(int jobID)
         {
             var jobToApprove = await dbcontext.Jobs
                .Include(s => s.OwnerUser)
@@ -173,9 +173,9 @@ namespace DataAccess.Repositories
             await dbcontext.SaveChangesAsync();
 
             return ModelMapper.ToJobModel(jobToApprove);
-        }
+        }*/
 
-        public async Task<Job> DeclineUser(int jobID)
+        /*public async Task<Job> DeclineUser(int jobID)
         {
             var jobToDecline = await dbcontext.Jobs
                .Include(s => s.OwnerUser)
@@ -192,13 +192,13 @@ namespace DataAccess.Repositories
             await dbcontext.SaveChangesAsync();
 
             return ModelMapper.ToJobModel(jobToDecline);
-        }
+        }*/
 
         public async Task<Job> FinishJob(int jobID)
         {
             var jobToFinish = await dbcontext.Jobs
                .Include(s => s.OwnerUser)
-               .Include(s => s.PetSitterUser)
+               //.Include(s => s.JobApplications) 
                .FirstAsync(s => s.ID == jobID);
 
             if (jobToFinish == null)
@@ -215,8 +215,6 @@ namespace DataAccess.Repositories
         public async Task DeleteJob(int jobID)
         {
             var jobToDelete = await dbcontext.Jobs
-               .Include(s => s.OwnerUser)
-               .Include(s => s.PetSitterUser)
                .FirstAsync(s => s.ID == jobID);
 
             dbcontext.Remove(jobToDelete);
@@ -239,7 +237,6 @@ namespace DataAccess.Repositories
         {
             var jobToUpdate = await dbcontext.Jobs
               .Include(s => s.OwnerUser)
-              .Include(s => s.PetSitterUser)
               .FirstAsync(s => s.ID == jobID);
 
             throw new NotImplementedException();

@@ -33,6 +33,8 @@ builder.Services.AddIdentity<DbUser, IdentityRole<int>>(x =>
 
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
 builder.Services.AddScoped<IJobApplicationCommentRepository, JobApplicationCommentRepository>();
+builder.Services.AddScoped<JobApplicationService, JobApplicationService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService, UserService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();

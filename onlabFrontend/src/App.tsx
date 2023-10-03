@@ -1,4 +1,5 @@
 import { AppShell } from "@mantine/core";
+import axios from "axios";
 import { useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthVerify from "./components/AuthVerify";
@@ -14,6 +15,8 @@ import OwnerProfile from "./pages/PostedJobs";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import UndertookJobs from "./pages/UndertookJobs";
+
+axios.defaults.baseURL = "http://localhost:5173/";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);

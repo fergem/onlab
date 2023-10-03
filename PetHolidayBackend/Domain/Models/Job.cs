@@ -25,9 +25,7 @@ namespace Domain.Models
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }
 
-        public ICollection<JobApplication>? JobApplications { get; set; }
-        public required UserBaseInformation OwnerUserInformation { get; set; }
-        public UserBaseInformation? PetSitterUserInformation { get; set; }
+        public required User OwnerUser { get; set; }
 
         public required IReadOnlyCollection<Pet> Pets { get; set; }
         public required ICollection<DaysOfWeek>? Days { get; set; }
