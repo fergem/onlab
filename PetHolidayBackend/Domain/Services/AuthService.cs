@@ -19,7 +19,7 @@ namespace Domain.Services
             this.configuration = configuration;
         }
 
-        public string GenerateToken(UserAdditionalInfo user, IList<string> userRoles)
+        public string GenerateToken(User user, IList<string> userRoles)
         {
             var authClaims = new List<Claim> {
                 new Claim("ID", user.ID.ToString()),

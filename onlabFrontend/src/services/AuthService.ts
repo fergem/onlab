@@ -1,20 +1,20 @@
 import axios from "axios";
-import User, { LoginModel, RegisterModel } from "../models/User";
+import { LoginModel, RegisterModel, User } from "../models/User";
 
 const login = async (loginModel: LoginModel) => {
   return axios
-    .post("/api/users/login", {
+    .post<User>("/api/users/login", {
       username: loginModel.userName,
       password: loginModel.password,
     })
     .then((response) => {
-      axios.defaults.headers.common.Authorization = `Bearer ${response.data.user.bearer}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${response.data.bearer}`;
       return response.data;
     });
 };
 
 const register = async (registerModel: RegisterModel) => {
-  return axios.post<User>("/api/users/register", {
+  return axios.post("/api/users/register", {
     email: registerModel.email,
     username: registerModel.userName,
     password: registerModel.password,

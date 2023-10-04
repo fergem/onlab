@@ -1,21 +1,29 @@
-import OwnerProfile from "./OwnerProfile";
-import Pet from "./Pet";
+import { OwnerProfile } from "./OwnerProfile";
+import { PetSitterProfile } from "./PetSitterProfile";
 
-export default interface User extends UserInformation {
-  userName?: string;
-  pets?: Pet[];
-  bearer?: string;
-  ownerProfile?: OwnerProfile;
-}
-
-export interface UserInformation {
+export interface UserDetails {
   id: number;
   firstName?: string;
   lastName?: string;
-  age?: number;
-  email?: string;
+  email: string;
   location?: string;
   phoneNumber?: string;
+  picture?: string;
+  ownerProfile?: OwnerProfile;
+  petSitterProfile?: PetSitterProfile;
+}
+
+export interface User {
+  id: number;
+  userName: string;
+  email: string;
+  bearer?: string;
+}
+
+export interface UserPreview {
+  id: number;
+  firstName?: string;
+  lastName?: string;
   picture?: string;
 }
 

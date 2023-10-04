@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using PetHolidayWebApi.DTOs;
+using PetHolidayWebApi.ModelExtensions;
 using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -32,12 +34,8 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var result = await userService.Register(registerModel);
-                return Ok(new Response
-                {
-                    Status = "Success",
-                    Message = "User created successfully!"
-                });
+                await userService.Register(registerModel);
+                return CreatedAtAction(nameof(Register),"User registered successfully!");
             }
             catch(Exception ex)
             {
@@ -46,145 +44,185 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
+        public async Task<ActionResult<UserDTO>> Login([FromBody] LoginModel loginModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var result = await userService.Login(loginModel);
-            var token = authService.GenerateToken(result.user, result.userRoles);
-            result.user.Bearer = token;
-            return Ok(new
+            try
             {
-                user = result.user,
-                Role = result.userRoles,
-                status = "User Login Successfully"
-            });
+                if (!ModelState.IsValid)
+                    throw new Exception("Logging model is not valid");
+
+                var result = await userService.Login(loginModel);
+                var token = authService.GenerateToken(result.user, result.userRoles);
+                result.user.Bearer = token;
+
+                return Ok(new UserDTO() {
+                    ID = result.user.ID,
+                    Bearer = result.user.Bearer,
+                    UserName = result.user.UserName,
+                    Email = result.user.Email,
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-
-
-        //[HttpGet("/list/{userName}")]
-        //public async Task<ActionResult<User>> FindByUsername([FromRoute] string userName)
-        //{
-        //    var value = await userService.FindByUserName(userName);
-        //    return value != null ? Ok() : NotFound();
-        //}
 
         [Authorize]
         [HttpDelete("deletepet/{petID}")]
-        public async Task<ActionResult<UserAdditionalInfo>> Deletepet([FromRoute] int petID)
+        public async Task<ActionResult> Deletepet([FromRoute] int petID)
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                BadRequest();
             try
             {
                 await userService.DeletePet(petID);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);                    
             }
-            return Ok();
         }
 
 
         [Authorize]
         [HttpGet("pets")]
-        public async Task<ActionResult<UserAdditionalInfo>> ListPets([FromQuery] PetFilterParameters filter)
+        public async Task<ActionResult<IReadOnlyCollection<PetDTO>>> ListPets([FromQuery] PetFilterParameters filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
 
             var value = await userService.ListUsersPets(userID, filter);
-            return Ok(value);
+            return Ok(value.Select(s => s.ToPetDTO()).ToList());
         }
-
 
         [Authorize]
         [HttpPost("addpet")]
-        public async Task<ActionResult<int>> InsertPet([FromBody] Pet pet)
+        public async Task<ActionResult<PetDTO>> InsertPet([FromBody] Pet pet)
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            
-            var created = await userService.InsertPet(pet, userID);
-            return CreatedAtAction(nameof(InsertPet), new { petID = created }, created);
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+
+                var created = await userService.InsertPet(pet, userID);
+                return CreatedAtAction(nameof(InsertPet), new { petID = created.ID }, created.ToPetDTO());
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex);
+            }
+           
         }
 
         [Authorize]
         [HttpPut("updatepet")]
-        public async Task<ActionResult<Pet>> UpdatePet([FromBody] Pet pet)
+        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] Pet pet)
         {
-            var updatedPet = await userService.UpdatePet(pet);
-            return CreatedAtAction(nameof(UpdatePet), new { petID = updatedPet.ID }, updatedPet);
+            try
+            {
+                var updatedPet = await userService.UpdatePet(pet);
+                return Ok(updatedPet.ToPetDTO());
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [Authorize]
-        [HttpPost("addpetimage")]
-        public async Task<ActionResult<Pet>> AddPetImage([FromHeader] int petID, [FromForm] List<IFormFile> file)
+        [HttpPatch("addpetimage")]
+        public async Task<ActionResult<PetDTO>> AddPetImage([FromHeader] int petID, [FromForm] List<IFormFile> file)
         {
-            if (file != null)
+            try
             {
-                var files = new List<byte[]>();
-                foreach (var item in file)
+                if (file != null)
+                {
+                    var files = new List<byte[]>();
+                    foreach (var item in file)
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            await item.CopyToAsync(stream);
+                            var fileData = stream.ToArray();
+                            files.Add(fileData);
+                        }
+                    }
+                    var updatedPet = await userService.AddPetImages(petID, files);
+                    return Ok(updatedPet.ToPetDTO());
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPatch("addprofilepicture")]
+        public async Task<ActionResult<UserDetailsDTO>> AddProfilePicture([FromForm] IFormFile file)
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+                if (file != null)
                 {
                     using (var stream = new MemoryStream())
                     {
-                        await item.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                         var fileData = stream.ToArray();
-                        files.Add(fileData);
+                        var updatedUser = await userService.AddProfilePicture(userID, fileData);
+                        return Ok(updatedUser.ToUserDetailsDTO());
                     }
                 }
-                var updatedPet = await userService.AddPetImages(petID, files);
-                return CreatedAtAction(nameof(AddPetImage), new { petID = updatedPet.ID }, updatedPet);
+                return BadRequest();
             }
-            return BadRequest();
-        }
-
-        [Authorize]
-        [HttpPost("addprofilepicture")]
-        public async Task<ActionResult<User>> AddProfilePicture([FromForm] IFormFile file)
-        {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            if (file != null)
+            catch (Exception ex)
             {
-                using (var stream = new MemoryStream())
-                {
-                    await file.CopyToAsync(stream);
-                    var fileData = stream.ToArray();
-                    var updatedPet = await userService.AddProfilePicture(userID, fileData);
-                    return CreatedAtAction(nameof(AddProfilePicture), updatedPet);
-                }
+                return NotFound(ex.Message);
             }
-            return BadRequest();
         }
 
         [Authorize]
         [HttpPatch("updateprofile")]
-        public async Task<ActionResult<UserAdditionalInfo>> UpdateProfile(UpdateProfileModel updateProfileModel)
+        public async Task<ActionResult<UserDetailsDTO>> UpdateProfile(UpdateProfileModel updateProfileModel)
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            var updatedUser = await userService.UpdateProfile(userID, updateProfileModel);
-            return Ok(updatedUser);
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+
+                var updatedUser = await userService.UpdateProfile(userID, updateProfileModel);
+                return Ok(updatedUser.ToUserDetailsDTO());
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [Authorize]
         [HttpPatch("changepassword")]
-        public async Task<ActionResult<UserAdditionalInfo>> ChangePassword(ChangePasswordModel model)
+        public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                BadRequest();
-            var updatedUser = await userService.ChangePassword(userID, model);
-            return Ok(updatedUser);
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+
+                var updatedUser = await userService.ChangePassword(userID, model);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

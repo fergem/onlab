@@ -4,6 +4,7 @@ using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
 using Domain.Models;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -26,8 +27,6 @@ namespace DataAccess.Repositories
         {
             var job = await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                .Include(s => s.JobApplications)
-                //.ThenInclude(s => s.Comments)
                 .Include(s => s.Pets).FirstOrDefaultAsync(s => s.ID == jobID);
             if (job == null)
                 throw new Exception("Job doesnt exist");

@@ -6,6 +6,8 @@ using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using PetHolidayWebApi.DTOs;
+using PetHolidayWebApi.ModelExtensions;
 using System.Collections.Generic;
 using System.Net;
 
@@ -25,7 +27,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> List([FromQuery] JobFilter jobParameters)
+        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> List([FromQuery] JobFilter jobParameters)
         {
             if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
                 return BadRequest("Filter is not good");
@@ -33,30 +35,30 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest("Filter is not good");
 
             var result = await jobService.List(jobParameters);
-            return Ok(result);
+            return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
 
         [Authorize]
         [HttpGet("posted")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListPostedJobs([FromQuery] JobFilterParticipant filter)
+        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListPostedJobs([FromQuery] JobFilterParticipant filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            
-            return Ok(await jobService.ListPostedJobs(userID, filter));
+            var result = await jobService.ListPostedJobs(userID, filter);
+            return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
 
         [Authorize]
         [HttpGet("undertook")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListUndertookJobs([FromQuery] JobFilterParticipant filter)
+        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListUndertookJobs([FromQuery] JobFilterParticipant filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            
 
-            return Ok(await jobService.ListUnderTookJobs(userID, filter));
+            var result = await jobService.ListUnderTookJobs(userID, filter);
+            return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
 
         /*[Authorize]
@@ -70,21 +72,28 @@ namespace PetHolidayWebApi.Controllers
         }*/
 
         [HttpGet("{jobID}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserAdditionalInfo>> FindById([FromRoute] int jobID) 
+        public async Task<ActionResult<JobDetailsDTO>> FindById([FromRoute] int jobID) 
         {
-            var value = await jobService.FindById(jobID);
-            return value != null ? Ok(value) : NotFound(); ;
+            try
+            {
+
+                var result = await jobService.FindById(jobID);
+                return result.ToJobDetailsDTO();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<int>> InsertJob([FromBody] InsertJobModel jobModel)
+        public async Task<ActionResult<Job>> InsertJob([FromBody] InsertJobModel jobModel)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
+
             var created = await jobService.Insert(jobModel, userID);
             return CreatedAtAction(nameof(FindById), new { jobID = created }, created);
         }
@@ -126,7 +135,6 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest(e.Message);
             }
         }*/
-
         /*[Authorize]
         [HttpPut("declineuser/{jobID}")]
         public async Task<ActionResult<Job>> DeclineUser([FromRoute] int jobID)
@@ -148,7 +156,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPut("finishjob/{jobID}")]
-        public async Task<ActionResult<Job>> FinishJob([FromRoute] int jobID)
+        public async Task<ActionResult<JobDetailsDTO>> FinishJob([FromRoute] int jobID)
         {
             try
             {
@@ -157,37 +165,32 @@ namespace PetHolidayWebApi.Controllers
                     return BadRequest("There is no such user with this Bearer");
 
                 var job = await jobService.FinishJob(jobID);
-                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
+                return Ok(job.ToJobDetailsDTO());
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
         }
 
 
         [Authorize]
         [HttpDelete("deletejob/{jobID}")]
-        public async Task<ActionResult<Job>> DeleteJob([FromRoute] int jobID)
+        public async Task<ActionResult> DeleteJob([FromRoute] int jobID)
         {
             try
             {
                 var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
                 if (!foundUser)
-                    return BadRequest("There is no such user with this Bearer");
+                    throw new Exception("User not found");
 
                  await jobService.DeleteJob(jobID);
                 return Ok();
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return NotFound(e.Message);
             }
-        }
-        [HttpGet("asd")]
-        public IReadOnlyList<DaysOfWeek> GetDay()
-        {
-            return new List<DaysOfWeek>() { DaysOfWeek.Sun, DaysOfWeek.Mon };
         }
     }
 }

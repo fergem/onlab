@@ -1,4 +1,6 @@
-export default interface OwnerProfile {
-  minRequiredExperience?: number;
-  minWage?: number;
+export interface OwnerProfile {
+  id: number;
+  description?: string | null;
+  minRequiredExperience: number;
+  minWage: number;
 }

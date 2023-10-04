@@ -3,6 +3,8 @@ using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetHolidayWebApi.DTOs;
+using PetHolidayWebApi.ModelExtensions;
 
 namespace PetHolidayWebApi.Controllers
 {
@@ -23,34 +25,28 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("{jobID}")]
-        public async Task<ActionResult<IReadOnlyCollection<JobApplication>>> GetAllForJob(int jobID)
+        public async Task<ActionResult<IReadOnlyCollection<JobApplicationDTO>>> GetAllForJob(int jobID)
         {
-            try
-            {
-                return Ok(await jobApplicationService.GetAllForJob(jobID));//.ConfigureAwait(false);
+            var result = await jobApplicationService.GetAllForJob(jobID);
+            return Ok(result.Select(s => s.ToJobApplicationDTO()));//.ConfigureAwait(false);
 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
         }
 
         [Authorize]
         [HttpPost("{jobID}")]
-        public async Task<ActionResult<JobApplication>> InsertApplicationForJob(int jobID)
+        public async Task<ActionResult<JobApplicationDTO>> InsertApplicationForJob(int jobID)
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                return BadRequest("There is no such user with this Bearer");
-
             try
             {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+
                 return Ok(await jobApplicationService.InsertApplicationForJob(jobID, userID));
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -65,7 +61,7 @@ namespace PetHolidayWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return NotFound(ex.Message);
             }
         }
 
@@ -80,7 +76,7 @@ namespace PetHolidayWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return NotFound(ex.Message);
             }
         }
 

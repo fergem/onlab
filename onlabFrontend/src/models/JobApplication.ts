@@ -1,8 +1,8 @@
 import { JobApplicationComment } from "./JobApplicationComment";
 
 export interface JobApplication {
-  ID: number;
+  id: number;
   isApproved: boolean;
-  comments: JobApplicationComment[];
+  comments?: JobApplicationComment[];
   applicantUserID: number;
 }

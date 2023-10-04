@@ -11,13 +11,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/AuthHooks";
 import { useDeleteJob } from "../../hooks/JobHooks";
-import Job from "../../models/Job";
+import { JobPreview } from "../../models/Job";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../LoadingBoundary";
 import { PetCountWithIcon } from "./JobDetail";
 
 export interface IPropsJobList {
-  jobs: Job[];
+  jobs: JobPreview[];
   loading: boolean;
   error: boolean;
   refetch(): void;

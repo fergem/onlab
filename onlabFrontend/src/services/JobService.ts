@@ -1,17 +1,19 @@
 import axios from "axios";
-import Job, {
+import {
   CreateJobModel,
+  JobDetails,
   JobFilter,
   JobFilterParticipant,
+  JobPreview,
 } from "../models/Job";
 
 const get = async (id?: string) => {
-  const response = await axios.get<Job>(`/api/jobs/${id}`);
+  const response = await axios.get<JobDetails>(`/api/jobs/${id}`);
   return response.data;
 };
 
 const list = async (filter: JobFilter) => {
-  const response = await axios.get<Job[]>(`/api/jobs?`, {
+  const response = await axios.get<JobPreview[]>(`/api/jobs?`, {
     params: filter,
     paramsSerializer: {
       indexes: true,
@@ -21,26 +23,26 @@ const list = async (filter: JobFilter) => {
 };
 
 const listUsersPostedJobs = async (filter: JobFilterParticipant) => {
-  const response = await axios.get<Job[]>(`/api/jobs/posted?`, {
+  const response = await axios.get<JobPreview[]>(`/api/jobs/posted?`, {
     params: filter,
   });
   return response.data;
 };
 
 const listUsersUndertookJobs = async (filter: JobFilterParticipant) => {
-  const response = await axios.get<Job[]>("/api/jobs/undertook", {
+  const response = await axios.get<JobPreview[]>("/api/jobs/undertook", {
     params: filter,
   });
   return response.data;
 };
 
-const listApprovals = async () => {
-  const response = await axios.get<Job[]>("/api/jobs/approvals");
-  return response.data;
-};
+// const listApprovals = async () => {
+//   const response = await axios.get<Job[]>("/api/jobs/approvals");
+//   return response.data;
+// };
 
 const createJob = async (jobModel: CreateJobModel) => {
-  const response = await axios.post("/api/jobs", jobModel);
+  const response = await axios.post<JobPreview>("/api/jobs", jobModel);
   return response.data;
 };
 

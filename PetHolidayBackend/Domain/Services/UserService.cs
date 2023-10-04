@@ -18,16 +18,15 @@ namespace Domain.Services
             this.userRepository = userRepository;
             this.jobRepository = jobRepository;
         }
-        public async Task<(UserAdditionalInfo user, IList<string> userRoles)> Login(LoginModel loginModel)
+        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             return await userRepository.Login(loginModel);
         }
-        public async Task<UserAdditionalInfo> Register(RegisterModel registerModel)
+        public async Task Register(RegisterModel registerModel)
         {
             try
             {
-                var response = await userRepository.Register(registerModel);
-                return response;
+                await userRepository.Register(registerModel);
             }
             catch (Exception ex)
             {
@@ -45,12 +44,7 @@ namespace Domain.Services
             return await petRepository.List(userID, filter);
         }
 
-        public async Task<Pet> FindPetByID(int ID)
-        {
-            return await petRepository.FindById(ID);
-        }
-
-        public async Task<int> InsertPet(Pet pet, int userID)
+        public async Task<Pet> InsertPet(Pet pet, int userID)
         {
             return await petRepository.Insert(pet, userID);
         }

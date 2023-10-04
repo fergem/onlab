@@ -1,5 +1,5 @@
-import Pet, { PetSpecies } from "./Pet";
-import { UserInformation } from "./User";
+import { Pet, PetSpecies } from "./Pet";
+import { UserPreview } from "./User";
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const JobFunctions = {
@@ -136,24 +136,34 @@ export const JobValidation = {
   },
 };
 
-export default interface Job {
+export interface JobDetails {
   id: number;
-  location?: string;
-  description?: string;
-  payment?: number;
-  ownerUserInformation?: UserInformation;
-  petSitterUserInformation?: UserInformation;
-  minRequiredExperience?: number;
-  status?: Status;
-
-  pets?: Pet[];
-
-  repeated?: boolean;
-  days?: Day[];
-  type?: JobType;
-  startDate?: Date;
+  location: string;
+  repeated: boolean;
+  title: string;
+  type: JobType;
+  startDate: Date;
   endDate?: Date;
-  title?: string;
+  description: string;
+  payment: number;
+  minRequiredExperience: number;
+  ownerUser: UserPreview;
+  pets: Pet[];
+  days?: Day[];
+}
+
+export interface JobPreview {
+  id: number;
+  location: string;
+  title: string;
+  startDate: Date;
+  endDate?: Date;
+  type: string;
+  days?: Day[];
+  catCount: number;
+  dogCount: number;
+  ownerUserPicture?: string;
+  displayPetPicture?: string;
 }
 
 export const Defaultjob: CreateJobModel = {

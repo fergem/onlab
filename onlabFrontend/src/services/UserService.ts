@@ -1,6 +1,6 @@
 import axios from "axios";
-import Pet, { PetFilter, PetInsertModel } from "../models/Pet";
-import { UserInformation } from "../models/User";
+import { Pet, PetFilter, PetInsertModel } from "../models/Pet";
+import { UpdateUserModel, UserDetails } from "../models/User";
 
 const getUserPets = async (filter?: PetFilter) => {
   const response = await axios.get<Pet[]>("/api/users/pets", {
@@ -11,8 +11,8 @@ const getUserPets = async (filter?: PetFilter) => {
   return response.data;
 };
 
-const updateUser = async (info: UserInformation) => {
-  const response = await axios.patch<UserInformation>(
+const updateUser = async (info: UpdateUserModel) => {
+  const response = await axios.patch<UserDetails>(
     "api/users/updateprofile",
     info
   );
@@ -20,17 +20,14 @@ const updateUser = async (info: UserInformation) => {
 };
 
 const updatePassword = async (password: string) => {
-  const response = await axios.patch<UserInformation>(
-    "api/users/changepassword",
-    {
-      Password: password,
-    }
-  );
+  const response = await axios.patch("api/users/changepassword", {
+    Password: password,
+  });
   return response.data;
 };
 
 const insertPet = async ({ name, species, age, images }: PetInsertModel) => {
-  const result = await axios.post<number>("/api/users/addpet", {
+  const result = await axios.post<Pet>("/api/users/addpet", {
     name,
     species,
     age,
@@ -44,16 +41,12 @@ const insertPet = async ({ name, species, age, images }: PetInsertModel) => {
     });
   }
 
-  const endresult = await axios.post<string>(
-    "/api/users/addpetimage",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        petID: result.data,
-      },
-    }
-  );
+  const endresult = await axios.patch<Pet>("/api/users/addpetimage", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      petID: result.data.id,
+    },
+  });
   return endresult;
 };
 
@@ -62,11 +55,45 @@ const deletePet = async (id: number) => {
   return result;
 };
 
+const uploadPetPictures = async (ID: number, file: File) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  const response = await axios.patch<Pet>("/api/users/addpetimage", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      petID: ID,
+    },
+  });
+
+  return response.data;
+};
+
+const uploadProfilePicture = async (file: File | undefined) => {
+  const formData = new FormData();
+  if (file !== undefined) formData.append("file", file);
+
+  const response = await axios.patch<UserDetails>(
+    "/api/users/addprofilepicture",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
+
 const UserService = {
   insertPet,
   getUserPets,
   deletePet,
   updateUser,
   updatePassword,
+  uploadPetPictures,
+  uploadProfilePicture,
 };
 export default UserService;

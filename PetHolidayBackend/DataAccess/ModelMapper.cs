@@ -19,10 +19,10 @@ namespace DataAccess
                 Picture = job.OwnerUser.Picture,
                 FirstName = job.OwnerUser.FirstName ?? "",
                 LastName = job.OwnerUser.LastName ?? "",
-                Age = job.OwnerUser.Age,
                 Email = job.OwnerUser.Email ?? "",
                 Location = job.OwnerUser.Location ?? "",
-                PhoneNumber = job.OwnerUser.PhoneNumber ?? ""
+                PhoneNumber = job.OwnerUser.PhoneNumber ?? "",
+                UserName = job.OwnerUser.UserName ?? "",
             };
 
             var pets = new List<Pet>();
@@ -47,44 +47,32 @@ namespace DataAccess
                 Type = job.Type,
             };
         }
-        internal static UserAdditionalInfo ToUserModel(DbUser user)
+        internal static User ToUserModel(DbUser user)
         {
-            var pets = new List<Pet>();
-            foreach (var pet in user.Pets)
-            {
-                pets.Add(ToPetModel(pet));
-            }
-            var ownerProfile = new OwnerProfile();
-            if (user.OwnerProfile != null)
-            {
-                ownerProfile = new OwnerProfile()
-                {
-                    ID = user.OwnerProfile.ID,
-                    Description = user.OwnerProfile.Description ?? "",
-                    MinRequiredExperience = user.OwnerProfile.MinRequiredExperience,
-                    MinWage = user.OwnerProfile.MinWage,
-                };
-            }
-
-            return new UserAdditionalInfo()
+            return new User()
             {
                 ID = user.Id,
                 UserName = user.UserName ?? "",
                 Email = user.Email ?? "",
-                Pets = pets,
                 Picture = user.Picture,
-                Age = user.Age,
                 FirstName = user.FirstName ?? "",
                 LastName = user.LastName ?? "",
-                OwnerProfile = ownerProfile,
+                OwnerProfile = ToOwnerProfileModel(user.OwnerProfile),
+                PetSitterProfile = ToPetSitterProfileModel(user.PetSitterProfile),
                 PhoneNumber = user.PhoneNumber ?? "",
                 Location = user.Location ?? "",
             };
         }
-        internal static Pet ToPetModel(DbPet pet)
-        {
-            return new Pet { Name = pet.Name, Description = pet.Description, Species = pet.Species, Age = pet.Age, ID = pet.ID, Images = ToPetImagesModel(pet.Images.ToList()) };
-        }
+        internal static Pet ToPetModel(DbPet pet) => 
+            new Pet 
+            { 
+                ID = pet.ID,
+                Name = pet.Name, 
+                Species = pet.Species, 
+                Age = pet.Age, 
+                Images = ToPetImagesModel(pet.Images.ToList()) 
+            };
+        
         internal static List<byte[]>? ToPetImagesModel(List<DbPetImage>? images)
         {
             if (images == null)
@@ -101,30 +89,30 @@ namespace DataAccess
             return result;
         }
 
-        internal static User ToUserInformationModel(DbUser user)
-        {
-            return new User()
-            {
-                ID = user.Id,
-                Picture = user.Picture,
-                FirstName = user.FirstName ?? "",
-                LastName = user.LastName ?? "",
-                Age = user.Age,
-                Email = user.Email ?? "",
-                Location = user.Location ?? "",
-                PhoneNumber = user.PhoneNumber ?? "",
-            };
-        }
-
-        internal static JobApplication ToJobApplicationModel(DbJobApplication job)
-        {
-            return new JobApplication()
-            {
-                ID = job.ID,
+        internal static JobApplication ToJobApplicationModel(DbJobApplication job) => 
+            new JobApplication() 
+            { 
+                ID = job.ID, 
                 IsApproved = job.IsApproved,
                 Comments = null,//job.Comments,
                 ApplicantUserID = job.ApplicantUserID,
             };
-        }
+
+        internal static OwnerProfile? ToOwnerProfileModel(DbOwnerProfile ownerProfile) =>
+            ownerProfile is not null ? new OwnerProfile()
+            {
+                ID = ownerProfile.ID,
+                Description = ownerProfile.Description,
+                MinRequiredExperience = ownerProfile.MinRequiredExperience,
+                MinWage = ownerProfile.MinWage,
+            } : null;
+
+        internal static PetSitterProfile? ToPetSitterProfileModel(DbPetSitterProfile petSitterProfile) =>
+            petSitterProfile is not null ? new PetSitterProfile()
+            {
+                ID = petSitterProfile.ID,
+                Description = petSitterProfile.Description,
+                AcquiredExperience = petSitterProfile.AcquiredExperience
+            } : null;
     }
 }

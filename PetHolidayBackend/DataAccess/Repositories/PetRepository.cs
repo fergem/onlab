@@ -43,40 +43,28 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Pet> FindById(int petID)
-        {
-            var pet = await dbcontext.Pets.FindAsync(petID);
-            if(pet == null) 
-            {
-                throw new Exception("Pet doesnt exist");
-            }
-            return ModelMapper.ToPetModel(pet);
-        }
-
-        public async Task<int> Insert(Pet pet, int userID)
+        public async Task<Pet> Insert(Pet pet, int userID)
         {
             var insertPet = new DbPet()
             {
                 Name = pet.Name,
                 Species = pet.Species,
-                Description = pet.Description,
                 Age = pet.Age,
                 UserID = userID
             };
             
             await dbcontext.Pets.AddAsync(insertPet);
             await dbcontext.SaveChangesAsync();
-            return insertPet.ID;
+            return ModelMapper.ToPetModel(insertPet);
         }
 
         public async Task<Pet> Update(Pet pet)
         {
             var dbPet = await dbcontext.Pets.FindAsync(pet.ID);
             if (dbPet == null)
-                throw new Exception("Nincs ilyen pet");
+                throw new Exception("Pet not found");
 
             dbPet.Age = pet.Age;
-            dbPet.Description = pet.Description;
             dbPet.Species = pet.Species;
             dbPet.Name = pet.Name;
             if (pet.Images is not null)

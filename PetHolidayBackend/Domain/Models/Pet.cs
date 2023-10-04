@@ -12,8 +12,6 @@ namespace Domain.Models
     {
         public int ID { get; set; }
         public required string Name { get; set; }
-        public required string Description { get; set; }
-
         public required PetSpecies Species { get; set; }
         public int Age { get; set; }
         public List<byte[]>? Images { get; set; }

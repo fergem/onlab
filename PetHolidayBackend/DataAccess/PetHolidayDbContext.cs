@@ -67,7 +67,6 @@ namespace DataAccess
                 entity.Property(s => s.Name).HasMaxLength(50).IsUnicode(unicode: true);
                 entity.Property(s => s.Age);
                 entity.Property(s => s.Species);
-                entity.Property(s => s.Description).IsUnicode(unicode: true);
             });
 
             var converter = new EnumCollectionJsonValueConverter<DaysOfWeek>();
@@ -239,7 +238,6 @@ namespace DataAccess
                     {
                         ID = 1,
                         Name = "Milio",
-                        Description = "Milio, the seven-year-old dog, boasts a heartwarming mix of wisdom and playfulness, his tail wagging through years of cherished adventures and companionship. His loyal eyes and graying fur tell a tale of unwavering friendship and boundless joy.",
                         Species = PetSpecies.Dog,
                         Age = 7,
                         UserID = 1,
@@ -248,7 +246,6 @@ namespace DataAccess
                     {
                         ID = 2,
                         Name = "Randy",
-                        Description = "Randy, the three-year-old cat, exudes youthful energy and curiosity in every graceful leap and stealthy pounce. With his sleek coat and bright, inquisitive eyes, he's a charming feline companion who brings a sense of enchantment to each day.",
                         Species = PetSpecies.Cat,
                         Age = 3,
                         UserID = 2,
@@ -257,7 +254,6 @@ namespace DataAccess
                     {
                         ID = 3,
                         Name = "Luna",
-                        Description = "Luna, the two-year-old pup, radiates youthful exuberance, bringing endless energy and an infectious spirit to every moment. With her vibrant personality and sparkling eyes, she's a delightful and energetic companion for any adventure.",
                         Species = PetSpecies.Dog,
                         Age = 2,
                         UserID = 3,
@@ -266,7 +262,6 @@ namespace DataAccess
                     {
                         ID = 4,
                         Name = "Whiskers",
-                        Description = "Whiskers, the three-year-old cat, exudes a graceful charm and inquisitive nature. With a glossy fur coat and sparkling eyes, Whiskers is a delightful feline companion who adds a touch of enchantment to every day.",
                         Species = PetSpecies.Cat,
                         Age = 3,
                         UserID = 2,
@@ -275,7 +270,6 @@ namespace DataAccess
                     {
                         ID = 5,
                         Name = "Rusty",
-                        Description = "Rusty, the four-year-old dog, emanates loyalty and playful energy. With a warm, russet-colored coat and soulful eyes, Rusty is a cherished canine companion who brings joy and adventure to each day.",
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 3,
@@ -284,7 +278,6 @@ namespace DataAccess
                     {
                         ID = 6,
                         Name = "Max",
-                        Description = "Max, the energetic four-year-old Labrador, radiates boundless enthusiasm and a love for play. With a sleek, chocolate-colored coat and an ever-wagging tail, Max is a cherished canine companion who brings joy and adventure to every moment.",
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 1,
@@ -293,7 +286,6 @@ namespace DataAccess
                     {
                         ID = 7,
                         Name = "Bella",
-                        Description = "Bella, the vivacious four-year-old Labrador, exudes charm and a zest for life. With a shiny, golden coat and bright, sparkling eyes, Bella is a beloved canine companion who adds a touch of sunshine to every day.",
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 1,

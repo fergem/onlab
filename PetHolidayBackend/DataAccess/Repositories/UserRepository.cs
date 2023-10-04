@@ -27,7 +27,7 @@ namespace DataAccess.Repositories
 
 
 
-        public async Task<(UserAdditionalInfo user, IList<string> userRoles)> Login(LoginModel loginModel)
+        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
             var user = await userManager.FindByNameAsync(loginModel.Username);
             if (user == null)
@@ -46,7 +46,7 @@ namespace DataAccess.Repositories
             return (ModelMapper.ToUserModel(user), userRoles);
         }
 
-        public async Task<UserAdditionalInfo> Register(RegisterModel registerModel)
+        public async Task Register(RegisterModel registerModel)
         {
             var IsExist = await userManager.FindByNameAsync(registerModel.Username);
             if (IsExist != null)
@@ -62,8 +62,6 @@ namespace DataAccess.Repositories
             var result = await userManager.CreateAsync(appUser, registerModel.Password);
             if (!result.Succeeded)
                 throw new Exception("User creation failed, check user credentials");
- 
-            return ModelMapper.ToUserModel(appUser);
         }
 
         public async Task<User> AddProfilePicture(int userID, byte[] file)
@@ -77,7 +75,7 @@ namespace DataAccess.Repositories
             await signInManager.RefreshSignInAsync(user);
 
             await dbContext.SaveChangesAsync();
-            return ModelMapper.ToUserInformationModel(user);
+            return ModelMapper.ToUserModel(user);
         }
 
         public async Task<User> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
@@ -97,7 +95,7 @@ namespace DataAccess.Repositories
             await signInManager.RefreshSignInAsync(user);
 
             await dbContext.SaveChangesAsync();
-            return ModelMapper.ToUserInformationModel(user);
+            return ModelMapper.ToUserModel(user);
 
         }
 
@@ -113,7 +111,7 @@ namespace DataAccess.Repositories
 
             await signInManager.RefreshSignInAsync(user);
             await dbContext.SaveChangesAsync();
-            return ModelMapper.ToUserInformationModel(user);
+            return ModelMapper.ToUserModel(user);
         }
     }
 }

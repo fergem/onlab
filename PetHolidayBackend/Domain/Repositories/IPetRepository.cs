@@ -11,8 +11,7 @@ namespace Domain.Repositories
     public interface IPetRepository
     {
         Task<IReadOnlyCollection<Pet>> List(int userID, PetFilterParameters filter);
-        Task<Pet> FindById(int petID);
-        Task<int> Insert(Pet pet, int userID);
+        Task<Pet> Insert(Pet pet, int userID);
         Task<Pet> Update(Pet pet);
         Task<Pet> AddImages(int ID, List<byte[]> files);
         Task Delete(int petID);
