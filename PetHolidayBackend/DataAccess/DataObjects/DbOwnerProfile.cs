@@ -15,8 +15,6 @@ namespace DataAccess.DataObjects
 
         public int MinWage { get; set; }
 
-        public string? Location { get; set; }
-
         public int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;
     }

@@ -25,6 +25,7 @@ namespace Domain.Models
         public required int Payment { get; set; }
         public required int MinRequiredExperience { get; set; }
 
+        public required Status Status { get; set; }
         public required User OwnerUser { get; set; }
 
         public required IReadOnlyCollection<Pet> Pets { get; set; }

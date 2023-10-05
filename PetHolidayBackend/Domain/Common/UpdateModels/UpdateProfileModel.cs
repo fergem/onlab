@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Common.QueryHelpers
+namespace Domain.Common.UpdateModels
 {
     public class UpdateProfileModel
     {
@@ -14,5 +14,7 @@ namespace Domain.Common.QueryHelpers
         public int? Age { get; set; }
         public string? Location { get; set; }
         public string? PhoneNumber { get; set; }
+        public UpdateOwnerProfile? OwnerProfile { get; set; }
+        public UpdatePetSitterProfile? PetSitterProfile { get; set;}
     }
 }

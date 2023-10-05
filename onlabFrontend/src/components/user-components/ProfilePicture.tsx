@@ -1,12 +1,14 @@
 import { FileInput, Image, Transition, rem } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
-import { useAuth } from "../hooks/AuthHooks";
-import { useUserProfilePictureUpload } from "../hooks/UserHooks";
-import { baseProfilePicture } from "../utility/constants";
+import { useUserProfilePictureUpload } from "../../hooks/react-query/UserHooks";
+import { baseProfilePicture } from "../../utility/constants";
 
-export default function ProfilePicture() {
-  const { user } = useAuth();
+export interface IPropsProfilePicture {
+  picture?: string;
+}
+
+export default function ProfilePicture({ picture }: IPropsProfilePicture) {
   const { postProfilePicture } = useUserProfilePictureUpload();
   const [hoveredProfile, setHoveredProfile] = useState(false);
   const [hoveredFileInput, setHoveredFileInput] = useState(false);
@@ -46,11 +48,7 @@ export default function ProfilePicture() {
         radius="md"
         width="15vw"
         height="15vw"
-        src={
-          user?.picture
-            ? `data:image/png;base64,${user.picture}`
-            : baseProfilePicture
-        }
+        src={picture ? `data:image/png;base64,${picture}` : baseProfilePicture}
         alt="Your Profile Picture"
       />
       <Transition

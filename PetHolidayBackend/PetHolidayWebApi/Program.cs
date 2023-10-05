@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using PetHolidayWebApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,8 +64,17 @@ builder.Services.AddAuthentication(options => {
     };
 });
 
+/*builder.Services.AddSignalR()
+    .AddJsonProtocol(options => {
+        options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+    });*/
+
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
+
+
 
 using (var serviceScope = app.Services.CreateScope())
 {
@@ -73,9 +83,13 @@ using (var serviceScope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<JobApplicationHub>("/hub");
+
 
 app.Run();

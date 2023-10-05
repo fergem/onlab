@@ -10,9 +10,8 @@ namespace DataAccess.DataObjects
     {
         public int ID { get; set; }
         public string? Description { get; set; }
-
         public int AcquiredExperience { get; set; }
-
+        
         public int UserID { get; set; }
         public virtual DbUser User { get; set; } = null!;
     }

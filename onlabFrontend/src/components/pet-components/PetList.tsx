@@ -1,9 +1,9 @@
 import { Grid, Image, Paper, Stack, Text } from "@mantine/core";
 import { useState } from "react";
-import { useGetUserPets } from "../../hooks/UserHooks";
-import Pet from "../../models/Pet";
+import { useGetUserPets } from "../../hooks/react-query/UserHooks";
+import { Pet } from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
-import LoadingBoundary from "../LoadingBoundary";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
 import EditPet from "./EditPet";
 
 interface IPropsPetGrid {

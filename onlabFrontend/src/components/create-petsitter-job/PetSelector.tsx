@@ -1,8 +1,8 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { useGetUserPets } from "../../hooks/UserHooks";
-import LoadingBoundary from "../LoadingBoundary";
-import NavButton from "../NavButton";
-import SelectableImage from "../SelectableImage";
+import { useGetUserPets } from "../../hooks/react-query/UserHooks";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
+import NavButton from "../utility-components/NavButton";
+import SelectableImage from "../utility-components/SelectableImage";
 
 interface IProps {
   selectPets: (id: number) => void;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/AuthHooks";
+import { useAuth } from "../../hooks/react-query/AuthHooks";
 
 const parseJwt = (token: string | undefined) => {
   if (token) {

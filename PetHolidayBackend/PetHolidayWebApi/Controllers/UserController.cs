@@ -1,6 +1,7 @@
 ﻿
 using Domain.Common.AuthHelpers;
-using Domain.Common.QueryHelpers;
+using Domain.Common.InsertModels;
+using Domain.Common.UpdateModels;
 using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -59,7 +60,6 @@ namespace PetHolidayWebApi.Controllers
                     ID = result.user.ID,
                     Bearer = result.user.Bearer,
                     UserName = result.user.UserName,
-                    Email = result.user.Email,
                 });
             }
             catch (Exception ex)
@@ -67,6 +67,26 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("details")]
+        public async Task<ActionResult<UserDetailsDTO>> GetUserDetails()
+        {
+            try
+            {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
+
+                var result = await userService.GetUser(userID);
+                return Ok(result.ToUserDetailsDTO());
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
 
         [Authorize]
         [HttpDelete("deletepet/{petID}")]
@@ -86,19 +106,19 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpGet("pets")]
-        public async Task<ActionResult<IReadOnlyCollection<PetDTO>>> ListPets([FromQuery] PetFilterParameters filter)
+        public async Task<ActionResult<IReadOnlyCollection<PetDTO>>> ListPets()
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
 
-            var value = await userService.ListUsersPets(userID, filter);
+            var value = await userService.ListUsersPets(userID);
             return Ok(value.Select(s => s.ToPetDTO()).ToList());
         }
 
         [Authorize]
         [HttpPost("addpet")]
-        public async Task<ActionResult<PetDTO>> InsertPet([FromBody] Pet pet)
+        public async Task<ActionResult<PetDTO>> InsertPet([FromBody] InsertPetModel pet)
         {
             try
             {
@@ -139,17 +159,17 @@ namespace PetHolidayWebApi.Controllers
             {
                 if (file != null)
                 {
-                    var files = new List<byte[]>();
+                    var addPetImageModel = new UpdatePetImagesModel();
                     foreach (var item in file)
                     {
                         using (var stream = new MemoryStream())
                         {
                             await item.CopyToAsync(stream);
                             var fileData = stream.ToArray();
-                            files.Add(fileData);
+                            addPetImageModel.files.Add(fileData);
                         }
                     }
-                    var updatedPet = await userService.AddPetImages(petID, files);
+                    var updatedPet = await userService.AddPetImages(petID, addPetImageModel);
                     return Ok(updatedPet.ToPetDTO());
                 }
                 return BadRequest();
@@ -208,7 +228,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPatch("changepassword")]
-        public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
+        public async Task<ActionResult> ChangePassword(UpdatePasswordModel model)
         {
             try
             {

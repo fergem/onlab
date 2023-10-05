@@ -1,9 +1,7 @@
 import { Center, Stack, Title, rem } from "@mantine/core";
 import JobHomeFilter from "../components/job-components/JobHomeFilter";
-import { useUser } from "../hooks/AuthHooks";
 
 export default function Home() {
-  const user = useUser();
   return (
     <Center
       mih="80vh"

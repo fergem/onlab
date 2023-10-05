@@ -9,11 +9,10 @@ import {
   Title,
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../hooks/AuthHooks";
-import { useDeleteJob } from "../../hooks/JobHooks";
+import { useUser } from "../../hooks/react-query/AuthHooks";
 import { JobPreview } from "../../models/Job";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
-import LoadingBoundary from "../LoadingBoundary";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
 import { PetCountWithIcon } from "./JobDetail";
 
 export interface IPropsJobList {
@@ -44,19 +43,19 @@ export default function JobList({
 }
 
 export interface IPropsJobCard {
-  job: Job;
+  job: JobPreview;
 }
 
 export function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
   const { user } = useUser();
-  const { deleteJob } = useDeleteJob();
-  const handleDelete = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    deleteJob(job.id);
-    event.stopPropagation();
-  };
+  //const { deleteJob } = useDeleteJob();
+  // const handleDelete = (
+  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  // ) => {
+  //   deleteJob(job.id);
+  //   event.stopPropagation();
+  // };
   return (
     <Paper
       shadow="sm"
@@ -71,16 +70,16 @@ export function JobCard({ job }: IPropsJobCard) {
             height="13vw"
             radius="md"
             src={
-              job?.pets?.at(0)?.images?.at(0)
-                ? `data:image/png;base64,${job?.pets?.at(0)?.images?.at(0)}`
+              job.displayPetPicture
+                ? `data:image/png;base64,${job.displayPetPicture}`
                 : basePetPicture
             }
             alt="Job picture"
           />
           <Avatar
             src={
-              job?.ownerUserInformation?.picture
-                ? `data:image/png;base64,${job.ownerUserInformation.picture}`
+              job.ownerUserPicture
+                ? `data:image/png;base64,${job.ownerUserPicture}`
                 : baseProfilePicture
             }
             radius="100%"
@@ -92,31 +91,14 @@ export function JobCard({ job }: IPropsJobCard) {
               right: "-5px",
             })}
           />
-          {/* {job?.ownerUserInformation?.id === user?.id && (
-            <ActionIcon
-              size="sm"
-              color="red"
-              variant="transparent"
-              onClick={handleDelete}
-              sx={() => ({
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-              })}
-            >
-              <IconTrash />
-            </ActionIcon>
-          )} */}
         </Center>
 
         <Stack justify="top" mx="10%" align="left" spacing={1}>
           <Title order={3} lineClamp={1}>
-            {job?.ownerUserInformation?.id === user?.id
-              ? `${job?.title} (Your job)`
-              : job?.title}
+            {job.ownerID === user?.id ? `${job?.title} (Your job)` : job?.title}
           </Title>
 
-          {!job.repeated && (
+          {!job.days && (
             <Text size="md">
               {new Date(job?.startDate ?? "").toLocaleString().split(",")[0]}
               {job?.endDate
@@ -124,7 +106,7 @@ export function JobCard({ job }: IPropsJobCard) {
                 : ""}
             </Text>
           )}
-          {job.repeated && (
+          {job.days && (
             <>
               <Text size="md">
                 Starts on{" "}
@@ -134,7 +116,7 @@ export function JobCard({ job }: IPropsJobCard) {
             </>
           )}
           <Text size="sm">{job.location}</Text>
-          <PetCountWithIcon pets={job?.pets} />
+          <PetCountWithIcon catCount={job.catCount} dogCount={job.dogCount} />
         </Stack>
       </Stack>
     </Paper>

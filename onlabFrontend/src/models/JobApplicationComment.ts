@@ -4,3 +4,8 @@ export interface JobApplicationComment {
   commentDate: Date;
   senderUserID: number;
 }
+
+export interface InsertJobApplicationComment {
+  applicationID: number;
+  message: string;
+}

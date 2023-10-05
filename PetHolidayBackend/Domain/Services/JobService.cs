@@ -19,39 +19,12 @@ namespace Domain.Services
         {
             this.jobRepository = jobRepository;
         }
-        public async Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters)
-        {
-            return await jobRepository.List(jobParameters);
-        }
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
-        {
-            return await jobRepository.ListPostedJobs(userID, filter);
-        }
-       /* public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
-        {
-            *return await jobRepository.ListApprovals(userID);
-        }*/
-        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
-        {
-            return await jobRepository.ListUnderTookJobs(userID, filter);
-        }
-        public async Task<int> Insert(InsertJobModel job, int userID)
-        {
-            return await jobRepository.Insert(job, userID);
-        }
-      
-        public async Task<Job> FindById(int jobID)
-        {
-            return await jobRepository.FindById(jobID);
-        }
-
-        public async Task<Job> FinishJob(int jobID)
-        {
-            return await jobRepository.FinishJob(jobID);
-        }
-        public async Task DeleteJob(int jobID)
-        {
-            await jobRepository.DeleteJob(jobID);
-        }
+        public async Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters) => await jobRepository.List(jobParameters);
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter) => await jobRepository.ListPostedJobs(userID, filter);
+        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter) => await jobRepository.ListUnderTookJobs(userID, filter);
+        public async Task<int> Insert(InsertJobModel job, int userID) => await jobRepository.Insert(job, userID);
+        public async Task<Job> FindById(int jobID) => await jobRepository.FindById(jobID);
+        public async Task<Job> FinishJob(int jobID) => await jobRepository.FinishJob(jobID);
+        public async Task DeleteJob(int jobID) => await jobRepository.DeleteJob(jobID);
     }
 }

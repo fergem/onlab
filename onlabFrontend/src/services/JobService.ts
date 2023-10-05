@@ -7,7 +7,7 @@ import {
   JobPreview,
 } from "../models/Job";
 
-const get = async (id?: string) => {
+const get = async (id: string) => {
   const response = await axios.get<JobDetails>(`/api/jobs/${id}`);
   return response.data;
 };
@@ -46,29 +46,29 @@ const createJob = async (jobModel: CreateJobModel) => {
   return response.data;
 };
 
-const takeJob = async (id: number) => {
-  const response = await axios.put<Job>(`/api/jobs/takejob/${id}`);
-  return response.data;
-};
+// const takeJob = async (id: number) => {
+//   const response = await axios.put<Job>(`/api/jobs/takejob/${id}`);
+//   return response.data;
+// };
 
-const approveJob = async (id: number) => {
-  const response = await axios.put<Job>(`/api/jobs/approvejob/${id}`);
-  return response.data;
-};
+// const approveJob = async (id: number) => {
+//   const response = await axios.put<Job>(`/api/jobs/approvejob/${id}`);
+//   return response.data;
+// };
 
-const declineJob = async (id: number) => {
-  const response = await axios.put<Job>(`/api/jobs/declineUser/${id}`);
-  return response.data;
-};
+// const declineJob = async (id: number) => {
+//   const response = await axios.put<Job>(`/api/jobs/declineUser/${id}`);
+//   return response.data;
+// };
 
-const finishJob = async (id: number) => {
-  const response = await axios.put<Job>(`/api/jobs/finishjob/${id}`);
-  return response.data;
-};
-const deleteJob = async (id: number) => {
-  const response = await axios.delete<Job>(`/api/jobs/deletejob/${id}`);
-  return response.data;
-};
+// const finishJob = async (id: number) => {
+//   const response = await axios.put<Job>(`/api/jobs/finishjob/${id}`);
+//   return response.data;
+// };
+// const deleteJob = async (id: number) => {
+//   const response = await axios.delete<Job>(`/api/jobs/deletejob/${id}`);
+//   return response.data;
+// };
 
 const JobService = {
   get,
@@ -76,12 +76,12 @@ const JobService = {
   createJob,
   listUsersPostedJobs,
   listUsersUndertookJobs,
-  takeJob,
-  approveJob,
-  declineJob,
-  listApprovals,
-  finishJob,
-  deleteJob,
+  // takeJob,
+  // approveJob,
+  // declineJob,
+  // listApprovals,
+  // finishJob,
+  // deleteJob,
 };
 
 export default JobService;

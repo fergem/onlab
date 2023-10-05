@@ -1,6 +1,6 @@
 ﻿using DataAccess.DataObjects;
 using Domain.Common.AuthHelpers;
-using Domain.Common.QueryHelpers;
+using Domain.Common.UpdateModels;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -29,9 +29,11 @@ namespace DataAccess.Repositories
 
         public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
-            var user = await userManager.FindByNameAsync(loginModel.Username);
-            if (user == null)
-                throw new Exception("Incorrect username");
+
+            var user = await userManager.Users
+                .Include(s => s.OwnerProfile)
+                .Include(s => s.PetSitterProfile)
+                .FirstOrDefaultAsync(s => s.UserName == loginModel.Username) ?? throw new Exception("User not exists");
 
             var result = await signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.RememberMe, false);
             if (!result.Succeeded)
@@ -49,26 +51,58 @@ namespace DataAccess.Repositories
         public async Task Register(RegisterModel registerModel)
         {
             var IsExist = await userManager.FindByNameAsync(registerModel.Username);
-            if (IsExist != null)
+            if (IsExist is not null)
                 throw new Exception("User already exist");
 
-            DbUser appUser = new DbUser
+            var appUser = new DbUser
             {
                 UserName = registerModel.Username,
                 Email = registerModel.Email,
                 Password = registerModel.Password,
                 //firstLogin = true,
+                
             };
+           
             var result = await userManager.CreateAsync(appUser, registerModel.Password);
             if (!result.Succeeded)
                 throw new Exception("User creation failed, check user credentials");
+
+            var defaultPetSitterProfile = new DbPetSitterProfile()
+            {
+                AcquiredExperience = 0,
+                Description = "",
+                User = appUser
+            };
+            var defaultOwnerProfile = new DbOwnerProfile()
+            {
+                Description = "",
+                User = appUser,
+                MinRequiredExperience = 0,
+                MinWage = 0,
+            };
+
+            await dbContext.AddAsync(defaultPetSitterProfile);
+            await dbContext.AddAsync(defaultOwnerProfile);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<User> GetUser(int userID)
+        {
+            var user = await userManager.Users
+                .Include(s => s.OwnerProfile)
+                .Include(s => s.PetSitterProfile)
+                .FirstOrDefaultAsync(s => s.Id == userID) ?? throw new Exception("User not exists");
+
+            return ModelMapper.ToUserModel(user);
         }
 
         public async Task<User> AddProfilePicture(int userID, byte[] file)
         {
-            var user = await userManager.FindByIdAsync(userID.ToString());
-            if (user == null)
-                throw new Exception("User not exists");
+            var user = await userManager.Users
+                .Include(s => s.OwnerProfile)
+                .Include(s => s.PetSitterProfile)
+                .FirstOrDefaultAsync(s => s.Id == userID) ?? throw new Exception("User not exists");
+
             user.Picture = file;
 
             await userManager.UpdateAsync(user);
@@ -80,9 +114,10 @@ namespace DataAccess.Repositories
 
         public async Task<User> UpdateProfile(int userID, UpdateProfileModel updateProfileModel)
         {
-            var user = await userManager.FindByIdAsync(userID.ToString());
-            if (user == null)
-                throw new Exception("User not exists");
+            var user = await userManager.Users
+                .Include(s => s.OwnerProfile)
+                .Include(s => s.PetSitterProfile)
+                .FirstOrDefaultAsync(s => s.Id == userID) ?? throw new Exception("User not exists");
 
             user.Location = updateProfileModel?.Location ?? user.Location;
             user.FirstName = updateProfileModel?.FirstName ?? user.FirstName;
@@ -91,15 +126,50 @@ namespace DataAccess.Repositories
             user.Age = updateProfileModel?.Age ?? user.Age;
             user.PhoneNumber = updateProfileModel?.PhoneNumber ?? user.PhoneNumber;
 
-            await userManager.UpdateAsync(user);
+            if(updateProfileModel?.PetSitterProfile is not null)
+            {
+                if (user.PetSitterProfile is not null)
+                {
+                    user.PetSitterProfile = new DbPetSitterProfile
+                    {
+                        AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ,
+                        Description = updateProfileModel.PetSitterProfile.Description
+                    };
+                }
+                else
+                {
+                    user.PetSitterProfile.AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ;
+                    user.PetSitterProfile.Description = updateProfileModel.PetSitterProfile.Description;
+                }
+            }
+
+           
+            if(updateProfileModel?.OwnerProfile is not null)
+            {
+                if (user.OwnerProfile is not null)
+                {
+                    user.OwnerProfile.Description = updateProfileModel.OwnerProfile.Description;
+                    user.OwnerProfile.MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience;
+                    user.OwnerProfile.MinWage = updateProfileModel.OwnerProfile.MinWage;
+                }
+                else
+                {
+                    user.OwnerProfile = new DbOwnerProfile
+                    {
+                        Description = updateProfileModel.OwnerProfile.Description,
+                        MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience,
+                        MinWage = updateProfileModel.OwnerProfile.MinWage
+                    };
+                }
+            }
+
             await signInManager.RefreshSignInAsync(user);
-
             await dbContext.SaveChangesAsync();
-            return ModelMapper.ToUserModel(user);
 
+            return ModelMapper.ToUserModel(user);
         }
 
-        public async Task<User> ChangePassword(int userID, ChangePasswordModel password)
+        public async Task<User> ChangePassword(int userID, UpdatePasswordModel password)
         {
             var user = await userManager.FindByIdAsync(userID.ToString());
             if (user == null)

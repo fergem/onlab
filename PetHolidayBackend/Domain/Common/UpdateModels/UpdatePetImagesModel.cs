@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Common.QueryHelpers
+namespace Domain.Common.UpdateModels
 {
-    public class PetFilterParameters
+    public class UpdatePetImagesModel
     {
-        public List<int>? PetIDs { get; set; }
-
+        public List<byte[]> files = new();
     }
 }

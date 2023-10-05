@@ -1,5 +1,5 @@
 import { Modal, ScrollArea } from "@mantine/core";
-import { usePostUserPet } from "../../hooks/UserHooks";
+import { usePostUserPet } from "../../hooks/react-query/UserHooks";
 import { PetInsertModel } from "../../models/Pet";
 import PetForm from "./PetForm";
 

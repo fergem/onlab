@@ -10,7 +10,6 @@ namespace PetHolidayWebApi.ModelExtensions
                 ID = user.ID,
                 UserName = user.UserName,
                 Bearer = user.Bearer,
-                Email = user.Email,
             };
 
         public static UserDetailsDTO ToUserDetailsDTO(this Domain.Models.User user) =>

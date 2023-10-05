@@ -17,7 +17,7 @@ namespace DataAccess
         }
 
         public DbSet<DbPet> Pets { get; set; }
-        public DbSet<DbPetSitterProfile> SitterProfiles { get; set; }
+        public DbSet<DbPetSitterProfile> PetSitterProfiles { get; set; }
         public DbSet<DbOwnerProfile> OwnerProfiles { get; set; }
         public DbSet<DbJob> Jobs { get; set; }
         public DbSet<DbPetImage> PetImages { get; set; }

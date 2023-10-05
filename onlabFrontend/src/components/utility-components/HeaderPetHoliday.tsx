@@ -8,7 +8,7 @@ import {
   IconUser,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/AuthHooks";
+import { useAuth } from "../../hooks/react-query/AuthHooks";
 
 function HeaderPetHoliday() {
   const { user, logoutUser } = useAuth();

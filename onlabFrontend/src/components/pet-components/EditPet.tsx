@@ -12,8 +12,8 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconArrowBack, IconX } from "@tabler/icons-react";
-import { useDeletePet } from "../../hooks/UserHooks";
-import Pet from "../../models/Pet";
+import { useDeletePet } from "../../hooks/react-query/UserHooks";
+import { Pet } from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
 
 interface IPropsPetModal {

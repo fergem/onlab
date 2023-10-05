@@ -10,7 +10,7 @@ namespace PetHolidayWebApi.ModelExtensions
                 ID = jobApplication.ID,
                 IsApproved = jobApplication.IsApproved,
                 Comments = jobApplication.Comments,
-                ApplicantUserID = jobApplication.ApplicantUserID,
+                ApplicantUser = jobApplication.ApplicantUser.ToUserPreviewDTO(),
             };
     }
 }

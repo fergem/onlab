@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Common.QueryHelpers
+namespace Domain.Common.UpdateModels
 {
-    public class ChangePasswordModel
+    public class UpdatePasswordModel
     {
         public required string Password { get; set; }
     }

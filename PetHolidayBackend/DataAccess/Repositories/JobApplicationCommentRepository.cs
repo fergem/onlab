@@ -1,4 +1,6 @@
-﻿using Domain.Models;
+﻿using DataAccess.DataObjects;
+using Domain.Common.InsertModels;
+using Domain.Models;
 using Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,17 +12,35 @@ namespace DataAccess.Repositories
 {
     public class JobApplicationCommentRepository : IJobApplicationCommentRepository
     {
-        public Task DeleteApplicationComment(int commentID)
+
+        private readonly PetHolidayDbContext dbcontext;
+
+        public JobApplicationCommentRepository(PetHolidayDbContext dbcontext) 
         {
-            throw new NotImplementedException();
+            this.dbcontext = dbcontext;
         }
 
-        public Task<JobApplicationComment> InsertApplicationComment(string text, int userID)
+        public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID, int applicationID)
         {
-            throw new NotImplementedException();
+            var newComment = new DbJobApplicationComment()
+            {
+                CommentDate = DateTime.Now,
+                SenderUserID = userID,
+                JobApplicationID = applicationID,
+                CommentText = model.Message,
+            };
+
+            await dbcontext.JobApplicationsComment.AddAsync(newComment);
+            await dbcontext.SaveChangesAsync();
+
+            return ModelMapper.ToJobApplicationCommentModel(newComment);
         }
 
         public Task<JobApplicationComment> UpdateApplicationComment(string text, int userID)
+        {
+            throw new NotImplementedException();
+        }
+        public Task DeleteApplicationComment(int commentID)
         {
             throw new NotImplementedException();
         }

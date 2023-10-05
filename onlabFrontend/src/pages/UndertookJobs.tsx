@@ -1,8 +1,7 @@
 import { Stack, Title } from "@mantine/core";
 import { useEffect, useState } from "react";
-import StatusBadge from "../components/StatusBadge";
 import JobList from "../components/job-components/JobList";
-import { useGetUserUnderTookJobs } from "../hooks/JobHooks";
+import { useGetUserUnderTookJobs } from "../hooks/react-query/JobHooks";
 import {
   DefaultJobFilterParticipant,
   JobFilterParticipant,
@@ -24,7 +23,6 @@ export default function UndertookJobs() {
     <Stack align="center" justify="center">
       <Title order={2}>Undertook jobs</Title>
       <Stack w="60%">
-        <StatusBadge filter={filter} setFilter={handleSetFilter} />
         <JobList
           jobs={jobs}
           loading={loading}

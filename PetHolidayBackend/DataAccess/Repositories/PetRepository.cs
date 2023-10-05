@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DataObjects;
+using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
+using Domain.Common.UpdateModels;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +35,7 @@ namespace DataAccess.Repositories
             await dbcontext.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyCollection<Pet>> List(int userID, PetFilterParameters filter)
+        public async Task<IReadOnlyCollection<Pet>> List(int userID)
         {
             return await dbcontext.Pets
                 .Include(s => s.Images)
@@ -43,7 +45,7 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Pet> Insert(Pet pet, int userID)
+        public async Task<Pet> Insert(InsertPetModel pet, int userID)
         {
             var insertPet = new DbPet()
             {
@@ -85,13 +87,13 @@ namespace DataAccess.Repositories
             return ModelMapper.ToPetModel(dbPet);
         }
 
-        public async Task<Pet> AddImages(int ID, List<byte[]> files)
+        public async Task<Pet> AddImages(int ID, UpdatePetImagesModel addPetImagesModel)
         {
             var dbPet = await dbcontext.Pets.Include(s => s.Images).FirstOrDefaultAsync(s => s.ID == ID);
             if (dbPet == null)
                 throw new Exception("Nincs ilyen pet");
             var dbImagesToAdd = new List<DbPetImage>();
-            foreach (var image in files)
+            foreach (var image in addPetImagesModel.files)
             {
                 dbImagesToAdd.Add(new DbPetImage
                 {

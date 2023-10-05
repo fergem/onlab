@@ -1,7 +1,10 @@
-import { OwnerProfile } from "./OwnerProfile";
-import { PetSitterProfile } from "./PetSitterProfile";
+import { OwnerProfile, UpdateOwnerProfileModel } from "./OwnerProfile";
+import {
+  PetSitterProfile,
+  UpdatePetSitterProfileModel,
+} from "./PetSitterProfile";
 
-export interface UserDetails {
+export interface UserDetailsWithoutProfiles {
   id: number;
   firstName?: string;
   lastName?: string;
@@ -9,6 +12,9 @@ export interface UserDetails {
   location?: string;
   phoneNumber?: string;
   picture?: string;
+}
+
+export interface UserDetails extends UserDetailsWithoutProfiles {
   ownerProfile?: OwnerProfile;
   petSitterProfile?: PetSitterProfile;
 }
@@ -16,7 +22,6 @@ export interface UserDetails {
 export interface User {
   id: number;
   userName: string;
-  email: string;
   bearer?: string;
 }
 
@@ -27,12 +32,18 @@ export interface UserPreview {
   picture?: string;
 }
 
-export interface UpdateUserModel {
+export interface UpdateUserDetailsModel {
   firstName?: string;
   lastName?: string;
   age?: number;
   email?: string;
   location?: string;
+  phoneNumber?: string;
+}
+
+export interface UpdateUserModel extends UpdateUserDetailsModel {
+  ownerProfile?: UpdateOwnerProfileModel;
+  petSitterProfile?: UpdatePetSitterProfileModel;
 }
 
 export interface RegisterModel {

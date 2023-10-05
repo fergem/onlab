@@ -8,15 +8,19 @@ namespace DataAccess.DataObjects
 {
     public class DbJobApplication
     {
+        public DbJobApplication() 
+        {
+            Comments = new HashSet<DbJobApplicationComment>();
+        }
         public int ID { get; set; }
         public bool IsApproved { get; set; }
 
         public int JobID { get; set; }
-        public virtual DbJob? Job { get; set; }
+        public virtual DbJob Job { get; set; } = null!;
         public int ApplicantUserID { get; set; }
-        public virtual DbUser? ApplicantUser { get; set; }
+        public virtual DbUser ApplicantUser { get; set; } = null!;
 
 
-        public virtual ICollection<DbJobApplicationComment> Comments { get; set; } = new List<DbJobApplicationComment>();
+        public virtual ICollection<DbJobApplicationComment> Comments { get; set; }
     }
 }

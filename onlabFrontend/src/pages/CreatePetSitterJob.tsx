@@ -1,16 +1,16 @@
 import { Center, Paper } from "@mantine/core";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomStepper from "../components/CustomStepper";
+import CustomStepper from "../components/utility-components/CustomStepper";
 
-import { usePostJobs } from "../hooks/JobHooks";
+import { usePostJob } from "../hooks/react-query/JobHooks";
 import useCreateJobDetailsForm from "../hooks/useCreateJobDetailsForm";
 import useCreateJobServiceForm from "../hooks/useCreateJobServiceForm";
 import { usePetSelector } from "../hooks/usePetSelector";
 import { CreateJobModel, Defaultjob as DefaultJob } from "../models/Job";
 
 export default function CreatePetSitterJob() {
-  const { postJob } = usePostJobs();
+  const { postJob } = usePostJob();
 
   const navigate = useNavigate();
 

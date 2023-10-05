@@ -10,7 +10,7 @@ namespace PetHolidayWebApi.DTOs
         public required bool Repeated { get; set; }
 
         public required string Title { get; set; }
-        public required string Type { get; set; }
+        public required JobType Type { get; set; }
 
         public required DateTime StartDate { get; set; }
         public required DateTime? EndDate { get; set; }
@@ -22,6 +22,8 @@ namespace PetHolidayWebApi.DTOs
         public required UserPreviewDTO OwnerUser { get; set; }
 
         public required IReadOnlyCollection<PetDTO> Pets { get; set; }
-        public required ICollection<string>? Days { get; set; }
+        public required ICollection<DaysOfWeek>? Days { get; set; }
+        public required int OwnerID { get; set; }
+        public required Status Status { get; set; }
     }
 }

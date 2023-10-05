@@ -1,12 +1,12 @@
 import { Flex, Image } from "@mantine/core";
 import { useState } from "react";
-import { basePetPicture } from "../utility/constants";
+import { basePetPicture } from "../../utility/constants";
 
 export interface IPropsSelectableImage {
   onClick(id: number): void;
   source?: string;
   title: string;
-  id: number | null;
+  id: number;
 }
 
 export default function SelectableImage({

@@ -7,6 +7,6 @@ namespace PetHolidayWebApi.DTOs
         public required int ID { get; set; }
         public required bool IsApproved { get; set; }
         public required IReadOnlyCollection<JobApplicationComment>? Comments { get; set; }
-        public required int ApplicantUserID { get; set; }
+        public required UserPreviewDTO ApplicantUser { get; set; }
     }
 }

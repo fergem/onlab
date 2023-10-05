@@ -1,5 +1,5 @@
 import { Center } from "@mantine/core";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/user-components/LoginForm";
 
 export default function Login() {
   return (

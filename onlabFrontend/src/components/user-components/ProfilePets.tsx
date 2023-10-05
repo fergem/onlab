@@ -1,5 +1,5 @@
 import { ScrollArea, Stack } from "@mantine/core";
-import PetListLoadingPets from "./pet-components/PetList";
+import PetListLoadingPets from "../pet-components/PetList";
 
 export default function ProfilePets() {
   return (

@@ -10,8 +10,9 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
-import Pet, {
+import {
   getPetSpeciesValueLabel,
+  Pet,
   PetInsertModel,
   PetSpecies,
   PetValidation,

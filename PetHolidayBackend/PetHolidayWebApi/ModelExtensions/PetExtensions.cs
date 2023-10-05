@@ -9,7 +9,7 @@ namespace PetHolidayWebApi.ModelExtensions
             {
                 ID = pet.ID,
                 Name = pet.Name,
-                Species = pet.Species.ToString(),
+                Species = pet.Species,
                 Age = pet.Age,
                 Images = pet.Images,
             };

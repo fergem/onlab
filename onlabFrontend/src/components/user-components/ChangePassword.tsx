@@ -1,8 +1,8 @@
 import { Button, PasswordInput, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
-import { useUpdateUserPassword } from "../hooks/UserHooks";
-import { UserValidation } from "../models/User";
+import { useUpdateUserPassword } from "../../hooks/react-query/UserHooks";
+import { UserValidation } from "../../models/User";
 
 interface PasswordChangeModel {
   password: string;

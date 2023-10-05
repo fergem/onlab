@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
-import User, {
+import AuthContext from "../../context/AuthContext";
+import {
   LoginModel,
   RegisterModel,
-  UserInformation,
-} from "../models/User";
-import AuthService from "../services/AuthService";
+  UpdateUserModel,
+  User,
+} from "../../models/User";
+import AuthService from "../../services/AuthService";
 
 export const useLocalStorage = () => {
   const [value, setValue] = useState<string | null>(null);
@@ -45,12 +46,8 @@ export const useUser = () => {
     removeItem("user");
   };
 
-  const updateProfile = (updatedUser: UserInformation | undefined) => {
+  const updateProfile = (updatedUser: UpdateUserModel | undefined) => {
     if (updatedUser && user) {
-      console.log(user);
-      console.log(updatedUser);
-      console.log({ ...updatedUser, ...user });
-      console.log({ ...user, ...updatedUser });
       setUser({ ...user, ...updatedUser });
       setItem("user", JSON.stringify({ ...user, ...updatedUser }));
     }
@@ -81,7 +78,7 @@ export const useAuth = () => {
 
   const loginUser = async (loginModel: LoginModel) => {
     const userData = await AuthService.login(loginModel);
-    addUser(userData.user);
+    addUser(userData);
     navigate("/profile");
   };
 

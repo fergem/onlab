@@ -45,6 +45,7 @@ namespace DataAccess
                 Days = job.Days,
                 Title = job.Title,
                 Type = job.Type,
+                Status = job.Status,
             };
         }
         internal static User ToUserModel(DbUser user)
@@ -89,14 +90,24 @@ namespace DataAccess
             return result;
         }
 
-        internal static JobApplication ToJobApplicationModel(DbJobApplication job) => 
+        internal static JobApplication ToJobApplicationModel(DbJobApplication application) => 
             new JobApplication() 
             { 
-                ID = job.ID, 
-                IsApproved = job.IsApproved,
-                Comments = null,//job.Comments,
-                ApplicantUserID = job.ApplicantUserID,
+                ID = application.ID, 
+                IsApproved = application.IsApproved,
+                Comments = application.Comments.Select(ToJobApplicationCommentModel).ToList(),
+                ApplicantUser = ToUserModel(application.ApplicantUser),
             };
+
+        internal static JobApplicationComment ToJobApplicationCommentModel(DbJobApplicationComment jobApplicationComment) =>
+            new JobApplicationComment()
+            {
+                ID = jobApplicationComment.ID,
+                SenderUserID = jobApplicationComment.SenderUserID,
+                CommentText = jobApplicationComment.CommentText,
+                CommentDate = jobApplicationComment.CommentDate,
+            };
+
 
         internal static OwnerProfile? ToOwnerProfileModel(DbOwnerProfile ownerProfile) =>
             ownerProfile is not null ? new OwnerProfile()

@@ -21,10 +21,6 @@ export interface PetUpdateModel {
   picture?: File;
 }
 
-export interface PetFilter {
-  petIDs?: number[];
-}
-
 export enum PetSpecies {
   Dog = "Dog",
   Cat = "Cat",

@@ -1,5 +1,10 @@
 export interface PetSitterProfile {
   id: number;
-  description?: string | null;
-  acquiredExperience: number;
+  description?: string;
+  acquiredExperience?: number;
+}
+
+export interface UpdatePetSitterProfileModel {
+  description?: string;
+  acquiredExperience?: number;
 }

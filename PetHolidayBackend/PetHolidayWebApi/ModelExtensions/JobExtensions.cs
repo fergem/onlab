@@ -17,8 +17,9 @@ namespace PetHolidayWebApi.ModelExtensions
                 ID = job.ID,
                 Location = job.Location,
                 Repeated = job.Repeated,
+                OwnerID = job.OwnerUser.ID,
                 Title = job.Title,
-                Type = job.Type.ToString(), 
+                Type = job.Type, 
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Description = job.Description,
@@ -26,7 +27,8 @@ namespace PetHolidayWebApi.ModelExtensions
                 MinRequiredExperience = job.MinRequiredExperience,
                 OwnerUser = job.OwnerUser.ToUserPreviewDTO(), 
                 Pets = job.Pets.Select(p => p.ToPetDTO()).ToList(), 
-                Days = job?.Days?.Select(d => d.ToString()).ToList()
+                Days = job.Days?.ToList(),
+                Status = job.Status,
             };
         public static JobPreviewDTO ToJobPreviewDTO(this Domain.Models.Job job) =>
             new JobPreviewDTO

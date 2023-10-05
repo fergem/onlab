@@ -1,13 +1,14 @@
 import axios from "axios";
-import { Pet, PetFilter, PetInsertModel } from "../models/Pet";
+import { Pet, PetInsertModel } from "../models/Pet";
 import { UpdateUserModel, UserDetails } from "../models/User";
 
-const getUserPets = async (filter?: PetFilter) => {
-  const response = await axios.get<Pet[]>("/api/users/pets", {
-    params: {
-      petIDs: filter?.petIDs?.join(","),
-    },
-  });
+const getUserDetails = async () => {
+  const response = await axios.get<UserDetails>("api/users/details");
+  return response.data;
+};
+
+const getUserPets = async () => {
+  const response = await axios.get<Pet[]>("/api/users/pets");
   return response.data;
 };
 
@@ -47,7 +48,7 @@ const insertPet = async ({ name, species, age, images }: PetInsertModel) => {
       petID: result.data.id,
     },
   });
-  return endresult;
+  return endresult.data;
 };
 
 const deletePet = async (id: number) => {
@@ -95,5 +96,6 @@ const UserService = {
   updatePassword,
   uploadPetPictures,
   uploadProfilePicture,
+  getUserDetails,
 };
 export default UserService;

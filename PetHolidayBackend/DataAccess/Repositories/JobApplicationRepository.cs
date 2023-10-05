@@ -67,7 +67,7 @@ namespace DataAccess.Repositories
         {
             var job = await dbcontext.Jobs.FindAsync(jobID) ?? throw new Exception("Requested job does not exist");
 
-            return await dbcontext.JobApplications.Where(s => s.JobID == jobID).Select(s => ModelMapper.ToJobApplicationModel(s)).ToListAsync();
+            return await dbcontext.JobApplications.Include(s => s.ApplicantUser).Include(s => s.Comments).Where(s => s.JobID == jobID).Select(s => ModelMapper.ToJobApplicationModel(s)).ToListAsync();
         }
     }
 }

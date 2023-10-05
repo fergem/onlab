@@ -47,10 +47,6 @@ export function getJobTypes() {
   return types;
 }
 
-export interface JobWithPetIDs extends Job {
-  petIDs: number[];
-}
-
 export interface JobHoursRange {
   minHours?: number;
   maxHours?: number;
@@ -102,7 +98,7 @@ export const DefaultJobFilterParticipant = {
 };
 
 export interface JobFilter {
-  type?: JobType;
+  type: JobType;
   species?: PetSpecies[];
   startDate: Date;
   endDate?: Date;
@@ -150,6 +146,7 @@ export interface JobDetails {
   ownerUser: UserPreview;
   pets: Pet[];
   days?: Day[];
+  status: Status;
 }
 
 export interface JobPreview {
@@ -164,6 +161,7 @@ export interface JobPreview {
   dogCount: number;
   ownerUserPicture?: string;
   displayPetPicture?: string;
+  ownerID: number;
 }
 
 export const Defaultjob: CreateJobModel = {

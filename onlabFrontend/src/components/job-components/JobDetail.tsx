@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Avatar,
   Badge,
   Box,
   Button,
@@ -8,7 +9,9 @@ import {
   Image,
   Paper,
   Stack,
+  Tabs,
   Text,
+  TextInput,
   Title,
   Tooltip,
 } from "@mantine/core";
@@ -22,43 +25,52 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../hooks/AuthHooks";
-import { useGetApplicationsForJob } from "../../hooks/JobApplicationHooks";
-import { useGetJob, useProgressJob } from "../../hooks/JobHooks";
+import { useAuth } from "../../hooks/react-query/AuthHooks";
+import {
+  useApplyToJob,
+  useGetApplicationsForJob,
+} from "../../hooks/react-query/JobApplicationHooks";
+import { useGetJob } from "../../hooks/react-query/JobHooks";
 import { Day, JobType, Status } from "../../models/Job";
-import Pet, { PetSpecies } from "../../models/Pet";
+import { Pet, PetSpecies } from "../../models/Pet";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
-import LoadingBoundary from "../LoadingBoundary";
 import { PetGrid } from "../pet-components/PetList";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
+import JobCommentSectionOwner from "./JobCommentSectionOwner";
 
 function JobDetail() {
   const { id } = useParams();
   const { job, error, loading, getJob } = useGetJob(id);
-  const { takeJob, finishJob } = useProgressJob();
   const { user } = useAuth();
   const navigate = useNavigate();
-
   const {
     loadingApplications,
     errorApplications,
     applications,
     refetchApplications,
   } = useGetApplicationsForJob(id);
+
+  const { applyToJob } = useApplyToJob();
+
   console.log(applications);
-  const handleTakeJob = () => {
+  const handleApplyToJob = () => {
     if (job) {
-      takeJob(job.id);
-      navigate("/postedjobs");
+      applyToJob(job.id);
+      // navigate("/postedjobs");
     }
   };
 
-  const handleFinishJob = () => {
-    if (job) finishJob(job.id);
-  };
+  // const handleFinishJob = () => {
+  //   if (job) finishJob(job.id);
+  // };
+  const dogCount = job?.pets?.filter((s) => s.species === PetSpecies.Dog)
+    .length;
+  const catCount = job?.pets?.filter((s) => s.species === PetSpecies.Cat)
+    .length;
   return (
-    <Stack justify="center">
+    <Stack justify="center" align="center">
       <LoadingBoundary loading={loading} error={error} refetch={getJob}>
-        <Grid w="85%" justify="space-around" gutter="xl">
+        <Grid w="60%" justify="space-around" gutter="xl">
           <Grid.Col span={4}>
             <Paper p="md" shadow="sm" withBorder>
               <Stack justify="center" align="center">
@@ -68,16 +80,16 @@ function JobDetail() {
                     width="7vw"
                     height="7vw"
                     src={
-                      job?.ownerUserInformation?.picture
-                        ? `data:image/png;base64,${job?.ownerUserInformation.picture}`
+                      job?.ownerUser?.picture
+                        ? `data:image/png;base64,${job?.ownerUser.picture}`
                         : baseProfilePicture
                     }
                     alt="Your picture"
                   />
                   <Box>
                     <Title order={5} mb="3%">
-                      {job?.ownerUserInformation?.firstName ?? ""}
-                      {job?.ownerUserInformation?.lastName ?? ""}
+                      {job?.ownerUser?.firstName ?? ""}
+                      {job?.ownerUser?.lastName ?? ""}
                     </Title>
                     <Text>Pet parent</Text>
                   </Box>
@@ -116,14 +128,15 @@ function JobDetail() {
 
                 {job?.repeated && <ChipDays days={job?.days} />}
 
-                {user?.id !== job?.ownerUserInformation?.id &&
-                  job?.status === Status.Available && (
-                    <Button onClick={handleTakeJob}>Take Job</Button>
-                  )}
-                {user?.id === job?.ownerUserInformation?.id &&
+                {user?.id !== job?.ownerUser?.id &&
+                  (job?.status === Status.Available ||
+                    job?.status === Status.Approving) &&
+                  !applications.some(
+                    (s) => s.applicantUser.id === user?.id
+                  ) && <Button onClick={handleApplyToJob}>Apply to Job</Button>}
+                {user?.id === job?.ownerUser?.id &&
                   job?.status === Status.Upcoming && (
                     <Group position="center" align="center">
-                      <Button onClick={handleFinishJob}>Finish job</Button>
                       <Button onClick={() => {}} color="red">
                         Cancel job
                       </Button>
@@ -138,7 +151,7 @@ function JobDetail() {
               <Box>
                 <Group position="left" align="center" spacing={1} mb="sm">
                   <Title order={2}>{job?.title} </Title>
-                  {user?.id === job?.ownerUserInformation?.id && (
+                  {user?.id === job?.ownerUser?.id && (
                     <Tooltip label="Delete">
                       <ActionIcon
                         variant="subtle"
@@ -156,7 +169,7 @@ function JobDetail() {
                 <Text fz="md" fw={500} mb="xs">
                   {job?.location}{" "}
                 </Text>
-                <PetCountWithIcon pets={job?.pets} />
+                <PetCountWithIcon dogCount={dogCount} catCount={catCount} />
               </Box>
               <Title order={4}>Description: </Title>
               <Text lineClamp={0}>{job?.description}</Text>{" "}
@@ -173,8 +186,39 @@ function JobDetail() {
         error={errorApplications}
         refetch={refetchApplications}
       >
-        <Paper p="md" shadow="sm" withBorder>
-          <Stack />
+        <Paper p="md" shadow="sm" withBorder w="60%">
+          <Tabs
+            variant="outline"
+            defaultValue={applications.at(0)?.id.toString()}
+          >
+            <Tabs.List>
+              {applications.map((s) => (
+                <Tabs.Tab
+                  value={s.id.toString()}
+                  icon={
+                    <Avatar
+                      src={s.applicantUser.picture ?? baseProfilePicture}
+                    />
+                  }
+                  key={s.id}
+                >
+                  {`${s.applicantUser.firstName} ${s.applicantUser.lastName}`}
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+
+            {applications.map((s) => (
+              <Tabs.Panel value={s.id.toString()} key={s.id} pt="xs">
+                <Stack>
+                  <JobCommentSectionOwner
+                    applicationID={s.id}
+                    applications={applications}
+                  />
+                  <TextInput placeholder="Say something" />
+                </Stack>
+              </Tabs.Panel>
+            ))}
+          </Tabs>
         </Paper>
       </LoadingBoundary>
     </Stack>
@@ -206,12 +250,11 @@ export function PetDescription({ pet }: IPetsProps) {
 }
 
 interface IPetCountWithProps {
-  pets?: Pet[];
+  dogCount?: number;
+  catCount?: number;
 }
 
-export function PetCountWithIcon({ pets }: IPetCountWithProps) {
-  const dogCount = pets?.filter((s) => s.species === PetSpecies.Dog).length;
-  const catCount = pets?.filter((s) => s.species === PetSpecies.Cat).length;
+export function PetCountWithIcon({ dogCount, catCount }: IPetCountWithProps) {
   return (
     <Group align="center" spacing={0}>
       {dogCount && dogCount > 0 && (

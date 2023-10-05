@@ -19,6 +19,5 @@ namespace Domain.Common.InsertModels
         public required bool Repeated { get; set; }
         public required JobType Type { get; set; }
         public required string Title { get; set; }
-
     }
 }

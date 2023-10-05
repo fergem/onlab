@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { JobFilterLocalStorageKey } from "../components/job-components/JobHomeFilter";
 import JobList from "../components/job-components/JobList";
 import JobPageFilter from "../components/job-components/JobPageFilter";
-import { useGetJobs } from "../hooks/JobHooks";
+import { useGetJobs } from "../hooks/react-query/JobHooks";
 import { DefaultJobFilter, JobFilter, JobFunctions } from "../models/Job";
 
 export default function Jobs() {
