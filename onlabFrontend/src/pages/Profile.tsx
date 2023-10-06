@@ -32,7 +32,6 @@ export default function Profile() {
   const handldeUpdatePetSitterProfile = (
     petSitterProfile: UpdatePetSitterProfileModel
   ) => updateUser({ ...userDetails, petSitterProfile });
-  console.log(userDetails);
   return (
     <LoadingBoundary
       loading={loadingUserDetials}

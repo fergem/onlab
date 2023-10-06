@@ -22,8 +22,6 @@ export default function EditPetSitterProfile({
     validate: {},
   });
 
-  console.log(currentPetSitterProfile);
-  console.log(form.values);
   const updateDisabled =
     form.values.acquiredExperience ===
       currentPetSitterProfile?.acquiredExperience &&

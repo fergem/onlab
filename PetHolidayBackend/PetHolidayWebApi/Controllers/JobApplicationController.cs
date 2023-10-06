@@ -96,7 +96,7 @@ namespace PetHolidayWebApi.Controllers
                     throw new Exception("User not found");
 
                 var result = await jobApplicationService.InsertApplicationComment(model, userID, model.ApplicationID);
-                await hub.Clients.Group(model.ApplicationID.ToString()).SendAsync("CommentAdded", result, model.ApplicationID);
+                await hub.Clients.Group(model.ApplicationID.ToString()).SendAsync("CommentAdded");
                 return Ok(result);
             }
             catch (Exception ex)

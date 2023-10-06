@@ -1,6 +1,6 @@
 import axios from "axios";
 import { JobApplication } from "../models/JobApplication";
-import { InsertJobApplicationComment } from "../models/JobApplicationComment";
+import { InsertJobApplicationCommentModel } from "../models/JobApplicationComment";
 
 const getAllForJob = async (jobID: string | undefined) => {
   const response = await axios.get<JobApplication[]>(
@@ -17,7 +17,7 @@ const insertApplicationForJob = async (jobID: number) => {
 };
 
 const insertApplicationCommentForJob = async (
-  model: InsertJobApplicationComment
+  model: InsertJobApplicationCommentModel
 ) => {
   console.log("bent", model);
   const response = await axios.post<JobApplication>(

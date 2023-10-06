@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Avatar,
   Badge,
   Box,
   Button,
@@ -9,9 +8,7 @@ import {
   Image,
   Paper,
   Stack,
-  Tabs,
   Text,
-  TextInput,
   Title,
   Tooltip,
 } from "@mantine/core";
@@ -24,7 +21,7 @@ import {
   IconPaw,
   IconX,
 } from "@tabler/icons-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import {
   useApplyToJob,
@@ -36,13 +33,12 @@ import { Pet, PetSpecies } from "../../models/Pet";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import { PetGrid } from "../pet-components/PetList";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
-import JobCommentSectionOwner from "./JobCommentSectionOwner";
+import JobCommentsSection from "./comment-section/JobCommentsSection";
 
 function JobDetail() {
   const { id } = useParams();
   const { job, error, loading, getJob } = useGetJob(id);
   const { user } = useAuth();
-  const navigate = useNavigate();
   const {
     loadingApplications,
     errorApplications,
@@ -52,7 +48,6 @@ function JobDetail() {
 
   const { applyToJob } = useApplyToJob();
 
-  console.log(applications);
   const handleApplyToJob = () => {
     if (job) {
       applyToJob(job.id);
@@ -154,9 +149,9 @@ function JobDetail() {
                   {user?.id === job?.ownerUser?.id && (
                     <Tooltip label="Delete">
                       <ActionIcon
+                        onClick={() => {}}
                         variant="subtle"
                         color="dark"
-                        onClick={() => {}}
                         radius="md"
                         size="lg"
                       >
@@ -186,40 +181,10 @@ function JobDetail() {
         error={errorApplications}
         refetch={refetchApplications}
       >
-        <Paper p="md" shadow="sm" withBorder w="60%">
-          <Tabs
-            variant="outline"
-            defaultValue={applications.at(0)?.id.toString()}
-          >
-            <Tabs.List>
-              {applications.map((s) => (
-                <Tabs.Tab
-                  value={s.id.toString()}
-                  icon={
-                    <Avatar
-                      src={s.applicantUser.picture ?? baseProfilePicture}
-                    />
-                  }
-                  key={s.id}
-                >
-                  {`${s.applicantUser.firstName} ${s.applicantUser.lastName}`}
-                </Tabs.Tab>
-              ))}
-            </Tabs.List>
-
-            {applications.map((s) => (
-              <Tabs.Panel value={s.id.toString()} key={s.id} pt="xs">
-                <Stack>
-                  <JobCommentSectionOwner
-                    applicationID={s.id}
-                    applications={applications}
-                  />
-                  <TextInput placeholder="Say something" />
-                </Stack>
-              </Tabs.Panel>
-            ))}
-          </Tabs>
-        </Paper>
+        <JobCommentsSection
+          applications={applications}
+          ownerUser={job?.ownerUser}
+        />
       </LoadingBoundary>
     </Stack>
   );

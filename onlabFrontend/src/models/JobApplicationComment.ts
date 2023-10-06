@@ -5,7 +5,7 @@ export interface JobApplicationComment {
   senderUserID: number;
 }
 
-export interface InsertJobApplicationComment {
+export interface InsertJobApplicationCommentModel {
   applicationID: number;
   message: string;
 }

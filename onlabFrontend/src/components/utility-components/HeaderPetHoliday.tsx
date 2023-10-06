@@ -1,4 +1,4 @@
-import { Burger, Group, Header, Menu } from "@mantine/core";
+import { Burger, Group, Header, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -49,6 +49,7 @@ function HeaderPetHoliday() {
           </svg>
         </Link>
 
+        <Text>{user?.userName}</Text>
         <Menu width="13vw">
           <Menu.Target>
             <Burger opened={opened} onClick={toggle} aria-label={label} />

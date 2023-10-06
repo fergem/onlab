@@ -23,8 +23,6 @@ export default function EditOwnerProfile({
     validate: {},
   });
 
-  console.log(currentOwnerProfile);
-  console.log(form.values);
   const updateDisabled =
     form.values.wage === currentOwnerProfile?.minWage &&
     form.values.experience === currentOwnerProfile?.minRequiredExperience &&

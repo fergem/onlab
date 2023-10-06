@@ -8,7 +8,7 @@ namespace Domain.Common.InsertModels
 {
     public class InsertJobApplicationCommentModel
     {
-        public required int ApplicationID;
-        public required string Message;
+        public required int ApplicationID {  get; set; }
+        public required string Message { get; set; }
     }
 }

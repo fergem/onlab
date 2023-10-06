@@ -5,7 +5,6 @@ import {
   NumberInput,
   Select,
   Stack,
-  Textarea,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -80,12 +79,6 @@ export default function PetForm({ onCancel, onConfirm }: IAddPetProps) {
               />
             </Grid.Col>
           </Grid>
-          <Textarea
-            placeholder="Your text"
-            label="Description"
-            withAsterisk
-            {...form.getInputProps("description")}
-          />
         </Stack>
         <Group grow>
           <Button variant="outline" onClick={onCancel}>
