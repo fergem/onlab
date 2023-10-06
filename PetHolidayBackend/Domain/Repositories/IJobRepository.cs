@@ -13,7 +13,6 @@ namespace Domain.Repositories
     {
         Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters);
         Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter);
-        //Task<IReadOnlyCollection<Job>> ListApprovals(int userID);
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter);
         Task<Job> FindById(int jobID);
         Task<int> Insert(InsertJobModel job, int userID);

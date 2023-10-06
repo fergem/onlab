@@ -10,8 +10,7 @@ namespace Domain.Repositories
 {
     public interface IJobApplicationCommentRepository
     {
-        Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID, int applicationID);
-        Task<JobApplicationComment> UpdateApplicationComment(string text, int userID);
+        Task<JobApplicationComment> InsertApplicationComment(string message, int userID, int applicationID);
         Task DeleteApplicationComment(int commentID);
     }
 }

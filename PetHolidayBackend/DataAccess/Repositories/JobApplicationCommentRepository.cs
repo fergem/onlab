@@ -20,14 +20,15 @@ namespace DataAccess.Repositories
             this.dbcontext = dbcontext;
         }
 
-        public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID, int applicationID)
+        public async Task<JobApplicationComment> InsertApplicationComment(string message, int userID, int applicationID)
         {
+
             var newComment = new DbJobApplicationComment()
             {
                 CommentDate = DateTime.Now,
                 SenderUserID = userID,
                 JobApplicationID = applicationID,
-                CommentText = model.Message,
+                CommentText = message,
             };
 
             await dbcontext.JobApplicationsComment.AddAsync(newComment);
@@ -36,10 +37,6 @@ namespace DataAccess.Repositories
             return ModelMapper.ToJobApplicationCommentModel(newComment);
         }
 
-        public Task<JobApplicationComment> UpdateApplicationComment(string text, int userID)
-        {
-            throw new NotImplementedException();
-        }
         public Task DeleteApplicationComment(int commentID)
         {
             throw new NotImplementedException();

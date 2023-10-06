@@ -13,19 +13,32 @@ namespace Domain.Services
     {
         public IJobApplicationRepository jobApplicationRepository { get; set; }
         public IJobApplicationCommentRepository jobApplicationCommentRepository { get; set; }
+        public IJobRepository jobRepository { get; set; }
 
-        public JobApplicationService(IJobApplicationRepository jobApplicationRepository, IJobApplicationCommentRepository jobApplicationCommentRepository)
+        public JobApplicationService(IJobApplicationRepository jobApplicationRepository, IJobApplicationCommentRepository jobApplicationCommentRepository, IJobRepository jobRepository)
         {
             this.jobApplicationRepository = jobApplicationRepository;
             this.jobApplicationCommentRepository = jobApplicationCommentRepository;
+            this.jobRepository = jobRepository;
         }
 
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForJob(int jobID) => await jobApplicationRepository.GetAllForJob(jobID);
-        public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID) => await jobApplicationRepository.InsertApplicationForJob(jobID, userID);
-        public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.DeleteApplication(applicationID);
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForJob(int jobID)
+        {
+            var job = await jobRepository.FindById(jobID);
+            return await jobApplicationRepository.GetAllForJob(job);
+        }
+        public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID)
+        {
+            var job = await jobRepository.FindById(jobID);
+            return await jobApplicationRepository.InsertApplicationForJob(job, userID); 
+        }
+        public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.TerminateApplication(applicationID);
         public async Task ApproveApplication(int applicationID) => await jobApplicationRepository.ApproveApplication(applicationID);
-        public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID, int applicationID) => await jobApplicationCommentRepository.InsertApplicationComment(model, userID, applicationID);
-        public async Task<JobApplicationComment> UpdateApplicationComment(string text, int userID) => await jobApplicationCommentRepository.UpdateApplicationComment(text, userID);
+        public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID) 
+        {
+            var applicaton = await jobApplicationRepository.GetById(model.ApplicationID);
+            return await jobApplicationCommentRepository.InsertApplicationComment(model.Message, userID, applicaton.ID); 
+        }
         public async Task DeleteApplicationComment(int commentID) => await jobApplicationCommentRepository.DeleteApplicationComment(commentID);
     }
 }

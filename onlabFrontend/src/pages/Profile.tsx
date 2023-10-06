@@ -43,7 +43,7 @@ export default function Profile() {
           <Stack align="center">
             <Tabs.List>
               <Tabs.Tab value="profile" icon={<IconUser />}>
-                Profile
+                Profile details
               </Tabs.Tab>
               <Tabs.Tab value="password" icon={<IconKey />}>
                 Password

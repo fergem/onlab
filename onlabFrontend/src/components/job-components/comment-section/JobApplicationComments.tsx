@@ -39,12 +39,6 @@ export default function JobApplicationComments({
   const viewport = useRef<HTMLDivElement>(null);
   const scrollToBottom = () => {
     if (viewport.current) {
-      console.log(
-        viewport.current.scrollTo({
-          top: viewport.current.scrollHeight,
-          behavior: "smooth",
-        })
-      );
       viewport.current.scrollTo({
         top: viewport.current.scrollHeight,
         behavior: "smooth",

@@ -2,7 +2,10 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { JobApplication } from "../../models/JobApplication";
+import {
+  JobApplication,
+  JobApplicationFunctions,
+} from "../../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../../models/JobApplicationComment";
 import JobApplicationService from "../../services/JobApplicationService";
 import useNotification from "../useNotification";
@@ -24,7 +27,10 @@ export const useGetApplicationsForJob = (jobID: string | undefined) => {
 
   useEffect(() => {
     if (data) {
-      setApplications(data);
+      setApplications(
+        JobApplicationFunctions.orderJobApplicationsByLastCommentDate(data)
+      );
+      console.log(data);
     }
   }, [data]);
 

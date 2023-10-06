@@ -27,7 +27,7 @@ export default function PetSelector({ selectPets }: IProps) {
               <Text align="center">
                 You have got no pets yet. Go to your profile and add one
               </Text>
-              <NavButton name="Profile" route="/profile" />
+              <NavButton name="Profile" to="/profile" />
             </Stack>
           )}
           {pets?.map((s) => (

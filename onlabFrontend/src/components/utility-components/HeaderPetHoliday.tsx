@@ -1,4 +1,4 @@
-import { Burger, Group, Header, Menu, Text } from "@mantine/core";
+import { Burger, Group, Header, Menu, Tabs } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -7,19 +7,21 @@ import {
   IconShare,
   IconUser,
 } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 
 function HeaderPetHoliday() {
   const { user, logoutUser } = useAuth();
 
   const [opened, { toggle }] = useDisclosure(false);
-  const label = opened ? "Close navigation" : "Open navigation";
+  const navigate = useNavigate();
+  const { tabValue } = useParams();
 
+  const label = opened ? "Close navigation" : "Open navigation";
   return (
     <Header height="75px">
-      <Group position="apart" spacing="xl" mx="xl">
-        <Link style={{ textDecoration: "none" }} to="/">
+      <Group position="apart" spacing="xl" mx="40px" align="center">
+        <Link style={{ textDecoration: "none", height: "75px" }} to="/">
           <svg
             fill="#505168"
             height="75px"
@@ -49,7 +51,22 @@ function HeaderPetHoliday() {
           </svg>
         </Link>
 
-        <Text>{user?.userName}</Text>
+        <Tabs
+          value={tabValue}
+          onTabChange={(value) => navigate(`/${value}`)}
+          variant="pills"
+          radius={0}
+        >
+          <Tabs.List h="75px">
+            <Tabs.Tab value="profile">Profile</Tabs.Tab>
+            <Tabs.Tab value="jobs">Second tab</Tabs.Tab>
+            {user && <Tabs.Tab value="postedjobs">Posted jobs</Tabs.Tab>}
+            {user && <Tabs.Tab value="undertookjobs">Undertook jobs</Tabs.Tab>}
+            {!!user === false && <Tabs.Tab value="register">Register</Tabs.Tab>}
+            {!!user === false && <Tabs.Tab value="login">Login</Tabs.Tab>}
+          </Tabs.List>
+        </Tabs>
+
         <Menu width="13vw">
           <Menu.Target>
             <Burger opened={opened} onClick={toggle} aria-label={label} />

@@ -18,24 +18,34 @@ namespace DataAccess.Repositories
         public JobApplicationRepository(PetHolidayDbContext dbcontext)
         { 
             this.dbcontext = dbcontext;
-        } 
+        }
 
-        public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID)
+        public async Task<JobApplication> GetById(int applicationID)
         {
-            var job = await dbcontext.Jobs.Include(s => s.JobApplications).FirstOrDefaultAsync(s => s.ID == jobID) ?? throw new Exception("Job does not exist");
-            if (job.JobApplications.Any(s => s.ApplicantUserID == userID))
-                throw new Exception("You already applied for this job");
+            var application = await dbcontext.JobApplications.Include(s => s.ApplicantUser).FirstOrDefaultAsync(s => s.ID == applicationID) ?? throw new Exception("No such application");
+            return ModelMapper.ToJobApplicationModel(application);
+        }
 
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForJob(Job job)
+        {
+            return await dbcontext.JobApplications
+                .Include(s => s.ApplicantUser)
+                .Include(s => s.Comments)
+                .Where(s => s.JobID == job.ID)
+                .Select(s => ModelMapper.ToJobApplicationModel(s)).ToListAsync();
+        }
+
+        public async Task<JobApplication> InsertApplicationForJob(Job job,int userID)
+        {
+            var user = await dbcontext.Users.FindAsync(userID) ?? throw new Exception("User not found");
             var application = new DbJobApplication()
             {
-                ApplicantUserID = userID,
-                Job = job,
+                ApplicantUser = user,
+                JobID = job.ID,
                 IsApproved = false,
             };
-      
-            job.JobApplications.Add(application);
-            job.Status = Status.Approving;
 
+            await dbcontext.JobApplications.AddAsync(application);
             await dbcontext.SaveChangesAsync();
 
             return ModelMapper.ToJobApplicationModel(application);
@@ -54,20 +64,13 @@ namespace DataAccess.Repositories
             jobOfApplication.Status = Status.Upcoming;
             await dbcontext.SaveChangesAsync(); 
         }
-
-        public async Task DeleteApplication(int applicationID)
+        
+        public async Task TerminateApplication(int applicationID)
         {
             var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");
 
             dbcontext.Remove(application);
             await dbcontext.SaveChangesAsync();
-        }
-
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForJob(int jobID)
-        {
-            var job = await dbcontext.Jobs.FindAsync(jobID) ?? throw new Exception("Requested job does not exist");
-
-            return await dbcontext.JobApplications.Include(s => s.ApplicantUser).Include(s => s.Comments).Where(s => s.JobID == jobID).Select(s => ModelMapper.ToJobApplicationModel(s)).ToListAsync();
         }
     }
 }
