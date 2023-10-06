@@ -18,7 +18,9 @@ import {
   usePostComment,
 } from "../../../hooks/react-query/JobApplicationHooks";
 import { JobApplication } from "../../../models/JobApplication";
+import { JobApplicationCommentFunctions } from "../../../models/JobApplicationComment";
 import { UserPreview } from "../../../models/User";
+import { ArrayFunctions } from "../../../utility/array";
 import MessageBubble from "./MessageBubble";
 
 export interface IPropsJobComments {
@@ -82,7 +84,7 @@ export default function JobApplicationComments({
     <Paper shadow="sm" p="xl" withBorder>
       <Stack>
         <ScrollArea h={300} offsetScrollbars viewportRef={viewport}>
-          <Stack justify="center">
+          <Stack justify="center" spacing={2}>
             {application.comments?.length === 0 && (
               <Stack align="center" justify="center" spacing={0} my={20}>
                 <IconMoodSmileBeam size={100} />
@@ -98,6 +100,11 @@ export default function JobApplicationComments({
                     ? application.applicantUser.picture
                     : ownerUser?.picture
                 }
+                isLast={ArrayFunctions.isLastElement(application.comments, s)}
+                isNewMessage={JobApplicationCommentFunctions.isOlderThanBefore(
+                  application.comments,
+                  s
+                )}
               />
             ))}
             {typing && (
