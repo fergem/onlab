@@ -24,6 +24,7 @@ export interface User {
   userName: string;
   bearer?: string;
   roles: UserRoles[];
+  refreshToken?: string;
 }
 
 export enum UserRoles {

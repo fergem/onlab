@@ -37,7 +37,7 @@ namespace PetHolidayWebApi.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "PETSITTER")]
         [HttpPost("{jobID}")]
         public async Task<ActionResult<JobApplicationDTO>> InsertApplicationForJob(int jobID)
         {
@@ -70,7 +70,7 @@ namespace PetHolidayWebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "OWNER")]
         [HttpPatch("{applicationID}/approve")]
         public async Task<ActionResult> ApproveApplication(int applicationID)
         {

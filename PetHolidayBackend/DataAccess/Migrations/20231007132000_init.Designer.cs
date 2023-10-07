@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    [Migration("20231007130817_add_roles")]
-    partial class add_roles
+    [Migration("20231007132000_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 10,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 9, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(5951),
+                            StartDate = new DateTime(2023, 10, 9, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(7871),
                             Status = 1,
                             Title = "Looking for a weekly walk buddy for Milio!",
                             Type = 2
@@ -106,13 +106,13 @@ namespace DataAccess.Migrations
                         {
                             ID = 2,
                             Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
-                            EndDate = new DateTime(2023, 10, 11, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6043),
+                            EndDate = new DateTime(2023, 10, 11, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(7937),
                             Location = "Szolnok",
                             MinRequiredExperience = 1,
                             OwnerUserID = 2,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 11, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6039),
+                            StartDate = new DateTime(2023, 10, 11, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(7935),
                             Status = 1,
                             Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
                             Type = 0
@@ -127,7 +127,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 30,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 11, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6054),
+                            StartDate = new DateTime(2023, 10, 11, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(7945),
                             Status = 1,
                             Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
                             Type = 2
@@ -142,7 +142,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 15,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 10, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6063),
+                            StartDate = new DateTime(2023, 10, 10, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(8000),
                             Status = 1,
                             Title = "Daily Adventures with Luna!",
                             Type = 2
@@ -151,13 +151,13 @@ namespace DataAccess.Migrations
                         {
                             ID = 5,
                             Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
-                            EndDate = new DateTime(2023, 10, 15, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6074),
+                            EndDate = new DateTime(2023, 10, 15, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(8006),
                             Location = "Budapest",
                             MinRequiredExperience = 2,
                             OwnerUserID = 2,
                             Payment = 25,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 12, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6072),
+                            StartDate = new DateTime(2023, 10, 12, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(8005),
                             Status = 1,
                             Title = "Senior Cat Care: Whiskers' Comfort Companion",
                             Type = 0
@@ -171,7 +171,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 11, 15, 8, 17, 522, DateTimeKind.Local).AddTicks(6081),
+                            StartDate = new DateTime(2023, 10, 11, 15, 20, 0, 268, DateTimeKind.Local).AddTicks(8010),
                             Status = 1,
                             Title = "Weekly Labrador Love: Max and Bella's Pawsome Playdates",
                             Type = 3
@@ -550,7 +550,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "5324a266-d28f-4988-8fc0-45bea5e9a54d",
+                            ConcurrencyStamp = "46b25d6e-2fe8-4cde-87fa-7a57fcdd8ca9",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
@@ -567,7 +567,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "3f5f6ade-cbfc-4753-9b0a-a3ca65417ae1",
+                            ConcurrencyStamp = "acd4c8ff-9a27-4292-9bf8-e77cdbee8dc2",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
@@ -584,7 +584,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "b5c5928d-3b93-49e0-9a2d-e57234159306",
+                            ConcurrencyStamp = "f70288a6-ff26-4043-938f-f7a1022b9ef6",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
@@ -601,7 +601,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "138b63de-4af6-436b-85c4-ba6b57262132",
+                            ConcurrencyStamp = "4f367ed8-eec1-4ee5-af0b-a29cff91a78f",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",

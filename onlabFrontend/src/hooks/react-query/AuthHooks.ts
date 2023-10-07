@@ -46,6 +46,10 @@ export const useUser = () => {
     removeItem("user");
   };
 
+  const getLocalRefreshToken = () => {
+    return user?.refreshToken;
+  };
+
   const updateProfile = (updatedUser: UpdateUserModel | undefined) => {
     if (updatedUser && user) {
       setUser({ ...user, ...updatedUser });

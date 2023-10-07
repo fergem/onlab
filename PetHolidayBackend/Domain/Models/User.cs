@@ -11,13 +11,15 @@ namespace Domain.Models
             JobAdvertisements = new HashSet<Job>();
             JobApplications = new HashSet<Job>();
         }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
         public required string Password { get; set; }
         public int Age { get; set; }
         public byte[]? Picture { get; set; }
         public string? Location { get; set; }
-        public string? Bearer { get; set; }
+
+        public required string? RefreshToken { get; set; }
+        public required DateTime RefreshTokenExpiryTime { get; set; }
 
         public virtual OwnerProfile OwnerProfile { get; set; } = null!;
         public virtual PetSitterProfile PetSitterProfile { get; set; } = null!;

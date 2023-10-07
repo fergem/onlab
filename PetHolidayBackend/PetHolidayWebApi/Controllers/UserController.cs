@@ -3,10 +3,11 @@ using Domain.Common.InsertModels;
 using Domain.Common.UpdateModels;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetHolidayWebApi.DTOs;
 using PetHolidayWebApi.ModelExtensions;
-
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PetHolidayWebApi.Controllers
 {
@@ -47,15 +48,60 @@ namespace PetHolidayWebApi.Controllers
 
                 var result = await userService.Login(loginModel);
                 var token = authService.GenerateToken(result.user, result.userRoles);
-                result.user.Bearer = token;
+                var refreshToken = authService.GenerateRefreshToken();
 
-                return Ok(result.user.ToUserDTO(result.userRoles.ToList()));
+                return Ok(result.user.ToUserDTO(result.userRoles.ToList(), token, refreshToken));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
+        {
+            if (tokenModel is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            string? bearer = tokenModel.Bearer;
+            string? refreshToken = tokenModel.RefreshToken;
+
+            var principal = authService.GetPrincipalFromExpiredToken(bearer);
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+
+
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+            if (!foundUser)
+                throw new Exception("User not found");
+
+            var user = await userService.GetUser(userID);
+
+
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            var newAccessToken = CreateToken(principal.Claims.ToList());
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new ObjectResult(new
+            {
+                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                refreshToken = newRefreshToken
+            });
+        }
+
 
         [Authorize]
         [HttpGet("details")]

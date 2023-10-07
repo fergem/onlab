@@ -53,6 +53,10 @@ namespace DataAccess.Repositories
                 FirstName = registerModel.FirstName,
             };
 
+            var result = await userManager.CreateAsync(appUser, registerModel.Password);
+            if (!result.Succeeded)
+                throw new Exception("User creation failed, check user credentials");
+
             if (registerModel.IsOwner)
             {
                 //var role = await roleManager.FindByNameAsync("OWNER");
@@ -68,12 +72,6 @@ namespace DataAccess.Repositories
                     throw new Exception("Role could not be set to User");
             }
 
-
-            var result = await userManager.CreateAsync(appUser, registerModel.Password);
-            if (!result.Succeeded)
-                throw new Exception("User creation failed, check user credentials");
-
-            
 
             var defaultPetSitterProfile = new PetSitterProfile()
             {

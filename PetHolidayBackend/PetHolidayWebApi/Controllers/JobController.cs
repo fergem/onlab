@@ -38,7 +38,7 @@ namespace PetHolidayWebApi.Controllers
             return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
 
-        [Authorize]
+        [Authorize(Roles = "OWNER")]
         [HttpGet("posted")]
         public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListPostedJobs([FromQuery] JobFilterParticipant filter)
         {
@@ -49,7 +49,7 @@ namespace PetHolidayWebApi.Controllers
             return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
 
-        [Authorize]
+        [Authorize(Roles = "PETSITTER")]
         [HttpGet("undertook")]
         public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListUndertookJobs([FromQuery] JobFilterParticipant filter)
         {
@@ -60,16 +60,6 @@ namespace PetHolidayWebApi.Controllers
             var result = await jobService.ListUnderTookJobs(userID, filter);
             return Ok(result.Select(s => s.ToJobDetailsDTO()));
         }
-
-        /*[Authorize]
-        [HttpGet("approvals")]
-        public async Task<ActionResult<IReadOnlyCollection<Job>>> ListApprovals()
-        {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                return BadRequest("There is no such user with this Bearer");
-            return Ok(await jobService.ListApprovals(userID));
-        }*/
 
         [HttpGet("{jobID}")]
         public async Task<ActionResult<JobDetailsDTO>> FindById([FromRoute] int jobID) 
@@ -86,7 +76,7 @@ namespace PetHolidayWebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "OWNER")]
         [HttpPost]
         public async Task<ActionResult<Job>> InsertJob([FromBody] InsertJobModel jobModel)
         {
@@ -174,7 +164,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "OWNER")]
         [HttpDelete("deletejob/{jobID}")]
         public async Task<ActionResult> DeleteJob([FromRoute] int jobID)
         {
