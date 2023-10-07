@@ -82,7 +82,7 @@ namespace PetHolidayWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
         }
 

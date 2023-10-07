@@ -1,29 +1,26 @@
-﻿using Azure;
-using DataAccess.DataObjects;
+﻿using Domain.Models;
 using Domain.Common;
-using Domain.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DataAccess
 {
-    public class PetHolidayDbContext : IdentityDbContext<DbUser, IdentityRole<int>, int>
+    public class PetHolidayDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public PetHolidayDbContext(DbContextOptions options)
         : base(options)
         {
         }
 
-        public DbSet<DbPet> Pets { get; set; }
-        public DbSet<DbPetSitterProfile> PetSitterProfiles { get; set; }
-        public DbSet<DbOwnerProfile> OwnerProfiles { get; set; }
-        public DbSet<DbJob> Jobs { get; set; }
-        public DbSet<DbPetImage> PetImages { get; set; }
-        public DbSet<DbPetJob> PetJobs { get; set; }
-        public DbSet<DbJobApplication> JobApplications { get; set; }
-        public DbSet<DbJobApplicationComment> JobApplicationsComment { get; set; }
+        public DbSet<Pet> Pets { get; set; }
+        public DbSet<PetSitterProfile> PetSitterProfiles { get; set; }
+        public DbSet<OwnerProfile> OwnerProfiles { get; set; }
+        public DbSet<Job> Jobs { get; set; }
+        public DbSet<PetImage> PetImages { get; set; }
+        public DbSet<PetJob> PetJobs { get; set; }
+        public DbSet<JobApplication> JobApplications { get; set; }
+        public DbSet<JobApplicationComment> JobApplicationsComment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,19 +28,19 @@ namespace DataAccess
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            modelBuilder.Entity<DbUser>().Navigation(s => s.OwnerProfile).AutoInclude();
-            modelBuilder.Entity<DbPetJob>().Navigation(s => s.Job).AutoInclude();
-            modelBuilder.Entity<DbPetJob>().Navigation(s => s.Pet).AutoInclude();
-            modelBuilder.Entity<DbPet>().Navigation(s => s.Images).AutoInclude();
+            modelBuilder.Entity<User>().Navigation(s => s.OwnerProfile).AutoInclude();
+            modelBuilder.Entity<PetJob>().Navigation(s => s.Job).AutoInclude();
+            modelBuilder.Entity<PetJob>().Navigation(s => s.Pet).AutoInclude();
+            modelBuilder.Entity<Pet>().Navigation(s => s.Images).AutoInclude();
 
 
-            modelBuilder.Entity<DbPetJob>(entity =>
+            modelBuilder.Entity<PetJob>(entity =>
             {
                 entity.ToTable("PetJob");
                 entity.HasKey(s => new { s.PetID, s.JobID });
             });
 
-            modelBuilder.Entity<DbOwnerProfile>(entity =>
+            modelBuilder.Entity<OwnerProfile>(entity =>
             {
                 entity.ToTable("OwnerProfiles");
                 entity.HasKey(s => s.ID);
@@ -52,15 +49,15 @@ namespace DataAccess
                 entity.Property(s => s.MinRequiredExperience);
             });
 
-            modelBuilder.Entity<DbPetSitterProfile>(entity =>
+            modelBuilder.Entity<PetSitterProfile>(entity =>
             {
                 entity.ToTable("PetSitterProfiles");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.Description).IsUnicode(unicode: true);
                 entity.Property(s => s.AcquiredExperience);
             });
-              
-            modelBuilder.Entity<DbPet>(entity =>
+
+            modelBuilder.Entity<Pet>(entity =>
             {
                 entity.ToTable("Pets");
                 entity.HasKey(s => s.ID);
@@ -72,7 +69,7 @@ namespace DataAccess
             var converter = new EnumCollectionJsonValueConverter<DaysOfWeek>();
             var comparer = new CollectionValueComparer<DaysOfWeek>();
 
-            modelBuilder.Entity<DbJob>(entity =>
+            modelBuilder.Entity<Job>(entity =>
             {
                 entity.ToTable("Jobs");
                 entity.HasKey(s => s.ID);
@@ -83,20 +80,20 @@ namespace DataAccess
                                              .Metadata.SetValueComparer(comparer);
             });
 
-            modelBuilder.Entity<DbPetImage>(entity =>
+            modelBuilder.Entity<PetImage>(entity =>
             {
                 entity.ToTable("PetImages");
                 entity.HasKey(s => s.ID);
             });
 
-            modelBuilder.Entity<DbJobApplication>(entity =>
+            modelBuilder.Entity<JobApplication>(entity =>
             {
                 entity.ToTable("JobApplications");
                 entity.HasKey(s => s.ID);
                 entity.Property(s => s.IsApproved);
             });
 
-            modelBuilder.Entity<DbJobApplicationComment>(entity =>
+            modelBuilder.Entity<JobApplicationComment>(entity =>
             {
                 entity.ToTable("JobApplicationComments");
                 entity.HasKey(s => s.ID);
@@ -116,12 +113,12 @@ namespace DataAccess
 
         private void OneToManyRelationshipConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<User>()
                 .HasMany(c => c.Pets)
                 .WithOne(s => s.User)
                 .IsRequired();
 
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<User>()
                 .HasMany(c => c.JobAdvertisements)
                 .WithOne(s => s.OwnerUser)
                 .HasForeignKey(e => e.OwnerUserID)
@@ -133,18 +130,18 @@ namespace DataAccess
                 .WithOne(s => s.PetSitterUser)
                 .HasForeignKey(e => e.PetSitterUserID);*/
 
-            modelBuilder.Entity<DbPet>()
+            modelBuilder.Entity<Pet>()
                 .HasMany(c => c.Images)
                 .WithOne(s => s.Pet)
                 .HasForeignKey(e => e.PetID)
                 .IsRequired();
 
-            modelBuilder.Entity<DbJob>()
+            modelBuilder.Entity<Job>()
                 .HasMany(j => j.JobApplications)
                 .WithOne(a => a.Job)
                 .HasForeignKey(a => a.JobID);
 
-            modelBuilder.Entity<DbJobApplication>()
+            modelBuilder.Entity<JobApplication>()
                 .HasMany(j => j.Comments)
                 .WithOne(a => a.JobApplication)
                 .HasForeignKey(a => a.JobApplicationID);
@@ -152,26 +149,26 @@ namespace DataAccess
 
         private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<User>()
                 .HasOne(c => c.OwnerProfile)
                 .WithOne(s => s.User)
-                .HasForeignKey<DbOwnerProfile>(b => b.UserID);
+                .HasForeignKey<OwnerProfile>(b => b.UserID);
 
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<User>()
                 .HasOne(c => c.PetSitterProfile)
                 .WithOne(s => s.User)
-                .HasForeignKey<DbPetSitterProfile>(b => b.UserID);
+                .HasForeignKey<PetSitterProfile>(b => b.UserID);
 
         }
 
         private void ManyToManyRelationshipConfiguration(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DbPetJob>()
+            modelBuilder.Entity<PetJob>()
                 .HasOne(s => s.Job)
                 .WithMany(s => s.Pets)
                 .HasForeignKey(s => s.JobID);
 
-            modelBuilder.Entity<DbPetJob>()
+            modelBuilder.Entity<PetJob>()
                 .HasOne(s => s.Pet)
                 .WithMany(s => s.Jobs)
                 .HasForeignKey(s => s.PetID);
@@ -180,9 +177,9 @@ namespace DataAccess
         public void DataSeeding(ModelBuilder modelBuilder)
         {
             var hasher = new PasswordHasher<IdentityUser>();
-            modelBuilder.Entity<DbUser>()
+            modelBuilder.Entity<User>()
                 .HasData(
-                    new DbUser()
+                    new User()
                     {
                         Id = 1,
                         UserName = "kissjanos",
@@ -191,10 +188,9 @@ namespace DataAccess
                         Age = 23,
                         Password = "asd",
                         NormalizedUserName = "KISSJANOS",
-                        PasswordHash = hasher.HashPassword(null, "asd"),
-                        //FirstLogin = true
+                        PasswordHash = "asd",
                     },
-                    new DbUser()
+                    new User()
                     {
                         Id = 2,
                         UserName = "nagyfero",
@@ -203,10 +199,9 @@ namespace DataAccess
                         Age = 32,
                         Password = "asd",
                         NormalizedUserName = "NAGYFERO",
-                        PasswordHash = hasher.HashPassword(null, "asd"),
-                        //FirstLogin = true
+                        PasswordHash = "asd",
                     },
-                    new DbUser()
+                    new User()
                     {
                         Id = 3,
                         UserName = "viccelek",
@@ -215,10 +210,9 @@ namespace DataAccess
                         Age = 43,
                         Password = "asd",
                         NormalizedUserName = "VICCELEK",
-                        PasswordHash = hasher.HashPassword(null, "asd"),
-                        //FirstLogin = true
+                        PasswordHash = "asd",
                     },
-                    new DbUser()
+                    new User()
                     {
                         Id = 4,
                         UserName = "makulatlan",
@@ -227,14 +221,13 @@ namespace DataAccess
                         Age = 17,
                         Password = "asd",
                         NormalizedUserName = "MAKULATLAN",
-                        PasswordHash = hasher.HashPassword(null, "asd"),
-                        //FirstLogin = true
+                        PasswordHash = "asd",
                     }
                 );
 
-            modelBuilder.Entity<DbPet>()
+            modelBuilder.Entity<Pet>()
                 .HasData(
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 1,
                         Name = "Milio",
@@ -242,7 +235,7 @@ namespace DataAccess
                         Age = 7,
                         UserID = 1,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 2,
                         Name = "Randy",
@@ -250,7 +243,7 @@ namespace DataAccess
                         Age = 3,
                         UserID = 2,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 3,
                         Name = "Luna",
@@ -258,7 +251,7 @@ namespace DataAccess
                         Age = 2,
                         UserID = 3,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 4,
                         Name = "Whiskers",
@@ -266,7 +259,7 @@ namespace DataAccess
                         Age = 3,
                         UserID = 2,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 5,
                         Name = "Rusty",
@@ -274,7 +267,7 @@ namespace DataAccess
                         Age = 4,
                         UserID = 3,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 6,
                         Name = "Max",
@@ -282,7 +275,7 @@ namespace DataAccess
                         Age = 4,
                         UserID = 1,
                     },
-                    new DbPet()
+                    new Pet()
                     {
                         ID = 7,
                         Name = "Bella",
@@ -291,48 +284,48 @@ namespace DataAccess
                         UserID = 1,
                     }
                 );
-            modelBuilder.Entity<DbPetJob>()
+            modelBuilder.Entity<PetJob>()
                 .HasData(
-                    new DbPetJob()
+                    new PetJob()
                     {
                         JobID = 1,
                         PetID = 1,
                     },
-                    new DbPetJob()
+                    new PetJob()
                     {
                         JobID = 2,
                         PetID = 2,
-                    }, new DbPetJob()
+                    }, new PetJob()
                     {
                         JobID = 3,
                         PetID = 3,
                     },
-                    new DbPetJob()
+                    new PetJob()
                     {
                         JobID = 4,
                         PetID = 3,
                     },
-                    new DbPetJob()
+                    new PetJob()
                     {
                         JobID = 4,
                         PetID = 5,
-                    }, new DbPetJob()
+                    }, new PetJob()
                     {
                         JobID = 5,
                         PetID = 4,
-                    }, new DbPetJob()
+                    }, new PetJob()
                     {
                         JobID = 6,
                         PetID = 6,
-                    }, new DbPetJob()
+                    }, new PetJob()
                     {
                         JobID = 6,
                         PetID = 7,
                     }
                  );
-            modelBuilder.Entity<DbJob>()
+            modelBuilder.Entity<Job>()
                 .HasData(
-                    new DbJob()
+                    new Job()
                     {
                         ID = 1,
                         Location = "Szeged",
@@ -347,7 +340,7 @@ namespace DataAccess
                         Days = new List<DaysOfWeek>() { DaysOfWeek.Mon, DaysOfWeek.Wed, DaysOfWeek.Fri },
                         Type = JobType.Walking,
                     },
-                    new DbJob()
+                    new Job()
                     {
                         ID = 2,
                         Location = "Szolnok",
@@ -362,7 +355,7 @@ namespace DataAccess
                         Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
                         Type = JobType.Sitting,
                     },
-                    new DbJob()
+                    new Job()
                     {
                         ID = 3,
                         Location = "Jászkarajenő",
@@ -377,7 +370,7 @@ namespace DataAccess
                         Type = JobType.Walking,
                         Days = new List<DaysOfWeek>() { DaysOfWeek.Tue, DaysOfWeek.Wed, DaysOfWeek.Fri }
                     },
-                    new DbJob()
+                    new Job()
                     {
                         ID = 4,
                         Location = "Debrecen",
@@ -389,10 +382,10 @@ namespace DataAccess
                         Repeated = true,
                         StartDate = DateTime.Now.AddDays(3),
                         Title = "Daily Adventures with Luna!",
-                        Days =new List<DaysOfWeek>() { DaysOfWeek.Mon, DaysOfWeek.Wed, DaysOfWeek.Fri },
+                        Days = new List<DaysOfWeek>() { DaysOfWeek.Mon, DaysOfWeek.Wed, DaysOfWeek.Fri },
                         Type = JobType.Walking,
                     },
-                    new DbJob()
+                    new Job()
                     {
                         ID = 5,
                         Location = "Budapest",
@@ -407,7 +400,7 @@ namespace DataAccess
                         Title = "Senior Cat Care: Whiskers' Comfort Companion",
                         Type = JobType.Sitting,
                     },
-                    new DbJob()
+                    new Job()
                     {
                         ID = 6,
                         Location = "Pécs",
@@ -423,5 +416,5 @@ namespace DataAccess
                     }
                 );
         }
-    }  
+    }
 }

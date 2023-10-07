@@ -23,6 +23,12 @@ export interface User {
   id: number;
   userName: string;
   bearer?: string;
+  roles: UserRoles[];
+}
+
+export enum UserRoles {
+  Owner = "Owner",
+  PetSitter = "PetSitter",
 }
 
 export interface UserPreview {
@@ -47,14 +53,18 @@ export interface UpdateUserModel extends UpdateUserDetailsModel {
 }
 
 export interface RegisterModel {
-  userName?: string;
-  email?: string;
-  password?: string;
+  userName: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  isOwner: boolean;
+  isPetSitter: boolean;
 }
 
 export interface LoginModel {
-  userName?: string;
-  password?: string;
+  userName: string;
+  password: string;
 }
 
 export const UserValidation = {
@@ -76,5 +86,9 @@ export const UserValidation = {
 
   passwordSameValidation(val1: string, val2: string) {
     if (val2 !== val1) return "Passwords are not identical!";
+  },
+
+  roleValidation(val1: boolean, val2: boolean) {
+    if (!val1 && !val2) return "Atleast one role should be picked";
   },
 };

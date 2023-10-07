@@ -8,9 +8,18 @@ namespace Domain.Models
 {
     public class JobApplication
     {
+        public JobApplication() 
+        {
+            Comments = new HashSet<JobApplicationComment>();
+        }
         public int ID { get; set; }
         public bool IsApproved { get; set; }
-        public IReadOnlyCollection<JobApplicationComment>? Comments { get; set; }
-        public required User ApplicantUser { get; set; }
+
+        public int JobID { get; set; }
+        public virtual Job Job { get; set; } = null!;
+        public int ApplicantUserID { get; set; }
+        public virtual User ApplicantUser { get; set; } = null!;
+
+        public virtual ICollection<JobApplicationComment> Comments { get; set; }
     }
 }

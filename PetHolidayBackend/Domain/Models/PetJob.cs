@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DataObjects
+namespace Domain.Models
 {
-    public class DbPetJob
+    public class PetJob
     {
         public int JobID { get; set; }
-        public virtual DbJob? Job { get; set; }
+        public virtual Job Job { get; set; } = null!;
         public int PetID { get; set; }
-        public virtual DbPet? Pet { get; set; }
+        public virtual Pet Pet { get; set; } = null!;
     }
 }

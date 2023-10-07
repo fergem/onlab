@@ -1,6 +1,5 @@
 import { Avatar, Badge, Group, Stack, Text } from "@mantine/core";
 import { format, formatRelative } from "date-fns";
-import { hu } from "date-fns/locale";
 import { useUser } from "../../../hooks/react-query/AuthHooks";
 import { JobApplicationComment } from "../../../models/JobApplicationComment";
 import { baseProfilePicture } from "../../../utility/constants";
@@ -29,9 +28,7 @@ export default function MessageBubble({
           sx={() => ({ alignSelf: "center" })}
           my="xs"
         >
-          {format(new Date(comment.commentDate), "MM/dd/yyyy", {
-            locale: hu,
-          })}
+          {format(new Date(comment.commentDate), "MM/dd/yyyy")}
         </Text>
       )}
       <Badge

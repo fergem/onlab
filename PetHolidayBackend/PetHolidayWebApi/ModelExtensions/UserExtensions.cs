@@ -1,21 +1,23 @@
-﻿using PetHolidayWebApi.DTOs;
+﻿using Domain.Models;
+using PetHolidayWebApi.DTOs;
 
 namespace PetHolidayWebApi.ModelExtensions
 {
     public static class UserExtensions
     {
-        public static UserDTO ToUserDTO(this Domain.Models.User user) =>
+        public static UserDTO ToUserDTO(this User user, List<string> role) =>
             new UserDTO
             {
-                ID = user.ID,
+                ID = user.Id,
                 UserName = user.UserName,
                 Bearer = user.Bearer,
+                Role = role
             };
 
-        public static UserDetailsDTO ToUserDetailsDTO(this Domain.Models.User user) =>
+        public static UserDetailsDTO ToUserDetailsDTO(this User user) =>
             new UserDetailsDTO
             {
-                ID = user.ID,
+                ID = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -24,18 +26,19 @@ namespace PetHolidayWebApi.ModelExtensions
                 Picture = user.Picture,
                 OwnerProfile = user?.OwnerProfile?.ToOwnerProfileDTO(),
                 PetSitterProfile = user?.PetSitterProfile?.ToPetSitterProfileDTO(),
+                
             };
 
-        public static UserPreviewDTO ToUserPreviewDTO(this Domain.Models.User user) =>
+        public static UserPreviewDTO ToUserPreviewDTO(this User user) =>
             new UserPreviewDTO
             {
-                ID = user.ID,
+                ID = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Picture = user.Picture,
             };
 
-        public static OwnerProfileDTO ToOwnerProfileDTO(this Domain.Models.OwnerProfile ownerProfile) =>
+        public static OwnerProfileDTO ToOwnerProfileDTO(this OwnerProfile ownerProfile) =>
             new OwnerProfileDTO
             {
                 ID = ownerProfile.ID,
@@ -44,7 +47,7 @@ namespace PetHolidayWebApi.ModelExtensions
                 MinWage = ownerProfile.MinWage,
             };
 
-        public static PetSitterProfileDTO ToPetSitterProfileDTO(this Domain.Models.PetSitterProfile petSitterProfile) =>
+        public static PetSitterProfileDTO ToPetSitterProfileDTO(this PetSitterProfile petSitterProfile) =>
             new PetSitterProfileDTO
             {
                 ID = petSitterProfile.ID,

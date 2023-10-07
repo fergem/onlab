@@ -1,17 +1,10 @@
-﻿using DataAccess.DataObjects;
+﻿using Domain.Models;
 using Domain.Common;
 using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
-using Domain.Models;
 using Domain.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text.Json.Serialization;
+
 
 namespace DataAccess.Repositories
 {
@@ -30,12 +23,12 @@ namespace DataAccess.Repositories
                 .Include(s => s.Pets).FirstOrDefaultAsync(s => s.ID == jobID);
             if (job == null)
                 throw new Exception("Job doesnt exist");
-            return ModelMapper.ToJobModel(job);
+            return job;
         }
 
-        public async Task<int> Insert(InsertJobModel job, int userID)
+        public async Task<Job> Insert(InsertJobModel job, int userID)
         {
-            var insertJob = new DbJob()
+            var insertJob = new Job()
             {
                 Location = job.Location,
                 Description = job.Description,
@@ -51,20 +44,20 @@ namespace DataAccess.Repositories
                 Type = job.Type,
             };
 
-            var petJobs = new List<DbPetJob>();
+            var petJobs = new List<PetJob>();
             foreach (var petID in job.petIDs)
-                petJobs.Add(new DbPetJob() { PetID = petID, Job = insertJob });
+                petJobs.Add(new PetJob() { PetID = petID, Job = insertJob });
             
             await dbcontext.Jobs.AddAsync(insertJob);
             await dbcontext.PetJobs.AddRangeAsync(petJobs);
             await dbcontext.SaveChangesAsync();
 
-            return insertJob.ID;
+            return insertJob;
         }
 
         public async Task<IReadOnlyCollection<Job>> List(JobFilter filter)
         {
-            IQueryable<DbJob> query = dbcontext.Jobs
+            IQueryable<Job> query = dbcontext.Jobs
                     .Include(s => s.OwnerUser)
                     .Include(s => s.Pets)
                     .Where(s => s.Repeated == filter.Repeated)
@@ -98,106 +91,33 @@ namespace DataAccess.Repositories
            if (filter.Repeated && filter.Days is not null) asd = asd.Where(s => s.Days.Any(day => filter.Days.Contains(day))).ToList();
 
 
-            return asd.Select(s => ModelMapper.ToJobModel(s)).ToList();
+            return asd.ToList();
         }
 
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
         { 
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                //.Include(s => s.JobApplications) 
                 .Include(s => s.Pets)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => s.Status == filter.Status)
-                .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
-        /*public async Task<IReadOnlyCollection<Job>> ListApprovals(int userID)
-        {
-            return await dbcontext.Jobs
-               .Include(s => s.OwnerUser)
-               //.Include(s => s.JobApplications) 
-               .Where(s => s.OwnerUserID == userID && s.Status == Status.Approving && s.PetSitterUserID != null)
-               .Select(s => ModelMapper.ToJobModel(s))
-               .ToListAsync();
-        }*/
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                //.Include(s => s.JobApplications) 
                 .Include(s => s.Pets)
-                //.Include(s => s.JobApplications) 
                 .Where(s => s.Status == filter.Status)
                 .OrderByDescending(s => filter.Status == Status.Upcoming ? s.StartDate : s.EndDate)
-                .Select(s => ModelMapper.ToJobModel(s))
                 .ToListAsync();
         }
-
-        /*public async Task<Job> TakeJob(int jobID, int userID)
-        {
-            var jobToTake = await dbcontext.Jobs
-                .Include(s => s.OwnerUser)
-                .Include(s => s.PetSitterUser)
-                .FirstOrDefaultAsync(s => s.ID == jobID);
-
-            if (jobToTake is null)
-                throw new Exception("There is no such job that you want to undertake");
-            if (jobToTake.PetSitterUser != null)
-                throw new Exception("Job is already taken");
-
-            jobToTake.Status = Status.Approving;
-            jobToTake.PetSitterUserID = userID;
-
-            dbcontext.Update(jobToTake);
-            await dbcontext.SaveChangesAsync();
-
-            return ModelMapper.ToJobModel(jobToTake);
-        }*/
-
-        /*public async Task<Job> ApproveUser(int jobID)
-        {
-            var jobToApprove = await dbcontext.Jobs
-               .Include(s => s.OwnerUser)
-               .Include(s => s.PetSitterUser)
-               .FirstAsync(s => s.ID == jobID);
-
-            if (jobToApprove == null)
-                throw new Exception("There is no such job that you want to undertake");
-
-            jobToApprove.Status = Status.Upcoming;
-
-            dbcontext .Update(jobToApprove);
-            await dbcontext.SaveChangesAsync();
-
-            return ModelMapper.ToJobModel(jobToApprove);
-        }*/
-
-        /*public async Task<Job> DeclineUser(int jobID)
-        {
-            var jobToDecline = await dbcontext.Jobs
-               .Include(s => s.OwnerUser)
-               .Include(s => s.PetSitterUser)
-               .FirstAsync(s => s.ID == jobID);
-
-            if (jobToDecline == null)
-                throw new Exception("There is no such job that you want to undertake");
-
-            jobToDecline.Status = Status.Available;
-            jobToDecline.PetSitterUser = null;
-
-            dbcontext.Update(jobToDecline);
-            await dbcontext.SaveChangesAsync();
-
-            return ModelMapper.ToJobModel(jobToDecline);
-        }*/
 
         public async Task<Job> FinishJob(int jobID)
         {
             var jobToFinish = await dbcontext.Jobs
                .Include(s => s.OwnerUser)
-               //.Include(s => s.JobApplications) 
                .FirstAsync(s => s.ID == jobID);
 
             if (jobToFinish == null)
@@ -208,7 +128,7 @@ namespace DataAccess.Repositories
             dbcontext.Update(jobToFinish);
             await dbcontext.SaveChangesAsync();
 
-            return ModelMapper.ToJobModel(jobToFinish);
+            return jobToFinish;
         }
 
         public async Task DeleteJob(int jobID)

@@ -14,11 +14,7 @@ const login = async (loginModel: LoginModel) => {
 };
 
 const register = async (registerModel: RegisterModel) => {
-  return axios.post("/api/users/register", {
-    email: registerModel.email,
-    username: registerModel.userName,
-    password: registerModel.password,
-  });
+  return axios.post("/api/users/register", registerModel);
 };
 
 const logout = async () => {

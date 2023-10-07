@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Common;
+using Domain.Models;
 using Microsoft.Identity.Client;
 using PetHolidayWebApi.DTOs;
 using System;
@@ -11,13 +12,13 @@ namespace PetHolidayWebApi.ModelExtensions
 {
     public static class JobExtensions
     {
-        public static JobDetailsDTO ToJobDetailsDTO(this Domain.Models.Job job) => 
+        public static JobDetailsDTO ToJobDetailsDTO(this Job job) => 
             new JobDetailsDTO
             {
                 ID = job.ID,
                 Location = job.Location,
                 Repeated = job.Repeated,
-                OwnerID = job.OwnerUser.ID,
+                OwnerID = job.OwnerUser.Id,
                 Title = job.Title,
                 Type = job.Type, 
                 StartDate = job.StartDate,
@@ -30,7 +31,7 @@ namespace PetHolidayWebApi.ModelExtensions
                 Days = job.Days?.ToList(),
                 Status = job.Status,
             };
-        public static JobPreviewDTO ToJobPreviewDTO(this Domain.Models.Job job) =>
+        public static JobPreviewDTO ToJobPreviewDTO(this Job job) =>
             new JobPreviewDTO
             {
                 ID = job.ID,
@@ -40,10 +41,10 @@ namespace PetHolidayWebApi.ModelExtensions
                 StartDate = job.StartDate,
                 EndDate = job.EndDate,
                 Days = job.Days?.Select(d => d.ToString()).ToList(),
-                CatCount = job.Pets.Count(p => p.Species == PetSpecies.Cat),
-                DogCount = job.Pets.Count(p => p.Species == PetSpecies.Dog),
+                CatCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Cat),
+                DogCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Dog),
                 OwnerUserPicture = job.OwnerUser.Picture,
-                DisplayPetPicture = job.Pets.FirstOrDefault()?.Images?.FirstOrDefault()
+                DisplayPetPicture = job.Pets.FirstOrDefault()?.Pet.Images?.FirstOrDefault()?.ToPetImage()
             };
     }
 }

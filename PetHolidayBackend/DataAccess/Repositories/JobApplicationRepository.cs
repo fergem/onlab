@@ -1,13 +1,8 @@
-﻿using DataAccess.DataObjects;
+﻿using Domain.Models;
 using Domain.Common;
-using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DataAccess.Repositories
 {
@@ -23,7 +18,7 @@ namespace DataAccess.Repositories
         public async Task<JobApplication> GetById(int applicationID)
         {
             var application = await dbcontext.JobApplications.Include(s => s.ApplicantUser).FirstOrDefaultAsync(s => s.ID == applicationID) ?? throw new Exception("No such application");
-            return ModelMapper.ToJobApplicationModel(application);
+            return application;
         }
 
         public async Task<IReadOnlyCollection<JobApplication>> GetAllForJob(Job job)
@@ -32,13 +27,13 @@ namespace DataAccess.Repositories
                 .Include(s => s.ApplicantUser)
                 .Include(s => s.Comments)
                 .Where(s => s.JobID == job.ID)
-                .Select(s => ModelMapper.ToJobApplicationModel(s)).ToListAsync();
+                .ToListAsync();
         }
 
         public async Task<JobApplication> InsertApplicationForJob(Job job,int userID)
         {
             var user = await dbcontext.Users.FindAsync(userID) ?? throw new Exception("User not found");
-            var application = new DbJobApplication()
+            var application = new JobApplication()
             {
                 ApplicantUser = user,
                 JobID = job.ID,
@@ -48,7 +43,7 @@ namespace DataAccess.Repositories
             await dbcontext.JobApplications.AddAsync(application);
             await dbcontext.SaveChangesAsync();
 
-            return ModelMapper.ToJobApplicationModel(application);
+            return application;
         }
 
         public async Task ApproveApplication(int applicationID)
@@ -65,7 +60,7 @@ namespace DataAccess.Repositories
             await dbcontext.SaveChangesAsync(); 
         }
         
-        public async Task TerminateApplication(int applicationID)
+        public async Task CancelApplication(int applicationID)
         {
             var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");
 

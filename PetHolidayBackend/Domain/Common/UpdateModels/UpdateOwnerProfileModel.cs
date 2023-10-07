@@ -4,18 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.DataObjects
+namespace Domain.Common.UpdateModels
 {
-    public class DbOwnerProfile
+    public class UpdateOwnerProfileModel
     {
-        public int ID { get; set; }
         public string? Description { get; set; }
-
         public int MinRequiredExperience { get; set; }
-
         public int MinWage { get; set; }
-
-        public int UserID { get; set; }
-        public virtual DbUser User { get; set; } = null!;
     }
 }

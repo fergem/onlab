@@ -1,19 +1,12 @@
-﻿
-using Domain.Common.AuthHelpers;
+﻿using Domain.Common.AuthHelpers;
 using Domain.Common.InsertModels;
 using Domain.Common.UpdateModels;
-using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using PetHolidayWebApi.DTOs;
 using PetHolidayWebApi.ModelExtensions;
-using System.Drawing;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+
 
 namespace PetHolidayWebApi.Controllers
 {
@@ -56,11 +49,7 @@ namespace PetHolidayWebApi.Controllers
                 var token = authService.GenerateToken(result.user, result.userRoles);
                 result.user.Bearer = token;
 
-                return Ok(new UserDTO() {
-                    ID = result.user.ID,
-                    Bearer = result.user.Bearer,
-                    UserName = result.user.UserName,
-                });
+                return Ok(result.user.ToUserDTO(result.userRoles.ToList()));
             }
             catch (Exception ex)
             {
@@ -83,7 +72,7 @@ namespace PetHolidayWebApi.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
         }
 
@@ -138,7 +127,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize]
         [HttpPut("updatepet")]
-        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] Pet pet)
+        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] UpdatePetModel pet)
         {
             try
             {

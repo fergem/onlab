@@ -58,10 +58,19 @@ function HeaderPetHoliday() {
           radius={0}
         >
           <Tabs.List h="75px">
-            <Tabs.Tab value="profile">Profile</Tabs.Tab>
-            <Tabs.Tab value="jobs">Second tab</Tabs.Tab>
+            {user && <Tabs.Tab value="profile">Profile</Tabs.Tab>}
+            <Tabs.Tab value="jobs">Jobs</Tabs.Tab>
             {user && <Tabs.Tab value="postedjobs">Posted jobs</Tabs.Tab>}
             {user && <Tabs.Tab value="undertookjobs">Undertook jobs</Tabs.Tab>}
+          </Tabs.List>
+        </Tabs>
+        <Tabs
+          value={tabValue}
+          onTabChange={(value) => navigate(`/${value}`)}
+          variant="pills"
+          radius={0}
+        >
+          <Tabs.List h="75px">
             {!!user === false && <Tabs.Tab value="register">Register</Tabs.Tab>}
             {!!user === false && <Tabs.Tab value="login">Login</Tabs.Tab>}
           </Tabs.List>

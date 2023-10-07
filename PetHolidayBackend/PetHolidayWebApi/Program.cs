@@ -1,7 +1,5 @@
-using DataAccess;
-using DataAccess.DataObjects;
-using DataAccess.Repositories;
 using Domain.Models;
+using DataAccess.Repositories;
 using Domain.Repositories;
 using Domain.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,8 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Text.Json.Serialization;
 using PetHolidayWebApi.Hubs;
+using DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PetHolidayDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PetHolidayDbContext")));
 
-builder.Services.AddIdentity<DbUser, IdentityRole<int>>(x =>
+builder.Services.AddIdentity<User, IdentityRole<int>>(x =>
 {
     x.Password.RequiredLength = 6;
     x.Password.RequireUppercase = false;
@@ -53,28 +51,20 @@ builder.Services.AddAuthentication(options => {
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidateIssuerSigningKey = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateIssuerSigningKey"]),
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JsonWebTokenKeys:IssuerSigningKey"])),
-        ValidateIssuer = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateIssuer"]),
+        ValidateIssuerSigningKey = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateIssuerSigningKey"] ?? "false"),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JsonWebTokenKeys:IssuerSigningKey"] ?? "false")),
+        ValidateIssuer = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateIssuer"] ?? "false"),
         ValidAudience = builder.Configuration["JsonWebTokenKeys:ValidAudience"],
         ValidIssuer = builder.Configuration["JsonWebTokenKeys:ValidIssuer"],
-        ValidateAudience = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateAudience"]),
-        RequireExpirationTime = bool.Parse(builder.Configuration["JsonWebTokenKeys:RequireExpirationTime"]),
-        ValidateLifetime = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateLifetime"])
+        ValidateAudience = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateAudience"] ?? "false"),
+        RequireExpirationTime = bool.Parse(builder.Configuration["JsonWebTokenKeys:RequireExpirationTime"] ?? "false"),
+        ValidateLifetime = bool.Parse(builder.Configuration["JsonWebTokenKeys:ValidateLifetime"] ?? "false")
     };
 });
 
-/*builder.Services.AddSignalR()
-    .AddJsonProtocol(options => {
-        options.PayloadSerializerOptions.PropertyNamingPolicy = null;
-    });*/
-
 builder.Services.AddSignalR();
 
-
 var app = builder.Build();
-
-
 
 using (var serviceScope = app.Services.CreateScope())
 {

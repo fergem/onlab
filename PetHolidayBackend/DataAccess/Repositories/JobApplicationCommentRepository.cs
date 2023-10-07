@@ -1,12 +1,5 @@
-﻿using DataAccess.DataObjects;
-using Domain.Common.InsertModels;
-using Domain.Models;
+﻿using Domain.Models;
 using Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -20,21 +13,21 @@ namespace DataAccess.Repositories
             this.dbcontext = dbcontext;
         }
 
-        public async Task<JobApplicationComment> InsertApplicationComment(string message, int userID, int applicationID)
+        public async Task<JobApplicationComment> InsertApplicationComment(string message, int userID, JobApplication application)
         {
 
-            var newComment = new DbJobApplicationComment()
+            var newComment = new JobApplicationComment()
             {
                 CommentDate = DateTime.Now,
                 SenderUserID = userID,
-                JobApplicationID = applicationID,
+                JobApplication = application,
                 CommentText = message,
             };
 
             await dbcontext.JobApplicationsComment.AddAsync(newComment);
             await dbcontext.SaveChangesAsync();
 
-            return ModelMapper.ToJobApplicationCommentModel(newComment);
+            return newComment;
         }
 
         public Task DeleteApplicationComment(int commentID)

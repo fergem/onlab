@@ -22,7 +22,7 @@ namespace Domain.Services
         public async Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters) => await jobRepository.List(jobParameters);
         public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter) => await jobRepository.ListPostedJobs(userID, filter);
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter) => await jobRepository.ListUnderTookJobs(userID, filter);
-        public async Task<int> Insert(InsertJobModel job, int userID) => await jobRepository.Insert(job, userID);
+        public async Task<Job> Insert(InsertJobModel job, int userID) => await jobRepository.Insert(job, userID);
         public async Task<Job> FindById(int jobID) => await jobRepository.FindById(jobID);
         public async Task<Job> FinishJob(int jobID) => await jobRepository.FinishJob(jobID);
         public async Task DeleteJob(int jobID) => await jobRepository.DeleteJob(jobID);

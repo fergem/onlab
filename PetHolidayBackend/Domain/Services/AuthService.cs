@@ -1,14 +1,9 @@
 ﻿using Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Services
 {
@@ -23,7 +18,7 @@ namespace Domain.Services
         public string GenerateToken(User user, IList<string> userRoles)
         {
             var authClaims = new List<Claim> {
-                new Claim("ID", user.ID.ToString()),
+                new Claim("Id", user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

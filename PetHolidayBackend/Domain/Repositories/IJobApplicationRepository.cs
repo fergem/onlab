@@ -13,7 +13,7 @@ namespace Domain.Repositories
         Task<IReadOnlyCollection<JobApplication>> GetAllForJob(Job job);
         Task<JobApplication> GetById(int applicationID);
         Task<JobApplication> InsertApplicationForJob(Job job, int userID);
-        Task TerminateApplication(int applicationID);
+        Task CancelApplication(int applicationID);
         Task ApproveApplication(int applicationID);
     }
 }

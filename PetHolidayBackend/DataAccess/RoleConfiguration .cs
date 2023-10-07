@@ -9,18 +9,20 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
+    public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole<int>>
     {
-        public void Configure(EntityTypeBuilder<IdentityRole> builder)
+        public void Configure(EntityTypeBuilder<IdentityRole<int>> builder)
         {
             builder.HasData(
-            new IdentityRole
+            new IdentityRole<int>
             {
+                Id = 1,
                 Name = "PetSitter",
                 NormalizedName = "PETSITTER"
             },
-            new IdentityRole
+            new IdentityRole<int>
             {
+                Id = 2,
                 Name = "Owner",
                 NormalizedName = "OWNER"
             });

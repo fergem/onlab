@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccess.DataObjects;
+﻿using Domain.Models;
 using Domain.Common.InsertModels;
-using Domain.Common.QueryHelpers;
 using Domain.Common.UpdateModels;
-using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
-using static System.Net.Mime.MediaTypeNames;
+
 
 namespace DataAccess.Repositories
 {
@@ -24,6 +13,12 @@ namespace DataAccess.Repositories
         public PetRepository(PetHolidayDbContext dbcontext)
         {
             this.dbcontext = dbcontext;
+        }
+
+        public async Task<Pet> FindById(int petID)
+        {
+            var result = await dbcontext.Pets.FirstOrDefaultAsync(s => s.ID == petID) ?? throw new Exception("Requested pet not exists");
+            return result;
         }
 
         public async Task Delete(int petID)
@@ -41,13 +36,12 @@ namespace DataAccess.Repositories
                 .Include(s => s.Images)
                 .Include(s => s.User)
                 .Where(s => s.UserID == userID)
-                .Select(s => ModelMapper.ToPetModel(s))
                 .ToListAsync();
         }
 
         public async Task<Pet> Insert(InsertPetModel pet, int userID)
         {
-            var insertPet = new DbPet()
+            var insertPet = new Pet()
             {
                 Name = pet.Name,
                 Species = pet.Species,
@@ -57,45 +51,31 @@ namespace DataAccess.Repositories
             
             await dbcontext.Pets.AddAsync(insertPet);
             await dbcontext.SaveChangesAsync();
-            return ModelMapper.ToPetModel(insertPet);
+            return insertPet;
         }
 
-        public async Task<Pet> Update(Pet pet)
+        public async Task<Pet> Update(UpdatePetModel pet)
         {
             var dbPet = await dbcontext.Pets.FindAsync(pet.ID);
             if (dbPet == null)
                 throw new Exception("Pet not found");
 
             dbPet.Age = pet.Age;
-            dbPet.Species = pet.Species;
             dbPet.Name = pet.Name;
-            if (pet.Images is not null)
-            {
-                var dbImagesToAdd = new List<DbPetImage>();
-                foreach (var image in pet.Images)
-                {
-                    dbImagesToAdd.Add(new DbPetImage
-                    {
-                        Picture = image,
-                    });   
-                }
-                await dbcontext.AddRangeAsync(dbImagesToAdd);
-                dbPet.Images = dbImagesToAdd;
-            }
 
             await dbcontext.SaveChangesAsync();
-            return ModelMapper.ToPetModel(dbPet);
+            return dbPet;
         }
 
-        public async Task<Pet> AddImages(int ID, UpdatePetImagesModel addPetImagesModel)
+        public async Task<Pet> InsertImages(int ID, UpdatePetImagesModel addPetImagesModel)
         {
             var dbPet = await dbcontext.Pets.Include(s => s.Images).FirstOrDefaultAsync(s => s.ID == ID);
             if (dbPet == null)
                 throw new Exception("Nincs ilyen pet");
-            var dbImagesToAdd = new List<DbPetImage>();
+            var dbImagesToAdd = new List<PetImage>();
             foreach (var image in addPetImagesModel.files)
             {
-                dbImagesToAdd.Add(new DbPetImage
+                dbImagesToAdd.Add(new PetImage
                 {
                     Picture = image,
                 });
@@ -105,7 +85,7 @@ namespace DataAccess.Repositories
 
             await dbcontext.PetImages.AddRangeAsync(dbImagesToAdd);
             await dbcontext.SaveChangesAsync();
-            return ModelMapper.ToPetModel(dbPet);
+            return dbPet;
         }
     }
 }

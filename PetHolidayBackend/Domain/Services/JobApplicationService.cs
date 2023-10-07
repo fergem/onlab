@@ -32,12 +32,12 @@ namespace Domain.Services
             var job = await jobRepository.FindById(jobID);
             return await jobApplicationRepository.InsertApplicationForJob(job, userID); 
         }
-        public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.TerminateApplication(applicationID);
+        public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.CancelApplication(applicationID);
         public async Task ApproveApplication(int applicationID) => await jobApplicationRepository.ApproveApplication(applicationID);
         public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID) 
         {
-            var applicaton = await jobApplicationRepository.GetById(model.ApplicationID);
-            return await jobApplicationCommentRepository.InsertApplicationComment(model.Message, userID, applicaton.ID); 
+            var application = await jobApplicationRepository.GetById(model.ApplicationID);
+            return await jobApplicationCommentRepository.InsertApplicationComment(model.Message, userID, application); 
         }
         public async Task DeleteApplicationComment(int commentID) => await jobApplicationCommentRepository.DeleteApplicationComment(commentID);
     }

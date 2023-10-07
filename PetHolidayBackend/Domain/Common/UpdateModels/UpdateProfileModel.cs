@@ -14,7 +14,7 @@ namespace Domain.Common.UpdateModels
         public int? Age { get; set; }
         public string? Location { get; set; }
         public string? PhoneNumber { get; set; }
-        public UpdateOwnerProfile? OwnerProfile { get; set; }
+        public UpdateOwnerProfileModel? OwnerProfile { get; set; }
         public UpdatePetSitterProfile? PetSitterProfile { get; set;}
     }
 }
