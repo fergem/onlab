@@ -4,7 +4,7 @@ using Domain.Common.UpdateModels;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using System.Security.Cryptography;
 
 namespace DataAccess.Repositories
 {
@@ -35,7 +35,18 @@ namespace DataAccess.Repositories
                 throw new Exception("Incorrect password");
             
             var userRoles = await userManager.GetRolesAsync(user);
+            user.RefreshToken = GenerateRefreshToken();
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(1);
+            await dbContext.SaveChangesAsync();
             return new (user, userRoles);
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         public async Task Register(RegisterModel registerModel)
@@ -91,6 +102,21 @@ namespace DataAccess.Repositories
             await dbContext.AddAsync(defaultOwnerProfile);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task UpdateRefreshToken(UpdateRefreshTokenModel updateRefreshTokenModel)
+        {
+            if (updateRefreshTokenModel.UserName is null)
+                throw new Exception("Username not exists");
+
+            var user = await userManager.FindByNameAsync(updateRefreshTokenModel.UserName) ?? throw new Exception("User not exists");
+
+            if (user == null || !string.Equals(user.RefreshToken, updateRefreshTokenModel.OldRefreshToken) || user.RefreshTokenExpiryTime <= DateTime.Now)
+                throw new Exception("Invalid access token or refres h token");
+
+            user.RefreshToken = updateRefreshTokenModel.NewRefreshToken;
+            await userManager.UpdateAsync(user);
+        }
+
 
         public async Task<User> FindById(int userID)
         {

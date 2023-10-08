@@ -21,6 +21,8 @@ namespace Domain.Services
         }
         public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel) => await userRepository.Login(loginModel);
         public async Task Register(RegisterModel registerModel) => await userRepository.Register(registerModel);
+        public async Task UpdateRefreshToken(UpdateRefreshTokenModel updateRefreshTokenModel) => await userRepository.UpdateRefreshToken(updateRefreshTokenModel);
+
         public async Task<User> GetUser(int userID) => await userRepository.FindById(userID);
         public async Task<User> AddProfilePicture(int userID, byte[] file) => await userRepository.AddProfilePicture(userID, file);
         public async Task<IReadOnlyCollection<Pet>> ListUsersPets(int userID) => await petRepository.List(userID);

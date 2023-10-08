@@ -18,11 +18,12 @@ namespace Domain.Models
         public byte[]? Picture { get; set; }
         public string? Location { get; set; }
 
-        public required string? RefreshToken { get; set; }
-        public required DateTime RefreshTokenExpiryTime { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
         public virtual OwnerProfile OwnerProfile { get; set; } = null!;
         public virtual PetSitterProfile PetSitterProfile { get; set; } = null!;
+
         
         public virtual ICollection<Pet> Pets { get; set; }
         public virtual ICollection<Job> JobAdvertisements { get; set; }

@@ -5,14 +5,14 @@ namespace PetHolidayWebApi.ModelExtensions
 {
     public static class UserExtensions
     {
-        public static UserDTO ToUserDTO(this User user, List<string> role, string bearer, string refreshToken) =>
+        public static UserDTO ToUserDTO(this User user, List<string> role, string bearer) =>
             new UserDTO
             {
                 ID = user.Id,
                 UserName = user.UserName,
                 Bearer = bearer,
                 Role = role,
-                RefreshToken = refreshToken
+                RefreshToken = user.RefreshToken
             };
 
         public static UserDetailsDTO ToUserDetailsDTO(this User user) =>

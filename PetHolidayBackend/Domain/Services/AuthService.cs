@@ -57,7 +57,7 @@ namespace Domain.Services
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:Secret"] ?? "")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"] ?? "")),
                 ValidateLifetime = false
             };
 
@@ -68,6 +68,21 @@ namespace Domain.Services
 
             return principal;
 
+        }
+        public JwtSecurityToken CreateTokenFromClaims(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:Secret"] ?? ""));
+            _ = int.TryParse(configuration["JsonWebTokenKeys:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+            var token = new JwtSecurityToken(
+                issuer: configuration["JsonWebTokenKeys:ValidIssuer"],
+                audience: configuration["JsonWebTokenKeys:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
         }
     }
 }

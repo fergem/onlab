@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
+import UserService from "../../services/UserService";
 
 const parseJwt = (token: string | undefined) => {
   if (token) {
@@ -18,6 +19,11 @@ export default function AuthVerify() {
   const { user, logoutUser } = useAuth();
   useEffect(() => {
     if (user) {
+      const response = UserService.updateUserToken({
+        accessToken: user.bearer ?? "",
+        refreshToken: user.refreshToken ?? "",
+      });
+      console.log(response);
       const decodedJwt = parseJwt(user?.bearer);
       if (decodedJwt.exp * 1000 < Date.now() || !user.bearer) {
         console.log("bent");

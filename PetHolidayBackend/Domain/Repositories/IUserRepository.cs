@@ -15,6 +15,7 @@ namespace Domain.Repositories
         Task Register(RegisterModel registerModel);
         Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel);
 
+        Task UpdateRefreshToken(UpdateRefreshTokenModel updateRefreshTokenModel);
         Task<User> FindById(int userID);
         Task<User> AddProfilePicture(int userID, byte[] file);
         Task<User> UpdateProfile(int userID, UpdateProfileModel updateProfileModel);

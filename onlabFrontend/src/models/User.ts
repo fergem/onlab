@@ -31,6 +31,10 @@ export enum UserRoles {
   Owner = "Owner",
   PetSitter = "PetSitter",
 }
+export interface RefreshTokenModel {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export interface UserPreview {
   id: number;

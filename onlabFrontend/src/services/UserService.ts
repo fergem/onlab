@@ -1,9 +1,24 @@
 import axios from "axios";
 import { Pet, PetInsertModel } from "../models/Pet";
-import { UpdateUserModel, UserDetails } from "../models/User";
+import {
+  RefreshTokenModel,
+  UpdateUserModel,
+  UserDetails,
+} from "../models/User";
 
 const getUserDetails = async () => {
   const response = await axios.get<UserDetails>("api/users/details");
+
+  return response.data;
+};
+
+const updateUserToken = async (token: RefreshTokenModel) => {
+  const response = await axios.post<RefreshTokenModel>(
+    "api/users/refresh-token",
+    token
+  );
+  console.log(response.data.accessToken);
+
   return response.data;
 };
 
@@ -93,6 +108,7 @@ const UserService = {
   getUserPets,
   deletePet,
   updateUser,
+  updateUserToken,
   updatePassword,
   uploadPetPictures,
   uploadProfilePicture,

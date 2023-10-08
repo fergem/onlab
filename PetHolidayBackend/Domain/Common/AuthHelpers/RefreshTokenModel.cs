@@ -8,7 +8,7 @@ namespace Domain.Common.AuthHelpers
 {
     public class RefreshTokenModel
     {
-        public required string? Bearer {  get; set; }
-        public required string? RefreshToken { get; set; }
+        public required string AccessToken {  get; set; }
+        public required string RefreshToken { get; set; }
     }
 }

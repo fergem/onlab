@@ -50,7 +50,7 @@ namespace PetHolidayWebApi.Controllers
                 var token = authService.GenerateToken(result.user, result.userRoles);
                 var refreshToken = authService.GenerateRefreshToken();
 
-                return Ok(result.user.ToUserDTO(result.userRoles.ToList(), token, refreshToken));
+                return Ok(result.user.ToUserDTO(result.userRoles.ToList(), token));
             }
             catch (Exception ex)
             {
@@ -59,47 +59,40 @@ namespace PetHolidayWebApi.Controllers
         }
         [HttpPost]
         [Route("refresh-token")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
+        public async Task<ActionResult<RefreshBearerTokenDTO>> RefreshToken(RefreshTokenModel tokenModel)
         {
-            if (tokenModel is null)
+
+            try
             {
-                return BadRequest("Invalid client request");
+                var principal = authService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
+                if (principal is null)
+                {
+                    return BadRequest("Invalid access token or refresh token");
+                }
+
+                var newAccessToken = authService.CreateTokenFromClaims(principal.Claims.ToList());
+                var newRefreshToken = authService.GenerateRefreshToken();
+
+                var updateRefreshTokenModel = new UpdateRefreshTokenModel()
+                {
+                    UserName = principal?.Identity?.Name,
+                    OldRefreshToken = tokenModel.RefreshToken,
+                    NewRefreshToken = newRefreshToken,
+                };
+
+                await userService.UpdateRefreshToken(updateRefreshTokenModel);
+                var result = new RefreshBearerTokenDTO()
+                {
+                    AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                    RefreshToken = newRefreshToken
+                };
+
+                return CreatedAtAction(nameof(RefreshToken), result, result);
             }
-
-            string? bearer = tokenModel.Bearer;
-            string? refreshToken = tokenModel.RefreshToken;
-
-            var principal = authService.GetPrincipalFromExpiredToken(bearer);
-            if (principal == null)
+            catch (Exception ex)
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest(ex.Message);
             }
-
-
-
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
-            if (!foundUser)
-                throw new Exception("User not found");
-
-            var user = await userService.GetUser(userID);
-
-
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
-                return BadRequest("Invalid access token or refresh token");
-            }
-
-            var newAccessToken = CreateToken(principal.Claims.ToList());
-            var newRefreshToken = GenerateRefreshToken();
-
-            user.RefreshToken = newRefreshToken;
-            await _userManager.UpdateAsync(user);
-
-            return new ObjectResult(new
-            {
-                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-                refreshToken = newRefreshToken
-            });
         }
 
 
