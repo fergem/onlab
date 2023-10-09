@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import {
   LoginModel,
+  RefreshTokenModel,
   RegisterModel,
-  UpdateUserModel,
   User,
 } from "../../models/User";
 import AuthService from "../../services/AuthService";
@@ -46,18 +46,11 @@ export const useUser = () => {
     removeItem("user");
   };
 
-  const getLocalRefreshToken = () => {
-    return user?.refreshToken;
+  return {
+    user,
+    addUser,
+    removeUser,
   };
-
-  const updateProfile = (updatedUser: UpdateUserModel | undefined) => {
-    if (updatedUser && user) {
-      setUser({ ...user, ...updatedUser });
-      setItem("user", JSON.stringify({ ...user, ...updatedUser }));
-    }
-  };
-
-  return { user, addUser, removeUser, updateProfile };
 };
 
 export const useAuth = () => {
@@ -70,7 +63,7 @@ export const useAuth = () => {
     if (userToGet) {
       const contextUser = JSON.parse(userToGet ?? "");
       addUser(contextUser);
-      axios.defaults.headers.common.Authorization = `Bearer ${contextUser.bearer}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${contextUser.accessToken}`;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -86,12 +79,37 @@ export const useAuth = () => {
     navigate("/profile");
   };
 
+  const refreshToken = async (model: RefreshTokenModel) => {
+    const response = await AuthService.updateUserToken(model);
+    if (user)
+      addUser({
+        ...user,
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      });
+  };
+
   const logoutUser = async () => {
     if (user)
       // await AuthService.logout(authHeader());
       removeUser();
-    navigate("/");
   };
 
-  return { user, registerUser, loginUser, logoutUser };
+  const getLocalRefreshToken = () => {
+    return user?.refreshToken;
+  };
+
+  const getLocalAccessToken = () => {
+    return user?.accessToken;
+  };
+
+  return {
+    user,
+    registerUser,
+    loginUser,
+    logoutUser,
+    refreshToken,
+    getLocalRefreshToken,
+    getLocalAccessToken,
+  };
 };

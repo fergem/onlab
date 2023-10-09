@@ -33,7 +33,7 @@ import { Pet, PetSpecies } from "../../models/Pet";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import { PetGrid } from "../pet-components/PetList";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
-import JobCommentsSection from "./comment-section/JobCommentsSection";
+import JobOwnerCommentsSection from "./comment-section/JobOwnerCommentsSection";
 
 function JobDetail() {
   const { id } = useParams();
@@ -50,6 +50,7 @@ function JobDetail() {
 
   const handleApplyToJob = () => {
     if (job) {
+      console.log(job.id);
       applyToJob(job.id);
       // navigate("/postedjobs");
     }
@@ -181,7 +182,7 @@ function JobDetail() {
         error={errorApplications}
         refetch={refetchApplications}
       >
-        <JobCommentsSection
+        <JobOwnerCommentsSection
           applications={applications}
           ownerUser={job?.ownerUser}
         />

@@ -1,4 +1,4 @@
-import { Divider, Group, Paper, Stack, Tabs, Title } from "@mantine/core";
+import { Divider, Group, Paper, Stack, Tabs, Text, Title } from "@mantine/core";
 import {
   IconInfoCircle,
   IconKey,
@@ -12,12 +12,15 @@ import EditPetSitterProfile from "../components/user-components/EditPetSitterPro
 import EditUserDetails from "../components/user-components/EditUserDetails";
 import ProfilePets from "../components/user-components/ProfilePets";
 import LoadingBoundary from "../components/utility-components/LoadingBoundary";
+import { useAuth } from "../hooks/react-query/AuthHooks";
 import { useGetUser, useUpdateUser } from "../hooks/react-query/UserHooks";
 import { UpdateOwnerProfileModel } from "../models/OwnerProfile";
 import { UpdatePetSitterProfileModel } from "../models/PetSitterProfile";
-import { UpdateUserDetailsModel } from "../models/User";
+import { UpdateUserDetailsModel, UserRole } from "../models/User";
+import { ArrayFunctions } from "../utility/array";
 
 export default function Profile() {
+  const { user } = useAuth();
   const { userDetails, loadingUserDetials, errorUserDetails, getUserDetails } =
     useGetUser();
 
@@ -48,23 +51,32 @@ export default function Profile() {
               <Tabs.Tab value="password" icon={<IconKey />}>
                 Password
               </Tabs.Tab>
-              <Tabs.Tab value="pets" icon={<IconPaw />}>
-                Pets
-              </Tabs.Tab>
-              <Tabs.Tab value="owner" icon={<IconInfoCircle />}>
-                Owner Profile
-              </Tabs.Tab>
-              <Tabs.Tab value="petsitter" icon={<IconInfoCircle />}>
-                Petsitter Profile
-              </Tabs.Tab>
+              {ArrayFunctions.safeIncludes(user?.roles, UserRole.Owner) && (
+                <Tabs.Tab value="pets" icon={<IconPaw />}>
+                  Pets
+                </Tabs.Tab>
+              )}
+              {ArrayFunctions.safeIncludes(user?.roles, UserRole.Owner) && (
+                <Tabs.Tab value="owner" icon={<IconInfoCircle />}>
+                  Owner Profile
+                </Tabs.Tab>
+              )}
+              {ArrayFunctions.safeIncludes(user?.roles, UserRole.PetSitter) && (
+                <Tabs.Tab value="petsitter" icon={<IconInfoCircle />}>
+                  Petsitter Profile
+                </Tabs.Tab>
+              )}
             </Tabs.List>
           </Stack>
 
           <Tabs.Panel value="profile" w="60%">
             <Paper shadow="sm" p="xl" withBorder>
-              <Title order={3} ml="lg">
-                Your profile
-              </Title>
+              <Group ml="lg" position="apart">
+                <Title order={3}>Your profile</Title>
+                <Title order={4}>
+                  Roles: {user?.roles.map((s) => <Text key={s}>{s}</Text>)}
+                </Title>
+              </Group>
               <Divider my="md" />
               <EditUserDetails
                 currentUserDetails={userDetails}

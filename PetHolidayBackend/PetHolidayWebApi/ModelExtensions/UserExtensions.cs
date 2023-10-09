@@ -10,8 +10,8 @@ namespace PetHolidayWebApi.ModelExtensions
             {
                 ID = user.Id,
                 UserName = user.UserName,
-                Bearer = bearer,
-                Role = role,
+                AccessToken = bearer,
+                Roles = role,
                 RefreshToken = user.RefreshToken
             };
 

@@ -57,9 +57,9 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost]
-        [Route("refresh-token")]
-        public async Task<ActionResult<RefreshBearerTokenDTO>> RefreshToken(RefreshTokenModel tokenModel)
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<RefreshBearerTokenDTO>> RefreshToken([FromBody] RefreshTokenModel tokenModel)
         {
 
             try
@@ -87,7 +87,7 @@ namespace PetHolidayWebApi.Controllers
                     RefreshToken = newRefreshToken
                 };
 
-                return CreatedAtAction(nameof(RefreshToken), result, result);
+                return Ok(new { AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                 var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
 
@@ -116,7 +116,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpDelete("deletepet/{petID}")]
         public async Task<ActionResult> Deletepet([FromRoute] int petID)
         {
@@ -132,11 +132,11 @@ namespace PetHolidayWebApi.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpGet("pets")]
         public async Task<ActionResult<IReadOnlyCollection<PetDTO>>> ListPets()
         {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 BadRequest();
 
@@ -144,13 +144,13 @@ namespace PetHolidayWebApi.Controllers
             return Ok(value.Select(s => s.ToPetDTO()).ToList());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpPost("addpet")]
         public async Task<ActionResult<PetDTO>> InsertPet([FromBody] InsertPetModel pet)
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
 
@@ -164,7 +164,7 @@ namespace PetHolidayWebApi.Controllers
            
         }
 
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpPut("updatepet")]
         public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] UpdatePetModel pet)
         {
@@ -179,7 +179,7 @@ namespace PetHolidayWebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         [HttpPatch("addpetimage")]
         public async Task<ActionResult<PetDTO>> AddPetImage([FromHeader] int petID, [FromForm] List<IFormFile> file)
         {
@@ -214,7 +214,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
                 if (file != null)
@@ -241,7 +241,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
 
@@ -260,7 +260,7 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
 

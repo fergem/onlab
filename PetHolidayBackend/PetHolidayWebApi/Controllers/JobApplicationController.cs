@@ -37,17 +37,18 @@ namespace PetHolidayWebApi.Controllers
 
         }
 
-        [Authorize(Roles = "PETSITTER")]
+        [Authorize(Roles = "PetSitter")]
         [HttpPost("{jobID}")]
         public async Task<ActionResult<JobApplicationDTO>> InsertApplicationForJob(int jobID)
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
+                var result = await jobApplicationService.InsertApplicationForJob(jobID, userID);
 
-                return Ok(await jobApplicationService.InsertApplicationForJob(jobID, userID));
+                return Ok(result.ToJobApplicationDTO());
             }
             catch (Exception ex)
             {
@@ -70,7 +71,7 @@ namespace PetHolidayWebApi.Controllers
             }
         }
 
-        [Authorize(Roles = "OWNER")]
+        [Authorize(Roles = "Owner")]
         [HttpPatch("{applicationID}/approve")]
         public async Task<ActionResult> ApproveApplication(int applicationID)
         {
@@ -91,13 +92,13 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "ID")?.Value, out var userID);
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
                     throw new Exception("User not found");
 
                 var result = await jobApplicationService.InsertApplicationComment(model, userID);
                 await hub.Clients.Group(model.ApplicationID.ToString()).SendAsync("CommentAdded");
-                return Ok(result);
+                return Ok(result.ToJobApplicationCommentDTO());
             }
             catch (Exception ex)
             {

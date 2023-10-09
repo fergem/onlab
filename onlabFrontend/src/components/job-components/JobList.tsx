@@ -49,7 +49,7 @@ export interface IPropsJobCard {
 export function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
   const { user } = useUser();
-  //const { deleteJob } = useDeleteJob();
+  // const { deleteJob } = useDeleteJob();
   // const handleDelete = (
   //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   // ) => {

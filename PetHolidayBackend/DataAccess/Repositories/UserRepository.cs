@@ -25,10 +25,7 @@ namespace DataAccess.Repositories
         public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
         {
 
-            var user = await userManager.Users
-                .Include(s => s.OwnerProfile)
-                .Include(s => s.PetSitterProfile)
-                .FirstOrDefaultAsync(s => s.UserName == loginModel.Username) ?? throw new Exception("User not exists");
+            var user = await userManager.Users.FirstOrDefaultAsync(s => s.UserName == loginModel.Username) ?? throw new Exception("User not exists");
 
             var result = await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false);
             if (!result.Succeeded)

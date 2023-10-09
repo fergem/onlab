@@ -17,7 +17,10 @@ namespace DataAccess.Repositories
 
         public async Task<JobApplication> GetById(int applicationID)
         {
-            var application = await dbcontext.JobApplications.Include(s => s.ApplicantUser).FirstOrDefaultAsync(s => s.ID == applicationID) ?? throw new Exception("No such application");
+            var application = await dbcontext.JobApplications
+                                .Include(s => s.ApplicantUser)
+                                .Include(s => s.Comments)
+                                .FirstOrDefaultAsync(s => s.ID == applicationID) ?? throw new Exception("No such application");
             return application;
         }
 
@@ -30,12 +33,13 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<JobApplication> InsertApplicationForJob(Job job,int userID)
+        public async Task<JobApplication> InsertApplicationForJob(int jobID,int userID)
         {
             var user = await dbcontext.Users.FindAsync(userID) ?? throw new Exception("User not found");
+            var job = await dbcontext.Jobs.FindAsync(jobID) ?? throw new Exception("Job not found");
             var application = new JobApplication()
             {
-                ApplicantUser = user,
+                ApplicantUserID = user.Id,
                 JobID = job.ID,
                 IsApproved = false,
             };

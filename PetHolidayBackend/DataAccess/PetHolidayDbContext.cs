@@ -28,10 +28,10 @@ namespace DataAccess
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            modelBuilder.Entity<User>().Navigation(s => s.OwnerProfile).AutoInclude();
-            modelBuilder.Entity<PetJob>().Navigation(s => s.Job).AutoInclude();
-            modelBuilder.Entity<PetJob>().Navigation(s => s.Pet).AutoInclude();
-            modelBuilder.Entity<Pet>().Navigation(s => s.Images).AutoInclude();
+            //modelBuilder.Entity<User>().Navigation(s => s.OwnerProfile).AutoInclude();
+            //modelBuilder.Entity<PetJob>().Navigation(s => s.Job).AutoInclude();
+            //modelBuilder.Entity<PetJob>().Navigation(s => s.Pet).AutoInclude();
+            //modelBuilder.Entity<Pet>().Navigation(s => s.Images).AutoInclude();
 
 
             modelBuilder.Entity<PetJob>(entity =>
@@ -145,6 +145,11 @@ namespace DataAccess
                 .HasMany(j => j.Comments)
                 .WithOne(a => a.JobApplication)
                 .HasForeignKey(a => a.JobApplicationID);
+
+            modelBuilder.Entity<User>()
+                .HasMany(j => j.JobApplications)
+                .WithOne(a => a.ApplicantUser)
+                .HasForeignKey(a => a.ApplicantUserID);
         }
 
         private void OneToOneRelationshipConfiguration(ModelBuilder modelBuilder)

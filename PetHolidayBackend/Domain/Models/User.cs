@@ -9,7 +9,7 @@ namespace Domain.Models
         {
             Pets = new HashSet<Pet>();
             JobAdvertisements = new HashSet<Job>();
-            JobApplications = new HashSet<Job>();
+            JobApplications = new HashSet<JobApplication>();
         }
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
@@ -27,6 +27,6 @@ namespace Domain.Models
         
         public virtual ICollection<Pet> Pets { get; set; }
         public virtual ICollection<Job> JobAdvertisements { get; set; }
-        public virtual ICollection<Job> JobApplications { get; set; }
+        public virtual ICollection<JobApplication> JobApplications { get; set; }
     }
 }

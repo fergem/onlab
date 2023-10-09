@@ -4,6 +4,7 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(PetHolidayDbContext))]
-    partial class PetHolidayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231009171258_user-jobapplication-relationship")]
+    partial class userjobapplicationrelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,7 +92,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 10,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 11, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7415),
+                            StartDate = new DateTime(2023, 10, 11, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5494),
                             Status = 1,
                             Title = "Looking for a weekly walk buddy for Milio!",
                             Type = 2
@@ -98,13 +101,13 @@ namespace DataAccess.Migrations
                         {
                             ID = 2,
                             Description = "Calling all cat lovers! Randy, the charming feline, is seeking a reliable house sitter to provide him with the utmost comfort and care while his humans are away. Your duties include feeding Randy, ensuring his litter box is pristine, and offering plenty of cuddles and playtime to keep him content. Randy's cozy home is your domain during this assignment, making it a purr-fect opportunity to enjoy quality time with a delightful kitty. If you're ready to be Randy's temporary guardian, apply now for this fulfilling house-sitting role!",
-                            EndDate = new DateTime(2023, 10, 13, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7497),
+                            EndDate = new DateTime(2023, 10, 13, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5563),
                             Location = "Szolnok",
                             MinRequiredExperience = 1,
                             OwnerUserID = 2,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 13, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7495),
+                            StartDate = new DateTime(2023, 10, 13, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5561),
                             Status = 1,
                             Title = "House-Sitting Delight: Randy the Cat's Comfy Companion Wanted!",
                             Type = 0
@@ -119,7 +122,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 30,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 13, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7507),
+                            StartDate = new DateTime(2023, 10, 13, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5570),
                             Status = 1,
                             Title = "Weekly Dog Walking Opportunity for Luna and Rusty",
                             Type = 2
@@ -134,7 +137,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 1,
                             Payment = 15,
                             Repeated = true,
-                            StartDate = new DateTime(2023, 10, 12, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7514),
+                            StartDate = new DateTime(2023, 10, 12, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5576),
                             Status = 1,
                             Title = "Daily Adventures with Luna!",
                             Type = 2
@@ -143,13 +146,13 @@ namespace DataAccess.Migrations
                         {
                             ID = 5,
                             Description = "Meet Whiskers, the charming senior cat in need of some extra TLC. Whiskers' owner is seeking a caring house sitter who can provide love, companionship, and attention to their beloved feline. Your daily routine includes feeding, gentle playtime, and ensuring Whiskers is comfortable and content. If you have a soft spot for senior cats and are ready to offer Whiskers a cozy haven, apply now!",
-                            EndDate = new DateTime(2023, 10, 17, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7522),
+                            EndDate = new DateTime(2023, 10, 17, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5583),
                             Location = "Budapest",
                             MinRequiredExperience = 2,
                             OwnerUserID = 2,
                             Payment = 25,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 14, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7520),
+                            StartDate = new DateTime(2023, 10, 14, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5582),
                             Status = 1,
                             Title = "Senior Cat Care: Whiskers' Comfort Companion",
                             Type = 0
@@ -163,7 +166,7 @@ namespace DataAccess.Migrations
                             OwnerUserID = 3,
                             Payment = 20,
                             Repeated = false,
-                            StartDate = new DateTime(2023, 10, 13, 21, 36, 42, 595, DateTimeKind.Local).AddTicks(7527),
+                            StartDate = new DateTime(2023, 10, 13, 19, 12, 58, 538, DateTimeKind.Local).AddTicks(5587),
                             Status = 1,
                             Title = "Weekly Labrador Love: Max and Bella's Pawsome Playdates",
                             Type = 3
@@ -547,7 +550,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             Age = 23,
-                            ConcurrencyStamp = "b92f7703-5a39-4381-bb88-32aaacd3a0b1",
+                            ConcurrencyStamp = "6ca9bf30-708f-46e2-8c29-ceca9713ae3d",
                             EmailConfirmed = false,
                             FirstName = "Kiss",
                             LastName = "Janos",
@@ -565,7 +568,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             Age = 32,
-                            ConcurrencyStamp = "6c43d95f-572b-4fb2-b78d-e6608ca8ee70",
+                            ConcurrencyStamp = "85f6abf3-3d93-41e0-80b0-f3ec8971076f",
                             EmailConfirmed = false,
                             FirstName = "Nagy",
                             LastName = "Feró",
@@ -583,7 +586,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             Age = 43,
-                            ConcurrencyStamp = "dfa265c8-b13f-4066-a3b6-6c3ba399f442",
+                            ConcurrencyStamp = "622dce46-d5aa-45ea-bdba-77431eb3ef14",
                             EmailConfirmed = false,
                             FirstName = "Vicc",
                             LastName = "Elek",
@@ -601,7 +604,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Age = 17,
-                            ConcurrencyStamp = "135158e7-b908-4c1f-9c1d-75cb411d28ca",
+                            ConcurrencyStamp = "8a9349ee-aacd-407d-8316-56b0d7c596e7",
                             EmailConfirmed = false,
                             FirstName = "Maku",
                             LastName = "Látlan",

@@ -22,18 +22,18 @@ export interface UserDetails extends UserDetailsWithoutProfiles {
 export interface User {
   id: number;
   userName: string;
-  bearer?: string;
-  roles: UserRoles[];
+  accessToken?: string;
+  roles: UserRole[];
   refreshToken?: string;
 }
 
-export enum UserRoles {
+export enum UserRole {
   Owner = "Owner",
   PetSitter = "PetSitter",
 }
 export interface RefreshTokenModel {
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface UserPreview {

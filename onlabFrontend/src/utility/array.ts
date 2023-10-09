@@ -20,4 +20,11 @@ export const ArrayFunctions = {
 
     return undefined;
   },
+
+  safeIncludes<T>(array: T[] | undefined, includedElement: T): boolean {
+    if (array) {
+      return array.includes(includedElement);
+    }
+    return false;
+  },
 };

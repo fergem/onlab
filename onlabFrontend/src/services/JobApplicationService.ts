@@ -1,17 +1,17 @@
-import axios from "axios";
 import { JobApplication } from "../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../models/JobApplicationComment";
+import apiInstance from "./api";
 
 const getAllForJob = async (jobID: string | undefined) => {
-  const response = await axios.get<JobApplication[]>(
-    `api/jobapplications/${jobID}`
+  const response = await apiInstance.get<JobApplication[]>(
+    `/jobapplications/${jobID}`
   );
   return response.data;
 };
 
 const insertApplicationForJob = async (jobID: number) => {
-  const response = await axios.post<JobApplication>(
-    `api/jobapplications/${jobID}`
+  const response = await apiInstance.post<JobApplication>(
+    `/jobapplications/${jobID}`
   );
   return response.data;
 };
@@ -19,22 +19,23 @@ const insertApplicationForJob = async (jobID: number) => {
 const insertApplicationCommentForJob = async (
   model: InsertJobApplicationCommentModel
 ) => {
-  console.log("bent", model);
-  const response = await axios.post<JobApplication>(
-    `api/jobapplications/comment`,
+  const response = await apiInstance.post<JobApplication>(
+    `/jobapplications/comment`,
     model
   );
   return response.data;
 };
 
 const deleteApplication = async (applicationID: number) => {
-  const response = await axios.delete(`api/jobapplications/${applicationID}`);
+  const response = await apiInstance.delete(
+    `api/jobapplications/${applicationID}`
+  );
   return response.data;
 };
 
 const approveApplication = async (applicationID: number) => {
-  const response = await axios.patch<JobApplication>(
-    `api/jobapplications/${applicationID}/approve`
+  const response = await apiInstance.patch<JobApplication>(
+    `/jobapplications/${applicationID}/approve`
   );
   return response.data;
 };

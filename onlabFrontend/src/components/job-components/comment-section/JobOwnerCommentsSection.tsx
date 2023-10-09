@@ -9,7 +9,7 @@ export interface IJobCommentSectionProps {
   ownerUser?: UserPreview;
 }
 
-export default function JobCommentsSection({
+export default function JobOwnerCommentsSection({
   applications,
   ownerUser,
 }: IJobCommentSectionProps) {

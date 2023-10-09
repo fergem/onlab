@@ -17,7 +17,9 @@ namespace DataAccess.Repositories
 
         public async Task<Pet> FindById(int petID)
         {
-            var result = await dbcontext.Pets.FirstOrDefaultAsync(s => s.ID == petID) ?? throw new Exception("Requested pet not exists");
+            var result = await dbcontext.Pets
+                .Include(s => s.Images)
+                .FirstOrDefaultAsync(s => s.ID == petID) ?? throw new Exception("Requested pet not exists");
             return result;
         }
 

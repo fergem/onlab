@@ -4,8 +4,8 @@
     {
         public required int ID { get; set; }
         public required string? UserName { get; set; }
-        public required string? Bearer { get; set; }
+        public required string? AccessToken { get; set; }
         public required string? RefreshToken { get; set; }
-        public required List<string>? Role { get; set; }
+        public required List<string>? Roles { get; set; }
     }
 }

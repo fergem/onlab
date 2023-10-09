@@ -1,5 +1,5 @@
-import { Burger, Group, Header, Menu, Tabs } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Burger, Group, Header, Menu, Tabs, TabsValue } from "@mantine/core";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconBriefcase,
   IconLogout,
@@ -9,18 +9,37 @@ import {
 } from "@tabler/icons-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
+import { UserRole } from "../../models/User";
+import { ArrayFunctions } from "../../utility/array";
 
-function HeaderPetHoliday() {
+export default function HeaderPetHoliday() {
   const { user, logoutUser } = useAuth();
 
   const [opened, { toggle }] = useDisclosure(false);
   const navigate = useNavigate();
   const { tabValue } = useParams();
 
+  const matches = useMediaQuery("(min-width: 56.25em)");
   const label = opened ? "Close navigation" : "Open navigation";
+
+  const handleTabNavigate = (route: TabsValue) => {
+    if (route?.toString() === "/logout") {
+      logoutUser();
+      navigate("/");
+    } else {
+      navigate(`${route}`);
+    }
+  };
+  console.log(user);
+
   return (
     <Header height="75px">
-      <Group position="apart" spacing="xl" mx="40px" align="center">
+      <Group
+        position={matches ? "center" : "apart"}
+        spacing="xl"
+        mx="40px"
+        align="center"
+      >
         <Link style={{ textDecoration: "none", height: "75px" }} to="/">
           <svg
             fill="#505168"
@@ -50,78 +69,85 @@ function HeaderPetHoliday() {
             </g>
           </svg>
         </Link>
+        {matches && (
+          <Tabs
+            value={tabValue}
+            onTabChange={handleTabNavigate}
+            variant="pills"
+            radius={0}
+          >
+            <Tabs.List h="75px" position="apart">
+              {user && <Tabs.Tab value="/profile">Profile</Tabs.Tab>}
+              <Tabs.Tab value="/jobs">Jobs</Tabs.Tab>
+              {user &&
+                ArrayFunctions.safeIncludes(user.roles, UserRole.Owner) && (
+                  <Tabs.Tab value="/postedjobs">Posted jobs</Tabs.Tab>
+                )}
+              {user &&
+                ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
+                  <Tabs.Tab value="/undertookjobs">Undertook jobs</Tabs.Tab>
+                )}
+              {!!user === false && (
+                <Tabs.Tab value="/register" ml="30vw">
+                  Register
+                </Tabs.Tab>
+              )}
+              {!!user === false && <Tabs.Tab value="/login">Login</Tabs.Tab>}
+              {user && (
+                <Tabs.Tab value="/logout" ml="30vw">
+                  Logout
+                </Tabs.Tab>
+              )}
+            </Tabs.List>
+          </Tabs>
+        )}
 
-        <Tabs
-          value={tabValue}
-          onTabChange={(value) => navigate(`/${value}`)}
-          variant="pills"
-          radius={0}
-        >
-          <Tabs.List h="75px">
-            {user && <Tabs.Tab value="profile">Profile</Tabs.Tab>}
-            <Tabs.Tab value="jobs">Jobs</Tabs.Tab>
-            {user && <Tabs.Tab value="postedjobs">Posted jobs</Tabs.Tab>}
-            {user && <Tabs.Tab value="undertookjobs">Undertook jobs</Tabs.Tab>}
-          </Tabs.List>
-        </Tabs>
-        <Tabs
-          value={tabValue}
-          onTabChange={(value) => navigate(`/${value}`)}
-          variant="pills"
-          radius={0}
-        >
-          <Tabs.List h="75px">
-            {!!user === false && <Tabs.Tab value="register">Register</Tabs.Tab>}
-            {!!user === false && <Tabs.Tab value="login">Login</Tabs.Tab>}
-          </Tabs.List>
-        </Tabs>
+        {!matches && (
+          <Menu width="13vw">
+            <Menu.Target>
+              <Burger opened={opened} onClick={toggle} aria-label={label} />
+            </Menu.Target>
+            <Menu.Dropdown>
+              {user && (
+                <Link style={{ textDecoration: "none" }} to="/profile">
+                  <Menu.Item icon={<IconUser />}>Profile</Menu.Item>
+                </Link>
+              )}
+              <Link style={{ textDecoration: "none" }} to="/jobs">
+                <Menu.Item icon={<IconBriefcase />}>Jobs</Menu.Item>
+              </Link>
 
-        <Menu width="13vw">
-          <Menu.Target>
-            <Burger opened={opened} onClick={toggle} aria-label={label} />
-          </Menu.Target>
-          <Menu.Dropdown>
-            {user && (
-              <Link style={{ textDecoration: "none" }} to="/profile">
-                <Menu.Item icon={<IconUser />}>Profile</Menu.Item>
-              </Link>
-            )}
-            <Link style={{ textDecoration: "none" }} to="/jobs">
-              <Menu.Item icon={<IconBriefcase />}>Jobs</Menu.Item>
-            </Link>
+              {user && (
+                <Link style={{ textDecoration: "none" }} to="/postedjobs">
+                  <Menu.Item icon={<IconShare />}>Posted job</Menu.Item>
+                </Link>
+              )}
+              {user && (
+                <Link style={{ textDecoration: "none" }} to="/undertookjobs">
+                  <Menu.Item icon={<IconNote />}>Undertook jobs</Menu.Item>
+                </Link>
+              )}
 
-            {user && (
-              <Link style={{ textDecoration: "none" }} to="/postedjobs">
-                <Menu.Item icon={<IconShare />}>Posted job</Menu.Item>
-              </Link>
-            )}
-            {user && (
-              <Link style={{ textDecoration: "none" }} to="/undertookjobs">
-                <Menu.Item icon={<IconNote />}>Undertook jobs</Menu.Item>
-              </Link>
-            )}
+              {!!user === false && (
+                <Link style={{ textDecoration: "none" }} to="/register">
+                  <Menu.Item>Register</Menu.Item>
+                </Link>
+              )}
 
-            {!!user === false && (
-              <Link style={{ textDecoration: "none" }} to="/register">
-                <Menu.Item>Register</Menu.Item>
-              </Link>
-            )}
-
-            {!!user === false && (
-              <Link style={{ textDecoration: "none" }} to="/login">
-                <Menu.Item>Login</Menu.Item>
-              </Link>
-            )}
-            {user && (
-              <Menu.Item onClick={logoutUser} icon={<IconLogout />}>
-                Logout
-              </Menu.Item>
-            )}
-          </Menu.Dropdown>
-        </Menu>
+              {!!user === false && (
+                <Link style={{ textDecoration: "none" }} to="/login">
+                  <Menu.Item>Login</Menu.Item>
+                </Link>
+              )}
+              {user && (
+                <Menu.Item onClick={logoutUser} icon={<IconLogout />}>
+                  Logout
+                </Menu.Item>
+              )}
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </Group>
     </Header>
   );
 }
-
-export default HeaderPetHoliday;

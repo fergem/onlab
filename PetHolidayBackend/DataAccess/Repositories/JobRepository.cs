@@ -20,7 +20,10 @@ namespace DataAccess.Repositories
         {
             var job = await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
-                .Include(s => s.Pets).FirstOrDefaultAsync(s => s.ID == jobID);
+                .Include(s => s.Pets)
+                .ThenInclude(s=> s.Pet)
+                .FirstOrDefaultAsync(s => s.ID == jobID);
+
             if (job == null)
                 throw new Exception("Job doesnt exist");
             return job;
@@ -60,6 +63,7 @@ namespace DataAccess.Repositories
             IQueryable<Job> query = dbcontext.Jobs
                     .Include(s => s.OwnerUser)
                     .Include(s => s.Pets)
+                    .ThenInclude(s => s.Pet)
                     .Where(s => s.Repeated == filter.Repeated)
                     .Where(s => s.Status == Status.Available || s.Status == Status.Approving);
 
@@ -99,6 +103,7 @@ namespace DataAccess.Repositories
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
+                .ThenInclude(s => s.Pet)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => s.Status == filter.Status)
                 .ToListAsync();
@@ -109,6 +114,7 @@ namespace DataAccess.Repositories
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
+                .ThenInclude(s => s.Pet)
                 .Where(s => s.Status == filter.Status)
                 .OrderByDescending(s => filter.Status == Status.Upcoming ? s.StartDate : s.EndDate)
                 .ToListAsync();
