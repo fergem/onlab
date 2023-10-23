@@ -12,7 +12,9 @@ namespace Domain.Repositories
     public interface IJobRepository
     {
         Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters);
-        Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter);
+        Task<IReadOnlyCollection<Job>> ListRepeatablePostedJobs(int userID, JobFilterParticipant filter);
+        Task<IReadOnlyCollection<Job>> ListNonRepeatablePostedJobs(int userID, JobFilterParticipant filter);
+
         Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter);
 
         Task<Job> FindById(int jobID);

@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
       suspense: false,
     },
     mutations: {
-      retry: 2,
+      retry: 0,
     },
   },
 });

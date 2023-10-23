@@ -16,9 +16,9 @@ namespace Domain.Models
         public bool IsApproved { get; set; }
 
         public int JobID { get; set; }
-        public virtual Job Job { get; set; } = null!; //ITT KI KELL VENNI EZT!!
+        public virtual Job Job { get; set; } = null!; 
         public int ApplicantUserID { get; set; }
-        public virtual User ApplicantUser { get; set; } = null!; //ITT KI KELL VENNI EZT!!
+        public virtual User ApplicantUser { get; set; } = null!; 
 
         public virtual ICollection<JobApplicationComment> Comments { get; set; }
     }

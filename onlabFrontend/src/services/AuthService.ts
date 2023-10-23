@@ -29,7 +29,6 @@ const logout = async () => {
 };
 
 const updateUserToken = async (token: RefreshTokenModel) => {
-  console.log("tokenbe", token);
   const response = await apiInstance.post<RefreshTokenModel>(
     "/users/refresh-token",
     token

@@ -11,6 +11,8 @@ namespace Domain.Repositories
     public interface IJobApplicationRepository
     {
         Task<IReadOnlyCollection<JobApplication>> GetAllForJob(Job job);
+        Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterParticipant filter);
+
         Task<JobApplication> GetById(int applicationID);
         Task<JobApplication> InsertApplicationForJob(int jobID, int userID);
         Task CancelApplication(int applicationID);

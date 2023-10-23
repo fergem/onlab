@@ -16,6 +16,7 @@ const parseJwt = (token: string | undefined) => {
 export default function AuthVerify() {
   const navigate = useNavigate();
   const { user, logoutUser } = useAuth();
+
   useEffect(() => {
     if (user) {
       const decodedJwt = parseJwt(user?.accessToken);
@@ -24,7 +25,8 @@ export default function AuthVerify() {
         navigate("/");
       }
     }
-  }, [logoutUser, navigate, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <div />;
 }

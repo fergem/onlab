@@ -2,9 +2,10 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { JobFilterParticipant } from "../../models/Job";
 import {
   JobApplication,
-  JobApplicationFunctions,
+  JobApplicationUserAppliedTo,
 } from "../../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../../models/JobApplicationComment";
 import JobApplicationService from "../../services/JobApplicationService";
@@ -27,10 +28,7 @@ export const useGetApplicationsForJob = (jobID: string | undefined) => {
 
   useEffect(() => {
     if (data) {
-      setApplications(
-        JobApplicationFunctions.orderJobApplicationsByLastCommentDate(data)
-      );
-      console.log(data);
+      setApplications(data);
     }
   }, [data]);
 
@@ -65,6 +63,7 @@ export const useJobApplicationCommentHub = (
 
     hubConnection.on("CommentAdded", () => {
       handleCommentUpdate();
+      console.log("receivedupdate");
     });
     hubConnection.on("CommentTyping", () => {
       setTyping(true);
@@ -110,6 +109,7 @@ export const useApplyToJob = () => {
             ["query-applications", newAppliction.id],
             newAppliction
           );
+        queryClient.invalidateQueries("query-jobs");
       },
       onError: (error: Error) => notifications.error(error.message),
     }
@@ -155,10 +155,40 @@ export const useApproveApplicationForJob = () => {
             ["query-applications", { id: approvedApplication.id }],
             approvedApplication
           );
+        queryClient.invalidateQueries([
+          "query-posted-nonrepeated",
+          "query-posted-repeated",
+        ]);
       },
       onError: (error: Error) => notifications.error(error.message),
     }
   );
 
   return { approveJob };
+};
+
+export const useJobApplicationsUserAppliedTo = (
+  filter?: JobFilterParticipant
+) => {
+  const [appliedJobs, setAppliedJobs] = useState<JobApplicationUserAppliedTo[]>(
+    []
+  );
+  const {
+    isLoading: loading,
+    refetch: listAppliedJobs,
+    isError: error,
+    data,
+  } = useQuery({
+    queryKey: ["query-usersAppliedTo", filter],
+    queryFn: async () => {
+      return JobApplicationService.jobApplicationsUserAppliedTo(filter);
+    },
+    staleTime: Infinity,
+  });
+
+  useEffect(() => {
+    if (data) setAppliedJobs(data);
+  }, [data]);
+
+  return { appliedJobs, error, loading, listAppliedJobs };
 };

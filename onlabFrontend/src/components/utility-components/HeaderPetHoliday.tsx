@@ -1,4 +1,12 @@
-import { Burger, Group, Header, Menu, Tabs, TabsValue } from "@mantine/core";
+import {
+  Burger,
+  Button,
+  Group,
+  Header,
+  Menu,
+  Tabs,
+  TabsValue,
+} from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconBriefcase,
@@ -9,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
+import useDrawer from "../../hooks/useDrawer";
 import { UserRole } from "../../models/User";
 import { ArrayFunctions } from "../../utility/array";
 
@@ -22,6 +31,8 @@ export default function HeaderPetHoliday() {
   const matches = useMediaQuery("(min-width: 56.25em)");
   const label = opened ? "Close navigation" : "Open navigation";
 
+  const { open } = useDrawer();
+
   const handleTabNavigate = (route: TabsValue) => {
     if (route?.toString() === "/logout") {
       logoutUser();
@@ -30,7 +41,6 @@ export default function HeaderPetHoliday() {
       navigate(`${route}`);
     }
   };
-  console.log(user);
 
   return (
     <Header height="75px">
@@ -86,6 +96,10 @@ export default function HeaderPetHoliday() {
               {user &&
                 ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
                   <Tabs.Tab value="/undertookjobs">Undertook jobs</Tabs.Tab>
+                )}
+              {user &&
+                ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
+                  <Tabs.Tab value="/applications">Applications</Tabs.Tab>
                 )}
               {!!user === false && (
                 <Tabs.Tab value="/register" ml="30vw">
@@ -147,6 +161,7 @@ export default function HeaderPetHoliday() {
             </Menu.Dropdown>
           </Menu>
         )}
+        <Button onClick={open}>Messages</Button>
       </Group>
     </Header>
   );

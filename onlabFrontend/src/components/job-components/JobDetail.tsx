@@ -21,6 +21,7 @@ import {
   IconPaw,
   IconX,
 } from "@tabler/icons-react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import {
@@ -30,10 +31,12 @@ import {
 import { useGetJob } from "../../hooks/react-query/JobHooks";
 import { Day, JobType, Status } from "../../models/Job";
 import { Pet, PetSpecies } from "../../models/Pet";
+import { UserRole } from "../../models/User";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import { PetGrid } from "../pet-components/PetList";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import JobOwnerCommentsSection from "./comment-section/JobOwnerCommentsSection";
+import JobPetSitterCommentSection from "./comment-section/JobPetSitterCommentSection";
 
 function JobDetail() {
   const { id } = useParams();
@@ -50,7 +53,6 @@ function JobDetail() {
 
   const handleApplyToJob = () => {
     if (job) {
-      console.log(job.id);
       applyToJob(job.id);
       // navigate("/postedjobs");
     }
@@ -59,10 +61,21 @@ function JobDetail() {
   // const handleFinishJob = () => {
   //   if (job) finishJob(job.id);
   // };
+  // console.log(user?.id);
+  // console.log(
+  //   user && user.id && applications.some((s) => s.applicantUser.id === user.id)
+  // );
+  // console.log(applications.find((s) => s.applicantUser.id === user?.id));
   const dogCount = job?.pets?.filter((s) => s.species === PetSpecies.Dog)
     .length;
   const catCount = job?.pets?.filter((s) => s.species === PetSpecies.Cat)
     .length;
+
+  const application = useMemo(
+    () => applications.find((s) => s.applicantUser.id === user?.id),
+    [applications, user?.id]
+  );
+
   return (
     <Stack justify="center" align="center">
       <LoadingBoundary loading={loading} error={error} refetch={getJob}>
@@ -127,11 +140,13 @@ function JobDetail() {
                 {user?.id !== job?.ownerUser?.id &&
                   (job?.status === Status.Available ||
                     job?.status === Status.Approving) &&
-                  !applications.some(
-                    (s) => s.applicantUser.id === user?.id
-                  ) && <Button onClick={handleApplyToJob}>Apply to Job</Button>}
+                  !applications.some((s) => s.applicantUser.id === user?.id) &&
+                  user?.roles.includes(UserRole.PetSitter) && (
+                    <Button onClick={handleApplyToJob}>Apply to Job</Button>
+                  )}
                 {user?.id === job?.ownerUser?.id &&
-                  job?.status === Status.Upcoming && (
+                  job?.status === Status.Upcoming &&
+                  applications.length === 0 && (
                     <Group position="center" align="center">
                       <Button onClick={() => {}} color="red">
                         Cancel job
@@ -182,10 +197,20 @@ function JobDetail() {
         error={errorApplications}
         refetch={refetchApplications}
       >
-        <JobOwnerCommentsSection
-          applications={applications}
-          ownerUser={job?.ownerUser}
-        />
+        {user && user.id === job?.ownerUser.id && (
+          <JobOwnerCommentsSection
+            applications={applications}
+            ownerUser={job?.ownerUser}
+          />
+        )}
+        {user &&
+          user.id &&
+          applications.some((s) => s.applicantUser.id === user.id) && (
+            <JobPetSitterCommentSection
+              application={application}
+              ownerUser={job?.ownerUser}
+            />
+          )}
       </LoadingBoundary>
     </Stack>
   );

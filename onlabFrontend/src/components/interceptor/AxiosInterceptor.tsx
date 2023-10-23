@@ -3,6 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 import { useEffect } from "react";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
+import { User } from "../../models/User";
 import AuthService from "../../services/AuthService";
 import apiInstance from "../../services/api";
 
@@ -11,12 +12,11 @@ export interface IAxiosInterceptor {
 }
 
 export default function AxiosInterceptor({ children }: IAxiosInterceptor) {
-  const { user, refreshToken } = useAuth();
+  const { refreshToken, logoutUser } = useAuth();
   useEffect(() => {
     apiInstance.interceptors.request.use(
       (config) => {
-        console.log("firstasd");
-        const token = user?.accessToken;
+        const token = getLocalRefreshToken().accessToken;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -35,21 +35,19 @@ export default function AxiosInterceptor({ children }: IAxiosInterceptor) {
 
         if (originalConfig.url !== "/users/login" && err.response) {
           // Access Token was expired
-          console.log(err.response.status);
           if (err.response.status === 401 && !originalConfig._retry) {
             originalConfig._retry = true;
-            console.log("seconasdd");
 
             try {
-              console.log(user);
-              const result = await AuthService.updateUserToken({
-                refreshToken: user?.refreshToken,
-                accessToken: user?.accessToken,
-              });
-
-              console.log(result);
-              refreshToken(result);
-
+              const result = await AuthService.updateUserToken(
+                getLocalRefreshToken()
+              )
+                .then((s) => {
+                  refreshToken(s);
+                })
+                .catch(() => {
+                  removeUser();
+                });
               return await apiInstance(originalConfig);
             } catch (_error) {
               return Promise.reject(_error);
@@ -60,6 +58,23 @@ export default function AxiosInterceptor({ children }: IAxiosInterceptor) {
         return Promise.reject(err);
       }
     );
-  }, [refreshToken, user]);
+  }, [logoutUser, refreshToken]);
   return <>{children}</>;
+}
+
+function getLocalRefreshToken() {
+  const user = localStorage.getItem("user");
+  if (user) {
+    const { refreshToken, accessToken } = JSON.parse(user) as User;
+    return { refreshToken, accessToken };
+  }
+  return {
+    refreshToken: undefined,
+    accessToken: undefined,
+  };
+}
+
+function removeUser() {
+  localStorage.removeItem("user");
+  window.location.href = "/";
 }

@@ -8,6 +8,7 @@ export interface IPropsLoadingBoundary {
   isEmpty?: boolean;
   refetch(): void;
   errorNode?: React.ReactNode;
+  withBorder: boolean;
 }
 
 export default function LoadingBoundary({
@@ -15,11 +16,12 @@ export default function LoadingBoundary({
   loading,
   error,
   isEmpty,
+  withBorder,
   refetch,
 }: IPropsLoadingBoundary) {
   if (loading)
     return (
-      <Paper shadow="sm" p="xl" withBorder>
+      <Paper shadow="sm" p="xl" withBorder={withBorder}>
         <Stack align="center" justify="center ">
           <Loader size="xl" />
         </Stack>

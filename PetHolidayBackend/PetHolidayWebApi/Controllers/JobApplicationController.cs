@@ -1,5 +1,6 @@
 ﻿using DataAccess.Repositories;
 using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -33,9 +34,23 @@ namespace PetHolidayWebApi.Controllers
         public async Task<ActionResult<IReadOnlyCollection<JobApplicationDTO>>> GetAllForJob(int jobID)
         {
             var result = await jobApplicationService.GetAllForJob(jobID);
-            return Ok(result.Select(s => s.ToJobApplicationDTO()));//.ConfigureAwait(false);
+            return Ok(result.Select(s => s.ToJobApplicationDTO()));
 
         }
+
+        [Authorize(Roles = "PetSitter")]
+        [HttpGet("appliedto")]
+        public async Task<ActionResult<IReadOnlyCollection<JobApplicationUserAppliedToDTO>>> GetAllForUser([FromQuery] JobFilterParticipant filter)
+        {
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
+            if (!foundUser)
+                return BadRequest("There is no such user with this Bearer");
+
+            var result = await jobApplicationService.GetAllForUser(userID, filter);
+            return Ok(result.Select(s => s.ToJobApplicationUserAppliedToDTO()));
+        }
+
+
 
         [Authorize(Roles = "PetSitter")]
         [HttpPost("{jobID}")]
@@ -56,6 +71,7 @@ namespace PetHolidayWebApi.Controllers
             }
         }
 
+       
         [Authorize]
         [HttpDelete("{applicationID}")]
         public async Task<ActionResult> DeleteApplication(int applicationID)

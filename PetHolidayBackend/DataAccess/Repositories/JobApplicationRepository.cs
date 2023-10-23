@@ -2,7 +2,7 @@
 using Domain.Common;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-
+using Domain.Common.QueryHelpers;
 
 namespace DataAccess.Repositories
 {
@@ -30,7 +30,29 @@ namespace DataAccess.Repositories
                 .Include(s => s.ApplicantUser)
                 .Include(s => s.Comments)
                 .Where(s => s.JobID == job.ID)
+                .OrderByDescending(s => s.Comments.Max(c => c.CommentDate))
                 .ToListAsync();
+        }
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterParticipant filter)
+        {
+            /* return await dbcontext.Jobs
+                     .Include(s => s.Pets)
+                     .ThenInclude(s => s.Pet)
+                     .Include(s => s.JobApplications)
+                     .ThenInclude(s => s.Comments)
+                     .Include(s => s.OwnerUser)
+                     .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
+                     .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
+                     .ToListAsync();*/
+            return await dbcontext.JobApplications
+                 .Include(s => s.Job)
+                 .ThenInclude(s => s.OwnerUser)
+                 .Include(s => s.Comments)
+                 .Include(s => s.ApplicantUser)
+                 .Where(s => s.ApplicantUserID == userID)
+                 .Where(s => filter.Status != Status.All ? s.Job.Status == filter.Status : true)
+                 .OrderByDescending(s => s.Comments.Max(c => c.CommentDate)) 
+                 .ToListAsync();
         }
 
         public async Task<JobApplication> InsertApplicationForJob(int jobID,int userID)

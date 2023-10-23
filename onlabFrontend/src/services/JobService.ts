@@ -4,6 +4,7 @@ import {
   JobFilter,
   JobFilterParticipant,
   JobPreview,
+  PostedJob,
 } from "../models/Job";
 import apiInstance from "./api";
 
@@ -22,10 +23,23 @@ const list = async (filter: JobFilter) => {
   return response.data;
 };
 
-const listUsersPostedJobs = async (filter: JobFilterParticipant) => {
-  const response = await apiInstance.get<JobPreview[]>(`/jobs/posted?`, {
-    params: filter,
-  });
+const listNonRepeatedPostedJobs = async (filter: JobFilterParticipant) => {
+  const response = await apiInstance.get<PostedJob[]>(
+    `/jobs/posted-nonrepeated?`,
+    {
+      params: filter,
+    }
+  );
+  return response.data;
+};
+
+const listRepeatedPostedJobs = async (filter: JobFilterParticipant) => {
+  const response = await apiInstance.get<PostedJob[]>(
+    `/jobs/posted-repeated?`,
+    {
+      params: filter,
+    }
+  );
   return response.data;
 };
 
@@ -74,7 +88,8 @@ const JobService = {
   get,
   list,
   createJob,
-  listUsersPostedJobs,
+  listNonRepeatedPostedJobs,
+  listRepeatedPostedJobs,
   listUsersUndertookJobs,
   // takeJob,
   // approveJob,

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
@@ -9,6 +8,7 @@ import {
   User,
 } from "../../models/User";
 import AuthService from "../../services/AuthService";
+import apiInstance from "../../services/api";
 
 export const useLocalStorage = () => {
   const [value, setValue] = useState<string | null>(null);
@@ -61,9 +61,9 @@ export const useAuth = () => {
   useEffect(() => {
     const userToGet = getItem("user");
     if (userToGet) {
-      const contextUser = JSON.parse(userToGet ?? "");
+      const contextUser = JSON.parse(userToGet ?? "") as User;
       addUser(contextUser);
-      axios.defaults.headers.common.Authorization = `Bearer ${contextUser.accessToken}`;
+      apiInstance.defaults.headers.common.Authorization = `Bearer ${contextUser.accessToken}`;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -90,9 +90,10 @@ export const useAuth = () => {
   };
 
   const logoutUser = async () => {
-    if (user)
-      // await AuthService.logout(authHeader());
+    if (user) {
       removeUser();
+      navigate("/");
+    }
   };
 
   const getLocalRefreshToken = () => {

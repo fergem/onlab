@@ -35,7 +35,6 @@ export default function CreatePetSitterJob() {
     postJob(newJob);
     navigate("/postedjobs");
   };
-  console.log(newJob);
   return (
     <Center mih="80vh">
       <Paper shadow="sm" p="xl" w="50%">

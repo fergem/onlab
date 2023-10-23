@@ -10,7 +10,7 @@ namespace Domain.Common
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Status
     {
-        Empty,
+        All,
         Available,
         Approving,
         Upcoming,

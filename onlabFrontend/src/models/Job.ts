@@ -1,3 +1,9 @@
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+import { PostedJobApplication } from "./JobApplication";
 import { Pet, PetSpecies } from "./Pet";
 import { UserPreview } from "./User";
 
@@ -9,6 +15,38 @@ export const JobFunctions = {
     const endDate = value.endDate ? new Date(value.endDate) : undefined;
 
     return { ...value, startDate, endDate };
+  },
+
+  insideOfDate(day: Date, startDate: Date, endDate?: Date) {
+    dayjs.extend(isBetween);
+    dayjs.extend(isSameOrAfter);
+    dayjs.extend(isSameOrBefore);
+
+    // dayjs(day).isBetween(dayjs(startDate), dayjs(endDate ?? startDate));
+    if (!endDate) {
+      return dayjs(day).isSame(dayjs(startDate), "day");
+    }
+
+    return (
+      dayjs(day).isSameOrAfter(dayjs(startDate), "day") &&
+      dayjs(day).isSameOrBefore(dayjs(endDate), "day")
+    );
+  },
+
+  generateShadeOfBlue(shadeLevel: number | undefined) {
+    if (!shadeLevel || shadeLevel < 0 || shadeLevel > 7) {
+      return "blue";
+    }
+
+    const blueComponent = 255 - shadeLevel * 30;
+
+    let blueHex = blueComponent.toString(16);
+
+    if (blueHex.length === 1) {
+      blueHex = `0${blueHex}`;
+    }
+
+    return `#0000${blueHex}`;
   },
 };
 
@@ -30,7 +68,7 @@ export enum JobType {
 }
 
 export enum Status {
-  Empty = "Empty",
+  All = "All",
   Available = "Available",
   Approving = "Approving",
   Upcoming = "Upcoming",
@@ -50,6 +88,19 @@ export function getJobTypes() {
 export interface JobHoursRange {
   minHours?: number;
   maxHours?: number;
+}
+
+export interface JobUserAppliedTo {
+  id: number;
+  title: string;
+  startDate: Date;
+  endDate?: Date;
+  type: string;
+  days?: Day[];
+  repeated: boolean;
+  jobApplicationID: number;
+  ownerUserPicture: string;
+  displayPetPicture: string;
 }
 
 const getDatePlusThreeDays = () => {
@@ -83,6 +134,7 @@ export interface CreateJobDetailsModel {
 }
 
 export const JobFilterParticipantData = [
+  { value: Status.All, label: Status.All },
   { value: Status.Available, label: Status.Available },
   { value: Status.Approving, label: Status.Approving },
   { value: Status.Upcoming, label: Status.Upcoming },
@@ -94,7 +146,7 @@ export interface JobFilterParticipant {
   status: Status;
 }
 export const DefaultJobFilterParticipant = {
-  status: Status.Upcoming,
+  status: Status.All,
 };
 
 export interface JobFilter {
@@ -104,6 +156,18 @@ export interface JobFilter {
   endDate?: Date;
   repeated: boolean;
   days?: Day[];
+}
+
+export interface PostedJob {
+  id: number;
+  title: string;
+  startDate: Date;
+  endDate?: Date;
+  type: JobType;
+  status: Status;
+  days?: Day[];
+  description: string;
+  jobApplications: PostedJobApplication[];
 }
 
 export interface CreateJobServiceModel {
@@ -162,6 +226,10 @@ export interface JobPreview {
   ownerUserPicture?: string;
   displayPetPicture?: string;
   ownerID: number;
+}
+
+export interface JobPreviewWithColor extends JobPreview {
+  color: string;
 }
 
 export const Defaultjob: CreateJobModel = {

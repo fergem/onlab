@@ -6,6 +6,7 @@ import {
   JobFilter,
   JobFilterParticipant,
   JobPreview,
+  PostedJob,
 } from "../../models/Job";
 import JobService from "../../services/JobService";
 import useNotification from "../useNotification";
@@ -39,7 +40,7 @@ export const useGetJobs = (jobParameters: JobFilter) => {
     isError: error,
     data,
   } = useQuery({
-    queryKey: ["query-jobs"],
+    queryKey: ["query-jobs", jobParameters],
     queryFn: async () => {
       return JobService.list(jobParameters);
     },
@@ -52,17 +53,17 @@ export const useGetJobs = (jobParameters: JobFilter) => {
   return { jobs, error, loading, listJobs };
 };
 
-export const useGetUserPostedJobs = (filter: JobFilterParticipant) => {
-  const [jobs, setJobs] = useState<JobPreview[]>([]);
+export const useGetRepeatedPostedJobs = (filter: JobFilterParticipant) => {
+  const [repeatableJobs, setJobs] = useState<PostedJob[]>([]);
   const {
-    isLoading: loading,
-    refetch: listJobs,
-    isError: error,
+    isLoading: repeatableLoading,
+    refetch: listRepeatableJobs,
+    isError: repeatableError,
     data,
   } = useQuery({
-    queryKey: "query-postedJobs",
+    queryKey: ["query-posted-repeated", filter],
     queryFn: async () => {
-      return JobService.listUsersPostedJobs(filter);
+      return JobService.listRepeatedPostedJobs(filter);
     },
   });
 
@@ -70,7 +71,37 @@ export const useGetUserPostedJobs = (filter: JobFilterParticipant) => {
     if (data) setJobs(data);
   }, [data]);
 
-  return { jobs, error, loading, listJobs };
+  return {
+    repeatableJobs,
+    repeatableError,
+    repeatableLoading,
+    listRepeatableJobs,
+  };
+};
+export const useGetNonRepeatedPostedJobs = (filter: JobFilterParticipant) => {
+  const [nonRepeatableJobs, setJobs] = useState<PostedJob[]>([]);
+  const {
+    isLoading: nonRepeatedJobsLoading,
+    refetch: listNonRepeatedJobs,
+    isError: errorNonRepeatedJobs,
+    data,
+  } = useQuery({
+    queryKey: ["query-posted-nonrepeated", filter],
+    queryFn: async () => {
+      return JobService.listNonRepeatedPostedJobs(filter);
+    },
+  });
+
+  useEffect(() => {
+    if (data) setJobs(data);
+  }, [data]);
+
+  return {
+    nonRepeatableJobs,
+    errorNonRepeatedJobs,
+    nonRepeatedJobsLoading,
+    listNonRepeatedJobs,
+  };
 };
 
 // export const useFinishJob = () => {
@@ -166,10 +197,7 @@ export const usePostJob = () => {
     },
     {
       onSuccess: (result) => {
-        queryClient.setQueriesData(
-          ["query-jobs", "query-postedJobs", result.id],
-          result
-        );
+        queryClient.setQueriesData(["query-jobs", result.id], result);
         notifications.success("Successfully posted job!");
       },
       onError: (error: Error) => {
@@ -188,7 +216,7 @@ export const useGetUserUnderTookJobs = (filter: JobFilterParticipant) => {
     isError: error,
     data,
   } = useQuery({
-    queryKey: "query-undertookJobs",
+    queryKey: ["query-undertookJobs", filter],
     queryFn: async () => {
       return JobService.listUsersUndertookJobs(filter);
     },

@@ -1,17 +1,17 @@
 import {
   ActionIcon,
+  Box,
   Group,
   Loader,
   Paper,
-  ScrollArea,
   Stack,
   Text,
   TextInput,
   Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useScrollIntoView } from "@mantine/hooks";
 import { IconMoodSmileBeam, IconSend } from "@tabler/icons-react";
-import { useEffect, useRef } from "react";
 import { useQueryClient } from "react-query";
 import {
   useJobApplicationCommentHub,
@@ -38,23 +38,20 @@ export default function JobApplicationComments({
     },
   });
 
-  const viewport = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    if (viewport.current) {
-      viewport.current.scrollTo({
-        top: viewport.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  };
+  const { scrollIntoView, targetRef, scrollableRef } =
+    useScrollIntoView<HTMLInputElement>({
+      offset: 0,
+    });
 
   const queryClient = useQueryClient();
   const handleCommentUpdate = () => {
     queryClient.invalidateQueries(["query-applications"]);
+    // queryClient.invalidateQueries(["query-usersAppliedTo"]);
   };
 
   const { handleInvokeTyping, handleInvokeNotTyping, typing } =
     useJobApplicationCommentHub(application.id, handleCommentUpdate);
+
   const { commentOnJob } = usePostComment();
 
   const handlePostComment = () => {
@@ -73,17 +70,18 @@ export default function JobApplicationComments({
 
   const handleStartTyping = () => {
     handleInvokeTyping();
-    scrollToBottom();
+    scrollIntoView();
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
 
   return (
     <Paper shadow="sm" p="xl" withBorder>
-      <Stack>
-        <ScrollArea h={300} offsetScrollbars viewportRef={viewport}>
+      <Stack miw={600}>
+        <Box
+          w="100%"
+          h="300px"
+          sx={() => ({ overflow: "auto" })}
+          ref={scrollableRef}
+        >
           <Stack justify="center" spacing={2}>
             {application.comments?.length === 0 && (
               <Stack align="center" justify="center" spacing={0} my={20}>
@@ -114,7 +112,8 @@ export default function JobApplicationComments({
               </Group>
             )}
           </Stack>
-        </ScrollArea>
+        </Box>
+
         <form onSubmit={handleSubmitComment}>
           <TextInput
             placeholder="Say something"
@@ -129,6 +128,7 @@ export default function JobApplicationComments({
                 <IconSend />
               </ActionIcon>
             }
+            ref={targetRef}
             autoComplete="off"
             {...form.getInputProps("message")}
             onFocus={handleStartTyping}

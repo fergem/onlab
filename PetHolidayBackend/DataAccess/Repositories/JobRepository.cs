@@ -31,6 +31,10 @@ namespace DataAccess.Repositories
 
         public async Task<Job> Insert(InsertJobModel job, int userID)
         {
+            var petsToAdd = await dbcontext.Pets.Where(s => job.petIDs.Any(c => c == s.ID)).ToListAsync();
+            if (petsToAdd.Count != job.petIDs.Count)
+                throw new Exception("One of the pet ID is not valid");
+
             var insertJob = new Job()
             {
                 Location = job.Location,
@@ -48,9 +52,9 @@ namespace DataAccess.Repositories
             };
 
             var petJobs = new List<PetJob>();
-            foreach (var petID in job.petIDs)
-                petJobs.Add(new PetJob() { PetID = petID, Job = insertJob });
-            
+            foreach (var pet in petsToAdd)
+                petJobs.Add(new PetJob() { Pet = pet, Job = insertJob });
+
             await dbcontext.Jobs.AddAsync(insertJob);
             await dbcontext.PetJobs.AddRangeAsync(petJobs);
             await dbcontext.SaveChangesAsync();
@@ -98,16 +102,47 @@ namespace DataAccess.Repositories
             return asd.ToList();
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
+        public async Task<IReadOnlyCollection<Job>> ListRepeatablePostedJobs(int userID, JobFilterParticipant filter)
         { 
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
+                .Include(s => s.JobApplications)
+                .ThenInclude(s => s.ApplicantUser)
                 .Where(s => s.OwnerUserID == userID)
-                .Where(s => s.Status == filter.Status)
+                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
+                .Where(s => s.Repeated)
+                .OrderBy(s => s.JobApplications.Any(s => s.IsApproved))
                 .ToListAsync();
         }
+
+        public async Task<IReadOnlyCollection<Job>> ListNonRepeatablePostedJobs(int userID, JobFilterParticipant filter)
+        {
+            return await dbcontext.Jobs
+                .Include(s => s.OwnerUser)
+                .Include(s => s.Pets)
+                .ThenInclude(s => s.Pet)
+                .Include(s => s.JobApplications)
+                .ThenInclude(s => s.ApplicantUser)
+                .Where(s => s.OwnerUserID == userID)
+                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
+                // .Where(s => s.JobApplications.Any(s => !s.IsApproved))
+                .Where(s => !s.Repeated)
+                .OrderBy(s => s.JobApplications.Any(s => s.IsApproved))
+                .ToListAsync();
+        }
+
+        /*public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
+        {
+            return await dbcontext.Jobs
+                .Include(s => s.OwnerUser)
+                .Include(s => s.Pets)
+                .ThenInclude(s => s.Pet)
+                .Where(s => s.OwnerUserID == userID)
+                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
+                .ToListAsync();
+        }*/
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
@@ -115,8 +150,9 @@ namespace DataAccess.Repositories
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
-                .Where(s => s.Status == filter.Status)
-                .OrderByDescending(s => filter.Status == Status.Upcoming ? s.StartDate : s.EndDate)
+                .Include(s => s.JobApplications)
+                .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
+                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
                 .ToListAsync();
         }
 

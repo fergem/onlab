@@ -39,14 +39,24 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [Authorize(Roles = "Owner")]
-        [HttpGet("posted")]
-        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListPostedJobs([FromQuery] JobFilterParticipant filter)
+        [HttpGet("posted-repeated")]
+        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListRepeatablePostedJobs([FromQuery] JobFilterParticipant filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            var result = await jobService.ListPostedJobs(userID, filter);
-            return Ok(result.Select(s => s.ToJobPreviewDTO()));
+            var result = await jobService.ListRepeatablePostedJobs(userID, filter);
+            return Ok(result.Select(s => s.ToPostedJobDTO()));
+        }
+        [Authorize(Roles = "Owner")]
+        [HttpGet("posted-nonrepeated")]
+        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListNonRepeatablePostedJobs([FromQuery] JobFilterParticipant filter)
+        {
+            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
+            if (!foundUser)
+                return BadRequest("There is no such user with this Bearer");
+            var result = await jobService.ListNonRepeatablePostedJobs(userID, filter);
+            return Ok(result.Select(s => s.ToPostedJobDTO()));
         }
 
         [Authorize(Roles = "PetSitter")]
@@ -60,6 +70,7 @@ namespace PetHolidayWebApi.Controllers
             var result = await jobService.ListUnderTookJobs(userID, filter);
             return Ok(result.Select(s => s.ToJobPreviewDTO()));
         }
+
 
         [HttpGet("{jobID}")]
         public async Task<ActionResult<JobDetailsDTO>> FindById([FromRoute] int jobID) 
@@ -85,7 +96,7 @@ namespace PetHolidayWebApi.Controllers
                 BadRequest();
 
             var created = await jobService.Insert(jobModel, userID);
-            return CreatedAtAction(nameof(FindById), new { jobID = created }, created);
+            return CreatedAtAction(nameof(FindById), new { jobID = created.ToJobPreviewDTO() }, created);
         }
 
         /*[Authorize]

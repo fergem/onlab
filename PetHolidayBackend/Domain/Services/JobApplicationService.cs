@@ -1,4 +1,5 @@
 ﻿using Domain.Common.InsertModels;
+using Domain.Common.QueryHelpers;
 using Domain.Models;
 using Domain.Repositories;
 using System;
@@ -27,7 +28,9 @@ namespace Domain.Services
             var job = await jobRepository.FindById(jobID);
             return await jobApplicationRepository.GetAllForJob(job);
         }
-        public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID) => await jobApplicationRepository.InsertApplicationForJob(jobID, userID);
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterParticipant filter) => await jobApplicationRepository.GetAllForUser(userID, filter);
+        public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID) =>
+            await jobApplicationRepository.InsertApplicationForJob(jobID, userID);
         public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.CancelApplication(applicationID);
         public async Task ApproveApplication(int applicationID) => await jobApplicationRepository.ApproveApplication(applicationID);
         public async Task<JobApplicationComment> InsertApplicationComment(InsertJobApplicationCommentModel model, int userID) 
