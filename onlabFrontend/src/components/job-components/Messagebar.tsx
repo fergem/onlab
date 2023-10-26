@@ -8,15 +8,10 @@ import { ImageFunctions } from "../../utility/image";
 
 interface IMessagebarProps {
   appliedJob: JobApplicationUserAppliedTo;
-  selected: boolean;
   select(applicationID: number): void;
 }
 
-export default function Messagebar({
-  appliedJob,
-  selected,
-  select,
-}: IMessagebarProps) {
+export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
   const handleOnClick = () => {
     select(appliedJob.id);
   };
@@ -26,11 +21,8 @@ export default function Messagebar({
       noWrap
       onClick={handleOnClick}
       sx={(theme) => ({
-        backgroundColor: selected ? theme.colors.blue[5] : "white",
         ":hover": {
-          backgroundColor: selected
-            ? theme.colors.blue[5]
-            : theme.colors.blue[2],
+          backgroundColor: theme.colors.blue[4],
         },
         borderRadius: "10px",
       })}
@@ -46,8 +38,8 @@ export default function Messagebar({
         radius="lg"
       />
       <Stack spacing={0}>
-        <Text fw={1000} fz={10} lineClamp={2}>
-          {appliedJob.jobTitle}
+        <Text fw={1000} fz={17} lineClamp={2}>
+          {`${appliedJob.jobTitle} (${appliedJob.ownerUser.firstName} ${appliedJob.ownerUser.lastName})`}
         </Text>
         <LastComment
           lastComment={
@@ -73,13 +65,13 @@ function LastComment({ lastComment, ownerUserName }: ILastCommentProps) {
     ? `You: ${lastComment.commentText}`
     : `${ownerUserName}: ${lastComment.commentText}`;
   return (
-    <Group position="apart" spacing={0}>
-      <Text fw={500} fz={10}>
+    <Stack spacing={0}>
+      <Text fw={500} fz={13}>
         {userLastCommentedText}
       </Text>
-      <Text fw={500} fz={10}>
+      <Text fw={500} fz={13}>
         {dayjs(lastComment.commentDate).format("YYYY-MM-DD HH:mm:ss")}
       </Text>
-    </Group>
+    </Stack>
   );
 }

@@ -6,8 +6,8 @@ import {
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
-import JobStatusBadge from "../JobStatusBadge";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
+import JobStatusBadge from "../utility-components/JobStatusBadge";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import JobUserTable from "./AvailableJobUserTable";
 import RepeatedPostedJobDetails from "./RepeadtedPostedJobDetails";

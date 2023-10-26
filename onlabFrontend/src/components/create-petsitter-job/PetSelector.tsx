@@ -21,13 +21,18 @@ export default function PetSelector({ selectPets }: IProps) {
         <Text>These pets will be added to your newly created job.</Text>
       )}
       <Group position="center" align="center" w="100%">
-        <LoadingBoundary loading={loading} error={error} refetch={listPets}>
+        <LoadingBoundary
+          loading={loading}
+          error={error}
+          refetch={listPets}
+          withBorder={false}
+        >
           {pets.length === 0 && (
             <Stack align="center" justify="center">
               <Text align="center">
                 You have got no pets yet. Go to your profile and add one
               </Text>
-              <NavButton name="Profile" to="/profile" />
+              <NavButton name="Profile" to="/profile" icon={undefined} />
             </Stack>
           )}
           {pets?.map((s) => (

@@ -78,7 +78,12 @@ function JobDetail() {
 
   return (
     <Stack justify="center" align="center">
-      <LoadingBoundary loading={loading} error={error} refetch={getJob}>
+      <LoadingBoundary
+        loading={loading}
+        error={error}
+        refetch={getJob}
+        withBorder
+      >
         <Grid w="60%" justify="space-around" gutter="xl">
           <Grid.Col span={4}>
             <Paper p="md" shadow="sm" withBorder>
@@ -138,8 +143,7 @@ function JobDetail() {
                 {job?.repeated && <ChipDays days={job?.days} />}
 
                 {user?.id !== job?.ownerUser?.id &&
-                  (job?.status === Status.Available ||
-                    job?.status === Status.Approving) &&
+                  job?.status === Status.Available &&
                   !applications.some((s) => s.applicantUser.id === user?.id) &&
                   user?.roles.includes(UserRole.PetSitter) && (
                     <Button onClick={handleApplyToJob}>Apply to Job</Button>
@@ -196,6 +200,7 @@ function JobDetail() {
         loading={loadingApplications}
         error={errorApplications}
         refetch={refetchApplications}
+        withBorder={false}
       >
         {user && user.id === job?.ownerUser.id && (
           <JobOwnerCommentsSection

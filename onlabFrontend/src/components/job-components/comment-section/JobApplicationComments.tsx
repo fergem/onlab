@@ -26,11 +26,13 @@ import MessageBubble from "./MessageBubble";
 export interface IPropsJobComments {
   application: JobApplication;
   ownerUser?: UserPreview;
+  miw: number;
 }
 
 export default function JobApplicationComments({
   application,
   ownerUser,
+  miw,
 }: IPropsJobComments) {
   const form = useForm({
     initialValues: {
@@ -45,7 +47,8 @@ export default function JobApplicationComments({
 
   const queryClient = useQueryClient();
   const handleCommentUpdate = () => {
-    queryClient.invalidateQueries(["query-applications"]);
+    queryClient.invalidateQueries("query-applications");
+    queryClient.invalidateQueries("query-usersAppliedTo");
     // queryClient.invalidateQueries(["query-usersAppliedTo"]);
   };
 
@@ -75,7 +78,7 @@ export default function JobApplicationComments({
 
   return (
     <Paper shadow="sm" p="xl" withBorder>
-      <Stack miw={600}>
+      <Stack miw={miw}>
         <Box
           w="100%"
           h="300px"

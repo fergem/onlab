@@ -40,6 +40,7 @@ export default function JobPetSitterCommentSection({
           <JobApplicationComments
             application={application}
             ownerUser={ownerUser}
+            miw={400}
           />
         </Tabs.Panel>
       </Tabs>

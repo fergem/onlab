@@ -1,4 +1,5 @@
-﻿using Domain.Common.InsertModels;
+﻿using Domain.Common;
+using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
 using Domain.Models;
 using System;
@@ -19,9 +20,9 @@ namespace Domain.Repositories
 
         Task<Job> FindById(int jobID);
         Task<Job> Insert(InsertJobModel job, int userID);
+        Task<Job> ProgressJob(int jobID, Status status);
         Task<Job> UpdateJob(int jobID);
-        Task<Job> FinishJob(int jobID);
-        Task DeleteJob(int jobID);
+
         Task RemoveJobsDependentOnPet(int petID);
     }
 }

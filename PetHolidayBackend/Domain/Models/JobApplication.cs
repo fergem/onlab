@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Domain.Models
             Comments = new HashSet<JobApplicationComment>();
         }
         public int ID { get; set; }
-        public bool IsApproved { get; set; }
+        public JobApplicationStatus Status { get; set; }
 
         public int JobID { get; set; }
         public virtual Job Job { get; set; } = null!; 

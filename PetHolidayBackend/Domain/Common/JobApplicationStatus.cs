@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Domain.Common
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum Status
+    public enum JobApplicationStatus
     {
         All,
-        Available,
-        Upcoming,
-        Done,
+        Approving,
+        Approved,
+        NotApproved,
         Canceled,
     }
 }

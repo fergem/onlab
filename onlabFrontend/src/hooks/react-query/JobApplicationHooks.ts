@@ -2,7 +2,7 @@
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { JobFilterParticipant } from "../../models/Job";
+import { JobApplicationFilter } from "../../models/Filters";
 import {
   JobApplication,
   JobApplicationUserAppliedTo,
@@ -168,7 +168,7 @@ export const useApproveApplicationForJob = () => {
 };
 
 export const useJobApplicationsUserAppliedTo = (
-  filter?: JobFilterParticipant
+  filter?: JobApplicationFilter
 ) => {
   const [appliedJobs, setAppliedJobs] = useState<JobApplicationUserAppliedTo[]>(
     []

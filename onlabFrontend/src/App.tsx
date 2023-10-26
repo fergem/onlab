@@ -1,15 +1,14 @@
 import { AppShell } from "@mantine/core";
 import { useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import MessagesDrawer from "./components/MessagesDrawer";
 import AxiosInterceptor from "./components/interceptor/AxiosInterceptor";
 import JobDetail from "./components/job-components/JobDetail";
 import AuthVerify from "./components/user-components/AuthVerify";
 import HeaderPetHoliday from "./components/utility-components/HeaderPetHoliday";
+import MessagesDrawer from "./components/utility-components/MessagesDrawer";
 import AuthContext from "./context/AuthContext";
 import MessagesOpenContext from "./context/MessagesContext";
 import { User } from "./models/User";
-import ApplicationsPetSitter from "./pages/ApplicationsPetSitter";
 import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
@@ -39,14 +38,13 @@ function App() {
               <Route path="/postedjobs" element={<OwnerProfile />} />
               <Route path="/undertookjobs" element={<UndertookJobs />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
-              <Route path="/applications" element={<ApplicationsPetSitter />} />
               <Route
                 path="/createpetsitterjob"
                 element={<CreatePetSitterJob />}
               />
             </Routes>
           </AxiosInterceptor>
-          <MessagesDrawer />
+          {user && <MessagesDrawer />}
         </AppShell>
         <AuthVerify />
       </MessagesOpenContext.Provider>

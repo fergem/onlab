@@ -97,10 +97,6 @@ export default function HeaderPetHoliday() {
                 ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
                   <Tabs.Tab value="/undertookjobs">Undertook jobs</Tabs.Tab>
                 )}
-              {user &&
-                ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
-                  <Tabs.Tab value="/applications">Applications</Tabs.Tab>
-                )}
               {!!user === false && (
                 <Tabs.Tab value="/register" ml="30vw">
                   Register

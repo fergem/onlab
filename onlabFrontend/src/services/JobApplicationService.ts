@@ -1,4 +1,4 @@
-import { JobFilterParticipant } from "../models/Job";
+import { JobApplicationFilter } from "../models/Filters";
 import {
   JobApplication,
   JobApplicationUserAppliedTo,
@@ -13,7 +13,7 @@ const getAllForJob = async (jobID: string | undefined) => {
   return response.data;
 };
 
-const jobApplicationsUserAppliedTo = async (filter?: JobFilterParticipant) => {
+const jobApplicationsUserAppliedTo = async (filter?: JobApplicationFilter) => {
   const response = await apiInstance.get<JobApplicationUserAppliedTo[]>(
     "jobapplications/appliedto",
     {

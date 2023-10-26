@@ -3,15 +3,22 @@ import { UserDetails, UserPreview } from "./User";
 
 export interface JobApplication {
   id: number;
-  isApproved: boolean;
   comments?: JobApplicationComment[];
   applicantUser: UserPreview;
+  status: JobApplicationStatus;
 }
 
 export interface PostedJobApplication {
   id: number;
-  isApproved: boolean;
+  status: JobApplicationStatus;
   applicantUser: UserDetails;
+}
+
+export enum JobApplicationStatus {
+  All = "All",
+  Approving = "Approving",
+  Approved = "Approved",
+  Canceled = "Canceled",
 }
 
 export interface JobApplicationUserAppliedTo extends JobApplication {

@@ -1,5 +1,6 @@
 import { Divider, Group, Paper, Stack, Tabs, Text, Title } from "@mantine/core";
 import {
+  IconHome,
   IconInfoCircle,
   IconKey,
   IconPaw,
@@ -40,6 +41,7 @@ export default function Profile() {
       loading={loadingUserDetials}
       error={errorUserDetails}
       refetch={getUserDetails}
+      withBorder
     >
       <Tabs defaultValue="profile">
         <Stack justify="center" ml="5%" mr="10%" align="center" spacing={0}>
@@ -57,7 +59,7 @@ export default function Profile() {
                 </Tabs.Tab>
               )}
               {ArrayFunctions.safeIncludes(user?.roles, UserRole.Owner) && (
-                <Tabs.Tab value="owner" icon={<IconInfoCircle />}>
+                <Tabs.Tab value="owner" icon={<IconHome />}>
                   Owner Profile
                 </Tabs.Tab>
               )}

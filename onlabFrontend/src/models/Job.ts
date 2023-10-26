@@ -70,10 +70,9 @@ export enum JobType {
 export enum Status {
   All = "All",
   Available = "Available",
-  Approving = "Approving",
   Upcoming = "Upcoming",
   Done = "Done",
-  Canceled = "Canceled ",
+  Canceled = "Canceled",
 }
 
 export function getJobTypes() {
@@ -83,11 +82,6 @@ export function getJobTypes() {
     types.push({ value: key, label: value });
   }
   return types;
-}
-
-export interface JobHoursRange {
-  minHours?: number;
-  maxHours?: number;
 }
 
 export interface JobUserAppliedTo {
@@ -102,22 +96,6 @@ export interface JobUserAppliedTo {
   ownerUserPicture: string;
   displayPetPicture: string;
 }
-
-const getDatePlusThreeDays = () => {
-  const today = new Date();
-  const newDate = new Date(today);
-  newDate.setDate(newDate.getDate() + 10);
-  return newDate;
-};
-
-export const DefaultJobFilter: JobFilter = {
-  type: JobType.Sitting,
-  species: [PetSpecies.Dog, PetSpecies.Cat],
-  startDate: new Date(),
-  endDate: getDatePlusThreeDays(),
-  repeated: false,
-  days: undefined,
-};
 
 export enum Frequency {
   Once = "Once",
@@ -136,27 +114,10 @@ export interface CreateJobDetailsModel {
 export const JobFilterParticipantData = [
   { value: Status.All, label: Status.All },
   { value: Status.Available, label: Status.Available },
-  { value: Status.Approving, label: Status.Approving },
   { value: Status.Upcoming, label: Status.Upcoming },
   { value: Status.Done, label: Status.Done },
   { value: Status.Canceled, label: Status.Canceled },
 ];
-
-export interface JobFilterParticipant {
-  status: Status;
-}
-export const DefaultJobFilterParticipant = {
-  status: Status.All,
-};
-
-export interface JobFilter {
-  type: JobType;
-  species?: PetSpecies[];
-  startDate: Date;
-  endDate?: Date;
-  repeated: boolean;
-  days?: Day[];
-}
 
 export interface PostedJob {
   id: number;
@@ -244,4 +205,36 @@ export const Defaultjob: CreateJobModel = {
   minRequiredExperience: 0,
   payment: 0,
   title: "",
+};
+
+export interface JobFilterParticipant {
+  status: Status;
+}
+export const DefaultJobFilterParticipant = {
+  status: Status.All,
+};
+
+export interface JobFilter {
+  type: JobType;
+  species?: PetSpecies[];
+  startDate: Date;
+  endDate?: Date;
+  repeated: boolean;
+  days?: Day[];
+}
+
+const getDatePlusThreeDays = () => {
+  const today = new Date();
+  const newDate = new Date(today);
+  newDate.setDate(newDate.getDate() + 10);
+  return newDate;
+};
+
+export const DefaultJobFilter: JobFilter = {
+  type: JobType.Sitting,
+  species: [PetSpecies.Dog, PetSpecies.Cat],
+  startDate: new Date(),
+  endDate: getDatePlusThreeDays(),
+  repeated: false,
+  days: undefined,
 };

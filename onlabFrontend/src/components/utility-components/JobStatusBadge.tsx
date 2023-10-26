@@ -1,5 +1,5 @@
 import { Badge } from "@mantine/core";
-import { Status } from "../models/Job";
+import { Status } from "../../models/Job";
 
 interface IPropsStatusBadge {
   status: Status;

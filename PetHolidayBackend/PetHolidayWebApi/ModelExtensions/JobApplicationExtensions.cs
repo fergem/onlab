@@ -10,7 +10,7 @@ namespace PetHolidayWebApi.ModelExtensions
             new JobApplicationDTO
             {
                 ID = jobApplication.ID,
-                IsApproved = jobApplication.IsApproved,
+                Status = jobApplication.Status.ToString(),
                 Comments = jobApplication.Comments.Select(s => s.ToJobApplicationCommentDTO()).ToList(),
                 ApplicantUser = jobApplication.ApplicantUser.ToUserPreviewDTO(),
             };
@@ -43,7 +43,7 @@ namespace PetHolidayWebApi.ModelExtensions
             new PostedJobApplicationDTO
             {
                 ID = jobApplication.ID,
-                IsApproved = jobApplication.IsApproved,
+                Status = jobApplication.Status.ToString(),
                 ApplicantUser = jobApplication.ApplicantUser.ToUserDetailsDTO()
             };
     }

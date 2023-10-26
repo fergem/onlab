@@ -28,7 +28,7 @@ namespace Domain.Services
             var job = await jobRepository.FindById(jobID);
             return await jobApplicationRepository.GetAllForJob(job);
         }
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterParticipant filter) => await jobApplicationRepository.GetAllForUser(userID, filter);
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobApplicationFilter filter) => await jobApplicationRepository.GetAllForUser(userID, filter);
         public async Task<JobApplication> InsertApplicationForJob(int jobID, int userID) =>
             await jobApplicationRepository.InsertApplicationForJob(jobID, userID);
         public async Task DeleteApplication(int applicationID) => await jobApplicationRepository.CancelApplication(applicationID);

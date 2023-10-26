@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   Center,
   Group,
   Image,
@@ -34,6 +35,7 @@ export default function JobList({
       error={error}
       refetch={refetch}
       isEmpty={jobs.length === 0}
+      withBorder
     >
       <Group position="center" align="left">
         {jobs.length > 0 && jobs.map((x) => <JobCard key={x.id} job={x} />)}
@@ -49,20 +51,11 @@ export interface IPropsJobCard {
 export function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
   const { user } = useUser();
-  // const { deleteJob } = useDeleteJob();
-  // const handleDelete = (
-  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  // ) => {
-  //   deleteJob(job.id);
-  //   event.stopPropagation();
-  // };
+  const navigateToJob = () => {
+    navigate(`/jobs/${job.id}`);
+  };
   return (
-    <Paper
-      shadow="sm"
-      p="xs"
-      withBorder
-      onClick={() => navigate(`/jobs/${job.id}`, { state: { job } })}
-    >
+    <Paper shadow="sm" p="xs" withBorder>
       <Stack maw="250px" justify="center">
         <Center sx={() => ({ position: "relative" })}>
           <Image
@@ -116,7 +109,13 @@ export function JobCard({ job }: IPropsJobCard) {
             </>
           )}
           <Text size="sm">{job.location}</Text>
-          <PetCountWithIcon catCount={job.catCount} dogCount={job.dogCount} />
+          <Group position="apart">
+            <PetCountWithIcon catCount={job.catCount} dogCount={job.dogCount} />
+
+            <Button onClick={navigateToJob} size="xs">
+              Details
+            </Button>
+          </Group>
         </Stack>
       </Stack>
     </Paper>

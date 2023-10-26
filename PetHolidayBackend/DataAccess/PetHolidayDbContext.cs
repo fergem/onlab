@@ -3,6 +3,7 @@ using Domain.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using DataAccess.Converter;
 
 namespace DataAccess
 {
@@ -90,7 +91,7 @@ namespace DataAccess
             {
                 entity.ToTable("JobApplications");
                 entity.HasKey(s => s.ID);
-                entity.Property(s => s.IsApproved);
+                entity.Property(s => s.Status);
             });
 
             modelBuilder.Entity<JobApplicationComment>(entity =>

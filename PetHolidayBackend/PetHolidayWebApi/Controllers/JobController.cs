@@ -99,62 +99,7 @@ namespace PetHolidayWebApi.Controllers
             return CreatedAtAction(nameof(FindById), new { jobID = created.ToJobPreviewDTO() }, created);
         }
 
-        /*[Authorize]
-        [HttpPut("takejob/{jobID}")]
-        public async Task<ActionResult<Job>> TakeJob([FromRoute] int jobID)
-        {
-            try
-            {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
-                if (!foundUser)
-                    return BadRequest("There is no such user with this Bearer");
-
-                var underTookJob = await jobService.TakeJob(jobID, userID);
-                return CreatedAtAction(nameof(FindById), new { jobID = underTookJob.ID }, underTookJob);
-            }
-            catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        */
-        /*[Authorize]
-        [HttpPut("approvejob/{jobID}")]
-        public async Task<ActionResult<Job>> ApproveUser([FromRoute] int jobID)
-        {
-            try
-            {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
-                if (!foundUser)
-                    return BadRequest("There is no such user with this Bearer");
-
-                var job = await jobService.ApproveUser(jobID);
-                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }*/
-        /*[Authorize]
-        [HttpPut("declineuser/{jobID}")]
-        public async Task<ActionResult<Job>> DeclineUser([FromRoute] int jobID)
-        {
-            try
-            {
-                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
-                if (!foundUser)
-                    return BadRequest("There is no such user with this Bearer");
-
-                var job = await jobService.DeclineUser(jobID);
-                return CreatedAtAction(nameof(FindById), new { jobID = job.ID }, job);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }*/
-
+        [Authorize(Roles = "Owner")]
         [Authorize]
         [HttpPut("finishjob/{jobID}")]
         public async Task<ActionResult<JobDetailsDTO>> FinishJob([FromRoute] int jobID)
@@ -176,8 +121,8 @@ namespace PetHolidayWebApi.Controllers
 
 
         [Authorize(Roles = "Owner")]
-        [HttpDelete("deletejob/{jobID}")]
-        public async Task<ActionResult> DeleteJob([FromRoute] int jobID)
+        [HttpDelete("canceljob/{jobID}")]
+        public async Task<ActionResult<JobDetailsDTO>> CancelJob([FromRoute] int jobID)
         {
             try
             {
@@ -185,8 +130,8 @@ namespace PetHolidayWebApi.Controllers
                 if (!foundUser)
                     throw new Exception("User not found");
 
-                 await jobService.DeleteJob(jobID);
-                return Ok();
+                 var job = await jobService.CancelJob(jobID);
+                return Ok(job.ToJobDetailsDTO());
             }
             catch (Exception e)
             {

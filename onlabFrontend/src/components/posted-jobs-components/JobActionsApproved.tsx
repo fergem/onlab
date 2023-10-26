@@ -1,5 +1,6 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { IconMessages, IconX } from "@tabler/icons-react";
+import useDrawer from "../../hooks/useDrawer";
 
 interface IJobActionsApprovedProps {
   isJobDone: boolean;
@@ -9,6 +10,10 @@ export default function JobActionsApproved({
   isJobDone,
   applicationID,
 }: IJobActionsApprovedProps) {
+  const { open } = useDrawer();
+  const handleOpenMessages = () => {
+    open();
+  };
   return (
     <Group position="center">
       {!isJobDone && (
@@ -30,7 +35,7 @@ export default function JobActionsApproved({
           size="md"
           variant="outline"
           p={4}
-          onClick={() => {}}
+          onClick={handleOpenMessages}
         >
           <IconMessages />
         </ActionIcon>

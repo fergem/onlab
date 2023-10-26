@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 
-namespace DataAccess
+namespace DataAccess.Converter
 {
 
     public class EnumCollectionJsonValueConverter<T> : ValueConverter<ICollection<T>, string> where T : Enum

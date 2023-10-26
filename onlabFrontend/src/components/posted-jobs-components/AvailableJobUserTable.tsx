@@ -10,7 +10,10 @@ import {
 } from "@mantine/core";
 import { useMemo, useState } from "react";
 import { Status } from "../../models/Job";
-import { PostedJobApplication } from "../../models/JobApplication";
+import {
+  JobApplicationStatus,
+  PostedJobApplication,
+} from "../../models/JobApplication";
 import { baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
 import JobActionsApproved from "./JobActionsApproved";
@@ -26,10 +29,14 @@ export default function JobUserTable({
   jobStatus,
 }: INonRepeatedTableProps) {
   const areThereAnyApproved = useMemo(() => {
-    return jobApplications.find((s) => s.isApproved);
+    return jobApplications.find(
+      (s) => s.status === JobApplicationStatus.Approved
+    );
   }, [jobApplications]);
   const jobsWithoutTheApproved = useMemo(() => {
-    return jobApplications.filter((s) => !s.isApproved);
+    return jobApplications.filter(
+      (s) => s.status !== JobApplicationStatus.Approved
+    );
   }, [jobApplications]);
 
   const [showNotApproved, setShowNotApproved] = useState(!areThereAnyApproved);
@@ -159,13 +166,13 @@ export function PostedJobApplicationRow({
         </Text>
       </td>
       <td>
-        {!application.isApproved && (
+        {application.status === JobApplicationStatus.Approving && (
           <JobActionsNotApproved
             applicationID={application.id}
             isJobAvailable={jobStatus === Status.Available}
           />
         )}
-        {application.isApproved && (
+        {application.status === JobApplicationStatus.Approved && (
           <JobActionsApproved
             isJobDone={jobStatus === Status.Done}
             applicationID={application.id}

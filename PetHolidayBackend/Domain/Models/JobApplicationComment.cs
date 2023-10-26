@@ -13,6 +13,7 @@ namespace Domain.Models
         public DateTime CommentDate { get; set; }
         public int SenderUserID { get; set; }
 
+
         public int JobApplicationID { get; set; }
         public virtual JobApplication? JobApplication { get; set; }
     }

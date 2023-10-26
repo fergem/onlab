@@ -13,7 +13,12 @@ interface IPropsPetGrid {
 export default function PetListLoadingPets() {
   const { pets, error, loading, listPets } = useGetUserPets();
   return (
-    <LoadingBoundary loading={loading} error={error} refetch={listPets}>
+    <LoadingBoundary
+      loading={loading}
+      error={error}
+      refetch={listPets}
+      withBorder={false}
+    >
       <PetGrid pets={pets} />
     </LoadingBoundary>
   );

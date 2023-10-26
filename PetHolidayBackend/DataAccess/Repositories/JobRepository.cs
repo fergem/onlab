@@ -69,7 +69,7 @@ namespace DataAccess.Repositories
                     .Include(s => s.Pets)
                     .ThenInclude(s => s.Pet)
                     .Where(s => s.Repeated == filter.Repeated)
-                    .Where(s => s.Status == Status.Available || s.Status == Status.Approving);
+                    .Where(s => s.Status == Status.Available);
 
 
             //Filter by type
@@ -103,7 +103,7 @@ namespace DataAccess.Repositories
         }
 
         public async Task<IReadOnlyCollection<Job>> ListRepeatablePostedJobs(int userID, JobFilterParticipant filter)
-        { 
+        {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
@@ -113,7 +113,7 @@ namespace DataAccess.Repositories
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
                 .Where(s => s.Repeated)
-                .OrderBy(s => s.JobApplications.Any(s => s.IsApproved))
+                .OrderBy(s => (int)s.Status)
                 .ToListAsync();
         }
 
@@ -127,22 +127,11 @@ namespace DataAccess.Repositories
                 .ThenInclude(s => s.ApplicantUser)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
-                // .Where(s => s.JobApplications.Any(s => !s.IsApproved))
                 .Where(s => !s.Repeated)
-                .OrderBy(s => s.JobApplications.Any(s => s.IsApproved))
+                .OrderBy(s => (int)s.Status)
                 .ToListAsync();
         }
 
-        /*public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterParticipant filter)
-        {
-            return await dbcontext.Jobs
-                .Include(s => s.OwnerUser)
-                .Include(s => s.Pets)
-                .ThenInclude(s => s.Pet)
-                .Where(s => s.OwnerUserID == userID)
-                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
-                .ToListAsync();
-        }*/
 
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
         {
@@ -156,30 +145,19 @@ namespace DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Job> FinishJob(int jobID)
+        public async Task<Job> ProgressJob(int jobID, Status status)
         {
             var jobToFinish = await dbcontext.Jobs
                .Include(s => s.OwnerUser)
                .FirstAsync(s => s.ID == jobID);
 
             if (jobToFinish == null)
-                throw new Exception("There is no such job that you want to undertake");
+                throw new Exception($"There is no such job that you want to progress to status: {status}");
 
-            jobToFinish.Status = Status.Done;
+            jobToFinish.Status = status;
 
-            dbcontext.Update(jobToFinish);
             await dbcontext.SaveChangesAsync();
-
             return jobToFinish;
-        }
-
-        public async Task DeleteJob(int jobID)
-        {
-            var jobToDelete = await dbcontext.Jobs
-               .FirstAsync(s => s.ID == jobID);
-
-            dbcontext.Remove(jobToDelete);
-            await dbcontext.SaveChangesAsync();
         }
 
         public async Task RemoveJobsDependentOnPet(int petID)

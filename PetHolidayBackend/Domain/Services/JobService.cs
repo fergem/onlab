@@ -1,4 +1,5 @@
-﻿using Domain.Common.InsertModels;
+﻿using Domain.Common;
+using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
 using Domain.Models;
 using Domain.Repositories;
@@ -25,7 +26,7 @@ namespace Domain.Services
         public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter) => await jobRepository.ListUnderTookJobs(userID, filter);
         public async Task<Job> Insert(InsertJobModel job, int userID) => await jobRepository.Insert(job, userID);
         public async Task<Job> FindById(int jobID) => await jobRepository.FindById(jobID);
-        public async Task<Job> FinishJob(int jobID) => await jobRepository.FinishJob(jobID);
-        public async Task DeleteJob(int jobID) => await jobRepository.DeleteJob(jobID);
+        public async Task<Job> FinishJob(int jobID) => await jobRepository.ProgressJob(jobID, Status.Done);
+        public async Task<Job> CancelJob(int jobID) => await jobRepository.ProgressJob(jobID, Status.Canceled);
     }
 }

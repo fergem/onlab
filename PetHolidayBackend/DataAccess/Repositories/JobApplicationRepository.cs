@@ -33,24 +33,17 @@ namespace DataAccess.Repositories
                 .OrderByDescending(s => s.Comments.Max(c => c.CommentDate))
                 .ToListAsync();
         }
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterParticipant filter)
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobApplicationFilter filter)
         {
-            /* return await dbcontext.Jobs
-                     .Include(s => s.Pets)
-                     .ThenInclude(s => s.Pet)
-                     .Include(s => s.JobApplications)
-                     .ThenInclude(s => s.Comments)
-                     .Include(s => s.OwnerUser)
-                     .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
-                     .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
-                     .ToListAsync();*/
+
             return await dbcontext.JobApplications
                  .Include(s => s.Job)
                  .ThenInclude(s => s.OwnerUser)
                  .Include(s => s.Comments)
                  .Include(s => s.ApplicantUser)
                  .Where(s => s.ApplicantUserID == userID)
-                 .Where(s => filter.Status != Status.All ? s.Job.Status == filter.Status : true)
+                 .Where(s => filter.JobStatus != Status.All ? s.Job.Status == filter.JobStatus : true)
+                 .Where(s => filter.ApplicationStatus != JobApplicationStatus.All ? s.Status == filter.ApplicationStatus : true)
                  .OrderByDescending(s => s.Comments.Max(c => c.CommentDate)) 
                  .ToListAsync();
         }
@@ -63,7 +56,7 @@ namespace DataAccess.Repositories
             {
                 ApplicantUserID = user.Id,
                 JobID = job.ID,
-                IsApproved = false,
+                Status = JobApplicationStatus.Approving,
             };
 
             await dbcontext.JobApplications.AddAsync(application);
@@ -78,19 +71,31 @@ namespace DataAccess.Repositories
               
             var jobOfApplication = await dbcontext.Jobs.Include(s => s.JobApplications).FirstOrDefaultAsync(s => s.ID == application.JobID) ?? throw new Exception("Job does not exist");
                
-            if (jobOfApplication.JobApplications.Any(s => s.IsApproved))
+            if (jobOfApplication.JobApplications.Any(s => s.Status == JobApplicationStatus.Approved))
                 throw new Exception("Job already has an approved application");
 
-            application.IsApproved = true;
+            application.Status = JobApplicationStatus.Approved;
             jobOfApplication.Status = Status.Upcoming;
+
+            foreach (var item in jobOfApplication.JobApplications.Where(s => s.ID != applicationID))
+            {
+                item.Status = JobApplicationStatus.NotApproved;
+            }
+
             await dbcontext.SaveChangesAsync(); 
         }
-        
+
+        public async Task NotApproveApplication(int applicationID)
+        {
+            var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");
+            application.Status = JobApplicationStatus.NotApproved;
+            await dbcontext.SaveChangesAsync();
+        }
+
         public async Task CancelApplication(int applicationID)
         {
             var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");
-
-            dbcontext.Remove(application);
+            application.Status = JobApplicationStatus.Canceled;
             await dbcontext.SaveChangesAsync();
         }
     }

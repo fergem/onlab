@@ -40,7 +40,11 @@ export default function JobOwnerCommentsSection({
 
         {applications.map((s) => (
           <Tabs.Panel value={s.id.toString()} key={s.id} pt="xs" py="0">
-            <JobApplicationComments application={s} ownerUser={ownerUser} />
+            <JobApplicationComments
+              application={s}
+              ownerUser={ownerUser}
+              miw={400}
+            />
           </Tabs.Panel>
         ))}
       </Tabs>
