@@ -16,7 +16,7 @@ namespace Domain.Services
             this.configuration = configuration;
         }
 
-        public string GenerateToken(User user, IList<string> userRoles)
+        public JwtSecurityToken GenerateToken(User user, IList<string> userRoles)
         {
             var authClaims = new List<Claim> {
                 new Claim("Id", user.Id.ToString()),
@@ -28,20 +28,26 @@ namespace Domain.Services
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"] ?? "");
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(authClaims),
-                Expires = DateTime.Now.AddHours(3),
-                Issuer = configuration["JsonWebTokenKeys:ValidIssuer"],
-                Audience = configuration["JsonWebTokenKeys:ValidAudience"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var token = CreateTokenFromClaims(authClaims);
+            return token;
         }
+
+        public JwtSecurityToken CreateTokenFromClaims(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
+            _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+            var token = new JwtSecurityToken(
+                issuer: configuration["JWT:ValidIssuer"],
+                audience: configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
+        }
+
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
@@ -50,14 +56,20 @@ namespace Domain.Services
             return Convert.ToBase64String(randomNumber);
         }
 
-        public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        public int GenerateRefreshTokenExpiryTime()
+        {
+            _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+            return refreshTokenValidityInDays;
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string? token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:IssuerSigningKey"] ?? "")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
                 ValidateLifetime = false
             };
 
@@ -67,22 +79,7 @@ namespace Domain.Services
                 throw new SecurityTokenException("Invalid token");
 
             return principal;
-
         }
-        public JwtSecurityToken CreateTokenFromClaims(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JsonWebTokenKeys:Secret"] ?? ""));
-            _ = int.TryParse(configuration["JsonWebTokenKeys:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-
-            var token = new JwtSecurityToken(
-                issuer: configuration["JsonWebTokenKeys:ValidIssuer"],
-                audience: configuration["JsonWebTokenKeys:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
-        }
+       
     }
 }

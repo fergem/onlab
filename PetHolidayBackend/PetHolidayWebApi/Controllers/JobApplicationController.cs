@@ -29,18 +29,17 @@ namespace PetHolidayWebApi.Controllers
         }
 
 
-        [Authorize]
+        [Authorize] 
         [HttpGet("{jobID}")]
         public async Task<ActionResult<IReadOnlyCollection<JobApplicationDTO>>> GetAllForJob(int jobID)
         {
             var result = await jobApplicationService.GetAllForJob(jobID);
             return Ok(result.Select(s => s.ToJobApplicationDTO()));
-
         }
 
         [Authorize(Roles = "PetSitter")]
         [HttpGet("appliedto")]
-        public async Task<ActionResult<IReadOnlyCollection<JobApplicationUserAppliedToDTO>>> GetAllForUser([FromQuery] JobApplicationFilter filter)
+        public async Task<ActionResult<IReadOnlyCollection<JobApplicationChatDTO>>> GetAllForUser([FromQuery] JobApplicationFilter filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)

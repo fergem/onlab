@@ -16,7 +16,7 @@ namespace Domain.Common.InsertModels
         public required DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public ICollection<DaysOfWeek>? Days { get; set; }
-        public required bool Repeated { get; set; }
+        public required bool Repeated { get; set; } 
         public required JobType Type { get; set; }
         public required string Title { get; set; }
     }

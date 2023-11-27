@@ -18,7 +18,6 @@ namespace DataAccess
         public DbSet<PetSitterProfile> PetSitterProfiles { get; set; }
         public DbSet<OwnerProfile> OwnerProfiles { get; set; }
         public DbSet<Job> Jobs { get; set; }
-        public DbSet<PetImage> PetImages { get; set; }
         public DbSet<PetJob> PetJobs { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<JobApplicationComment> JobApplicationsComment { get; set; }
@@ -81,12 +80,6 @@ namespace DataAccess
                                              .Metadata.SetValueComparer(comparer);
             });
 
-            modelBuilder.Entity<PetImage>(entity =>
-            {
-                entity.ToTable("PetImages");
-                entity.HasKey(s => s.ID);
-            });
-
             modelBuilder.Entity<JobApplication>(entity =>
             {
                 entity.ToTable("JobApplications");
@@ -124,17 +117,6 @@ namespace DataAccess
                 .WithOne(s => s.OwnerUser)
                 .HasForeignKey(e => e.OwnerUserID)
                 .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
-
-            /*modelBuilder.Entity<DbUser>()
-                .HasMany(c => c.JobApplications)
-                .WithOne(s => s.PetSitterUser)
-                .HasForeignKey(e => e.PetSitterUserID);*/
-
-            modelBuilder.Entity<Pet>()
-                .HasMany(c => c.Images)
-                .WithOne(s => s.Pet)
-                .HasForeignKey(e => e.PetID)
                 .IsRequired();
 
             modelBuilder.Entity<Job>()
@@ -240,6 +222,7 @@ namespace DataAccess
                         Species = PetSpecies.Dog,
                         Age = 7,
                         UserID = 1,
+                        Image = GetImageData("dog1"),
                     },
                     new Pet()
                     {
@@ -248,6 +231,7 @@ namespace DataAccess
                         Species = PetSpecies.Cat,
                         Age = 3,
                         UserID = 2,
+                        Image = GetImageData("cat1"),
                     },
                     new Pet()
                     {
@@ -256,6 +240,7 @@ namespace DataAccess
                         Species = PetSpecies.Dog,
                         Age = 2,
                         UserID = 3,
+                        Image = GetImageData("dog2"),
                     },
                     new Pet()
                     {
@@ -264,6 +249,7 @@ namespace DataAccess
                         Species = PetSpecies.Cat,
                         Age = 3,
                         UserID = 2,
+                        Image = GetImageData("cat2"),
                     },
                     new Pet()
                     {
@@ -272,6 +258,7 @@ namespace DataAccess
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 3,
+                        Image = GetImageData("dog3"),
                     },
                     new Pet()
                     {
@@ -280,6 +267,7 @@ namespace DataAccess
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 1,
+                        Image = GetImageData("dog4"),
                     },
                     new Pet()
                     {
@@ -288,6 +276,7 @@ namespace DataAccess
                         Species = PetSpecies.Dog,
                         Age = 4,
                         UserID = 1,
+                        Image = GetImageData("dog5"),
                     }
                 );
             modelBuilder.Entity<PetJob>()
@@ -422,5 +411,12 @@ namespace DataAccess
                     }
                 );
         }
+        private byte[] GetImageData(string path)
+        {
+            string imagePath = $"wwwroot/images/{path}.jpg";
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            return imageData;
+        }
     }
 }
+

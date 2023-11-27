@@ -29,46 +29,36 @@ namespace PetHolidayWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> List([FromQuery] JobFilter jobParameters)
         {
-            if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
+            /*if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
                 return BadRequest("Filter is not good");
             else if (!jobParameters.ValidRepeated && jobParameters.ValidRepeated)
-                return BadRequest("Filter is not good");
+                return BadRequest("Filter is not good");*/
 
             var result = await jobService.List(jobParameters);
             return Ok(result.Select(s => s.ToJobPreviewDTO()));
         }
 
         [Authorize(Roles = "Owner")]
-        [HttpGet("posted-repeated")]
-        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListRepeatablePostedJobs([FromQuery] JobFilterParticipant filter)
+        [HttpGet("posted")]
+        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListRepeatablePostedJobs([FromQuery] JobFilterPosted filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
-            var result = await jobService.ListRepeatablePostedJobs(userID, filter);
-            return Ok(result.Select(s => s.ToPostedJobDTO()));
-        }
-        [Authorize(Roles = "Owner")]
-        [HttpGet("posted-nonrepeated")]
-        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListNonRepeatablePostedJobs([FromQuery] JobFilterParticipant filter)
-        {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
-            if (!foundUser)
-                return BadRequest("There is no such user with this Bearer");
-            var result = await jobService.ListNonRepeatablePostedJobs(userID, filter);
+            var result = await jobService.ListPostedJobs(userID, filter);
             return Ok(result.Select(s => s.ToPostedJobDTO()));
         }
 
         [Authorize(Roles = "PetSitter")]
         [HttpGet("undertook")]
-        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> ListUndertookJobs([FromQuery] JobFilterParticipant filter)
+        public async Task<ActionResult<IReadOnlyCollection<UndertookJobDTO>>> ListUndertookJobs([FromQuery] JobApplicationFilter filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
 
             var result = await jobService.ListUnderTookJobs(userID, filter);
-            return Ok(result.Select(s => s.ToJobPreviewDTO()));
+            return Ok(result.Select(s => s.ToUndertookJobDTO(userID)));
         }
 
 
@@ -93,7 +83,7 @@ namespace PetHolidayWebApi.Controllers
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
-                BadRequest();
+                BadRequest("There is no such user with this Bearer");
 
             var created = await jobService.Insert(jobModel, userID);
             return CreatedAtAction(nameof(FindById), new { jobID = created.ToJobPreviewDTO() }, created);
@@ -128,7 +118,7 @@ namespace PetHolidayWebApi.Controllers
             {
                 var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
                 if (!foundUser)
-                    throw new Exception("User not found");
+                    throw new Exception("There is no such user with this Bearer");
 
                  var job = await jobService.CancelJob(jobID);
                 return Ok(job.ToJobDetailsDTO());

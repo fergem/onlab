@@ -7,9 +7,7 @@ namespace Domain.Models
     {
         public Pet()
         {
-            Images = new HashSet<PetImage>();
             Jobs = new HashSet<PetJob>();
-
         }
 
         public int ID { get; set; }
@@ -22,7 +20,7 @@ namespace Domain.Models
         public required int UserID { get; set; }
         public virtual User User { get; set; } = null!;
 
-        public virtual ICollection<PetImage> Images { get; set;}
+        public virtual byte[]? Image { get; set;}
         public virtual ICollection<PetJob> Jobs { get; set; }
     }
 }

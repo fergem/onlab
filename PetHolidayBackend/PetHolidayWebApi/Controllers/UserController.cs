@@ -1,12 +1,14 @@
 ﻿using Domain.Common.AuthHelpers;
 using Domain.Common.InsertModels;
 using Domain.Common.UpdateModels;
+using Domain.Models;
 using Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetHolidayWebApi.DTOs;
 using PetHolidayWebApi.ModelExtensions;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace PetHolidayWebApi.Controllers
@@ -29,6 +31,9 @@ namespace PetHolidayWebApi.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                    throw new Exception("Register model is not valid");
+
                 await userService.Register(registerModel);
                 return CreatedAtAction(nameof(Register),"User registered successfully!");
             }
@@ -46,11 +51,15 @@ namespace PetHolidayWebApi.Controllers
                 if (!ModelState.IsValid)
                     throw new Exception("Logging model is not valid");
 
-                var result = await userService.Login(loginModel);
-                var token = authService.GenerateToken(result.user, result.userRoles);
                 var refreshToken = authService.GenerateRefreshToken();
+                var refreshTokenExpirity = authService.GenerateRefreshTokenExpiryTime();
 
-                return Ok(result.user.ToUserDTO(result.userRoles.ToList(), token));
+                var result = await userService.Login(loginModel, refreshToken, refreshTokenExpirity);
+
+                var token = authService.GenerateToken(result.user, result.userRoles);
+                
+
+                return Ok(result.user.ToUserDTO(result.userRoles.ToList(), new JwtSecurityTokenHandler().WriteToken(token)));
             }
             catch (Exception ex)
             {
@@ -59,7 +68,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<RefreshBearerTokenDTO>> RefreshToken([FromBody] RefreshTokenModel tokenModel)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel tokenModel)
         {
 
             try
@@ -87,7 +96,11 @@ namespace PetHolidayWebApi.Controllers
                     RefreshToken = newRefreshToken
                 };
 
-                return Ok(new { AccessToken = result.AccessToken, RefreshToken = result.RefreshToken });
+                return new ObjectResult(new
+                {
+                    accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                    refreshToken = newRefreshToken
+                });
             }
             catch (Exception ex)
             {
@@ -146,7 +159,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize(Roles = "Owner")]
         [HttpPost("addpet")]
-        public async Task<ActionResult<PetDTO>> InsertPet([FromBody] InsertPetModel pet)
+        public async Task<ActionResult<PetDTO>> InsertPet([FromForm] InsertPetModel pet, [FromForm] IFormFile? file)
         {
             try
             {
@@ -154,8 +167,19 @@ namespace PetHolidayWebApi.Controllers
                 if (!foundUser)
                     throw new Exception("User not found");
 
-                var created = await userService.InsertPet(pet, userID);
-                return CreatedAtAction(nameof(InsertPet), new { petID = created.ID }, created.ToPetDTO());
+                if(file is null)
+                {
+                    var created = await userService.InsertPet(pet, null, userID);
+                    return CreatedAtAction(nameof(InsertPet), new { petID = created.ID }, created.ToPetDTO());
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    var fileData = stream.ToArray();
+                    var created = await userService.InsertPet(pet, fileData, userID);
+                    return CreatedAtAction(nameof(InsertPet), new { petID = created.ID }, created.ToPetDTO());
+                }
             }
             catch (Exception ex) 
             {
@@ -166,41 +190,24 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize(Roles = "Owner")]
         [HttpPut("updatepet")]
-        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] UpdatePetModel pet)
+        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] UpdatePetModel pet, [FromForm] IFormFile? file)
         {
             try
             {
-                var updatedPet = await userService.UpdatePet(pet);
-                return Ok(updatedPet.ToPetDTO());
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
 
-        [Authorize(Roles = "Owner")]
-        [HttpPatch("addpetimage")]
-        public async Task<ActionResult<PetDTO>> AddPetImage([FromHeader] int petID, [FromForm] List<IFormFile> file)
-        {
-            try
-            {
-                if (file != null)
+                if (file is null)
                 {
-                    var addPetImageModel = new UpdatePetImagesModel();
-                    foreach (var item in file)
-                    {
-                        using (var stream = new MemoryStream())
-                        {
-                            await item.CopyToAsync(stream);
-                            var fileData = stream.ToArray();
-                            addPetImageModel.files.Add(fileData);
-                        }
-                    }
-                    var updatedPet = await userService.AddPetImages(petID, addPetImageModel);
+                    var updatedPet = await userService.UpdatePet(pet, null);
                     return Ok(updatedPet.ToPetDTO());
                 }
-                return BadRequest();
+
+                using (var stream = new MemoryStream())
+                {
+                    await file.CopyToAsync(stream);
+                    var fileData = stream.ToArray();
+                    var updatedPet = await userService.UpdatePet(pet, fileData);
+                    return Ok(updatedPet.ToPetDTO());
+                }
             }
             catch (Exception ex)
             {

@@ -13,10 +13,10 @@ namespace Domain.Repositories
     public interface IJobRepository
     {
         Task<IReadOnlyCollection<Job>> List(JobFilter jobParameters);
-        Task<IReadOnlyCollection<Job>> ListRepeatablePostedJobs(int userID, JobFilterParticipant filter);
-        Task<IReadOnlyCollection<Job>> ListNonRepeatablePostedJobs(int userID, JobFilterParticipant filter);
+        Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterPosted filter);
 
-        Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter);
+
+        Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobApplicationFilter filter);
 
         Task<Job> FindById(int jobID);
         Task<Job> Insert(InsertJobModel job, int userID);

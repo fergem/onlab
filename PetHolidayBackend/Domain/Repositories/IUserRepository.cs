@@ -13,7 +13,7 @@ namespace Domain.Repositories
     public interface IUserRepository
     {
         Task Register(RegisterModel registerModel);
-        Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel);
+        Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel, string refreshToken, int refreshTokenExpirity);
 
         Task UpdateRefreshToken(UpdateRefreshTokenModel updateRefreshTokenModel);
         Task<User> FindById(int userID);

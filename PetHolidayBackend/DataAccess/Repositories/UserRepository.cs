@@ -13,16 +13,15 @@ namespace DataAccess.Repositories
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly PetHolidayDbContext dbContext;
-        private readonly RoleManager<IdentityRole<int>> roleManager;
-        public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager, PetHolidayDbContext dbContext, RoleManager<IdentityRole<int>> roleManager)
+
+        public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager, PetHolidayDbContext dbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.dbContext = dbContext;
-            this.roleManager = roleManager;
         }
 
-        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel)
+        public async Task<(User user, IList<string> userRoles)> Login(LoginModel loginModel, string refreshToken, int refreshTokenExpirity)
         {
 
             var user = await userManager.Users.FirstOrDefaultAsync(s => s.UserName == loginModel.Username) ?? throw new Exception("User not exists");
@@ -32,24 +31,19 @@ namespace DataAccess.Repositories
                 throw new Exception("Incorrect password");
             
             var userRoles = await userManager.GetRolesAsync(user);
-            user.RefreshToken = GenerateRefreshToken();
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(1);
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenExpirity);
+
+            await userManager.UpdateAsync(user);
             await dbContext.SaveChangesAsync();
             return new (user, userRoles);
         }
 
-        public string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[64];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
 
         public async Task Register(RegisterModel registerModel)
         {
-            var IsExist = await userManager.FindByNameAsync(registerModel.Username);
-            if (IsExist is not null)
+            var userExists = await userManager.FindByNameAsync(registerModel.Username);
+            if (userExists is not null)
                 throw new Exception("User already exist");
 
             var appUser = new User
@@ -67,8 +61,6 @@ namespace DataAccess.Repositories
 
             if (registerModel.IsOwner)
             {
-                //var role = await roleManager.FindByNameAsync("OWNER");
-                var roles = roleManager.Roles.ToList();
                 var roleResult = await userManager.AddToRoleAsync(appUser, "OWNER");
                 if (!roleResult.Succeeded)
                     throw new Exception("Role could not be set to User");

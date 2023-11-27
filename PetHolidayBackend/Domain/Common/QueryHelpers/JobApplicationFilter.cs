@@ -9,6 +9,6 @@ namespace Domain.Common.QueryHelpers
     public class JobApplicationFilter
     {
         public Status JobStatus { get; set; }
-        public JobApplicationStatus ApplicationStatus { get; set; }
+        public JobApplicationStatus JobApplicationStatus { get; set; }
     }
 }

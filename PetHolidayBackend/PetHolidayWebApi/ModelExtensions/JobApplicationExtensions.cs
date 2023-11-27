@@ -24,8 +24,8 @@ namespace PetHolidayWebApi.ModelExtensions
                 SenderUserID = jobApplicationComment.SenderUserID,
             };
 
-        public static JobApplicationUserAppliedToDTO ToJobApplicationUserAppliedToDTO(this JobApplication jobApplication) =>
-           new JobApplicationUserAppliedToDTO
+        public static JobApplicationChatDTO ToJobApplicationUserAppliedToDTO(this JobApplication jobApplication) =>
+           new JobApplicationChatDTO
            {
                ID = jobApplication.ID,
                JobTitle = jobApplication.Job.Title,
@@ -35,7 +35,7 @@ namespace PetHolidayWebApi.ModelExtensions
                Type = jobApplication.Job.Type.ToString(),
                OwnerUser = jobApplication.Job.OwnerUser.ToUserPreviewDTO(),
                ApplicantUser = jobApplication.ApplicantUser.ToUserPreviewDTO(),
-               DisplayPetPicture = jobApplication.Job.Pets.FirstOrDefault()?.Pet.Images?.FirstOrDefault()?.ToPetImage(),
+               DisplayPetPicture = jobApplication.Job.Pets.FirstOrDefault()?.Pet.Image,
                Comments = jobApplication.Comments.Select(s => s.ToJobApplicationCommentDTO()).ToList(),
            };
 

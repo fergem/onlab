@@ -12,7 +12,8 @@ namespace PetHolidayWebApi.ModelExtensions
                 UserName = user.UserName,
                 AccessToken = bearer,
                 Roles = role,
-                RefreshToken = user.RefreshToken
+                RefreshToken = user.RefreshToken,
+                Picture = user.Picture
             };
 
         public static UserDetailsDTO ToUserDetailsDTO(this User user) =>

@@ -12,7 +12,7 @@ namespace PetHolidayWebApi.ModelExtensions
                 Name = pet.Name,
                 Species = pet.Species,
                 Age = pet.Age,
-                Images = pet.Images.Select(s => s.ToPetImage()).ToList(),
+                Image = pet.Image,
             };
 
         public static PetDTO ToPetDTO(this PetJob petJob) =>
@@ -22,10 +22,7 @@ namespace PetHolidayWebApi.ModelExtensions
                Name = petJob.Pet.Name,
                Species = petJob.Pet.Species,
                Age = petJob.Pet.Age,
-               Images = petJob.Pet.Images.Select(s => s.ToPetImage()).ToList(),
+               Image = petJob.Pet.Image,
            };
-
-        public static byte[] ToPetImage(this PetImage petImage) =>
-            petImage.Picture;
     }
 }

@@ -14,9 +14,8 @@ namespace Domain.Repositories
     {
         Task<Pet> FindById(int petID);
         Task<IReadOnlyCollection<Pet>> List(int userID);
-        Task<Pet> Insert(InsertPetModel pet, int userID);
-        Task<Pet> InsertImages(int ID, UpdatePetImagesModel addPetImagesModel);
-        Task<Pet> Update(UpdatePetModel pet);
+        Task<Pet> Insert(InsertPetModel pet, byte[]? image, int userID);
+        Task<Pet> Update(UpdatePetModel pet, byte[]? image);
         Task Delete(int petID);
     }
 }

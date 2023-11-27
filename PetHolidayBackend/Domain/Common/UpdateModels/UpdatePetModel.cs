@@ -9,7 +9,8 @@ namespace Domain.Common.UpdateModels
     public class UpdatePetModel
     {
         public required int ID { get; set; }
-        public required string Name { get; set; }
-        public required int Age { get; set; }
+        public  string? Name { get; set; }
+        public int Age { get; set; }
+        public string? Species { get; set; }
     }
 }

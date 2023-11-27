@@ -44,7 +44,8 @@ namespace PetHolidayWebApi.ModelExtensions
                 CatCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Cat),
                 DogCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Dog),
                 OwnerUserPicture = job.OwnerUser.Picture,
-                DisplayPetPicture = job.Pets.FirstOrDefault()?.Pet.Images is not null ? job.Pets.FirstOrDefault()?.Pet.Images.FirstOrDefault()?.ToPetImage() : null
+                IsRepeated = job.Repeated,
+                DisplayPetPicture = job.Pets.FirstOrDefault()?.Pet.Image
             };
 
         public static PostedJobDTO ToPostedJobDTO(this Job job) =>
@@ -59,6 +60,24 @@ namespace PetHolidayWebApi.ModelExtensions
                 Description = job.Description,
                 Days = job.Days?.Select(d => d.ToString()).ToList(),
                 JobApplications = job.JobApplications.Select(s => s.ToPostedJobApplicationDTO()).ToList(),
+            };
+
+        public static UndertookJobDTO ToUndertookJobDTO(this Job job, int userID) =>
+            new UndertookJobDTO
+            {
+                ID = job.ID,
+                Title = job.Title,
+                Status = job.Status.ToString(),
+                Type = job.Type.ToString(),
+                StartDate = job.StartDate,
+                EndDate = job.EndDate,
+                Description = job.Description,
+                Days = job.Days?.Select(d => d.ToString()).ToList(),
+                ApplicationID = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == userID)?.ID,
+                ApplicationStatus = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == userID)?.Status.ToString(),
+                CatCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Cat),
+                DogCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Dog),
+                IsRepeated = job.Repeated,
             };
     }
 }

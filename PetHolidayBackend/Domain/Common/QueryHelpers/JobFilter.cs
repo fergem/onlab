@@ -11,7 +11,7 @@ namespace Domain.Common.QueryHelpers
 {
     public class JobFilter
     {
-        public JobType Type { get; set; }
+        public List<JobType>? Types { get; set; }
         public List<PetSpecies>? Species { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -21,8 +21,8 @@ namespace Domain.Common.QueryHelpers
 
         public ICollection<DaysOfWeek>? Days { get; set; }
 
-        public bool ValidRepeated => (Type == JobType.Visit || Type == JobType.Walking) && EndDate is null;
+       // public bool ValidRepeated => (Type == JobType.Visit || Type == JobType.Walking) && EndDate is null;
 
-        public bool ValidOnce => EndDate is not null;
+        //public bool ValidOnce => EndDate is not null;
     }
 }

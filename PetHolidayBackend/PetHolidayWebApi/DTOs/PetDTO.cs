@@ -8,6 +8,6 @@ namespace PetHolidayWebApi.DTOs
         public required string Name { get; set; }
         public required PetSpecies Species { get; set; }
         public required int Age { get; set; }
-        public required List<byte[]>? Images { get; set; }
+        public required byte[]? Image { get; set; }
     }
 }

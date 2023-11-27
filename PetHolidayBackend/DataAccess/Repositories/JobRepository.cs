@@ -71,38 +71,25 @@ namespace DataAccess.Repositories
                     .Where(s => s.Repeated == filter.Repeated)
                     .Where(s => s.Status == Status.Available);
 
-
-            //Filter by type
-            switch (filter.Type)
+            if(filter.Types is not null && filter.Types.Count > 0)
             {
-                case JobType.Boarding:
-                    query = query.Where(s => s.Type == JobType.Boarding);
-                    break;
-                case JobType.Walking:
-                    query = query.Where(s => s.Type == JobType.Walking);
-                    break;
-                case JobType.Sitting:
-                    query = query.Where(s => s.Type == JobType.Sitting);
-                    break;
-                case JobType.Visit:
-                    query = query.Where(s => s.Type == JobType.Visit);
-                    break;
-                default:
-                    break;
+                query = query.Where(job => filter.Types.Contains(job.Type));
             }
 
-           if(filter.Species is not null && filter.Species.Count > 0) query = query.Where(job => job.Pets.Any(petJob => filter.Species.Contains(petJob.Pet.Species)));
-           // if (filter.Repeated && filter.Days is not null) query = query.Where(job => job.Days.ToList().Any(day => filter.Days.ToList().Contains(day)));
+            if (filter.Species is not null && filter.Species.Count > 0) 
+            {
+                query = query.Where(job => job.Pets.Any(petJob => filter.Species.Contains(petJob.Pet.Species)));
+            }
 
-           var asd = await query.ToListAsync();
-
-           if (filter.Repeated && filter.Days is not null) asd = asd.Where(s => s.Days.Any(day => filter.Days.Contains(day))).ToList();
-
-
-            return asd.ToList();
+            if (filter.Repeated && filter.Days is not null) 
+            {
+                query = query.Where(s => s.Days.Any(day => filter.Days.Contains(day)));
+            }
+   
+            return await query.ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListRepeatablePostedJobs(int userID, JobFilterParticipant filter)
+        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterPosted filter)
         {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
@@ -112,28 +99,12 @@ namespace DataAccess.Repositories
                 .ThenInclude(s => s.ApplicantUser)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
-                .Where(s => s.Repeated)
+                .Where(s => filter.Repeated != null ? s.Repeated == filter.Repeated : true)
                 .OrderBy(s => (int)s.Status)
                 .ToListAsync();
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListNonRepeatablePostedJobs(int userID, JobFilterParticipant filter)
-        {
-            return await dbcontext.Jobs
-                .Include(s => s.OwnerUser)
-                .Include(s => s.Pets)
-                .ThenInclude(s => s.Pet)
-                .Include(s => s.JobApplications)
-                .ThenInclude(s => s.ApplicantUser)
-                .Where(s => s.OwnerUserID == userID)
-                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
-                .Where(s => !s.Repeated)
-                .OrderBy(s => (int)s.Status)
-                .ToListAsync();
-        }
-
-
-        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobFilterParticipant filter)
+        public async Task<IReadOnlyCollection<Job>> ListUnderTookJobs(int userID, JobApplicationFilter filter)
         {
             return await dbcontext.Jobs
                 .Include(s => s.OwnerUser)
@@ -141,7 +112,8 @@ namespace DataAccess.Repositories
                 .ThenInclude(s => s.Pet)
                 .Include(s => s.JobApplications)
                 .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
-                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
+                .Where(s => filter.JobStatus != Status.All ? s.Status == filter.JobStatus : true)
+                .Where(s => filter.JobApplicationStatus != JobApplicationStatus.All ? s.JobApplications.FirstOrDefault(k => k.ApplicantUserID == userID)!.Status == filter.JobApplicationStatus : true)
                 .ToListAsync();
         }
 
@@ -180,5 +152,6 @@ namespace DataAccess.Repositories
 
             throw new NotImplementedException();
         }
+
     } 
 }
