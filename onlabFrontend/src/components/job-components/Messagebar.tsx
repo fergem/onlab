@@ -1,13 +1,13 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
-import { JobApplicationUserAppliedTo } from "../../models/JobApplication";
+import { JobApplicationChat } from "../../models/JobApplication";
 import { JobApplicationComment } from "../../models/JobApplicationComment";
 import { baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
 
 interface IMessagebarProps {
-  appliedJob: JobApplicationUserAppliedTo;
+  appliedJob: JobApplicationChat;
   select(applicationID: number): void;
 }
 

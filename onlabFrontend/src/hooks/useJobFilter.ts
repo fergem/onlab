@@ -1,17 +1,12 @@
 import { DateValue } from "@mantine/dates";
-import {
-  CreateJobServiceModel,
-  Day,
-  Frequency,
-  JobFilter,
-  JobType,
-} from "../models/Job";
+import { Day, Frequency, JobFilter, JobType } from "../models/Job";
 import { PetSpecies } from "../models/Pet";
 
 interface IPropsJobFilterHooks {
-  jobFilter: JobFilter | CreateJobServiceModel;
-  setJobFilter(jobFilter: JobFilter | CreateJobServiceModel): void;
+  jobFilter: JobFilter;
+  setJobFilter(jobFilter: JobFilter): void;
 }
+export const JobFilterLocalStorageKey = "job_filter_key";
 
 export default function useJobFilter({
   jobFilter,
@@ -20,15 +15,18 @@ export default function useJobFilter({
   const handleSelectDays = (values: string[]) =>
     setJobFilter({ ...jobFilter, days: values as Day[] });
 
-  const handleSelectJobType = (value: string) => {
-    const jobType = value as JobType;
-    setJobFilter({
-      ...jobFilter,
-      type: jobType,
-      repeated:
-        !(jobType === JobType.Sitting || jobType === JobType.Boarding) &&
-        jobFilter.repeated,
-    });
+  const handleSelectJobType = (values: string[]) => {
+    const newValues = values as JobType[];
+    if (
+      newValues.includes(JobType.Boarding) ||
+      newValues.includes(JobType.Sitting)
+    ) {
+      setJobFilter({ ...jobFilter, types: newValues, repeated: false });
+    } else if (newValues.length === 0) {
+      setJobFilter({ ...jobFilter, types: newValues, repeated: false });
+    } else {
+      setJobFilter({ ...jobFilter, types: newValues });
+    }
   };
 
   const handleSelectPetSpecies = (value: string[]) =>
@@ -57,6 +55,7 @@ export default function useJobFilter({
   };
 
   return {
+    jobFilter,
     handleSelectDays,
     handleSelectJobType,
     handleSelectRepeatable,

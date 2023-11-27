@@ -19,7 +19,7 @@ const useNotification = () => {
       }),
     });
 
-  const error = (message: string) =>
+  const error = (message?: string) =>
     notifications.show({
       withCloseButton: true,
       autoClose: 4000,

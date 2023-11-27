@@ -3,11 +3,13 @@ import { useState } from "react";
 import { useGetUserPets } from "../../hooks/react-query/UserHooks";
 import { Pet } from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
+import { ImageFunctions } from "../../utility/image";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import EditPet from "./EditPet";
 
 interface IPropsPetGrid {
   pets?: Pet[];
+  editable?: boolean;
 }
 
 export default function PetListLoadingPets() {
@@ -24,32 +26,34 @@ export default function PetListLoadingPets() {
   );
 }
 
-export function PetGrid({ pets }: IPropsPetGrid) {
+export function PetGrid({ pets, editable }: IPropsPetGrid) {
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
   const handleSelectPet = (pet: Pet | null) => {
-    setSelectedPet(pet);
+    if (editable) setSelectedPet(pet);
   };
 
   const handleDeselectPet = () => {
-    setSelectedPet(null);
+    if (editable) setSelectedPet(null);
   };
 
   return (
     <Stack align="center">
       {!selectedPet && (
         <Grid justify="center">
-          {pets?.map((x) => (
+          {pets?.map((pet) => (
             <Grid.Col
               span="content"
-              key={x.id}
-              onClick={() => handleSelectPet(x)}
+              key={pet.id}
+              onClick={() => handleSelectPet(pet)}
             >
-              <PetCard pet={x} />
+              <PetCard pet={pet} />
             </Grid.Col>
           ))}
         </Grid>
       )}
-      {selectedPet && <EditPet pet={selectedPet} back={handleDeselectPet} />}
+      {editable && selectedPet && (
+        <EditPet pet={selectedPet} back={handleDeselectPet} />
+      )}
     </Stack>
   );
 }
@@ -66,11 +70,7 @@ export function PetCard({ pet }: IPropsPetCard) {
           height="8vw"
           width="8vw"
           radius="md"
-          src={
-            pet.images && pet.images.length > 0
-              ? `data:image/png;base64,${pet?.images[0]}`
-              : basePetPicture
-          }
+          src={ImageFunctions.toDisplayImage(basePetPicture, pet.image)}
           alt="Green double couch with wooden legs"
         />
 

@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { JobApplicationFilter } from "../../models/Filters";
 import {
   JobApplication,
-  JobApplicationUserAppliedTo,
+  JobApplicationChat,
 } from "../../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../../models/JobApplicationComment";
 import JobApplicationService from "../../services/JobApplicationService";
@@ -104,12 +104,9 @@ export const useApplyToJob = () => {
     },
     {
       onSuccess: (newAppliction) => {
-        if (newAppliction)
-          queryClient.setQueryData(
-            ["query-applications", newAppliction.id],
-            newAppliction
-          );
-        queryClient.invalidateQueries("query-jobs");
+        if (newAppliction) {
+          queryClient.invalidateQueries("query-applications");
+        }
       },
       onError: (error: Error) => notifications.error(error.message),
     }
@@ -155,10 +152,8 @@ export const useApproveApplicationForJob = () => {
             ["query-applications", { id: approvedApplication.id }],
             approvedApplication
           );
-        queryClient.invalidateQueries([
-          "query-posted-nonrepeated",
-          "query-posted-repeated",
-        ]);
+        queryClient.invalidateQueries("query-posted-nonrepeated");
+        queryClient.invalidateQueries("query-posted-repeated");
       },
       onError: (error: Error) => notifications.error(error.message),
     }
@@ -170,9 +165,7 @@ export const useApproveApplicationForJob = () => {
 export const useJobApplicationsUserAppliedTo = (
   filter?: JobApplicationFilter
 ) => {
-  const [appliedJobs, setAppliedJobs] = useState<JobApplicationUserAppliedTo[]>(
-    []
-  );
+  const [appliedJobs, setAppliedJobs] = useState<JobApplicationChat[]>([]);
   const {
     isLoading: loading,
     refetch: listAppliedJobs,

@@ -61,11 +61,13 @@ export default function EditOwnerProfile({
               : "$ "
           }
           miw="250px"
+          min={0}
           {...form.getInputProps("wage")}
         />
         <NumberInput
           label="Min. required years of exp. for petsitter"
           miw="250px"
+          min={0}
           {...form.getInputProps("experience")}
         />
         <Button type="submit" disabled={updateDisabled}>

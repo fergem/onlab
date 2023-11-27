@@ -28,7 +28,7 @@ const updatePassword = async (password: string) => {
   return response.data;
 };
 
-const insertPet = async ({ name, species, age, images }: PetInsertModel) => {
+const insertPet = async ({ name, species, age, image: images }: PetInsertModel) => {
   const result = await apiInstance.post<Pet>("/users/addpet", {
     name,
     species,

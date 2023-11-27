@@ -3,14 +3,14 @@ export interface Pet {
   name: string;
   species: PetSpecies;
   age: number;
-  images?: string[];
+  image?: string;
 }
 
 export interface PetInsertModel {
   name: string;
   species: PetSpecies;
   age: number;
-  images?: File[];
+  image?: File;
 }
 
 export interface PetUpdateModel {

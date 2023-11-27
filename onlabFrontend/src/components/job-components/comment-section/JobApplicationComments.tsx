@@ -49,6 +49,7 @@ export default function JobApplicationComments({
   const handleCommentUpdate = () => {
     queryClient.invalidateQueries("query-applications");
     queryClient.invalidateQueries("query-usersAppliedTo");
+    queryClient.invalidateQueries("query-u");
     // queryClient.invalidateQueries(["query-usersAppliedTo"]);
   };
 

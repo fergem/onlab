@@ -1,45 +1,37 @@
 import { Badge, Tooltip } from "@mantine/core";
-import { Status } from "../../models/Job";
+import { JobApplicationStatus } from "../../models/JobApplication";
 
 interface IPropsStatusBadge {
-  status: Status;
+  status: JobApplicationStatus;
   ml?: string;
 }
 
 export default function JobStatusBadge({
   status,
-  ml = "0",
+  ml = "10",
 }: IPropsStatusBadge) {
   switch (status) {
-    case Status.Available:
+    case JobApplicationStatus.Approving:
       return (
-        <Tooltip label="Status of job">
+        <Tooltip label="Status of application">
           <Badge color="green" size="sm" variant="filled" ml={ml}>
-            Available
+            Approving
           </Badge>
         </Tooltip>
       );
-    case Status.Upcoming:
+    case JobApplicationStatus.Approved:
       return (
-        <Tooltip label="Status of job">
+        <Tooltip label="Status of application">
           <Badge color="blue" size="sm" variant="filled" ml={ml}>
-            Upcoming
+            Approved
           </Badge>
         </Tooltip>
       );
-    case Status.Done:
+    case JobApplicationStatus.Canceled:
       return (
-        <Tooltip label="Status of job">
-          <Badge color="indigo" size="sm" variant="filled" ml={ml}>
-            Done
-          </Badge>
-        </Tooltip>
-      );
-    case Status.Canceled:
-      return (
-        <Tooltip label="Status of job">
+        <Tooltip label="Status of application">
           <Badge color="red" size="sm" variant="filled" ml={ml}>
-            Done
+            Canceled
           </Badge>
         </Tooltip>
       );

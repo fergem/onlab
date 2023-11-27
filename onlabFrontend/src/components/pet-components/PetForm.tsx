@@ -10,11 +10,11 @@ import {
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import {
-  getPetSpeciesValueLabel,
   Pet,
   PetInsertModel,
   PetSpecies,
   PetValidation,
+  getPetSpeciesValueLabel,
 } from "../../models/Pet";
 import PetImageSelect from "./PetImageSelect";
 
@@ -45,7 +45,7 @@ export default function PetForm({ onCancel, onConfirm }: IAddPetProps) {
   });
 
   const handleOnConfirm = (valuePet: Pet) => {
-    onConfirm({ ...valuePet, images: petImage });
+    onConfirm({ ...valuePet, image: petImage });
   };
   return (
     <Stack>

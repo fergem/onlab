@@ -1,8 +1,5 @@
 import { JobApplicationFilter } from "../models/Filters";
-import {
-  JobApplication,
-  JobApplicationUserAppliedTo,
-} from "../models/JobApplication";
+import { JobApplication, JobApplicationChat } from "../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../models/JobApplicationComment";
 import apiInstance from "./api";
 
@@ -14,7 +11,7 @@ const getAllForJob = async (jobID: string | undefined) => {
 };
 
 const jobApplicationsUserAppliedTo = async (filter?: JobApplicationFilter) => {
-  const response = await apiInstance.get<JobApplicationUserAppliedTo[]>(
+  const response = await apiInstance.get<JobApplicationChat[]>(
     "jobapplications/appliedto",
     {
       params: filter,

@@ -1,8 +1,8 @@
 export const baseProfilePicture =
-  "https://i.pinimg.com/550x/8f/6d/5c/8f6d5c365c7c29d9dab1ad219ca8eb70.jpg";
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXKlmqzqwaLCxnSlx-gG80Yt4OL5lUomYzRQ&usqp=CAU";
 
 export const basePetPicture =
-  "https://media.istockphoto.com/id/873088954/vector/large-and-small-paw-paw-prints-seamless-pattern.jpg?s=612x612&w=0&k=20&c=6bMLmmC0H0MAuvoo2zhtByC9Mxq5VbcxzOh6NWvA7Ic=";
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRanC5jwsMq8UoQInIWqAoHysG-GNIpK69qDQ&usqp=CAU";
 
 export const addPetImage =
   "https://cdn-icons-png.flaticon.com/512/32/32339.png";

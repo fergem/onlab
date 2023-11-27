@@ -1,7 +1,6 @@
 import {
   Avatar,
   Button,
-  Center,
   Group,
   Image,
   Paper,
@@ -9,11 +8,13 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/react-query/AuthHooks";
 import { JobPreview } from "../../models/Job";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
+import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
 import { PetCountWithIcon } from "./JobDetail";
 
 export interface IPropsJobList {
@@ -54,13 +55,17 @@ export function JobCard({ job }: IPropsJobCard) {
   const navigateToJob = () => {
     navigate(`/jobs/${job.id}`);
   };
+  const isDesktop = useMediaQuery("(min-width: 56.25em)");
+  const imageSize = isDesktop ? "200px" : "250px";
+  const avatarSize = "75px";
+
   return (
     <Paper shadow="sm" p="xs" withBorder>
-      <Stack maw="250px" justify="center">
-        <Center sx={() => ({ position: "relative" })}>
+      <Stack maw={isDesktop ? "225px" : "100%"} justify="center" spacing={25}>
+        <Stack align="center" sx={() => ({ position: "relative" })}>
           <Image
-            width="13vw"
-            height="13vw"
+            width={imageSize}
+            height={imageSize}
             radius="md"
             src={
               job.displayPetPicture
@@ -76,15 +81,15 @@ export function JobCard({ job }: IPropsJobCard) {
                 : baseProfilePicture
             }
             radius="100%"
-            h="5vw"
-            w="5vw"
+            h={avatarSize}
+            w={avatarSize}
             sx={() => ({
               position: "absolute",
               bottom: "-25px",
               right: "-5px",
             })}
           />
-        </Center>
+        </Stack>
 
         <Stack justify="top" mx="10%" align="left" spacing={1}>
           <Title order={3} lineClamp={1}>
@@ -109,10 +114,10 @@ export function JobCard({ job }: IPropsJobCard) {
             </>
           )}
           <Text size="sm">{job.location}</Text>
-          <Group position="apart">
+          <Group position="center">
             <PetCountWithIcon catCount={job.catCount} dogCount={job.dogCount} />
-
-            <Button onClick={navigateToJob} size="xs">
+            {job.isRepeated && <RepeatedJobIcon />}
+            <Button onClick={navigateToJob} size="xs" ml="auto">
               Details
             </Button>
           </Group>

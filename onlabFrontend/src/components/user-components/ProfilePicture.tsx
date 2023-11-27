@@ -1,4 +1,4 @@
-import { FileInput, Image, Transition, rem } from "@mantine/core";
+import { Avatar, FileInput, Transition, rem } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
 import { useState } from "react";
 import { useUserProfilePictureUpload } from "../../hooks/react-query/UserHooks";
@@ -42,12 +42,12 @@ export default function ProfilePicture({ picture }: IPropsProfilePicture) {
         margin: "auto",
       }}
     >
-      <Image
+      <Avatar
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseLeave}
         radius="md"
-        width="15vw"
-        height="15vw"
+        w="15vw"
+        h="15vw"
         src={picture ? `data:image/png;base64,${picture}` : baseProfilePicture}
         alt="Your Profile Picture"
       />

@@ -24,23 +24,18 @@ const register = async (registerModel: RegisterModel) => {
 
 const logout = async () => {
   return apiInstance.post("/users/logout").then(() => {
-    apiInstance.defaults.headers.common.Authorization = " ";
+    delete apiInstance.defaults.headers.common.Authorization;
   });
 };
 
-const updateUserToken = async (token: RefreshTokenModel) => {
-  const response = await apiInstance.post<RefreshTokenModel>(
-    "/users/refresh-token",
-    token
-  );
+const updateUserToken = async (token: RefreshTokenModel) =>
+  apiInstance.post<RefreshTokenModel>("/users/refresh-token", token);
 
-  return response.data;
-};
 const AuthService = {
   register,
   login,
   logout,
-  updateUserToken,
+  refreshToken: updateUserToken,
 };
 
 export default AuthService;

@@ -6,19 +6,21 @@ import {
   Stack,
   Text,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { useEffect } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import useNotification from "../../hooks/useNotification";
 import { RegisterModel, UserValidation } from "../../models/User";
 
+const REGISTRATION_HEIGHT = 568;
+
 export default function RegisterForm() {
-  const navigate: NavigateFunction = useNavigate();
+  const navigate = useNavigate();
   const { registerUser } = useAuth();
   const notification = useNotification();
-  // const [roles, setRoles] = useState<UserRoles[]>([]);
 
   const form = useForm({
     initialValues: {
@@ -41,6 +43,7 @@ export default function RegisterForm() {
       isPetSitter: (val, vals) =>
         UserValidation.roleValidation(val, vals.isOwner),
     },
+    validateInputOnBlur: true,
   });
 
   const handleRegister = (registerModel: RegisterModel) => {
@@ -61,29 +64,16 @@ export default function RegisterForm() {
       form.validateField("isOwner");
       form.validateField("isPetSitter");
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.isOwner, form.values.isPetSitter]);
 
   return (
-    <Paper shadow="sm" p="xl">
+    <Paper shadow="sm" p="xl" withBorder>
       <form onSubmit={form.onSubmit(handleRegister)}>
-        <Stack>
-          <Stack align="center" spacing={0}>
-            <Text>Please choose the roles you want to take</Text>
-            <Text fz={13}>(You can take both)</Text>
-            <Group mt="xs" miw="250px" position="center">
-              <Checkbox
-                {...form.getInputProps("isOwner", { type: "checkbox" })}
-                label="Owner"
-              />
-
-              <Checkbox
-                {...form.getInputProps("isPetSitter", { type: "checkbox" })}
-                label="Pet Sitter"
-              />
-            </Group>
-          </Stack>
+        <Stack mih={REGISTRATION_HEIGHT} justify="space-between">
+          <Title order={2} align="center">
+            Registration
+          </Title>
           <Group noWrap miw="250px">
             <TextInput
               withAsterisk
@@ -98,6 +88,19 @@ export default function RegisterForm() {
               {...form.getInputProps("lastName")}
             />
           </Group>
+          <Stack align="center" spacing={0}>
+            <Text>Please choose the roles you want to take</Text>
+            <Group mt="xs" miw="250px" position="center">
+              <Checkbox
+                {...form.getInputProps("isOwner", { type: "checkbox" })}
+                label="Owner"
+              />
+              <Checkbox
+                {...form.getInputProps("isPetSitter", { type: "checkbox" })}
+                label="Pet Sitter"
+              />
+            </Group>
+          </Stack>
           <TextInput
             withAsterisk
             label="Email"
@@ -115,7 +118,7 @@ export default function RegisterForm() {
           <TextInput
             withAsterisk
             label="Password"
-            placeholder="blabla123"
+            placeholder="yourpassword"
             type="password"
             {...form.getInputProps("password")}
             miw="250px"

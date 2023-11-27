@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Burger,
   Button,
   Group,
@@ -6,31 +7,35 @@ import {
   Menu,
   Tabs,
   TabsValue,
+  Text,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconBriefcase,
   IconLogout,
+  IconMessage,
   IconNote,
   IconShare,
   IconUser,
 } from "@tabler/icons-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import useDrawer from "../../hooks/useDrawer";
 import { UserRole } from "../../models/User";
 import { ArrayFunctions } from "../../utility/array";
+import { baseProfilePicture } from "../../utility/constants";
+import { ImageFunctions } from "../../utility/image";
 
 export default function HeaderPetHoliday() {
   const { user, logoutUser } = useAuth();
 
   const [opened, { toggle }] = useDisclosure(false);
+
   const navigate = useNavigate();
-  const { tabValue } = useParams();
+  const location = useLocation();
 
   const matches = useMediaQuery("(min-width: 56.25em)");
   const label = opened ? "Close navigation" : "Open navigation";
-
   const { open } = useDrawer();
 
   const handleTabNavigate = (route: TabsValue) => {
@@ -38,6 +43,7 @@ export default function HeaderPetHoliday() {
       logoutUser();
       navigate("/");
     } else {
+      console.log(route);
       navigate(`${route}`);
     }
   };
@@ -79,15 +85,15 @@ export default function HeaderPetHoliday() {
             </g>
           </svg>
         </Link>
+
         {matches && (
           <Tabs
-            value={tabValue}
+            value={location.pathname}
             onTabChange={handleTabNavigate}
             variant="pills"
             radius={0}
           >
             <Tabs.List h="75px" position="apart">
-              {user && <Tabs.Tab value="/profile">Profile</Tabs.Tab>}
               <Tabs.Tab value="/jobs">Jobs</Tabs.Tab>
               {user &&
                 ArrayFunctions.safeIncludes(user.roles, UserRole.Owner) && (
@@ -104,16 +110,27 @@ export default function HeaderPetHoliday() {
               )}
               {!!user === false && <Tabs.Tab value="/login">Login</Tabs.Tab>}
               {user && (
-                <Tabs.Tab value="/logout" ml="30vw">
-                  Logout
+                <Tabs.Tab value="/profile" ml="30vw">
+                  <Group align="center" position="center">
+                    <Avatar
+                      src={ImageFunctions.toDisplayImage(
+                        baseProfilePicture,
+                        user.picture
+                      )}
+                      radius="100%"
+                    />
+                    <Text>{user.userName}</Text>
+                  </Group>
                 </Tabs.Tab>
               )}
+              {user && <Tabs.Tab value="/logout">Logout</Tabs.Tab>}
             </Tabs.List>
           </Tabs>
         )}
+        {matches && user && <Button onClick={open}>Messages</Button>}
 
         {!matches && (
-          <Menu width="13vw">
+          <Menu width="13vw" onClose={toggle}>
             <Menu.Target>
               <Burger opened={opened} onClick={toggle} aria-label={label} />
             </Menu.Target>
@@ -138,16 +155,21 @@ export default function HeaderPetHoliday() {
                 </Link>
               )}
 
-              {!!user === false && (
+              {!user && (
                 <Link style={{ textDecoration: "none" }} to="/register">
                   <Menu.Item>Register</Menu.Item>
                 </Link>
               )}
 
-              {!!user === false && (
+              {!user && (
                 <Link style={{ textDecoration: "none" }} to="/login">
                   <Menu.Item>Login</Menu.Item>
                 </Link>
+              )}
+              {user && (
+                <Menu.Item onClick={open} icon={<IconMessage />}>
+                  Messages
+                </Menu.Item>
               )}
               {user && (
                 <Menu.Item onClick={logoutUser} icon={<IconLogout />}>
@@ -157,7 +179,6 @@ export default function HeaderPetHoliday() {
             </Menu.Dropdown>
           </Menu>
         )}
-        <Button onClick={open}>Messages</Button>
       </Group>
     </Header>
   );

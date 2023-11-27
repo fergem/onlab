@@ -1,8 +1,19 @@
-import { Accordion, Group, Paper, Select, Stack, Title } from "@mantine/core";
+import {
+  Accordion,
+  ActionIcon,
+  Group,
+  Paper,
+  Select,
+  Stack,
+  Title,
+  Tooltip,
+} from "@mantine/core";
+import { IconId, IconMoodSad } from "@tabler/icons-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
-  DefaultJobFilterParticipant,
+  DefaultJobFilterDetails,
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
@@ -13,7 +24,7 @@ import JobUserTable from "./AvailableJobUserTable";
 import RepeatedPostedJobDetails from "./RepeadtedPostedJobDetails";
 
 export default function RepeatedSection() {
-  const [filter, setFilter] = useState(DefaultJobFilterParticipant);
+  const [filter, setFilter] = useState(DefaultJobFilterDetails);
   const {
     repeatableJobs,
     repeatableError,
@@ -24,6 +35,7 @@ export default function RepeatedSection() {
   const handleSetStatus = (status: string) => {
     setFilter({ status: status as Status });
   };
+  const navigate = useNavigate();
 
   return (
     <Paper p="md" shadow="sm" withBorder>
@@ -50,26 +62,44 @@ export default function RepeatedSection() {
           multiple
           radius="md"
         >
-          {repeatableJobs.map((s) => (
-            <Accordion.Item value={s.id.toString()} key={s.id}>
-              <Accordion.Control>
-                <Group>
-                  <Title order={3}>{s.title}</Title>
-                  <JobChipIcon jobType={s.type} />
-                  <JobStatusBadge status={s.status} ml="auto" />
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack>
-                  <RepeatedPostedJobDetails job={s} />
-                  <JobUserTable
-                    jobApplications={s.jobApplications}
-                    jobStatus={s.status}
-                  />
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          ))}
+          {repeatableJobs.length === 0 && (
+            <Stack align="center" justify="center" my={20}>
+              <IconMoodSad size={150} />
+              <Title order={3} size={30}>
+                No jobs to show
+              </Title>
+            </Stack>
+          )}
+          {repeatableJobs.map((s) => {
+            const navigateToJob = () => {
+              navigate(`/jobs/${s.id}`);
+            };
+            return (
+              <Accordion.Item value={s.id.toString()} key={s.id}>
+                <Accordion.Control>
+                  <Group>
+                    <Title order={3}>{s.title}</Title>
+                    <JobChipIcon jobType={s.type} withTooltip />
+                    <Tooltip label="See details">
+                      <ActionIcon onClick={navigateToJob} ml="auto">
+                        <IconId />
+                      </ActionIcon>
+                    </Tooltip>
+                    <JobStatusBadge status={s.status} />
+                  </Group>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Stack>
+                    <RepeatedPostedJobDetails job={s} />
+                    <JobUserTable
+                      jobApplications={s.jobApplications}
+                      jobStatus={s.status}
+                    />
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
+            );
+          })}
         </Accordion>
       </LoadingBoundary>
     </Paper>

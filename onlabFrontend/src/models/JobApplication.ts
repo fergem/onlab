@@ -3,9 +3,9 @@ import { UserDetails, UserPreview } from "./User";
 
 export interface JobApplication {
   id: number;
+  status: JobApplicationStatus;
   comments?: JobApplicationComment[];
   applicantUser: UserPreview;
-  status: JobApplicationStatus;
 }
 
 export interface PostedJobApplication {
@@ -21,12 +21,16 @@ export enum JobApplicationStatus {
   Canceled = "Canceled",
 }
 
-export interface JobApplicationUserAppliedTo extends JobApplication {
+export interface JobApplicationChat {
+  id: number;
+  status: JobApplicationStatus;
+  comments?: JobApplicationComment[];
   jobTitle: string;
   startDate: Date;
   endDate?: Date;
   type: string;
   repeated: boolean;
+  applicantUser: UserPreview;
   ownerUser: UserPreview;
   displayPetPicture?: string;
 }

@@ -1,17 +1,16 @@
 import {
   Checkbox,
-  Container,
   Divider,
   Group,
   MultiSelect,
   Paper,
-  Select,
   Stack,
   Text,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
+import { useMediaQuery } from "@mantine/hooks";
 import useJobFilter from "../../hooks/useJobFilter";
-import { Day, JobFilter, getJobTypes } from "../../models/Job";
+import { Day, JobFilter, JobFunctions } from "../../models/Job";
 import { PetSpecies } from "../../models/Pet";
 import { ChipFrequency } from "./JobHomeFilter";
 
@@ -31,18 +30,12 @@ export default function JobPageFilter({
     handleSelectPetSpecies,
     handleSelectStartDate,
     handleSelectEndDate,
-  } = useJobFilter({
-    jobFilter,
-    setJobFilter,
-  });
+  } = useJobFilter({ jobFilter, setJobFilter });
+  const isDesktop = useMediaQuery("(min-width: 56.25em)");
 
   return (
-    <Container
-      sx={() => ({ position: "fixed", top: "150px", left: "50px" })}
-      w="25vw"
-      h="40vw"
-    >
-      <Paper shadow="sm" p="sm" withBorder>
+    <Stack w={isDesktop ? "20vw" : "100%"} h={isDesktop ? "40vw" : "100%"}>
+      <Paper shadow="sm" p="xs" withBorder>
         <Text fz="md" align="left">
           Search for:
         </Text>
@@ -58,12 +51,12 @@ export default function JobPageFilter({
               ))}
             </Group>
           </Checkbox.Group>
-          <Select
-            value={jobFilter.type}
+          <MultiSelect
+            value={jobFilter.types}
             onChange={handleSelectJobType}
-            data={getJobTypes()}
-            label="Type of job"
-            placeholder="Pick type"
+            data={JobFunctions.getJobTypes()}
+            label="Types of job"
+            placeholder="Pick job types"
             radius="md"
             transitionProps={{
               transition: "pop-top-left",
@@ -73,7 +66,7 @@ export default function JobPageFilter({
           />
           <ChipFrequency
             handleSetRepeatable={handleSelectRepeatable}
-            jobType={jobFilter.type}
+            jobType={jobFilter.types}
             repeated={jobFilter.repeated}
           />
           {jobFilter.repeated && (
@@ -122,6 +115,6 @@ export default function JobPageFilter({
           </Group>
         </Stack>
       </Paper>
-    </Container>
+    </Stack>
   );
 }

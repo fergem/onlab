@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetNonRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
-  DefaultJobFilterParticipant,
+  DefaultJobFilterDetails,
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
@@ -24,7 +24,7 @@ import JobUserTable from "./AvailableJobUserTable";
 import NonRepeatedPostedJobDetails from "./NonRepeatedPostedJobDetails";
 
 export default function NonRepeatedSection() {
-  const [filter, setFilter] = useState(DefaultJobFilterParticipant);
+  const [filter, setFilter] = useState(DefaultJobFilterDetails);
   const {
     nonRepeatableJobs,
     errorNonRepeatedJobs,
@@ -79,7 +79,7 @@ export default function NonRepeatedSection() {
                 <Accordion.Control>
                   <Group>
                     <Title order={3}>{s.title}</Title>
-                    <JobChipIcon jobType={s.type} />
+                    <JobChipIcon jobType={s.type} withTooltip />
                     <Tooltip label="See details">
                       <ActionIcon onClick={navigateToJob} ml="auto">
                         <IconId />

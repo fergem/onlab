@@ -12,7 +12,7 @@ export const DefaultJobApplicationFilter: JobApplicationFilter = {
 };
 
 export const DefaultJobApplicationtData = [
-  { value: JobApplicationStatus.All, label: JobApplicationStatus.All },
+  { value: JobApplicationStatus.All, label: "All applications" },
   {
     value: JobApplicationStatus.Approved,
     label: JobApplicationStatus.Approved,

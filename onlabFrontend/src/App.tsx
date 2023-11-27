@@ -1,14 +1,13 @@
 import { AppShell } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AxiosInterceptor from "./components/interceptor/AxiosInterceptor";
 import JobDetail from "./components/job-components/JobDetail";
-import AuthVerify from "./components/user-components/AuthVerify";
 import HeaderPetHoliday from "./components/utility-components/HeaderPetHoliday";
 import MessagesDrawer from "./components/utility-components/MessagesDrawer";
 import AuthContext from "./context/AuthContext";
 import MessagesOpenContext from "./context/MessagesContext";
-import { User } from "./models/User";
+import { User, UserRole } from "./models/User";
 import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
@@ -17,36 +16,73 @@ import OwnerProfile from "./pages/PostedJobs";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import UndertookJobs from "./pages/UndertookJobs";
+import { ArrayFunctions } from "./utility/array";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const val = useMemo(() => ({ user, setUser }), [user]);
+  const userContext = useMemo(() => ({ user, setUser }), [user]);
 
   const [opened, setOpened] = useState<boolean>(false);
-  const val2 = useMemo(() => ({ opened, setOpened }), [opened]);
+  const drawerOpenedContext = useMemo(() => ({ opened, setOpened }), [opened]);
   return (
-    <AuthContext.Provider value={val}>
-      <MessagesOpenContext.Provider value={val2}>
+    <AuthContext.Provider value={userContext}>
+      <MessagesOpenContext.Provider value={drawerOpenedContext}>
         <AppShell navbarOffsetBreakpoint="sm" header={<HeaderPetHoliday />}>
           <AxiosInterceptor>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/jobs" element={<Jobs />} />
-              <Route path="/profile" element={<Profile />} />
+
+              <Route
+                path="/profile"
+                element={userContext.user ? <Profile /> : <Navigate to="/" />}
+              />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/postedjobs" element={<OwnerProfile />} />
-              <Route path="/undertookjobs" element={<UndertookJobs />} />
+              <Route
+                path="/postedjobs"
+                element={
+                  ArrayFunctions.safeIncludes(
+                    userContext.user?.roles,
+                    UserRole.Owner
+                  ) ? (
+                    <OwnerProfile />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/undertookjobs"
+                element={
+                  ArrayFunctions.safeIncludes(
+                    userContext.user?.roles,
+                    UserRole.PetSitter
+                  ) ? (
+                    <UndertookJobs />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
               <Route path="/jobs/:id" element={<JobDetail />} />
               <Route
                 path="/createpetsitterjob"
-                element={<CreatePetSitterJob />}
+                element={
+                  ArrayFunctions.safeIncludes(
+                    userContext.user?.roles,
+                    UserRole.Owner
+                  ) ? (
+                    <CreatePetSitterJob />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
               />
             </Routes>
           </AxiosInterceptor>
           {user && <MessagesDrawer />}
         </AppShell>
-        <AuthVerify />
       </MessagesOpenContext.Provider>
     </AuthContext.Provider>
   );

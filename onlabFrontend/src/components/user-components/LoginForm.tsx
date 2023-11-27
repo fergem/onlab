@@ -1,9 +1,9 @@
-import { Button, Paper, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { Button, Paper, Stack, TextInput, Title } from "@mantine/core";
+import { isNotEmpty, useForm } from "@mantine/form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import useNotification from "../../hooks/useNotification";
-import { LoginModel, UserValidation } from "../../models/User";
+import { LoginModel } from "../../models/User";
 
 export default function LoginForm() {
   const navigate: NavigateFunction = useNavigate();
@@ -17,8 +17,8 @@ export default function LoginForm() {
       password: "",
     },
     validate: {
-      userName: (val) => UserValidation.userNameValidation(val),
-      password: (val) => UserValidation.passwordValidation(val),
+      userName: isNotEmpty("Enter a username"),
+      password: isNotEmpty("Enter a password"),
     },
   });
 
@@ -29,20 +29,26 @@ export default function LoginForm() {
         notification.success("Successful login");
       })
       .catch((error) => {
-        const resMessage =
-          error?.response?.data?.message || error.message || error.toString();
-        notification.error(resMessage);
-        form.setErrors({
-          userName: "User does not exist",
-          password: "User does not exist",
-        });
+        notification.error(error.response.data);
+        if (error.response.data === "User not exists") {
+          form.setErrors({
+            userName: "User not exists",
+          });
+        } else if (error.response.data === "Incorrect password") {
+          form.setErrors({
+            password: "Incorrect password",
+          });
+        }
       });
   };
 
   return (
-    <Paper shadow="sm" p="xl">
+    <Paper shadow="sm" p="xl" withBorder>
       <form onSubmit={form.onSubmit(handleLogin)}>
         <Stack>
+          <Title order={3} align="center" mb={10}>
+            Login
+          </Title>
           <TextInput
             withAsterisk
             label="Username"
@@ -52,7 +58,7 @@ export default function LoginForm() {
           <TextInput
             withAsterisk
             label="Password"
-            placeholder="blabla123"
+            placeholder="yourpassword"
             type="password"
             {...form.getInputProps("password")}
           />

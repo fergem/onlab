@@ -1,10 +1,12 @@
+import { JobApplicationFilter } from "../models/Filters";
 import {
   CreateJobModel,
   JobDetails,
   JobFilter,
-  JobFilterParticipant,
+  JobFilterDetails,
   JobPreview,
   PostedJob,
+  UndertookJob,
 } from "../models/Job";
 import apiInstance from "./api";
 
@@ -23,37 +25,26 @@ const list = async (filter: JobFilter) => {
   return response.data;
 };
 
-const listNonRepeatedPostedJobs = async (filter: JobFilterParticipant) => {
-  const response = await apiInstance.get<PostedJob[]>(
-    `/jobs/posted-nonrepeated?`,
-    {
-      params: filter,
-    }
-  );
-  return response.data;
-};
-
-const listRepeatedPostedJobs = async (filter: JobFilterParticipant) => {
-  const response = await apiInstance.get<PostedJob[]>(
-    `/jobs/posted-repeated?`,
-    {
-      params: filter,
-    }
-  );
-  return response.data;
-};
-
-const listUsersUndertookJobs = async (filter: JobFilterParticipant) => {
-  const response = await apiInstance.get<JobPreview[]>("/jobs/undertook", {
-    params: filter,
+const listNonRepeatedPostedJobs = async (filter: JobFilterDetails) => {
+  const response = await apiInstance.get<PostedJob[]>(`/jobs/posted`, {
+    params: { ...filter, repeated: false },
   });
   return response.data;
 };
 
-// const listApprovals = async () => {
-//   const response = await axios.get<Job[]>("/api/jobs/approvals");
-//   return response.data;
-// };
+const listRepeatedPostedJobs = async (filter: JobFilterDetails) => {
+  const response = await apiInstance.get<PostedJob[]>(`/jobs/posted`, {
+    params: { ...filter, repeated: true },
+  });
+  return response.data;
+};
+
+const listUndertookJobs = async (filter: JobApplicationFilter) => {
+  const response = await apiInstance.get<UndertookJob[]>("/jobs/undertook", {
+    params: filter,
+  });
+  return response.data;
+};
 
 const createJob = async (jobModel: CreateJobModel) => {
   const response = await apiInstance.post<JobPreview>("/jobs", jobModel);
@@ -90,7 +81,7 @@ const JobService = {
   createJob,
   listNonRepeatedPostedJobs,
   listRepeatedPostedJobs,
-  listUsersUndertookJobs,
+  listUndertookJobs,
   // takeJob,
   // approveJob,
   // declineJob,

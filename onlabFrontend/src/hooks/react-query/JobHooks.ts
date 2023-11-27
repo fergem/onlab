@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { JobApplicationFilter } from "../../models/Filters";
 import {
   CreateJobModel,
   JobDetails,
   JobFilter,
-  JobFilterParticipant,
+  JobFilterDetails,
   JobPreview,
   PostedJob,
+  UndertookJob,
 } from "../../models/Job";
 import JobService from "../../services/JobService";
 import useNotification from "../useNotification";
@@ -19,7 +21,7 @@ export const useGetJob = (id?: string) => {
     isError: error,
     data,
   } = useQuery({
-    queryKey: ["query-jobs"],
+    queryKey: ["query-job", id],
     queryFn: async () => {
       if (id) return JobService.get(id);
     },
@@ -53,7 +55,7 @@ export const useGetJobs = (jobParameters: JobFilter) => {
   return { jobs, error, loading, listJobs };
 };
 
-export const useGetRepeatedPostedJobs = (filter: JobFilterParticipant) => {
+export const useGetRepeatedPostedJobs = (filter: JobFilterDetails) => {
   const [repeatableJobs, setJobs] = useState<PostedJob[]>([]);
   const {
     isLoading: repeatableLoading,
@@ -78,7 +80,7 @@ export const useGetRepeatedPostedJobs = (filter: JobFilterParticipant) => {
     listRepeatableJobs,
   };
 };
-export const useGetNonRepeatedPostedJobs = (filter: JobFilterParticipant) => {
+export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
   const [nonRepeatableJobs, setJobs] = useState<PostedJob[]>([]);
   const {
     isLoading: nonRepeatedJobsLoading,
@@ -208,8 +210,8 @@ export const usePostJob = () => {
   return { postJob };
 };
 
-export const useGetUserUnderTookJobs = (filter: JobFilterParticipant) => {
-  const [jobs, setJobs] = useState<JobPreview[]>([]);
+export const useGetUserUnderTookJobs = (filter: JobApplicationFilter) => {
+  const [jobs, setJobs] = useState<UndertookJob[]>([]);
   const {
     isLoading: loading,
     refetch: listJobs,
@@ -218,7 +220,7 @@ export const useGetUserUnderTookJobs = (filter: JobFilterParticipant) => {
   } = useQuery({
     queryKey: ["query-undertookJobs", filter],
     queryFn: async () => {
-      return JobService.listUsersUndertookJobs(filter);
+      return JobService.listUndertookJobs(filter);
     },
   });
 

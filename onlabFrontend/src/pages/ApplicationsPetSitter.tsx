@@ -14,25 +14,13 @@ import Messagebar from "../components/job-components/Messagebar";
 import JobApplicationComments from "../components/job-components/comment-section/JobApplicationComments";
 import LoadingBoundary from "../components/utility-components/LoadingBoundary";
 import { useJobApplicationsUserAppliedTo } from "../hooks/react-query/JobApplicationHooks";
-import {
-  DefaultJobApplicationFilter,
-  DefaultJobApplicationtData,
-} from "../models/Filters";
-import { JobFilterParticipantData, Status } from "../models/Job";
-import { JobApplicationStatus } from "../models/JobApplication";
+import useJobAndApplicationFilter from "../hooks/useJobAndApplicationFilter";
+import { DefaultJobApplicationtData } from "../models/Filters";
+import { JobFilterParticipantData } from "../models/Job";
 
 export default function ApplicationsPetSitter() {
-  const [filter, setFilter] = useState(DefaultJobApplicationFilter);
-
-  const handleSetJobStatus = (status: string) => {
-    setFilter((oldval) => ({ ...oldval, jobStatus: status as Status }));
-  };
-  const handleSetJobApplicationStatus = (status: string) => {
-    setFilter((oldval) => ({
-      ...oldval,
-      jobApplicationStatus: status as JobApplicationStatus,
-    }));
-  };
+  const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
+    useJobAndApplicationFilter();
 
   const { appliedJobs, error, loading, listAppliedJobs } =
     useJobApplicationsUserAppliedTo(filter);

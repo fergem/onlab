@@ -34,27 +34,42 @@ export const useLocalStorage = () => {
 
 export const useUser = () => {
   const { user, setUser } = useContext(AuthContext);
-  const { setItem, removeItem } = useLocalStorage();
+  const { getItem, setItem, removeItem } = useLocalStorage();
 
   const addUser = (userAdded: User) => {
     setUser(userAdded);
     setItem("user", JSON.stringify(userAdded));
   };
 
+  const refreshUserToken = (tokenModel: RefreshTokenModel) => {
+    const userInStorage = getItem("user");
+    if (userInStorage) {
+      const parsedUser = JSON.parse(userInStorage) as User;
+      const newUser = {
+        ...parsedUser,
+        accessToken: tokenModel.accessToken,
+        refreshToken: tokenModel.refreshToken,
+      };
+      setItem("user", JSON.stringify(newUser));
+    }
+  };
+
   const removeUser = () => {
     setUser(null);
     removeItem("user");
+    window.location.href = "/";
   };
 
   return {
     user,
+    refreshUserToken,
     addUser,
     removeUser,
   };
 };
 
 export const useAuth = () => {
-  const { user, addUser, removeUser } = useUser();
+  const { refreshUserToken, user, addUser, removeUser } = useUser();
   const { getItem } = useLocalStorage();
   const navigate = useNavigate();
 
@@ -79,20 +94,13 @@ export const useAuth = () => {
     navigate("/profile");
   };
 
-  const refreshToken = async (model: RefreshTokenModel) => {
-    const response = await AuthService.updateUserToken(model);
-    if (user)
-      addUser({
-        ...user,
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken,
-      });
+  const refreshToken = (model: RefreshTokenModel) => {
+    refreshUserToken(model);
   };
 
   const logoutUser = async () => {
     if (user) {
       removeUser();
-      navigate("/");
     }
   };
 

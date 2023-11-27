@@ -22,7 +22,7 @@ interface IPropsPetModal {
 }
 
 export default function EditPetModal({ pet, back }: IPropsPetModal) {
-  const withIndicatorAndControls = !!pet.images && pet.images.length > 1;
+  const withIndicatorAndControls = !!pet.image && pet.image.length > 1;
 
   const { deletePet } = useDeletePet();
 
@@ -86,8 +86,8 @@ export default function EditPetModal({ pet, back }: IPropsPetModal) {
             withIndicators={withIndicatorAndControls}
             withControls={withIndicatorAndControls}
           >
-            {pet.images && pet.images.length > 0 ? (
-              pet.images.map((s) => (
+            {pet.image && pet.image.length > 0 ? (
+              pet.image.map((s) => (
                 <Carousel.Slide key={s}>
                   <Image
                     src={`data:image/png;base64,${s}`}

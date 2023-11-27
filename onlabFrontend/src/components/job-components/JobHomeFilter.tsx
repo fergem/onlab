@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useLocalStorage } from "@mantine/hooks";
@@ -21,7 +22,10 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import useJobFilter from "../../hooks/useJobFilter";
+
+import useJobFilter, {
+  JobFilterLocalStorageKey,
+} from "../../hooks/useJobFilter";
 import {
   Day,
   DefaultJobFilter,
@@ -32,8 +36,6 @@ import {
 } from "../../models/Job";
 import { PetSpecies } from "../../models/Pet";
 
-export const JobFilterLocalStorageKey = "job_filter_key";
-
 export default function JobHomeFilter() {
   const navigate = useNavigate();
   const [jobFilter, setJobFilter] = useLocalStorage<JobFilter>({
@@ -42,10 +44,6 @@ export default function JobHomeFilter() {
     deserialize: JobFunctions.deserializeJobFromStorage,
   });
 
-  const handleSetJobFilter = (filter: JobFilter) => {
-    setJobFilter(filter);
-  };
-
   const {
     handleSelectDays,
     handleSelectJobType,
@@ -53,7 +51,7 @@ export default function JobHomeFilter() {
     handleSelectPetSpecies,
     handleSelectStartDate,
     handleSelectEndDate,
-  } = useJobFilter({ jobFilter, setJobFilter: handleSetJobFilter });
+  } = useJobFilter({ jobFilter, setJobFilter });
 
   const handleOnSearch = () => {
     navigate("/jobs");
@@ -88,7 +86,11 @@ export default function JobHomeFilter() {
             </Text>
           </Group>
 
-          <Chip.Group value={jobFilter.type} onChange={handleSelectJobType}>
+          <Chip.Group
+            multiple
+            value={jobFilter.types}
+            onChange={handleSelectJobType}
+          >
             <Group position="center">
               {Object.values(JobType).map((s) => (
                 <Chip value={s} size="md" radius="sm" key={s}>
@@ -103,7 +105,7 @@ export default function JobHomeFilter() {
         <Group position="center" align="flex-end" grow>
           <ChipFrequency
             handleSetRepeatable={handleSelectRepeatable}
-            jobType={jobFilter.type}
+            jobType={jobFilter.types}
             repeated={jobFilter.repeated}
           />
           <Group position="center" align="center" noWrap>
@@ -139,7 +141,7 @@ export default function JobHomeFilter() {
 
 export interface IChipFrequencyProps {
   repeated: boolean;
-  jobType: JobType;
+  jobType: JobType[] | undefined;
   handleSetRepeatable(value: string): void;
 }
 
@@ -148,7 +150,13 @@ export function ChipFrequency({
   jobType,
   handleSetRepeatable,
 }: IChipFrequencyProps) {
-  if (jobType === JobType.Boarding || jobType === JobType.Sitting) return;
+  if (
+    !jobType ||
+    jobType.includes(JobType.Boarding) ||
+    jobType.includes(JobType.Sitting) ||
+    jobType.length === 0
+  )
+    return;
   return (
     <Chip.Group
       value={repeated === false ? Frequency.Once : Frequency.Repeat}
@@ -198,18 +206,38 @@ export function ChipDays({ handleSetDays }: IChipDaysProps) {
 
 interface IChipWithIconProps {
   jobType: JobType;
+  withTooltip?: boolean;
 }
 
-export function JobChipIcon({ jobType }: IChipWithIconProps) {
+export function JobChipIcon({
+  jobType,
+  withTooltip = false,
+}: IChipWithIconProps) {
   switch (jobType) {
     case JobType.Boarding:
-      return <IconBed />;
+      return (
+        <Tooltip label={withTooltip ? JobType.Boarding : ""}>
+          <IconBed />
+        </Tooltip>
+      );
     case JobType.Sitting:
-      return <IconHome />;
+      return (
+        <Tooltip label={withTooltip ? JobType.Sitting : ""}>
+          <IconHome />
+        </Tooltip>
+      );
     case JobType.Visit:
-      return <IconDogBowl />;
+      return (
+        <Tooltip label={withTooltip ? JobType.Visit : ""}>
+          <IconDogBowl />
+        </Tooltip>
+      );
     case JobType.Walking:
-      return <IconPaw />;
+      return (
+        <Tooltip label={withTooltip ? JobType.Walking : ""}>
+          <IconPaw />
+        </Tooltip>
+      );
     default:
       return <IconX />;
   }

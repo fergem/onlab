@@ -1,4 +1,5 @@
-import { Avatar, Paper, Tabs, Text } from "@mantine/core";
+import { Avatar, Paper, Stack, Tabs, Text, Title } from "@mantine/core";
+import { IconMoodSad } from "@tabler/icons-react";
 import { useAuth } from "../../../hooks/react-query/AuthHooks";
 import { JobApplication } from "../../../models/JobApplication";
 import { UserPreview } from "../../../models/User";
@@ -14,6 +15,19 @@ export default function JobOwnerCommentsSection({
   ownerUser,
 }: IJobCommentSectionProps) {
   const { user } = useAuth();
+
+  if (applications.length === 0)
+    return (
+      <Paper p="md" shadow="sm" withBorder w="60%">
+        <Stack align="center" justify="center" my={20}>
+          <IconMoodSad size={130} />
+          <Title order={3} size={20}>
+            No applications to this job yet.
+          </Title>
+        </Stack>
+      </Paper>
+    );
+
   return (
     <Paper p="md" shadow="sm" withBorder w="60%">
       <Tabs defaultValue={applications.at(0)?.id.toString()}>
