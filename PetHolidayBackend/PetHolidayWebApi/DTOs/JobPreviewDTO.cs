@@ -13,7 +13,7 @@ namespace PetHolidayWebApi.DTOs
         public required ICollection<string>? Days { get; set; }
         public required int CatCount { get; set; }
         public required int DogCount { get; set; }
-        public required byte[]? OwnerUserPicture { get; set; }
+        public byte[]? OwnerUserPicture { get; set; }
         public required bool IsRepeated { get; set; }
         public required byte[]? DisplayPetPicture { get; set; }
     }

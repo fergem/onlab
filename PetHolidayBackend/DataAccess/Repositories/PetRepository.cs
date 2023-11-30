@@ -26,8 +26,9 @@ namespace DataAccess.Repositories
         public async Task Delete(int petID)
         {
             var pet = await dbcontext.Pets.FindAsync(petID);
-            if (pet == null)
+            if (pet is null)
                 throw new Exception("Pet wanted to be deleted doesnt exists");
+            dbcontext.Remove(pet);
             await dbcontext.SaveChangesAsync();
         }
 
@@ -70,8 +71,7 @@ namespace DataAccess.Repositories
 
             if (pet.Species is not null)
             {
-                Enum.TryParse<PetSpecies>(pet.Species, out var newSpecies);
-                dbPet.Species = newSpecies;
+                dbPet.Species = (PetSpecies)pet.Species;
             }
 
             await dbcontext.SaveChangesAsync();

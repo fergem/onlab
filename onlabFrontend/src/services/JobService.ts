@@ -1,13 +1,14 @@
 import { JobApplicationFilter } from "../models/Filters";
 import {
+  AppliedJob,
   CreateJobModel,
   JobDetails,
   JobFilter,
   JobFilterDetails,
   JobPreview,
   PostedJob,
-  UndertookJob,
 } from "../models/Job";
+import { PagedList } from "../models/PagedList";
 import apiInstance from "./api";
 
 const get = async (id: string) => {
@@ -16,7 +17,7 @@ const get = async (id: string) => {
 };
 
 const list = async (filter: JobFilter) => {
-  const response = await apiInstance.get<JobPreview[]>(`/jobs?`, {
+  const response = await apiInstance.get<PagedList<JobPreview>>(`/jobs?`, {
     params: filter,
     paramsSerializer: {
       indexes: true,
@@ -39,8 +40,8 @@ const listRepeatedPostedJobs = async (filter: JobFilterDetails) => {
   return response.data;
 };
 
-const listUndertookJobs = async (filter: JobApplicationFilter) => {
-  const response = await apiInstance.get<UndertookJob[]>("/jobs/undertook", {
+const listAppliedJobs = async (filter: JobApplicationFilter) => {
+  const response = await apiInstance.get<AppliedJob[]>("/jobs/applied", {
     params: filter,
   });
   return response.data;
@@ -51,29 +52,14 @@ const createJob = async (jobModel: CreateJobModel) => {
   return response.data;
 };
 
-// const takeJob = async (id: number) => {
-//   const response = await axios.put<Job>(`/api/jobs/takejob/${id}`);
-//   return response.data;
-// };
-
-// const approveJob = async (id: number) => {
-//   const response = await axios.put<Job>(`/api/jobs/approvejob/${id}`);
-//   return response.data;
-// };
-
-// const declineJob = async (id: number) => {
-//   const response = await axios.put<Job>(`/api/jobs/declineUser/${id}`);
-//   return response.data;
-// };
-
-// const finishJob = async (id: number) => {
-//   const response = await axios.put<Job>(`/api/jobs/finishjob/${id}`);
-//   return response.data;
-// };
-// const deleteJob = async (id: number) => {
-//   const response = await axios.delete<Job>(`/api/jobs/deletejob/${id}`);
-//   return response.data;
-// };
+const finishJob = async (id: number) => {
+  const response = await apiInstance.put<JobDetails>(`/jobs/finishjob/${id}`);
+  return response.data;
+};
+const cancelJob = async (id: number) => {
+  const response = await apiInstance.put<JobDetails>(`/jobs/canceljob/${id}`);
+  return response.data;
+};
 
 const JobService = {
   get,
@@ -81,13 +67,10 @@ const JobService = {
   createJob,
   listNonRepeatedPostedJobs,
   listRepeatedPostedJobs,
-  listUndertookJobs,
-  // takeJob,
-  // approveJob,
-  // declineJob,
-  // listApprovals,
-  // finishJob,
-  // deleteJob,
+  listAppliedJobs,
+
+  finishJob,
+  cancelJob,
 };
 
 export default JobService;

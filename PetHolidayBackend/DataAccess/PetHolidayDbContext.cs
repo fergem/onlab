@@ -28,12 +28,6 @@ namespace DataAccess
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            //modelBuilder.Entity<User>().Navigation(s => s.OwnerProfile).AutoInclude();
-            //modelBuilder.Entity<PetJob>().Navigation(s => s.Job).AutoInclude();
-            //modelBuilder.Entity<PetJob>().Navigation(s => s.Pet).AutoInclude();
-            //modelBuilder.Entity<Pet>().Navigation(s => s.Images).AutoInclude();
-
-
             modelBuilder.Entity<PetJob>(entity =>
             {
                 entity.ToTable("PetJob");

@@ -1,4 +1,4 @@
-import { Pet, PetInsertModel } from "../models/Pet";
+import { Pet, PetInsertModel, PetUpdateModel } from "../models/Pet";
 import { UpdateUserModel, UserDetails } from "../models/User";
 import apiInstance from "./api";
 
@@ -28,28 +28,43 @@ const updatePassword = async (password: string) => {
   return response.data;
 };
 
-const insertPet = async ({ name, species, age, image: images }: PetInsertModel) => {
-  const result = await apiInstance.post<Pet>("/users/addpet", {
-    name,
-    species,
-    age,
-  });
-
+const insertPet = async ({ name, species, age, image }: PetInsertModel) => {
   const formData = new FormData();
 
-  if (images) {
-    images.forEach((e) => {
-      formData.append("file", e);
-    });
-  }
+  formData.append("Name", name);
+  formData.append("Species", species);
+  formData.append("Age", age.toString());
 
-  const endresult = await apiInstance.patch<Pet>(
-    "/users/addpetimage",
-    formData,
+  if (image) formData.append("file", image);
+
+  const endresult = await apiInstance.post<Pet>(
+    "/users/addpet",
+    {
+      pet: {
+        name,
+        species,
+        age,
+      },
+      file: image,
+    },
     {
       headers: {
         "Content-Type": "multipart/form-data",
-        petID: result.data.id,
+      },
+    }
+  );
+  return endresult.data;
+};
+
+const updatePet = async (pet: PetUpdateModel) => {
+  const endresult = await apiInstance.put<Pet>(
+    "/users/updatepet",
+    {
+      pet,
+    },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
     }
   );
@@ -59,25 +74,6 @@ const insertPet = async ({ name, species, age, image: images }: PetInsertModel) 
 const deletePet = async (id: number) => {
   const result = await apiInstance.delete(`/users/deletepet/${id}`);
   return result;
-};
-
-const uploadPetPictures = async (ID: number, file: File) => {
-  const formData = new FormData();
-
-  formData.append("file", file);
-
-  const response = await apiInstance.patch<Pet>(
-    "/users/addpetimage",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        petID: ID,
-      },
-    }
-  );
-
-  return response.data;
 };
 
 const uploadProfilePicture = async (file: File | undefined) => {
@@ -99,11 +95,11 @@ const uploadProfilePicture = async (file: File | undefined) => {
 
 const UserService = {
   insertPet,
+  updatePet,
   getUserPets,
   deletePet,
   updateUser,
   updatePassword,
-  uploadPetPictures,
   uploadProfilePicture,
   getUserDetails,
 };

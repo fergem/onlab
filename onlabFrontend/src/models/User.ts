@@ -54,6 +54,15 @@ export interface UpdateUserDetailsModel {
   phoneNumber?: string;
 }
 
+export const defaultUpdateUserDetailsModel: UpdateUserDetailsModel = {
+  firstName: "",
+  lastName: "",
+  age: 0,
+  email: "",
+  location: "",
+  phoneNumber: "",
+};
+
 export interface UpdateUserModel extends UpdateUserDetailsModel {
   ownerProfile?: UpdateOwnerProfileModel;
   petSitterProfile?: UpdatePetSitterProfileModel;

@@ -19,9 +19,9 @@ namespace PetHolidayWebApi.Controllers
        
         private readonly JobApplicationService jobApplicationService;
         private readonly AuthService authService;
-        private readonly IHubContext<JobApplicationHub> hub;
+        private readonly IHubContext<JobApplicationCommentHub> hub;
 
-        public JobApplicationController(JobApplicationService jobApplicationService, AuthService authService, IHubContext<JobApplicationHub> hub)
+        public JobApplicationController(JobApplicationService jobApplicationService, AuthService authService, IHubContext<JobApplicationCommentHub> hub)
         {
             this.jobApplicationService = jobApplicationService;
             this.authService = authService;
@@ -72,12 +72,12 @@ namespace PetHolidayWebApi.Controllers
 
        
         [Authorize]
-        [HttpDelete("{applicationID}")]
-        public async Task<ActionResult> DeleteApplication(int applicationID)
+        [HttpPatch("{applicationID}/cancel")]
+        public async Task<ActionResult> CancelApplication(int applicationID)
         {
             try
             {
-                await jobApplicationService.DeleteApplication(applicationID);
+                await jobApplicationService.CancelApplication(applicationID);
                 return Ok();
             }
             catch (Exception ex)

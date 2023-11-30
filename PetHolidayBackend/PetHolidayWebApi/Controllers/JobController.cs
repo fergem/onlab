@@ -27,7 +27,7 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<JobPreviewDTO>>> List([FromQuery] JobFilter jobParameters)
+        public async Task<IActionResult> List([FromQuery] JobFilter jobParameters)
         {
             /*if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
                 return BadRequest("Filter is not good");
@@ -35,7 +35,17 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest("Filter is not good");*/
 
             var result = await jobService.List(jobParameters);
-            return Ok(result.Select(s => s.ToJobPreviewDTO()));
+            var jobPreviewDTOs = result.Select(s => s.ToJobPreviewDTO()).ToList();
+            return Ok(new
+            {
+                Data = jobPreviewDTOs,
+                result.CurrentPage,
+                result.TotalPages,
+                result.PageSize,
+                result.TotalCount,
+                result.HasPrevious,
+                result.HasNext,
+            });
         }
 
         [Authorize(Roles = "Owner")]
@@ -50,14 +60,14 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [Authorize(Roles = "PetSitter")]
-        [HttpGet("undertook")]
-        public async Task<ActionResult<IReadOnlyCollection<UndertookJobDTO>>> ListUndertookJobs([FromQuery] JobApplicationFilter filter)
+        [HttpGet("applied")]
+        public async Task<ActionResult<IReadOnlyCollection<UndertookJobDTO>>> ListAppliedJobs([FromQuery] JobApplicationFilter filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
 
-            var result = await jobService.ListUnderTookJobs(userID, filter);
+            var result = await jobService.ListAppliedJobs(userID, filter);
             return Ok(result.Select(s => s.ToUndertookJobDTO(userID)));
         }
 
@@ -79,14 +89,14 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize(Roles = "Owner")]
         [HttpPost]
-        public async Task<ActionResult<Job>> InsertJob([FromBody] InsertJobModel jobModel)
+        public async Task<ActionResult> InsertJob([FromBody] InsertJobModel jobModel)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 BadRequest("There is no such user with this Bearer");
 
             var created = await jobService.Insert(jobModel, userID);
-            return CreatedAtAction(nameof(FindById), new { jobID = created.ToJobPreviewDTO() }, created);
+            return CreatedAtAction(nameof(FindById), new { jobID =  created.ID}, created.ToJobPreviewDTO());
         }
 
         [Authorize(Roles = "Owner")]
@@ -111,7 +121,7 @@ namespace PetHolidayWebApi.Controllers
 
 
         [Authorize(Roles = "Owner")]
-        [HttpDelete("canceljob/{jobID}")]
+        [HttpPut("canceljob/{jobID}")]
         public async Task<ActionResult<JobDetailsDTO>> CancelJob([FromRoute] int jobID)
         {
             try

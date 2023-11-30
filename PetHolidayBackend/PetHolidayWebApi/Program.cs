@@ -14,6 +14,7 @@ using System;
 using Domain.Common.AuthHelpers;
 using FluentValidation.AspNetCore;
 using Domain.Common.UpdateModels;
+using Domain.Common.InsertModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,7 @@ builder.Services.AddScoped<AuthService,AuthService>();
 builder.Services.AddScoped<IValidator<LoginModel>, LoginModelModelValidator>();
 builder.Services.AddScoped<IValidator<UpdatePasswordModel>, UpdatePasswordModelValidator>();
 builder.Services.AddScoped<IValidator<RegisterModel>, RegisterModelModelValidator>();
+builder.Services.AddScoped<IValidator<InsertJobModel>, InsertJobModelValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
 
@@ -82,7 +84,6 @@ var app = builder.Build();
 
 using (var serviceScope = app.Services.CreateScope())
 {
-    
     var context = serviceScope.ServiceProvider.GetRequiredService<PetHolidayDbContext>();
     context.Database.Migrate();
 }
@@ -94,7 +95,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<JobApplicationHub>("/hub");
+app.MapHub<JobApplicationCommentHub>("/hub");
 
 
 app.Run();

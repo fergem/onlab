@@ -43,7 +43,6 @@ namespace PetHolidayWebApi.ModelExtensions
                 Days = job.Days?.Select(d => d.ToString()).ToList(),
                 CatCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Cat),
                 DogCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Dog),
-                OwnerUserPicture = job.OwnerUser.Picture,
                 IsRepeated = job.Repeated,
                 DisplayPetPicture = job.Pets.FirstOrDefault()?.Pet.Image
             };

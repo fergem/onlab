@@ -21,6 +21,7 @@ export default function CreateJobDetailsForm({ form }: IProps) {
             label="Min experience"
             withAsterisk
             {...form.getInputProps("minRequiredExperience")}
+            min={0}
           />
         </Grid.Col>
         <Grid.Col span={5}>
@@ -35,6 +36,7 @@ export default function CreateJobDetailsForm({ form }: IProps) {
                 : "$ "
             }
             {...form.getInputProps("payment")}
+            min={0}
           />
         </Grid.Col>
       </Grid>

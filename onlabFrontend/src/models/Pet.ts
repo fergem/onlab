@@ -15,10 +15,10 @@ export interface PetInsertModel {
 
 export interface PetUpdateModel {
   id: number;
-  name: string;
-  species: PetSpecies;
-  age: number;
-  picture?: File;
+  name?: string;
+  species?: PetSpecies;
+  age?: number;
+  image?: File;
 }
 
 export enum PetSpecies {

@@ -3,6 +3,7 @@ import { format, formatRelative } from "date-fns";
 import { useUser } from "../../../hooks/react-query/AuthHooks";
 import { JobApplicationComment } from "../../../models/JobApplicationComment";
 import { baseProfilePicture } from "../../../utility/constants";
+import { ImageFunctions } from "../../../utility/image";
 
 export interface IPropsMessageBubble {
   comment: JobApplicationComment;
@@ -52,11 +53,7 @@ export default function MessageBubble({
           <Text>{comment.commentText}</Text>
           {isUser && (
             <Avatar
-              src={
-                picture
-                  ? `data:image/png;base64,${picture}`
-                  : baseProfilePicture
-              }
+              src={ImageFunctions.toDisplayImage(baseProfilePicture, picture)}
               size="sm"
               radius="xl"
             />

@@ -1,8 +1,8 @@
 import { Chip, Group, Stack, Text } from "@mantine/core";
-import { DatePickerInput, DateValue, Day } from "@mantine/dates";
+import { DatePickerInput, DateValue } from "@mantine/dates";
 import { IconCalendarEvent, IconCalendarRepeat } from "@tabler/icons-react";
-import { Frequency, JobType } from "../../models/Job";
-
+import dayjs from "dayjs";
+import { Day, Frequency, JobType } from "../../models/Job";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
 import { CreateJobDetailsFormType } from "./CreateJobDetailsForm";
 
@@ -12,10 +12,20 @@ interface IProps {
 
 export default function CreateJobServiceForm({ form }: IProps) {
   const handleSelectJobType = (value: string) => {
-    form.setFieldValue("jobType", value);
+    const realValue = value as JobType;
+
+    if (realValue === JobType.Boarding || realValue === JobType.Sitting) {
+      form.setFieldValue("jobType", realValue);
+      form.setFieldValue("repeated", false);
+      form.setFieldValue("days", []);
+    } else {
+      form.setFieldValue("jobType", realValue);
+    }
   };
+
   const handleSelectRepeatable = (value: string) => {
     const realValue = value as Frequency;
+
     switch (realValue) {
       case Frequency.Once:
         form.setFieldValue("repeated", false);
@@ -23,6 +33,7 @@ export default function CreateJobServiceForm({ form }: IProps) {
         break;
       case Frequency.Repeat:
         form.setFieldValue("repeated", true);
+        form.setFieldValue("endDate", undefined);
         break;
       default: // should not happen
         break;
@@ -30,16 +41,19 @@ export default function CreateJobServiceForm({ form }: IProps) {
   };
 
   const handleSelectStartDate = (value: DateValue) => {
-    if (value) form.setFieldValue("startDate", value);
+    const newDate = dayjs(value).utc(true).toDate();
+    if (value) form.setFieldValue("startDate", newDate);
   };
 
   const handleSelectEndDate = (value: DateValue) => {
-    form.setFieldValue("endDate", value ?? undefined);
+    const newDate = dayjs(value).utc(true).toDate();
+    form.setFieldValue("endDate", newDate ?? undefined);
   };
 
   const handleSelectDays = (values: string[]) => {
+    const realValues = values as Day[];
     if (form.values.days) {
-      form.setFieldValue("days", values);
+      form.setFieldValue("days", realValues);
     }
   };
 
@@ -55,8 +69,8 @@ export default function CreateJobServiceForm({ form }: IProps) {
           </Text>
         </Group>
 
-        <Chip.Group onChange={handleSelectJobType}>
-          <Group position="apart">
+        <Chip.Group onChange={handleSelectJobType} value={form.values.jobType}>
+          <Group position="center" spacing={30}>
             {Object.values(JobType).map((s) => (
               <Chip value={s} size="md" radius="sm" key={s}>
                 <JobChipIcon jobType={s} />
@@ -68,29 +82,34 @@ export default function CreateJobServiceForm({ form }: IProps) {
       </Stack>
 
       <Group position="center" align="flex-end" grow>
-        <Chip.Group
-          value={
-            form.values.repeated === false ? Frequency.Once : Frequency.Repeat
-          }
-          onChange={handleSelectRepeatable}
-        >
-          <Stack spacing={3}>
-            <Text fz="sm" fw={500} align="center">
-              How often do you need this service?
-            </Text>
-            <Group position="center" align="center">
-              <Chip value={0} size="md" radius="sm">
-                <IconCalendarEvent />
-                <Text ml="sm">Once</Text>
-              </Chip>
-              <Chip value={1} size="md" radius="sm">
-                <IconCalendarRepeat />
-                <Text ml="sm">Repeat</Text>
-              </Chip>
-            </Group>
-          </Stack>
-        </Chip.Group>
-        <Group position="center" align="center" noWrap>
+        {!(
+          form.values.jobType === JobType.Boarding ||
+          form.values.jobType === JobType.Sitting
+        ) && (
+          <Chip.Group
+            value={
+              form.values.repeated === false ? Frequency.Once : Frequency.Repeat
+            }
+            onChange={handleSelectRepeatable}
+          >
+            <Stack spacing={3}>
+              <Text fz="sm" fw={500} align="center">
+                How often do you need this service?
+              </Text>
+              <Group position="center" align="center">
+                <Chip value={Frequency.Once} size="md" radius="sm">
+                  <IconCalendarEvent />
+                  <Text ml="sm">Once</Text>
+                </Chip>
+                <Chip value={Frequency.Repeat} size="md" radius="sm">
+                  <IconCalendarRepeat />
+                  <Text ml="sm">Repeat</Text>
+                </Chip>
+              </Group>
+            </Stack>
+          </Chip.Group>
+        )}
+        <Group position="center" align="center" noWrap maw="350px">
           <DatePickerInput
             type="default"
             label="Start date"
@@ -98,11 +117,13 @@ export default function CreateJobServiceForm({ form }: IProps) {
             value={form.values.startDate}
             onChange={handleSelectStartDate}
             mx="auto"
-            maw={300}
+            miw="150px"
+            maw="300px"
+            minDate={dayjs().toDate()}
           />
           {!form.values.repeated && (
             <>
-              <Text>-</Text>
+              <Text mt="md">-</Text>
               <DatePickerInput
                 type="default"
                 label="End date"
@@ -110,16 +131,22 @@ export default function CreateJobServiceForm({ form }: IProps) {
                 value={form.values.endDate}
                 onChange={handleSelectEndDate}
                 mx="auto"
-                maw={300}
+                miw="150px"
+                maw="300px"
+                minDate={dayjs(form.values.startDate).add(1, "day").toDate()}
               />
             </>
           )}
         </Group>
       </Group>
       {form.values.repeated && (
-        <Chip.Group onChange={handleSelectDays} multiple>
+        <Chip.Group
+          onChange={handleSelectDays}
+          multiple
+          value={form.values.days}
+        >
           <Stack spacing={3}>
-            <Text fz="sm" fw={500}>
+            <Text fz="sm" fw={500} align="center">
               How often do you need this service?
             </Text>
             <Group position="center" align="center">

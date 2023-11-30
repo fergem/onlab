@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { JobApplicationFilter } from "../../models/Filters";
@@ -50,7 +51,6 @@ export const useJobApplicationCommentHub = (
 
   useEffect(() => {
     const hubConnection = new HubConnectionBuilder().withUrl("/hub").build();
-
     hubConnection
       .start()
       .then(() => {
@@ -63,7 +63,6 @@ export const useJobApplicationCommentHub = (
 
     hubConnection.on("CommentAdded", () => {
       handleCommentUpdate();
-      console.log("receivedupdate");
     });
     hubConnection.on("CommentTyping", () => {
       setTyping(true);
@@ -108,7 +107,8 @@ export const useApplyToJob = () => {
           queryClient.invalidateQueries("query-applications");
         }
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
 
@@ -126,8 +126,8 @@ export const usePostComment = () => {
       onSuccess: () => {
         // notifications.success("Successfully commented on job!");
       },
-      onError: (error: Error) => {
-        notifications.error(error.message);
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
       },
     }
   );
@@ -138,28 +138,48 @@ export const useApproveApplicationForJob = () => {
   const queryClient = useQueryClient();
   const notifications = useNotification();
 
-  const { mutate: approveJob } = useMutation(
-    "mutate-approveJob",
+  const { mutate: approveApplication } = useMutation(
+    "mutate-approveApplication",
     async (applicationID: number) => {
       if (applicationID) {
         return JobApplicationService.approveApplication(applicationID);
       }
     },
     {
-      onSuccess: (approvedApplication) => {
-        if (approvedApplication)
-          queryClient.setQueryData(
-            ["query-applications", { id: approvedApplication.id }],
-            approvedApplication
-          );
+      onSuccess: () => {
         queryClient.invalidateQueries("query-posted-nonrepeated");
         queryClient.invalidateQueries("query-posted-repeated");
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
+  return { approveApplication };
+};
 
-  return { approveJob };
+export const useCancelApplicationForJob = () => {
+  const queryClient = useQueryClient();
+  const notifications = useNotification();
+
+  const { mutate: cancelApplication } = useMutation(
+    "mutate-cancelApplication",
+    async (applicationID: number) => {
+      if (applicationID) {
+        return JobApplicationService.cancelApplication(applicationID);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("query-posted-nonrepeated");
+        queryClient.invalidateQueries("query-posted-repeated");
+        queryClient.invalidateQueries("query-appliedJobs");
+        notifications.success("Succesfully removed application");
+      },
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
+    }
+  );
+  return { cancelApplication };
 };
 
 export const useJobApplicationsUserAppliedTo = (
@@ -176,7 +196,6 @@ export const useJobApplicationsUserAppliedTo = (
     queryFn: async () => {
       return JobApplicationService.jobApplicationsUserAppliedTo(filter);
     },
-    staleTime: Infinity,
   });
 
   useEffect(() => {

@@ -1,38 +1,37 @@
-import { Accordion, Group, Paper, Select, Stack, Title } from "@mantine/core";
+import {
+  Accordion,
+  Divider,
+  Group,
+  Paper,
+  Select,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { IconMoodSad } from "@tabler/icons-react";
-import { useGetUserUnderTookJobs } from "../../hooks/react-query/JobHooks";
+import { useGetUserApliedJobs as useGetUserAppliedJobs } from "../../hooks/react-query/JobHooks";
 import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
 import { DefaultJobApplicationtData } from "../../models/Filters";
-import { JobFilterParticipantData } from "../../models/Job";
+import { JobFilterParticipantData, Status } from "../../models/Job";
+import { JobApplicationStatus } from "../../models/JobApplication";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
 import JobApplicationStatusBadge from "../utility-components/JobApplicationStatusBadge";
 import JobStatusBadge from "../utility-components/JobStatusBadge";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
-import UndertookJobsDetails from "./UndertookJobsDetails";
+import ToJobDetailsIcon from "../utility-components/ToJobDetailsIcon";
+import AppliedJobsDetails from "./AppliedJobsDetails";
 
-export default function UndertookJobsSection() {
+export default function AppliedJobsSection() {
   const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
     useJobAndApplicationFilter();
-  const { jobs, error, loading, listJobs } = useGetUserUnderTookJobs(filter);
+  const { jobs, error, loading, listJobs } = useGetUserAppliedJobs(filter);
 
-  // const rows = jobsWithColor.map((job) => (
-  //   <tr key={job.id}>
-  //     <td>{job.title}</td>
-  //     <td>{job.type}</td>
-  //     <td>{job.location}</td>
-  //     <td>{dayjs(job.startDate).format("YYYY-MM-DD")}</td>
-  //     <td>{job.endDate ? dayjs(job.endDate).format("YYYY-MM-DD") : "-"}</td>
-  //     <td>{job.days}</td>
-  //   </tr>
-  // ));
   return (
     <Paper p="md" shadow="sm" withBorder>
       <Group align="center" position="apart" mb={10}>
         <Title align="center" order={2} ml={30}>
-          Undertook jobs
+          Applied jobs
         </Title>
-
         <Group align="center">
           <Select
             label="Job status"
@@ -69,23 +68,32 @@ export default function UndertookJobsSection() {
           chevronPosition="left"
           multiple
           radius="md"
+          chevronSize={0}
         >
           {jobs.map((s) => (
             <Accordion.Item value={s.id.toString()} key={s.id}>
               <Accordion.Control>
                 <Group>
-                  <Title order={3}>{s.title}</Title>
-                  <JobChipIcon jobType={s.type} withTooltip />
-                  {s.isRepeated && <RepeatedJobIcon />}
-                  <JobStatusBadge status={s.status} />
-                  <JobApplicationStatusBadge
-                    status={s.applicationStatus}
-                    ml="auto"
-                  />
+                  <Stack spacing={3}>
+                    {s.applicationStatus !==
+                      JobApplicationStatus.NotApproved && (
+                      <JobStatusBadge status={s.status} />
+                    )}
+                    {s.status !== Status.Canceled && (
+                      <JobApplicationStatusBadge status={s.applicationStatus} />
+                    )}
+                  </Stack>
+                  <Title order={5}>{s.title}</Title>
+                  <Divider />
+                  <Group ml="auto" spacing={10}>
+                    {s.isRepeated && <RepeatedJobIcon />}
+                    <JobChipIcon jobType={s.type} withTooltip />
+                    <ToJobDetailsIcon jobID={s.id} />
+                  </Group>
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
-                <UndertookJobsDetails job={s} />
+                <AppliedJobsDetails job={s} />
               </Accordion.Panel>
             </Accordion.Item>
           ))}

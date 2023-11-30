@@ -190,12 +190,15 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize(Roles = "Owner")]
         [HttpPut("updatepet")]
-        public async Task<ActionResult<PetDTO>> UpdatePet([FromBody] UpdatePetModel pet, [FromForm] IFormFile? file)
+        public async Task<ActionResult<PetDTO>> UpdatePet([FromForm] UpdatePetModel pet, [FromForm] IFormFile? image)
         {
             try
             {
+                var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
+                if (!foundUser)
+                    throw new Exception("User not found");
 
-                if (file is null)
+                if (image is null)
                 {
                     var updatedPet = await userService.UpdatePet(pet, null);
                     return Ok(updatedPet.ToPetDTO());
@@ -203,7 +206,7 @@ namespace PetHolidayWebApi.Controllers
 
                 using (var stream = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream);
+                    await image.CopyToAsync(stream);
                     var fileData = stream.ToArray();
                     var updatedPet = await userService.UpdatePet(pet, fileData);
                     return Ok(updatedPet.ToPetDTO());

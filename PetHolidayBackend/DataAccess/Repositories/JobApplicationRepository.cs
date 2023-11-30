@@ -51,47 +51,55 @@ namespace DataAccess.Repositories
         public async Task<JobApplication> InsertApplicationForJob(int jobID,int userID)
         {
             var user = await dbcontext.Users.FindAsync(userID) ?? throw new Exception("User not found");
-            var job = await dbcontext.Jobs.FindAsync(jobID) ?? throw new Exception("Job not found");
-            var application = new JobApplication()
+            var job = await dbcontext.Jobs.Include(s => s.JobApplications).FirstOrDefaultAsync(s => s.ID == jobID) ?? throw new Exception("Job not found");
+            if(job.Status != Status.Available)
             {
-                ApplicantUserID = user.Id,
-                JobID = job.ID,
-                Status = JobApplicationStatus.Approving,
-            };
+                throw new Exception("Job is not available");
+            }
+            var jobApplication = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == user.Id);
 
-            await dbcontext.JobApplications.AddAsync(application);
+            if (jobApplication == null)
+            {
+                var newApplication = new JobApplication()
+                {
+                    ApplicantUserID = user.Id,
+                    JobID = job.ID,
+                    Status = JobApplicationStatus.Approving,
+                };
+
+                await dbcontext.JobApplications.AddAsync(newApplication);
+                await dbcontext.SaveChangesAsync();
+
+                return newApplication;
+            }
+            jobApplication.Status = JobApplicationStatus.Approving;
             await dbcontext.SaveChangesAsync();
 
-            return application;
+            return jobApplication;
         }
 
         public async Task ApproveApplication(int applicationID)
         {
-            var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application does not exist");
+            var selectedApplication = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application does not exist");
               
-            var jobOfApplication = await dbcontext.Jobs.Include(s => s.JobApplications).FirstOrDefaultAsync(s => s.ID == application.JobID) ?? throw new Exception("Job does not exist");
-               
+            var jobOfApplication = await dbcontext.Jobs.Include(s => s.JobApplications).FirstOrDefaultAsync(s => s.ID == selectedApplication.JobID) ?? throw new Exception("Job does not exist");
+            if (jobOfApplication.Status != Status.Available)
+                throw new Exception("Job status must be available to approve applicaton");
             if (jobOfApplication.JobApplications.Any(s => s.Status == JobApplicationStatus.Approved))
                 throw new Exception("Job already has an approved application");
 
-            application.Status = JobApplicationStatus.Approved;
+            selectedApplication.Status = JobApplicationStatus.Approved;
             jobOfApplication.Status = Status.Upcoming;
 
-            foreach (var item in jobOfApplication.JobApplications.Where(s => s.ID != applicationID))
+            var notSelectedApplications = jobOfApplication.JobApplications.Where(s => s.ID != applicationID);
+            foreach (var application in notSelectedApplications)
             {
-                item.Status = JobApplicationStatus.NotApproved;
+                application.Status = JobApplicationStatus.NotApproved;
             }
 
             await dbcontext.SaveChangesAsync(); 
         }
-
-        public async Task NotApproveApplication(int applicationID)
-        {
-            var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");
-            application.Status = JobApplicationStatus.NotApproved;
-            await dbcontext.SaveChangesAsync();
-        }
-
+         
         public async Task CancelApplication(int applicationID)
         {
             var application = await dbcontext.JobApplications.FindAsync(applicationID) ?? throw new Exception("Application is not found");

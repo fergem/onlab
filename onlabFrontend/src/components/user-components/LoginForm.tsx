@@ -1,12 +1,12 @@
 import { Button, Paper, Stack, TextInput, Title } from "@mantine/core";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import useNotification from "../../hooks/useNotification";
 import { LoginModel } from "../../models/User";
 
 export default function LoginForm() {
-  const navigate: NavigateFunction = useNavigate();
+  const navigate = useNavigate();
   const { loginUser } = useAuth();
   const notification = useNotification();
   // const formStorage = useFormStorage();

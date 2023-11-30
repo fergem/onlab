@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 interface INavButtonProps {
   name: string;
   to: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
 }
 
 export default function NavButton({

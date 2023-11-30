@@ -11,7 +11,7 @@ export default function OwnerProfile() {
   };
   return (
     <Stack align="center" justify="center">
-      <Stack w="60%" justify="center">
+      <Stack w="70%" justify="center">
         <NonRepeatedSection />
         <RepeatedSection />
       </Stack>

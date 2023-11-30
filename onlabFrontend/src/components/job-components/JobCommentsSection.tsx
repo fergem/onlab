@@ -1,6 +1,9 @@
 import { Fragment, useMemo } from "react";
 import { useUser } from "../../hooks/react-query/AuthHooks";
-import { JobApplication } from "../../models/JobApplication";
+import {
+  JobApplication,
+  JobApplicationStatus,
+} from "../../models/JobApplication";
 import { UserPreview } from "../../models/User";
 import JobOwnerCommentsSection from "./comment-section/JobOwnerCommentsSection";
 import JobPetSitterCommentSection from "./comment-section/JobPetSitterCommentSection";
@@ -22,6 +25,12 @@ export default function JobCommentsSection({
     () => applications.find((s) => s.applicantUser.id === user?.id),
     [applications, user?.id]
   );
+  const petSitteCommentSectionShown = applications.some(
+    (s) =>
+      s.applicantUser.id === user?.id &&
+      s.status !== JobApplicationStatus.Canceled
+  );
+
   return (
     <Fragment key={user?.userName}>
       {isOwner ? (
@@ -30,7 +39,7 @@ export default function JobCommentsSection({
           ownerUser={ownerUser}
         />
       ) : (
-        applications.some((s) => s.applicantUser.id === user?.id) && (
+        petSitteCommentSectionShown && (
           <JobPetSitterCommentSection
             application={application}
             ownerUser={ownerUser}

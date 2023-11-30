@@ -216,25 +216,25 @@ export function JobChipIcon({
   switch (jobType) {
     case JobType.Boarding:
       return (
-        <Tooltip label={withTooltip ? JobType.Boarding : ""}>
+        <Tooltip label={JobType.Boarding} disabled={!withTooltip}>
           <IconBed />
         </Tooltip>
       );
     case JobType.Sitting:
       return (
-        <Tooltip label={withTooltip ? JobType.Sitting : ""}>
+        <Tooltip label={JobType.Sitting} disabled={!withTooltip}>
           <IconHome />
         </Tooltip>
       );
     case JobType.Visit:
       return (
-        <Tooltip label={withTooltip ? JobType.Visit : ""}>
+        <Tooltip label={JobType.Visit} disabled={!withTooltip}>
           <IconDogBowl />
         </Tooltip>
       );
     case JobType.Walking:
       return (
-        <Tooltip label={withTooltip ? JobType.Walking : ""}>
+        <Tooltip label={JobType.Walking} disabled={!withTooltip}>
           <IconPaw />
         </Tooltip>
       );

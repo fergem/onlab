@@ -1,26 +1,20 @@
-import {
-  Accordion,
-  ActionIcon,
-  Group,
-  Paper,
-  Select,
-  Stack,
-  Title,
-  Tooltip,
-} from "@mantine/core";
-import { IconId, IconMoodSad } from "@tabler/icons-react";
+import { Accordion, Group, Paper, Select, Stack, Title } from "@mantine/core";
+import { IconMoodSad } from "@tabler/icons-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGetRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
   DefaultJobFilterDetails,
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
+import { JobApplicationStatus } from "../../models/JobApplication";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
 import JobStatusBadge from "../utility-components/JobStatusBadge";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
-import JobUserTable from "./AvailableJobUserTable";
+import ToJobDetailsIcon from "../utility-components/ToJobDetailsIcon";
+import CanceljobButton from "./CancelJobButton";
+import FinishJobButton from "./FinishJobButton";
+import PostedJobApplicationTable from "./PostedJobApplicationTable";
 import RepeatedPostedJobDetails from "./RepeadtedPostedJobDetails";
 
 export default function RepeatedSection() {
@@ -35,7 +29,6 @@ export default function RepeatedSection() {
   const handleSetStatus = (status: string) => {
     setFilter({ status: status as Status });
   };
-  const navigate = useNavigate();
 
   return (
     <Paper p="md" shadow="sm" withBorder>
@@ -44,7 +37,8 @@ export default function RepeatedSection() {
           Repeated jobs
         </Title>
         <Select
-          w={120}
+          mb={15}
+          label="Job status"
           value={filter.status}
           onChange={handleSetStatus}
           data={JobFilterParticipantData}
@@ -61,40 +55,54 @@ export default function RepeatedSection() {
           chevronPosition="left"
           multiple
           radius="md"
+          chevronSize={0}
         >
           {repeatableJobs.length === 0 && (
             <Stack align="center" justify="center" my={20}>
-              <IconMoodSad size={150} />
-              <Title order={3} size={30}>
-                No jobs to show
+              <IconMoodSad size={100} />
+              <Title order={3} size={20}>
+                No jobs to show yet. Consider adding one.
               </Title>
             </Stack>
           )}
           {repeatableJobs.map((s) => {
-            const navigateToJob = () => {
-              navigate(`/jobs/${s.id}`);
-            };
+            const areApplicationsShown = s.status !== Status.Canceled;
+            const hasApproved = s.jobApplications.some(
+              (k) => k.status === JobApplicationStatus.Approved
+            );
             return (
               <Accordion.Item value={s.id.toString()} key={s.id}>
                 <Accordion.Control>
                   <Group>
-                    <Title order={3}>{s.title}</Title>
-                    <JobChipIcon jobType={s.type} withTooltip />
-                    <Tooltip label="See details">
-                      <ActionIcon onClick={navigateToJob} ml="auto">
-                        <IconId />
-                      </ActionIcon>
-                    </Tooltip>
                     <JobStatusBadge status={s.status} />
+                    <Title order={5}>{s.title}</Title>
+                    <Group ml="auto" spacing={10}>
+                      <JobChipIcon jobType={s.type} withTooltip />
+                      <ToJobDetailsIcon jobID={s.id} />
+                    </Group>
                   </Group>
                 </Accordion.Control>
                 <Accordion.Panel>
                   <Stack>
+                    {areApplicationsShown && (
+                      <PostedJobApplicationTable
+                        jobApplications={s.jobApplications}
+                        jobStatus={s.status}
+                      />
+                    )}
                     <RepeatedPostedJobDetails job={s} />
-                    <JobUserTable
-                      jobApplications={s.jobApplications}
-                      jobStatus={s.status}
-                    />
+
+                    <Group position="center" align="center">
+                      {hasApproved ? (
+                        <FinishJobButton
+                          jobID={s.id}
+                          jobStatus={s.status}
+                          endDate={s.endDate}
+                        />
+                      ) : (
+                        <CanceljobButton jobID={s.id} jobStatus={s.status} />
+                      )}
+                    </Group>
                   </Stack>
                 </Accordion.Panel>
               </Accordion.Item>

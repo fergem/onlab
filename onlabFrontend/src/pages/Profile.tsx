@@ -15,9 +15,16 @@ import ProfilePets from "../components/user-components/ProfilePets";
 import LoadingBoundary from "../components/utility-components/LoadingBoundary";
 import { useAuth } from "../hooks/react-query/AuthHooks";
 import { useGetUser, useUpdateUser } from "../hooks/react-query/UserHooks";
-import { UpdateOwnerProfileModel } from "../models/OwnerProfile";
+import {
+  UpdateOwnerProfileModel,
+  defaultUpdateOwnerProfileModel,
+} from "../models/OwnerProfile";
 import { UpdatePetSitterProfileModel } from "../models/PetSitterProfile";
-import { UpdateUserDetailsModel, UserRole } from "../models/User";
+import {
+  UpdateUserDetailsModel,
+  UserRole,
+  defaultUpdateUserDetailsModel,
+} from "../models/User";
 import { ArrayFunctions } from "../utility/array";
 
 export default function Profile() {
@@ -36,6 +43,7 @@ export default function Profile() {
   const handldeUpdatePetSitterProfile = (
     petSitterProfile: UpdatePetSitterProfileModel
   ) => updateUser({ ...userDetails, petSitterProfile });
+
   return (
     <LoadingBoundary
       loading={loadingUserDetials}
@@ -80,10 +88,19 @@ export default function Profile() {
                 </Title>
               </Group>
               <Divider my="md" />
-              <EditUserDetails
-                currentUserDetails={userDetails}
-                updateUserDetails={handleUpdateUserDetails}
-              />
+              {userDetails ? (
+                <EditUserDetails
+                  profilePicture={userDetails?.picture}
+                  currentUserDetails={userDetails}
+                  updateUserDetails={handleUpdateUserDetails}
+                />
+              ) : (
+                <EditUserDetails
+                  profilePicture={undefined}
+                  currentUserDetails={defaultUpdateUserDetailsModel}
+                  updateUserDetails={handleUpdateUserDetails}
+                />
+              )}
             </Paper>
           </Tabs.Panel>
           <Tabs.Panel value="password" w="60%">
@@ -112,10 +129,18 @@ export default function Profile() {
                 Edit owner profile
               </Title>
               <Divider my="md" />
-              <EditOwnerProfile
-                currentOwnerProfile={userDetails?.ownerProfile}
-                updateOwnerProfile={handleUpdateOwnerProfile}
-              />
+
+              {userDetails?.ownerProfile ? (
+                <EditOwnerProfile
+                  currentOwnerProfile={userDetails?.ownerProfile}
+                  updateOwnerProfile={handleUpdateOwnerProfile}
+                />
+              ) : (
+                <EditOwnerProfile
+                  currentOwnerProfile={defaultUpdateOwnerProfileModel}
+                  updateOwnerProfile={handleUpdateOwnerProfile}
+                />
+              )}
             </Paper>
           </Tabs.Panel>
           <Tabs.Panel value="petsitter" w="60%">
@@ -124,10 +149,17 @@ export default function Profile() {
                 Edit petsitter profile
               </Title>
               <Divider my="md" />
-              <EditPetSitterProfile
-                currentPetSitterProfile={userDetails?.petSitterProfile}
-                updatePetSitterProfile={handldeUpdatePetSitterProfile}
-              />
+              {userDetails?.petSitterProfile ? (
+                <EditPetSitterProfile
+                  currentPetSitterProfile={userDetails?.petSitterProfile}
+                  updatePetSitterProfile={handldeUpdatePetSitterProfile}
+                />
+              ) : (
+                <EditPetSitterProfile
+                  currentPetSitterProfile={defaultUpdateOwnerProfileModel}
+                  updatePetSitterProfile={handldeUpdatePetSitterProfile}
+                />
+              )}
             </Paper>
           </Tabs.Panel>
         </Stack>

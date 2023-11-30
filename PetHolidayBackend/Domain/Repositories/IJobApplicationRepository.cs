@@ -16,7 +16,6 @@ namespace Domain.Repositories
         Task<JobApplication> GetById(int applicationID);
         Task<JobApplication> InsertApplicationForJob(int jobID, int userID);
         Task ApproveApplication(int applicationID);
-        Task NotApproveApplication(int applicationID);
         Task CancelApplication(int applicationID);
 
     }

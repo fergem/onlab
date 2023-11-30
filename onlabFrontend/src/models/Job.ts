@@ -1,14 +1,50 @@
+import dayjs from "dayjs";
 import { JobApplicationStatus, PostedJobApplication } from "./JobApplication";
 import { Pet, PetSpecies } from "./Pet";
 import { UserPreview } from "./User";
 
 export const JobValidation = {
-  validateLocation(val: string) {
-    if (val.length === 0) return "Location is required";
+  validateTitle(title: string) {
+    if (title.length === 0) return "Title is required";
     return null;
   },
-  validateDescription(val: string) {
-    if (val.length === 0) return "Description is required";
+  validateLocation(location: string) {
+    if (location.length === 0) return "Location is required";
+    return null;
+  },
+  validateDescription(desc: string) {
+    if (desc.length === 0) return "Description is required";
+  },
+  validatePetSelect(petIDs: number[]) {
+    if (petIDs.length === 0) return "Select atleast one pet";
+  },
+  validateJobType(type: JobType, repeated: boolean, days?: Day[]) {
+    if (!type) {
+      return "Job type should be set";
+    }
+    if (
+      (type === JobType.Boarding || type === JobType.Sitting) &&
+      (repeated || (days && days.length > 0))
+    ) {
+      return "This type of job should not be repeated";
+    }
+  },
+  validateEndDate(repeated: boolean, endDate?: Date) {
+    if (!repeated && !endDate)
+      return "End date should be set when job is not repeated";
+    if (repeated && endDate)
+      return "End date should not be set when job is not repeated";
+    if (repeated && endDate && endDate.getDate() < dayjs().day() - 1)
+      return "Cannot pick date in past";
+  },
+  validateStartDate(startDate: Date) {
+    if (!startDate) return "Start date should be set";
+    if (startDate.getDate() < dayjs().day() - 1)
+      return "Cannot pick date in past";
+  },
+  validateDays(repeated: boolean, days?: Day[]) {
+    if (repeated && days && days.length === 0)
+      return "Atleast one day should be selected";
   },
 };
 
@@ -86,9 +122,9 @@ export interface CreateJobModel {
   minRequiredExperience: number;
   payment: number;
   title: string;
-  jobType: string;
+  jobType: JobType;
   repeated: boolean;
-  days?: string[];
+  days?: Day[];
   startDate: Date;
   endDate?: Date;
   petIDs: number[];
@@ -114,7 +150,7 @@ export interface PostedJob {
   jobApplications: PostedJobApplication[];
 }
 
-export interface UndertookJob {
+export interface AppliedJob {
   id: number;
   title: string;
   startDate: Date;
@@ -177,6 +213,7 @@ export interface JobFilter {
   endDate?: Date;
   repeated: boolean;
   days?: Day[];
+  pageNumber: number;
 }
 
 export const DefaultJobFilter: JobFilter = {
@@ -186,4 +223,5 @@ export const DefaultJobFilter: JobFilter = {
   endDate: JobFunctions.getDatePlusThreeDays(),
   repeated: false,
   days: undefined,
+  pageNumber: 1,
 };

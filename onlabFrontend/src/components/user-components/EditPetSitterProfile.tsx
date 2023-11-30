@@ -1,12 +1,9 @@
 import { Button, NumberInput, Stack, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import {
-  PetSitterProfile,
-  UpdatePetSitterProfileModel,
-} from "../../models/PetSitterProfile";
+import { useState } from "react";
+import { UpdatePetSitterProfileModel } from "../../models/PetSitterProfile";
 
 export interface IEditPetSitterProfile {
-  currentPetSitterProfile?: PetSitterProfile;
+  currentPetSitterProfile: UpdatePetSitterProfileModel;
   updatePetSitterProfile(PetSitterProfile: UpdatePetSitterProfileModel): void;
 }
 
@@ -14,51 +11,51 @@ export default function EditPetSitterProfile({
   currentPetSitterProfile,
   updatePetSitterProfile,
 }: IEditPetSitterProfile) {
-  const form = useForm({
-    initialValues: {
-      description: currentPetSitterProfile?.description ?? "",
-      acquiredExperience: currentPetSitterProfile?.acquiredExperience ?? 0,
-    },
-    validate: {},
-  });
+  const [petSitterProfile, setPetSitterProfile] = useState(
+    currentPetSitterProfile
+  );
 
   const updateDisabled =
-    form.values.acquiredExperience ===
+    petSitterProfile?.acquiredExperience ===
       currentPetSitterProfile?.acquiredExperience &&
-    form.values.description === currentPetSitterProfile?.description;
+    petSitterProfile?.description === currentPetSitterProfile?.description;
 
-  // useEffect(() => {
-  //   form.setValues({
-  //     location: user?.location ?? "",
-  //     phoneNumber: user?.phoneNumber ?? "",
-  //     payment: user?.PetSitterProfile?.minWage ?? 0,
-  //     experience: user?.PetSitterProfile?.minRequiredExperience ?? 0,
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
-
-  const handleUpdate = (model: UpdatePetSitterProfileModel) => {
-    updatePetSitterProfile(model);
+  const handleUpdate = () => {
+    updatePetSitterProfile(petSitterProfile);
   };
 
+  const handleSetDescription = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newDescription = event.target.value;
+    setPetSitterProfile((prev) => ({ ...prev, description: newDescription }));
+  };
+
+  const handleSetExperience = (value: number) => {
+    setPetSitterProfile((prev) => ({
+      ...prev,
+      acquiredExperience: value,
+    }));
+  };
   return (
-    <form onSubmit={form.onSubmit(handleUpdate)}>
-      <Stack justify="center" align="center">
-        <Textarea
-          label="Description"
-          placeholder="This is what the owner will see when applying for job"
-          miw="250px"
-          {...form.getInputProps("description")}
-        />
-        <NumberInput
-          label="Acquired experience as a PetSitter"
-          miw="250px"
-          {...form.getInputProps("acquiredExperience")}
-        />
-        <Button type="submit" disabled={updateDisabled}>
-          Update petsitter profile
-        </Button>
-      </Stack>
-    </form>
+    <Stack justify="center" align="center">
+      <Textarea
+        label="Description"
+        placeholder="This is what the owner will see when applying for job"
+        miw="250px"
+        onChange={handleSetDescription}
+        value={petSitterProfile.description}
+      />
+      <NumberInput
+        label="Acquired experience as a PetSitter"
+        miw="250px"
+        min={0}
+        onChange={handleSetExperience}
+        value={petSitterProfile.acquiredExperience}
+      />
+      <Button disabled={updateDisabled} onClick={handleUpdate}>
+        Update petsitter profile
+      </Button>
+    </Stack>
   );
 }

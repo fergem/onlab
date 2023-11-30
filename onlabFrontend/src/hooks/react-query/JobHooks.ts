@@ -1,15 +1,18 @@
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { JobApplicationFilter } from "../../models/Filters";
 import {
+  AppliedJob,
   CreateJobModel,
   JobDetails,
   JobFilter,
   JobFilterDetails,
   JobPreview,
   PostedJob,
-  UndertookJob,
 } from "../../models/Job";
+import { PagedList } from "../../models/PagedList";
 import JobService from "../../services/JobService";
 import useNotification from "../useNotification";
 
@@ -35,7 +38,7 @@ export const useGetJob = (id?: string) => {
 };
 
 export const useGetJobs = (jobParameters: JobFilter) => {
-  const [jobs, setJobs] = useState<JobPreview[]>([]);
+  const [jobs, setJobs] = useState<PagedList<JobPreview>>();
   const {
     isLoading: loading,
     refetch: listJobs,
@@ -106,91 +109,62 @@ export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
   };
 };
 
-// export const useFinishJob = () => {
-//   const queryClient = useQueryClient();
-//   const notifications = useNotification();
+export const useFinishJob = () => {
+  const queryClient = useQueryClient();
+  const notifications = useNotification();
 
-//   const { mutate: finishJob } = useMutation(
-//     "mutate-finishJob",
-//     async (id: number) => {
-//       if (id !== null) {
-//         return JobService.finishJob(id);
-//       }
-//     },
-//     {
-//       onSuccess: () => {
-//         queryClient.invalidateQueries({
-//           queryKey: ["query-jobs", "query-postedJobs"],
-//         });
-//       },
-//       onError: (error: Error) => {
-//         notifications.error(error.message);
-//       },
-//     }
-//   );
+  const { mutate: finishJob } = useMutation(
+    "mutate-finishJob",
+    async (id: number) => {
+      if (id !== null) {
+        return JobService.finishJob(id);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("query-posted-repeated");
+        queryClient.invalidateQueries("query-posted-nonrepeated");
+        notifications.success("Successfully finished job!");
+      },
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
+      },
+    }
+  );
 
-//   return { finishJob };
-// };
+  return { finishJob };
+};
 
-// export const useDeleteJob = () => {
-//   const queryClient = useQueryClient();
-//   const notifications = useNotification();
+export const useCancelJob = () => {
+  const queryClient = useQueryClient();
+  const notifications = useNotification();
 
-//   const { mutate: deleteJob } = useMutation(
-//     "mutate-takeJob",
-//     async (id: number) => {
-//       if (id !== null) {
-//         return JobService.deleteJob(id);
-//       }
-//     },
-//     {
-//       onSuccess: () => {
-//         queryClient.invalidateQueries({
-//           queryKey: ["query-jobs", "query-postedJobs"],
-//         });
-//       },
-//       onError: (error: Error) => notifications.error(error.message),
-//     }
-//   );
+  const { mutate: cancelJob } = useMutation(
+    "mutate-cancelJob",
+    async (id: number | undefined) => {
+      if (id) {
+        return JobService.cancelJob(id);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("query-posted-repeated");
+        queryClient.invalidateQueries("query-posted-nonrepeated");
+        notifications.success("Successfully canceled job!");
+      },
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
+      },
+    }
+  );
 
-//   return { deleteJob };
-// };
-
-// export const useDeclineJob = () => {
-//   const queryClient = useQueryClient();
-//   const notifications = useNotification();
-
-//   const { mutate: declineJob } = useMutation(
-//     "mutate-approveJob",
-//     async (id: number | undefined) => {
-//       if (id) {
-//         return JobService.declineJob(id);
-//       }
-//     },
-//     {
-//       onSuccess: () => {
-//         queryClient.invalidateQueries({
-//           queryKey: ["query-jobs", "query-postedJobs", "query-approvals"],
-//         });
-//       },
-//       onError: (error: Error) => notifications.error(error.message),
-//     }
-//   );
-
-//   return { declineJob };
-// };
-
-// export const useProgressJob = () => {
-//   const { declineJob } = useDeclineJob();
-//   const { deleteJob } = useDeleteJob();
-//   const { finishJob } = useFinishJob();
-
-//   return { declineJob, finishJob, deleteJob };
-// };
+  return { cancelJob };
+};
 
 export const usePostJob = () => {
   const queryClient = useQueryClient();
   const notifications = useNotification();
+  const navigate = useNavigate();
 
   const { mutate: postJob } = useMutation(
     "mutate-postJob",
@@ -198,29 +172,31 @@ export const usePostJob = () => {
       return JobService.createJob(jobModel);
     },
     {
-      onSuccess: (result) => {
-        queryClient.setQueriesData(["query-jobs", result.id], result);
+      onSuccess: () => {
+        queryClient.invalidateQueries("query-posted-repeated");
+        queryClient.invalidateQueries("query-posted-nonrepeated");
+        navigate("/postedjobs");
         notifications.success("Successfully posted job!");
       },
-      onError: (error: Error) => {
-        notifications.error(error.message);
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
       },
     }
   );
   return { postJob };
 };
 
-export const useGetUserUnderTookJobs = (filter: JobApplicationFilter) => {
-  const [jobs, setJobs] = useState<UndertookJob[]>([]);
+export const useGetUserApliedJobs = (filter: JobApplicationFilter) => {
+  const [jobs, setJobs] = useState<AppliedJob[]>([]);
   const {
     isLoading: loading,
     refetch: listJobs,
     isError: error,
     data,
   } = useQuery({
-    queryKey: ["query-undertookJobs", filter],
+    queryKey: ["query-appliedJobs", filter],
     queryFn: async () => {
-      return JobService.listUndertookJobs(filter);
+      return JobService.listAppliedJobs(filter);
     },
   });
 

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Checkbox,
   Group,
   HoverCard,
   Stack,
@@ -8,7 +7,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Status } from "../../models/Job";
 import {
   JobApplicationStatus,
@@ -16,45 +15,35 @@ import {
 } from "../../models/JobApplication";
 import { baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
-import JobActionsApproved from "./JobActionsApproved";
-import JobActionsNotApproved from "./JobActionsNotApproved";
+import PostedJobApplicationActions from "./PostedJobApplicationActions";
 
 interface INonRepeatedTableProps {
   jobApplications: PostedJobApplication[];
   jobStatus: Status;
 }
 
-export default function JobUserTable({
+export default function PostedJobApplicationTable({
   jobApplications,
   jobStatus,
 }: INonRepeatedTableProps) {
-  const areThereAnyApproved = useMemo(() => {
+  const approvedApplication = useMemo(() => {
     return jobApplications.find(
       (s) => s.status === JobApplicationStatus.Approved
     );
   }, [jobApplications]);
-  const jobsWithoutTheApproved = useMemo(() => {
-    return jobApplications.filter(
-      (s) => s.status !== JobApplicationStatus.Approved
-    );
-  }, [jobApplications]);
 
-  const [showNotApproved, setShowNotApproved] = useState(!areThereAnyApproved);
-  const handleSetShowNotApproved = () => {
-    setShowNotApproved((t) => !t);
-  };
   return (
     <Stack spacing={0}>
-      <Stack>
-        <Group position="center" align="center" mb={10}>
-          <Title order={4} mr="auto">
-            Applications
-          </Title>
-          {areThereAnyApproved && (
-            <>
-              <Text>Show history:</Text>
-              <Checkbox onChange={handleSetShowNotApproved} />
-            </>
+      <Stack align="center">
+        <Group mb={10}>
+          {approvedApplication ? (
+            <Title order={4} mr="auto">
+              Applied user
+            </Title>
+          ) : (
+            <Title order={4} mr="auto">
+              Applications
+            </Title>
           )}
         </Group>
       </Stack>
@@ -69,26 +58,19 @@ export default function JobUserTable({
               <th>Email</th>
               <th>Phone number</th>
               <th>Experience</th>
-              <th>Actions</th>
+              {!approvedApplication && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
-            {areThereAnyApproved && (
+            {approvedApplication && (
               <PostedJobApplicationRow
-                application={areThereAnyApproved}
+                application={approvedApplication}
                 jobStatus={jobStatus}
               />
             )}
-            {!areThereAnyApproved &&
+
+            {!approvedApplication &&
               jobApplications.map((s) => (
-                <PostedJobApplicationRow
-                  application={s}
-                  key={s.id}
-                  jobStatus={jobStatus}
-                />
-              ))}
-            {showNotApproved &&
-              jobsWithoutTheApproved.map((s) => (
                 <PostedJobApplicationRow
                   application={s}
                   key={s.id}
@@ -122,6 +104,7 @@ export function PostedJobApplicationRow({
                   baseProfilePicture,
                   application.applicantUser.picture
                 )}
+                radius="100%"
               />
               <Text>{`${application.applicantUser.firstName}  ${application.applicantUser.lastName}`}</Text>
             </Group>
@@ -134,6 +117,7 @@ export function PostedJobApplicationRow({
                   application.applicantUser.picture
                 )}
                 size="lg"
+                radius="100%"
               />
               <Text>{`${application.applicantUser.firstName}  ${application.applicantUser.lastName}`}</Text>
               <Text size="sm" align="center" fw={600}>
@@ -143,7 +127,7 @@ export function PostedJobApplicationRow({
                 {application.applicantUser.location ?? "No information"}
               </Text>
               <Text size="sm" align="center" fw={600}>
-                Description
+                Description of user
               </Text>
               <Text size="sm" align="center">
                 {application.applicantUser.petSitterProfile?.description ??
@@ -157,26 +141,17 @@ export function PostedJobApplicationRow({
         <Text>{application.applicantUser.email}</Text>
       </td>
       <td>
-        <Text>{application.applicantUser.phoneNumber ?? "-"}</Text>
+        <Text>{application.applicantUser.phoneNumber ?? "No data"}</Text>
       </td>
       <td>
         <Text>
           {application.applicantUser.petSitterProfile?.acquiredExperience ??
-            "-"}
+            "No data"}
         </Text>
       </td>
       <td>
         {application.status === JobApplicationStatus.Approving && (
-          <JobActionsNotApproved
-            applicationID={application.id}
-            isJobAvailable={jobStatus === Status.Available}
-          />
-        )}
-        {application.status === JobApplicationStatus.Approved && (
-          <JobActionsApproved
-            isJobDone={jobStatus === Status.Done}
-            applicationID={application.id}
-          />
+          <PostedJobApplicationActions applicationID={application.id} />
         )}
       </td>
     </tr>

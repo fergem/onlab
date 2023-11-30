@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace PetHolidayWebApi.Hubs
 {
-    public class JobApplicationHub: Hub
+    public class JobApplicationCommentHub: Hub
     {
        
         public async Task SubscribeToCommentSection(int applicationID) => 

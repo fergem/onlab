@@ -1,4 +1,6 @@
 import { AppShell } from "@mantine/core";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc"; // Import the UTC plugin
 import { useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AxiosInterceptor from "./components/interceptor/AxiosInterceptor";
@@ -8,6 +10,7 @@ import MessagesDrawer from "./components/utility-components/MessagesDrawer";
 import AuthContext from "./context/AuthContext";
 import MessagesOpenContext from "./context/MessagesContext";
 import { User, UserRole } from "./models/User";
+import AppliedJobs from "./pages/AppliedJobs";
 import CreatePetSitterJob from "./pages/CreatePetSitterJob";
 import Home from "./pages/Home";
 import Jobs from "./pages/Jobs";
@@ -15,8 +18,9 @@ import Login from "./pages/Login";
 import OwnerProfile from "./pages/PostedJobs";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import UndertookJobs from "./pages/UndertookJobs";
 import { ArrayFunctions } from "./utility/array";
+
+dayjs.extend(utc);
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -53,13 +57,13 @@ function App() {
                 }
               />
               <Route
-                path="/undertookjobs"
+                path="/appliedjobs"
                 element={
                   ArrayFunctions.safeIncludes(
                     userContext.user?.roles,
                     UserRole.PetSitter
                   ) ? (
-                    <UndertookJobs />
+                    <AppliedJobs />
                   ) : (
                     <Navigate to="/" />
                   )

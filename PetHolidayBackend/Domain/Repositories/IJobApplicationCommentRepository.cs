@@ -11,6 +11,5 @@ namespace Domain.Repositories
     public interface IJobApplicationCommentRepository
     {
         Task<JobApplicationComment> InsertApplicationComment(string message, int userID, JobApplication application);
-        Task DeleteApplicationComment(int commentID);
     }
 }

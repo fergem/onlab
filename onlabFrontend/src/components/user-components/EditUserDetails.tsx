@@ -1,100 +1,91 @@
 import { Button, Group, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useEffect } from "react";
-import {
-  UpdateUserDetailsModel,
-  UserDetailsWithoutProfiles,
-  UserValidation,
-} from "../../models/User";
+import { useState } from "react";
+import { UpdateUserDetailsModel } from "../../models/User";
 import ProfilePicture from "./ProfilePicture";
 
 export interface IEditUserDetails {
-  currentUserDetails?: UserDetailsWithoutProfiles;
+  profilePicture: string | undefined;
+  currentUserDetails: UpdateUserDetailsModel;
   updateUserDetails(newDetails: UpdateUserDetailsModel): void;
 }
 
 export default function EditUserDetails({
+  profilePicture,
   currentUserDetails,
   updateUserDetails,
 }: IEditUserDetails) {
-  const form = useForm({
-    initialValues: {
-      firstName: currentUserDetails?.firstName ?? "",
-      lastName: currentUserDetails?.lastName ?? "",
-      location: currentUserDetails?.location ?? "",
-      email: currentUserDetails?.email ?? "",
-      phoneNumber: currentUserDetails?.phoneNumber ?? "",
-    },
-    validate: {
-      email: (val) => UserValidation.emailValidation(val),
-    },
-  });
-
-  useEffect(() => {
-    form.setValues({
-      firstName: currentUserDetails?.firstName ?? "",
-      lastName: currentUserDetails?.lastName ?? "",
-      location: currentUserDetails?.location ?? "",
-      email: currentUserDetails?.email ?? "",
-      phoneNumber: currentUserDetails?.phoneNumber ?? "",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUserDetails]);
+  const [userDetails, setUserDetails] = useState(currentUserDetails);
 
   const updateDisabled =
-    form.values.email === currentUserDetails?.email &&
-    form.values.firstName === currentUserDetails?.firstName &&
-    form.values.lastName === currentUserDetails?.lastName &&
-    form.values.location === currentUserDetails?.location &&
-    form.values.phoneNumber === currentUserDetails?.phoneNumber;
+    userDetails.email === currentUserDetails?.email &&
+    userDetails.firstName === currentUserDetails?.firstName &&
+    userDetails.lastName === currentUserDetails?.lastName &&
+    userDetails.location === currentUserDetails?.location &&
+    userDetails.phoneNumber === currentUserDetails?.phoneNumber;
 
-  const handleUpdate = (model: UpdateUserDetailsModel) => {
-    updateUserDetails(model);
+  const handleUpdate = () => {
+    updateUserDetails(userDetails);
+  };
+
+  const handleSetFirstName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFirstName = event.target.value;
+    setUserDetails((prev) => ({ ...prev, firstName: newFirstName }));
+  };
+  const handleSetLastName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newLastName = event.target.value;
+    setUserDetails((prev) => ({ ...prev, lastName: newLastName }));
+  };
+  const handleSetEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = event.target.value;
+    setUserDetails((prev) => ({ ...prev, email: newEmail }));
+  };
+  const handleSetLocation = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newLocation = event.target.value;
+    setUserDetails((prev) => ({ ...prev, location: newLocation }));
+  };
+  const handleSetPhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPhoneNumber = event.target.value;
+    setUserDetails((prev) => ({ ...prev, phoneNumber: newPhoneNumber }));
   };
 
   return (
     <Group grow spacing={0}>
-      <ProfilePicture picture={currentUserDetails?.picture} />
-      <form onSubmit={form.onSubmit(handleUpdate)}>
-        <Stack justify="center" align="center">
-          <TextInput
-            withAsterisk
-            label="First Name"
-            placeholder="John"
-            miw="250px"
-            {...form.getInputProps("firstName")}
-          />
-          <TextInput
-            withAsterisk
-            label="Last Name"
-            placeholder="Doh"
-            miw="250px"
-            {...form.getInputProps("lastName")}
-          />
-          <TextInput
-            withAsterisk
-            label="Email"
-            placeholder="your@email.com"
-            miw="250px"
-            {...form.getInputProps("email")}
-          />
-          <TextInput
-            label="Location"
-            placeholder="Budapest"
-            miw="250px"
-            {...form.getInputProps("location")}
-          />
-          <TextInput
-            label="Phone number"
-            placeholder="+36709912323"
-            miw="250px"
-            {...form.getInputProps("phoneNumber")}
-          />
-          <Button type="submit" disabled={updateDisabled}>
-            Update profile
-          </Button>
-        </Stack>
-      </form>
+      <ProfilePicture picture={profilePicture} />
+      <Stack justify="center" align="center">
+        <TextInput
+          label="First Name"
+          placeholder="John"
+          miw="250px"
+          onChange={handleSetFirstName}
+        />
+        <TextInput
+          label="Last Name"
+          placeholder="Doh"
+          miw="250px"
+          onChange={handleSetLastName}
+        />
+        <TextInput
+          label="Email"
+          placeholder="your@email.com"
+          miw="250px"
+          onChange={handleSetEmail}
+        />
+        <TextInput
+          label="Location"
+          placeholder="Budapest"
+          miw="250px"
+          onChange={handleSetLocation}
+        />
+        <TextInput
+          label="Phone number"
+          placeholder="+36709912323"
+          miw="250px"
+          onChange={handleSetPhoneNumber}
+        />
+        <Button disabled={updateDisabled} onClick={handleUpdate}>
+          Update profile
+        </Button>
+      </Stack>
     </Group>
   );
 }

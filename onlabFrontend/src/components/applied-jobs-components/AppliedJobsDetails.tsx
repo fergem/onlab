@@ -1,14 +1,13 @@
 import { Group, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
-import { UndertookJob } from "../../models/Job";
+import { AppliedJob } from "../../models/Job";
+import RemoveApplicationButton from "./RemoveApplicationButton";
 
-interface IUndertookJobsPanelProps {
-  job: UndertookJob;
+interface IAppliedJobsPanelProps {
+  job: AppliedJob;
 }
 
-export default function UndertookJobsDetails({
-  job,
-}: IUndertookJobsPanelProps) {
+export default function AppliedJobsDetails({ job }: IAppliedJobsPanelProps) {
   return (
     <Stack align="center">
       <Group position="center" spacing={100}>
@@ -37,6 +36,11 @@ export default function UndertookJobsDetails({
         <Text fw={800}>Description</Text>
         <Text>{job.description}</Text>
       </Stack>
+      <RemoveApplicationButton
+        applicationID={job.applicationID}
+        applicationStatus={job.applicationStatus}
+        jobStatus={job.status}
+      />
     </Stack>
   );
 }

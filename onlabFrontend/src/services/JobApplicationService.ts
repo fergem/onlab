@@ -37,9 +37,9 @@ const insertApplicationCommentForJob = async (
   return response.data;
 };
 
-const deleteApplication = async (applicationID: number) => {
-  const response = await apiInstance.delete(
-    `api/jobapplications/${applicationID}`
+const cancelApplication = async (applicationID: number) => {
+  const response = await apiInstance.patch(
+    `/jobapplications/${applicationID}/cancel`
   );
   return response.data;
 };
@@ -55,7 +55,7 @@ const JobApplicationService = {
   getAllForJob,
   insertApplicationForJob,
   insertApplicationCommentForJob,
-  deleteApplication,
+  cancelApplication,
   jobApplicationsUserAppliedTo,
   approveApplication,
 };

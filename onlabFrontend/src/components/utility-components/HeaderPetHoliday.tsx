@@ -43,7 +43,6 @@ export default function HeaderPetHoliday() {
       logoutUser();
       navigate("/");
     } else {
-      console.log(route);
       navigate(`${route}`);
     }
   };
@@ -55,6 +54,7 @@ export default function HeaderPetHoliday() {
         spacing="xl"
         mx="40px"
         align="center"
+        noWrap
       >
         <Link style={{ textDecoration: "none", height: "75px" }} to="/">
           <svg
@@ -101,16 +101,16 @@ export default function HeaderPetHoliday() {
                 )}
               {user &&
                 ArrayFunctions.safeIncludes(user.roles, UserRole.PetSitter) && (
-                  <Tabs.Tab value="/undertookjobs">Undertook jobs</Tabs.Tab>
+                  <Tabs.Tab value="/appliedjobs">Applied jobs</Tabs.Tab>
                 )}
               {!!user === false && (
-                <Tabs.Tab value="/register" ml="30vw">
+                <Tabs.Tab value="/register" ml="200px">
                   Register
                 </Tabs.Tab>
               )}
               {!!user === false && <Tabs.Tab value="/login">Login</Tabs.Tab>}
               {user && (
-                <Tabs.Tab value="/profile" ml="30vw">
+                <Tabs.Tab value="/profile" ml="200px">
                   <Group align="center" position="center">
                     <Avatar
                       src={ImageFunctions.toDisplayImage(
@@ -150,8 +150,8 @@ export default function HeaderPetHoliday() {
                 </Link>
               )}
               {user && (
-                <Link style={{ textDecoration: "none" }} to="/undertookjobs">
-                  <Menu.Item icon={<IconNote />}>Undertook jobs</Menu.Item>
+                <Link style={{ textDecoration: "none" }} to="/appliedjobs">
+                  <Menu.Item icon={<IconNote />}>Applied jobs</Menu.Item>
                 </Link>
               )}
 

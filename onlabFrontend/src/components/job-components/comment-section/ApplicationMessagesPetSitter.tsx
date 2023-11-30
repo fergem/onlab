@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import {
   ActionIcon,
   Group,
@@ -10,15 +11,15 @@ import {
 } from "@mantine/core";
 import { IconArrowBack } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import Messagebar from "../components/job-components/Messagebar";
-import JobApplicationComments from "../components/job-components/comment-section/JobApplicationComments";
-import LoadingBoundary from "../components/utility-components/LoadingBoundary";
-import { useJobApplicationsUserAppliedTo } from "../hooks/react-query/JobApplicationHooks";
-import useJobAndApplicationFilter from "../hooks/useJobAndApplicationFilter";
-import { DefaultJobApplicationtData } from "../models/Filters";
-import { JobFilterParticipantData } from "../models/Job";
+import { useJobApplicationsUserAppliedTo } from "../../../hooks/react-query/JobApplicationHooks";
+import useJobAndApplicationFilter from "../../../hooks/useJobAndApplicationFilter";
+import { DefaultJobApplicationtData } from "../../../models/Filters";
+import { JobFilterParticipantData } from "../../../models/Job";
+import LoadingBoundary from "../../utility-components/LoadingBoundary";
+import Messagebar from "../Messagebar";
+import JobApplicationComments from "./JobApplicationComments";
 
-export default function ApplicationsPetSitter() {
+export default function ApplicationMessagesPetSitter() {
   const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
     useJobAndApplicationFilter();
 
@@ -27,7 +28,7 @@ export default function ApplicationsPetSitter() {
 
   const [selectedApplicationID, setSelectedApplicationID] = useState<
     number | undefined
-  >(undefined);
+  >();
 
   const appliedJob = useMemo(() => {
     return appliedJobs.find((s) => s.id === selectedApplicationID);
@@ -44,17 +45,15 @@ export default function ApplicationsPetSitter() {
     <Stack align="center" h="100%" justify="center">
       <Paper p="md" shadow="sm" withBorder>
         {!appliedJob && (
-          <Group align="center">
+          <Group align="center" noWrap mb={15}>
             <Select
               label="Job status"
-              mb={15}
               value={filter.jobStatus}
               onChange={handleSetJobStatus}
               data={JobFilterParticipantData}
             />
             <Select
               label="Application status"
-              mb={15}
               value={filter.jobApplicationStatus}
               onChange={handleSetJobApplicationStatus}
               data={DefaultJobApplicationtData}
@@ -95,7 +94,7 @@ export default function ApplicationsPetSitter() {
               refetch={listAppliedJobs}
               withBorder={false}
             >
-              <Stack>
+              <Stack spacing={0}>
                 {appliedJobs.map((s) => (
                   <Messagebar
                     appliedJob={s}

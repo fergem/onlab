@@ -11,6 +11,6 @@ namespace Domain.Common.UpdateModels
         public required int ID { get; set; }
         public  string? Name { get; set; }
         public int Age { get; set; }
-        public string? Species { get; set; }
+        public PetSpecies? Species { get; set; }
     }
 }

@@ -8,3 +8,8 @@ export interface UpdatePetSitterProfileModel {
   description?: string;
   acquiredExperience?: number;
 }
+
+export const defaultUpdatePetSitterProfileModel: UpdatePetSitterProfileModel = {
+  description: "",
+  acquiredExperience: 0,
+};

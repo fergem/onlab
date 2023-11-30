@@ -1,4 +1,4 @@
-import { Group, Stack, Title } from "@mantine/core";
+import { Group, Pagination, Stack, Title } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import JobList from "../components/job-components/JobList";
 import JobPageFilter from "../components/job-components/JobPageFilter";
@@ -18,6 +18,10 @@ export default function Jobs() {
     setJobFilter(filter);
   };
 
+  const handleSetPageNumber = (page: number) => {
+    setJobFilter((prev) => ({ ...prev, pageNumber: page }));
+  };
+
   return (
     <Stack align="center">
       <Group align="flex-start" position="center" noWrap w="80%">
@@ -30,11 +34,18 @@ export default function Jobs() {
             Available jobs
           </Title>
           <JobList
-            jobs={jobs}
+            jobs={jobs?.data}
             loading={loading}
             error={error}
             refetch={listJobs}
           />
+          <Group>
+            <Pagination
+              value={jobs?.currentPage}
+              onChange={handleSetPageNumber}
+              total={jobs?.totalPages ?? 0}
+            />
+          </Group>
         </Stack>
       </Group>
     </Stack>

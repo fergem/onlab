@@ -21,8 +21,9 @@ export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
       noWrap
       onClick={handleOnClick}
       sx={(theme) => ({
-        ":hover": {
-          backgroundColor: theme.colors.blue[4],
+        "&:hover": {
+          color: "white",
+          backgroundColor: theme.colors.blue[6],
         },
         borderRadius: "10px",
       })}
@@ -38,9 +39,10 @@ export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
         radius="lg"
       />
       <Stack spacing={0}>
-        <Text fw={1000} fz={17} lineClamp={2}>
-          {`${appliedJob.jobTitle} (${appliedJob.ownerUser.firstName} ${appliedJob.ownerUser.lastName})`}
+        <Text fw={500} fz={12} lineClamp={2}>
+          {appliedJob.jobTitle}
         </Text>
+
         <LastComment
           lastComment={
             appliedJob.comments ? appliedJob.comments.at(0) : undefined

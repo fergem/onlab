@@ -1,12 +1,9 @@
 import { Button, NumberInput, Stack, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import {
-  OwnerProfile,
-  UpdateOwnerProfileModel,
-} from "../../models/OwnerProfile";
+import { useState } from "react";
+import { UpdateOwnerProfileModel } from "../../models/OwnerProfile";
 
 export interface IEditOwnerProfile {
-  currentOwnerProfile?: OwnerProfile;
+  currentOwnerProfile: UpdateOwnerProfileModel;
   updateOwnerProfile(ownerProfile: UpdateOwnerProfileModel): void;
 }
 
@@ -14,66 +11,70 @@ export default function EditOwnerProfile({
   currentOwnerProfile,
   updateOwnerProfile,
 }: IEditOwnerProfile) {
-  const form = useForm({
-    initialValues: {
-      description: currentOwnerProfile?.description ?? "",
-      wage: currentOwnerProfile?.minWage ?? 0,
-      experience: currentOwnerProfile?.minRequiredExperience ?? 0,
-    },
-    validate: {},
-  });
+  const [ownerProfile, setOwnerProfile] =
+    useState<UpdateOwnerProfileModel>(currentOwnerProfile);
 
   const updateDisabled =
-    form.values.wage === currentOwnerProfile?.minWage &&
-    form.values.experience === currentOwnerProfile?.minRequiredExperience &&
-    form.values.description === currentOwnerProfile?.description;
+    ownerProfile.minWage === currentOwnerProfile?.minWage &&
+    ownerProfile.minRequiredExperience ===
+      currentOwnerProfile?.minRequiredExperience &&
+    ownerProfile.description === currentOwnerProfile?.description;
 
-  // useEffect(() => {
-  //   form.setValues({
-  //     location: user?.location ?? "",
-  //     phoneNumber: user?.phoneNumber ?? "",
-  //     payment: user?.ownerProfile?.minWage ?? 0,
-  //     experience: user?.ownerProfile?.minRequiredExperience ?? 0,
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
+  const handleUpdate = () => {
+    updateOwnerProfile(ownerProfile);
+  };
 
-  const handleUpdate = (model: UpdateOwnerProfileModel) => {
-    updateOwnerProfile(model);
+  const handleSetDescription = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newDescription = event.target.value;
+    setOwnerProfile((prev) => ({ ...prev, description: newDescription }));
+  };
+
+  const handleSetExperience = (value: number) => {
+    setOwnerProfile((prev) => ({
+      ...prev,
+      minRequiredExperience: value,
+    }));
+  };
+
+  const handleSetMinWage = (value: number) => {
+    setOwnerProfile((prev) => ({
+      ...prev,
+      minWage: value,
+    }));
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleUpdate)}>
-      <Stack justify="center" align="center">
-        <Textarea
-          label="Description"
-          placeholder="This the petsitter will see when applying to your job"
-          miw="250px"
-          {...form.getInputProps("description")}
-        />
-        <NumberInput
-          label="Your default minimum wage"
-          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-          step={5}
-          formatter={(value) =>
-            !Number.isNaN(parseFloat(value))
-              ? `$ ${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-              : "$ "
-          }
-          miw="250px"
-          min={0}
-          {...form.getInputProps("wage")}
-        />
-        <NumberInput
-          label="Min. required years of exp. for petsitter"
-          miw="250px"
-          min={0}
-          {...form.getInputProps("experience")}
-        />
-        <Button type="submit" disabled={updateDisabled}>
-          Update owner profile
-        </Button>
-      </Stack>
-    </form>
+    <Stack justify="center" align="center">
+      <Textarea
+        label="Description"
+        placeholder="This the petsitter will see when applying to your job"
+        miw="250px"
+        onChange={handleSetDescription}
+      />
+      <NumberInput
+        label="Your default minimum wage"
+        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+        step={5}
+        formatter={(value) =>
+          !Number.isNaN(parseFloat(value))
+            ? `$ ${value}`.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+            : "$ "
+        }
+        miw="250px"
+        min={0}
+        onChange={handleSetMinWage}
+      />
+      <NumberInput
+        label="Min. required years of exp. for petsitter"
+        miw="250px"
+        min={0}
+        onChange={handleSetExperience}
+      />
+      <Button type="submit" disabled={updateDisabled} onClick={handleUpdate}>
+        Update owner profile
+      </Button>
+    </Stack>
   );
 }

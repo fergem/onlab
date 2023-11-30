@@ -1,4 +1,5 @@
 import { DateValue } from "@mantine/dates";
+import dayjs from "dayjs";
 import { Day, Frequency, JobFilter, JobType } from "../models/Job";
 import { PetSpecies } from "../models/Pet";
 
@@ -47,11 +48,13 @@ export default function useJobFilter({
   };
 
   const handleSelectStartDate = (value: DateValue) => {
-    if (value) setJobFilter({ ...jobFilter, startDate: value });
+    const newDate = dayjs(value).utc(true).toDate();
+    if (value) setJobFilter({ ...jobFilter, startDate: newDate });
   };
 
   const handleSelectEndDate = (value: DateValue) => {
-    setJobFilter({ ...jobFilter, endDate: value ?? undefined });
+    const newDate = dayjs(value).utc(true).toDate();
+    setJobFilter({ ...jobFilter, endDate: newDate });
   };
 
   return {

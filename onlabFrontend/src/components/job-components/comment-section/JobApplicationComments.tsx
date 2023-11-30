@@ -12,6 +12,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useScrollIntoView } from "@mantine/hooks";
 import { IconMoodSmileBeam, IconSend } from "@tabler/icons-react";
+import { useEffect } from "react";
 import { useQueryClient } from "react-query";
 import {
   useJobApplicationCommentHub,
@@ -41,16 +42,12 @@ export default function JobApplicationComments({
   });
 
   const { scrollIntoView, targetRef, scrollableRef } =
-    useScrollIntoView<HTMLInputElement>({
-      offset: 0,
-    });
+    useScrollIntoView<HTMLInputElement>();
 
   const queryClient = useQueryClient();
   const handleCommentUpdate = () => {
     queryClient.invalidateQueries("query-applications");
     queryClient.invalidateQueries("query-usersAppliedTo");
-    queryClient.invalidateQueries("query-u");
-    // queryClient.invalidateQueries(["query-usersAppliedTo"]);
   };
 
   const { handleInvokeTyping, handleInvokeNotTyping, typing } =
@@ -77,17 +74,24 @@ export default function JobApplicationComments({
     scrollIntoView();
   };
 
+  useEffect(() => {
+    scrollIntoView();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const noMessageYet = application.comments?.length === 0 && !typing;
   return (
     <Paper shadow="sm" p="xl" withBorder>
       <Stack miw={miw}>
         <Box
           w="100%"
-          h="300px"
           sx={() => ({ overflow: "auto" })}
           ref={scrollableRef}
+          h="165px"
+          mah="300px"
         >
-          <Stack justify="center" spacing={2}>
-            {application.comments?.length === 0 && (
+          <Stack justify="flex-end" spacing={2} mih="165px" h="100%">
+            {noMessageYet && (
               <Stack align="center" justify="center" spacing={0} my={20}>
                 <IconMoodSmileBeam size={100} />
                 <Title order={4}>Start chatting now!</Title>

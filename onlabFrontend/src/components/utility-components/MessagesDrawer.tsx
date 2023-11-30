@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/react-query/AuthHooks";
 import useDrawer from "../../hooks/useDrawer";
 import { UserRole } from "../../models/User";
-import ApplicationsPetSitter from "../../pages/ApplicationsPetSitter";
+import ApplicationMessagesPetSitter from "../job-components/comment-section/ApplicationMessagesPetSitter";
 
 export default function MessagesDrawer() {
   const { opened, close } = useDrawer();
@@ -27,7 +27,8 @@ export default function MessagesDrawer() {
       ? UserRole.Owner
       : UserRole.PetSitter;
     setValue(newVal);
-  }, [user?.roles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const UserRoleData = [
     {
@@ -71,7 +72,7 @@ export default function MessagesDrawer() {
           value={value}
           data={UserRoleData}
         />
-        {value === UserRole.PetSitter && <ApplicationsPetSitter />}
+        {value === UserRole.PetSitter && <ApplicationMessagesPetSitter />}
       </Stack>
     </Drawer>
   );

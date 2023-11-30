@@ -28,8 +28,9 @@ import {
   useGetApplicationsForJob,
 } from "../../hooks/react-query/JobApplicationHooks";
 import { useGetJob } from "../../hooks/react-query/JobHooks";
-import { Day, JobType, Status } from "../../models/Job";
-import { Pet, PetSpecies } from "../../models/Pet";
+import { Day, JobType } from "../../models/Job";
+import { JobApplicationStatus } from "../../models/JobApplication";
+import { Pet } from "../../models/Pet";
 import { UserRole } from "../../models/User";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import { PetGrid } from "../pet-components/PetList";
@@ -52,27 +53,22 @@ function JobDetail() {
   const handleApplyToJob = () => {
     if (job) {
       applyToJob(job.id);
-      // navigate("/postedjobs");
     }
   };
-  const dogCount = job?.pets?.filter((s) => s.species === PetSpecies.Dog)
-    .length;
-  const catCount = job?.pets?.filter((s) => s.species === PetSpecies.Cat)
-    .length;
 
   const isOwner = user && user.id === job?.ownerUser.id;
   const ownerUser = job?.ownerUser;
+  const userApplication = applications.find(
+    (s) => s.applicantUser.id === user?.id
+  );
+  const isNotOwnerAndPetSitter =
+    user?.id !== job?.ownerUser?.id && user?.roles.includes(UserRole.PetSitter);
 
   const canApplyToJob =
-    user?.id !== job?.ownerUser?.id &&
-    job?.status === Status.Available &&
-    !applications.some((s) => s.applicantUser.id === user?.id) &&
-    user?.roles.includes(UserRole.PetSitter);
-
-  const canCancelJob =
-    user?.id === job?.ownerUser?.id &&
-    job?.status === Status.Upcoming &&
-    applications.length === 0;
+    (isNotOwnerAndPetSitter && !userApplication) ||
+    (isNotOwnerAndPetSitter &&
+      userApplication &&
+      userApplication.status === JobApplicationStatus.Canceled);
 
   return (
     <Stack justify="center" align="center">
@@ -108,7 +104,7 @@ function JobDetail() {
                 </Group>
                 <JobTypeBadge jobType={job?.type} />
                 <Group position="center" align="center">
-                  <Box>
+                  <Box miw="125px">
                     <Text fw={700}>Start date</Text>
                     <Text>
                       {
@@ -119,18 +115,20 @@ function JobDetail() {
                     </Text>
                   </Box>
                   {job?.endDate && (
-                    <Box>
+                    <Box miw="125px">
                       <Text fw={700}>End date</Text>
                       <Text>
                         {new Date(job?.endDate).toLocaleString().split(",")[0]}
                       </Text>
                     </Box>
                   )}
-                  <Box>
+                </Group>
+                <Group position="center" align="center">
+                  <Box miw="125px">
                     <Text fw={700}>Payment:</Text>
                     <Text>{job?.payment}$/hours</Text>
                   </Box>
-                  <Box>
+                  <Box miw="125px">
                     <Text>
                       <Text fw={700}>Min. experience: </Text>
                       {job?.minRequiredExperience ?? "No"} years
@@ -141,14 +139,7 @@ function JobDetail() {
                 {job?.repeated && <ChipDays days={job?.days} />}
 
                 {canApplyToJob && (
-                  <Button onClick={handleApplyToJob}>Apply to Job</Button>
-                )}
-                {canCancelJob && (
-                  <Group position="center" align="center">
-                    <Button onClick={() => {}} color="red">
-                      Cancel job
-                    </Button>
-                  </Group>
+                  <Button onClick={handleApplyToJob}>Apply to job</Button>
                 )}
               </Stack>
             </Paper>
@@ -157,7 +148,7 @@ function JobDetail() {
           <Grid.Col span={7}>
             <Stack align="top" justify="top">
               <Box>
-                <Group position="left" align="center" spacing={1} mb="sm">
+                <Group position="left" align="center" spacing={1} mb="5px">
                   <Title order={2}>{job?.title} </Title>
                   {user?.id === job?.ownerUser?.id && (
                     <Tooltip label="Delete">
@@ -174,10 +165,9 @@ function JobDetail() {
                   )}
                 </Group>
 
-                <Text fz="md" fw={500} mb="xs">
+                <Text fz="md" fw={500}>
                   {job?.location}{" "}
                 </Text>
-                <PetCountWithIcon dogCount={dogCount} catCount={catCount} />
               </Box>
               <Title order={4}>Description: </Title>
               <Text lineClamp={0}>{job?.description}</Text>{" "}

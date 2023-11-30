@@ -1,6 +1,7 @@
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Pet, PetInsertModel } from "../../models/Pet";
+import { Pet, PetInsertModel, PetUpdateModel } from "../../models/Pet";
 import { UpdateUserModel, UserDetails } from "../../models/User";
 import UserService from "../../services/UserService";
 import useNotification from "../useNotification";
@@ -15,14 +16,16 @@ export const useGetUser = () => {
   } = useQuery<UserDetails, Error>({
     queryKey: "query-user-details",
     queryFn: async () => {
-      return UserService.getUserDetails();
+      const result = UserService.getUserDetails();
+      console.log(result);
+      return result;
     },
   });
 
   useEffect(() => {
     if (data) setUserDetails(data);
   }, [data]);
-
+  console.log(userDetails);
   return { userDetails, loadingUserDetials, errorUserDetails, getUserDetails };
 };
 
@@ -58,16 +61,41 @@ export const usePostUserPet = () => {
     },
     {
       onSuccess: (result) => {
-        queryClient.setQueryData(["query-pets", result.id], result);
-        notifications.success("Successfully updated password");
+        queryClient.invalidateQueries("query-pets");
+        notifications.success(
+          `Successfully added ${result.name}, the ${result.species}`
+        );
       },
 
-      onError: (error: Error) => {
-        notifications.error(error.message);
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
       },
     }
   );
   return { postPet };
+};
+
+export const useUpdateUserPet = () => {
+  const queryClient = useQueryClient();
+  const notifications = useNotification();
+
+  const { mutate: updatePet } = useMutation(
+    "mutate-updatePet",
+    async (pet: PetUpdateModel) => {
+      return UserService.updatePet(pet);
+    },
+    {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries("query-pets");
+        notifications.success(`Successfully updated ${result.name}`);
+      },
+
+      onError: (error: AxiosError) => {
+        notifications.error(error.response?.data as string);
+      },
+    }
+  );
+  return { updatePet };
 };
 
 export const useUpdateUser = () => {
@@ -80,11 +108,12 @@ export const useUpdateUser = () => {
       return UserService.updateUser(info);
     },
     {
-      onSuccess: (result) => {
+      onSuccess: () => {
         notifications.success("Successfully updated user information");
-        queryClient.setQueryData(["query-user-details"], result);
+        queryClient.invalidateQueries("query-user-details");
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
   return { updateUser };
@@ -101,7 +130,8 @@ export const useUpdateUserPassword = () => {
       onSuccess: () => {
         notifications.success("Successfully updated password");
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
   return { updateUser };
@@ -116,11 +146,12 @@ export const useUserProfilePictureUpload = () => {
       if (fileSelected) return UserService.uploadProfilePicture(fileSelected);
     },
     {
-      onSuccess: (result) => {
+      onSuccess: () => {
         notifications.success("Successfully updated user information");
-        queryClient.setQueryData(["query-user-details"], result);
+        queryClient.invalidateQueries("query-user-details");
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
   return { postProfilePicture, errorUpload };
@@ -139,7 +170,8 @@ export const useDeletePet = () => {
         notifications.success("Successfully deleted pet");
         queryClient.invalidateQueries("query-pets");
       },
-      onError: (error: Error) => notifications.error(error.message),
+      onError: (error: AxiosError) =>
+        notifications.error(error.response?.data as string),
     }
   );
 

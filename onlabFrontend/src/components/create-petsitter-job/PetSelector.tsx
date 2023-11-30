@@ -2,19 +2,23 @@ import { Group, Stack, Text } from "@mantine/core";
 import { useGetUserPets } from "../../hooks/react-query/UserHooks";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import NavButton from "../utility-components/NavButton";
-import SelectableImage from "../utility-components/SelectableImage";
+import SelectableCardWithImage from "../utility-components/SelectableCardWithImage";
+import { CreateJobDetailsFormType } from "./CreateJobDetailsForm";
 
 interface IProps {
-  selectPets: (id: number) => void;
+  form: CreateJobDetailsFormType;
 }
-
-export default function PetSelector({ selectPets }: IProps) {
+export default function PetSelector({ form }: IProps) {
   const { pets, error, loading, listPets } = useGetUserPets();
 
-  const handleSelectPets = (id: number) => {
-    selectPets(id);
+  const handleSelectPet = (id: number) => {
+    if (form.values.petIDs.includes(id)) {
+      const newPetIDs = form.values.petIDs.filter((s) => s !== id);
+      form.setFieldValue("petIDs", newPetIDs);
+    } else {
+      form.setFieldValue("petIDs", [...form.values.petIDs, id]);
+    }
   };
-
   return (
     <Stack align="center" justify="center" spacing="xl">
       {pets.length > 0 && (
@@ -32,16 +36,17 @@ export default function PetSelector({ selectPets }: IProps) {
               <Text align="center">
                 You have got no pets yet. Go to your profile and add one
               </Text>
-              <NavButton name="Profile" to="/profile" icon={undefined} />
+              <NavButton name="Profile" to="/profile" />
             </Stack>
           )}
           {pets?.map((s) => (
-            <SelectableImage
+            <SelectableCardWithImage
               key={s.id}
               id={s.id}
-              onClick={handleSelectPets}
-              source={s.image && s.image[1]}
+              onClick={handleSelectPet}
+              source={s.image}
               title={s.name}
+              selected={form.values.petIDs.includes(s.id)}
             />
           ))}
         </LoadingBoundary>

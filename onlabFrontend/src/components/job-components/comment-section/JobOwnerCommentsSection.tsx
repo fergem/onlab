@@ -3,6 +3,8 @@ import { IconMoodSad } from "@tabler/icons-react";
 import { useAuth } from "../../../hooks/react-query/AuthHooks";
 import { JobApplication } from "../../../models/JobApplication";
 import { UserPreview } from "../../../models/User";
+import { baseProfilePicture } from "../../../utility/constants";
+import { ImageFunctions } from "../../../utility/image";
 import JobApplicationComments from "./JobApplicationComments";
 
 export interface IJobCommentSectionProps {
@@ -39,8 +41,14 @@ export default function JobOwnerCommentsSection({
                 <Avatar
                   src={
                     user?.id === s.applicantUser.id
-                      ? s.applicantUser.picture
-                      : ownerUser?.picture
+                      ? ImageFunctions.toDisplayImage(
+                          baseProfilePicture,
+                          s.applicantUser.picture
+                        )
+                      : ImageFunctions.toDisplayImage(
+                          baseProfilePicture,
+                          ownerUser?.picture
+                        )
                   }
                   radius="xl"
                 />

@@ -1,5 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Models;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,11 +27,12 @@ namespace Domain.Models
 
         public required string Title { get; set; }
 
-        public required int OwnerUserID { get; set; }
+        public int OwnerUserID { get; set; }
         public virtual User OwnerUser { get; set; } = null!;
 
 
         public virtual ICollection<PetJob> Pets { get; private set; } = new List<PetJob>();
         public virtual ICollection<JobApplication> JobApplications { get; private set; } = new List<JobApplication>();
     }
+    
 }

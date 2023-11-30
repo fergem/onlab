@@ -10,3 +10,9 @@ export interface UpdateOwnerProfileModel {
   minRequiredExperience?: number;
   minWage?: number;
 }
+
+export const defaultUpdateOwnerProfileModel: UpdateOwnerProfileModel = {
+  description: "",
+  minRequiredExperience: 0,
+  minWage: 0,
+};

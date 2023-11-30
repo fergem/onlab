@@ -1,49 +1,64 @@
-import { Carousel } from "@mantine/carousel";
-import { FileInput, Image } from "@mantine/core";
+import { Button, FileButton, Group, Image, Text } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import { useRef } from "react";
 import { basePetPicture } from "../../utility/constants";
 
 interface IProps {
-  petImage?: File[];
-  setPetImageFiles(image: File[]): void;
+  oldPetImage?: File;
+  petImage?: File;
+  setPetImageFile(image?: File): void;
 }
-export default function PetImageSelect({ petImage, setPetImageFiles }: IProps) {
-  const upload = (files: File[]) => {
-    setPetImageFiles(files);
+export default function PetImageSelect({
+  oldPetImage,
+  petImage,
+  setPetImageFile,
+}: IProps) {
+  const upload = (file: File) => {
+    setPetImageFile(file);
+  };
+  const resetRef = useRef<() => void>(null);
+
+  const clearFile = () => {
+    setPetImageFile(undefined);
+    resetRef.current?.();
   };
 
-  const withIndicatorAndControls = !!petImage && petImage.length > 1;
+  // eslint-disable-next-line no-nested-ternary
+  const image = petImage
+    ? URL.createObjectURL(petImage)
+    : oldPetImage
+    ? URL.createObjectURL(oldPetImage)
+    : basePetPicture;
+
   return (
     <>
-      {!!petImage && petImage.length > 0 && (
-        <Carousel
-          w="17vw"
-          height="17vw"
-          mx="auto"
-          withIndicators={withIndicatorAndControls}
-          withControls={withIndicatorAndControls}
-        >
-          {petImage?.map((s) => (
-            <Carousel.Slide key={s.name}>
-              <Image
-                src={s ? URL.createObjectURL(s) : basePetPicture}
-                radius="md"
-                width="17vw"
-                height="17vw"
-                alt={s.name}
-              />
-            </Carousel.Slide>
-          ))}
-        </Carousel>
-      )}
-
-      <FileInput
-        multiple
-        onChange={upload}
-        placeholder="Select image"
-        label="Image"
-        icon={<IconUpload size="14" />}
+      <Image
+        src={image}
+        radius="md"
+        width="17vw"
+        height="17vw"
+        alt="Pet image"
       />
+
+      <Group position="center">
+        <FileButton
+          resetRef={resetRef}
+          onChange={upload}
+          accept="image/png,image/jpeg"
+        >
+          {(props) => (
+            <Button {...props}>
+              <Group spacing="xs">
+                <IconUpload size="20" />
+                <Text>Upload Image</Text>
+              </Group>
+            </Button>
+          )}
+        </FileButton>
+        <Button disabled={!petImage} color="red" onClick={clearFile}>
+          Reset
+        </Button>
+      </Group>
     </>
   );
 }

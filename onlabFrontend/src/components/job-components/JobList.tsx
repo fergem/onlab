@@ -18,7 +18,7 @@ import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
 import { PetCountWithIcon } from "./JobDetail";
 
 export interface IPropsJobList {
-  jobs: JobPreview[];
+  jobs?: JobPreview[];
   loading: boolean;
   error: boolean;
   refetch(): void;
@@ -35,12 +35,14 @@ export default function JobList({
       loading={loading}
       error={error}
       refetch={refetch}
-      isEmpty={jobs.length === 0}
+      isEmpty={jobs && jobs.length === 0}
       withBorder
     >
-      <Group position="center" align="left">
-        {jobs.length > 0 && jobs.map((x) => <JobCard key={x.id} job={x} />)}
-      </Group>
+      {jobs && (
+        <Group position="center" align="left">
+          {jobs.length > 0 && jobs.map((x) => <JobCard key={x.id} job={x} />)}
+        </Group>
+      )}
     </LoadingBoundary>
   );
 }

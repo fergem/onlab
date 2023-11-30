@@ -1,18 +1,18 @@
-import { Grid, Image, Paper, Stack, Text } from "@mantine/core";
-import { useState } from "react";
+import { Grid, Group, Image, Paper, Stack, Text, Title } from "@mantine/core";
+import { IconCat, IconDog, IconMoodSad } from "@tabler/icons-react";
 import { useGetUserPets } from "../../hooks/react-query/UserHooks";
-import { Pet } from "../../models/Pet";
+import { Pet, PetSpecies } from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
-import EditPet from "./EditPet";
+import DeletePetModal from "./DeletePetModal";
+import EditPetModal from "./EditPetModal";
 
-interface IPropsPetGrid {
-  pets?: Pet[];
+interface IPropsPetListLoadingPets {
   editable?: boolean;
 }
 
-export default function PetListLoadingPets() {
+export default function ProfilePetList({ editable }: IPropsPetListLoadingPets) {
   const { pets, error, loading, listPets } = useGetUserPets();
   return (
     <LoadingBoundary
@@ -21,51 +21,53 @@ export default function PetListLoadingPets() {
       refetch={listPets}
       withBorder={false}
     >
-      <PetGrid pets={pets} />
+      <PetGrid pets={pets} editable={editable} />
+      {pets.length === 0 && (
+        <Stack align="center" justify="center" my={20}>
+          <IconMoodSad size={130} />
+          <Title order={3} size={20}>
+            No pets yet, consider adding one with the plus icon.
+          </Title>
+        </Stack>
+      )}
     </LoadingBoundary>
   );
 }
 
+interface IPropsPetGrid {
+  pets?: Pet[];
+  editable?: boolean;
+}
+
 export function PetGrid({ pets, editable }: IPropsPetGrid) {
-  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
-  const handleSelectPet = (pet: Pet | null) => {
-    if (editable) setSelectedPet(pet);
-  };
-
-  const handleDeselectPet = () => {
-    if (editable) setSelectedPet(null);
-  };
-
   return (
     <Stack align="center">
-      {!selectedPet && (
-        <Grid justify="center">
-          {pets?.map((pet) => (
-            <Grid.Col
-              span="content"
-              key={pet.id}
-              onClick={() => handleSelectPet(pet)}
-            >
-              <PetCard pet={pet} />
-            </Grid.Col>
-          ))}
-        </Grid>
-      )}
-      {editable && selectedPet && (
-        <EditPet pet={selectedPet} back={handleDeselectPet} />
-      )}
+      <Grid justify="center">
+        {pets?.map((pet) => (
+          <Grid.Col span="content" key={pet.id}>
+            <PetCard pet={pet} editable={editable} />
+          </Grid.Col>
+        ))}
+      </Grid>
     </Stack>
   );
 }
 
 interface IPropsPetCard {
+  editable?: boolean;
   pet: Pet;
 }
 
-export function PetCard({ pet }: IPropsPetCard) {
+export function PetCard({ pet, editable }: IPropsPetCard) {
   return (
     <Stack justify="center" align="center" h="100%">
-      <Paper shadow="xs" p="md" withBorder>
+      <Paper p="md" shadow="sm" radius="5%" withBorder>
+        {editable && (
+          <Group position="apart" mb="xs">
+            <EditPetModal pet={pet} />
+            <DeletePetModal pet={pet} />
+          </Group>
+        )}
         <Image
           height="8vw"
           width="8vw"
@@ -73,10 +75,20 @@ export function PetCard({ pet }: IPropsPetCard) {
           src={ImageFunctions.toDisplayImage(basePetPicture, pet.image)}
           alt="Green double couch with wooden legs"
         />
+        <Group align="center" position="center" mt="sm" spacing={2}>
+          {pet.species === PetSpecies.Cat ? (
+            <IconCat size={20} />
+          ) : (
+            <IconDog size={20} />
+          )}
 
-        <Text size="sm" align="center" mt="sm">
-          {pet.name}
-        </Text>
+          <Text size="sm" align="center">
+            {pet.name}
+          </Text>
+          <Text size="sm" align="center">
+            ({pet.age})
+          </Text>
+        </Group>
       </Paper>
     </Stack>
   );

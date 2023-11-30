@@ -1,28 +1,19 @@
-import {
-  Button,
-  Center,
-  Code,
-  Group,
-  Paper,
-  Stack,
-  Stepper,
-} from "@mantine/core";
+import { Button, Center, Group, Paper, Stack, Stepper } from "@mantine/core";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useForm } from "@mantine/form";
 import CreateJobDetailsForm from "../components/create-petsitter-job/CreateJobDetailsForm";
 import CreateJobServiceForm from "../components/create-petsitter-job/CreateJobServiceForm";
+import PetSelector from "../components/create-petsitter-job/PetSelector";
 import { usePostJob } from "../hooks/react-query/JobHooks";
 import { CreateJobModel, JobType, JobValidation } from "../models/Job";
 
 export default function CreatePetSitterJob() {
-  const [active, setActive] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const { postJob } = usePostJob();
-  const navigate = useNavigate();
 
   const handlePostJob = () => {
-    navigate("/postedjobs");
+    postJob(form.values);
   };
 
   const form = useForm({
@@ -40,15 +31,37 @@ export default function CreatePetSitterJob() {
       petIDs: [],
     } as CreateJobModel,
 
-    validate: {
-      description: (val) => JobValidation.validateDescription(val),
-      location: (val) => JobValidation.validateLocation(val),
+    validate: (val) => {
+      if (activeStep === 0) {
+        return {
+          petIDs: JobValidation.validatePetSelect(val.petIDs),
+        };
+      }
+      if (activeStep === 1) {
+        return {
+          type: JobValidation.validateJobType(
+            val.jobType,
+            val.repeated,
+            val.days
+          ),
+          endDate: JobValidation.validateEndDate(val.repeated, val.endDate),
+          startDate: JobValidation.validateStartDate(val.startDate),
+          days: JobValidation.validateDays(val.repeated, val.days),
+        };
+      }
+      if (activeStep === 2) {
+        return {
+          description: JobValidation.validateDescription(val.description),
+          location: JobValidation.validateLocation(val.location),
+          title: JobValidation.validateTitle(val.title),
+        };
+      }
+      return {};
     },
-    validateInputOnChange: true,
   });
 
   const nextStep = () =>
-    setActive((current) => {
+    setActiveStep((current) => {
       if (form.validate().hasErrors) {
         return current;
       }
@@ -56,46 +69,51 @@ export default function CreatePetSitterJob() {
     });
 
   const prevStep = () =>
-    setActive((current) => (current > 0 ? current - 1 : current));
+    setActiveStep((current) => (current > 0 ? current - 1 : current));
+
+  const lastStep = () => handlePostJob();
+
   return (
     <Center mih="80vh">
-      <Paper shadow="sm" p="xl" w="50%">
+      <Paper shadow="sm" p="xl" w="50%" withBorder>
         <Stack spacing="xs">
           <Stepper
-            active={active}
-            onStepClick={setActive}
+            active={activeStep}
+            onStepClick={setActiveStep}
             breakpoint="sm"
             allowNextStepsSelect={false}
             color="indigo"
             iconSize={32}
           >
-            <Stepper.Step label="First step" description="Title and Details">
-              <CreateJobDetailsForm form={form} />
+            <Stepper.Step label="Select pets">
+              <PetSelector form={form} />
             </Stepper.Step>
 
-            <Stepper.Step
-              label="Second step"
-              description="Personal information"
-            >
+            <Stepper.Step label="Type of Service">
               <CreateJobServiceForm form={form} />
             </Stepper.Step>
-            <Stepper.Step label="Final step" description="Social media" />
 
-            <Stepper.Completed>
-              Completed! Form values:
-              <Code block mt="xl">
-                {JSON.stringify(form.values, null, 2)}
-              </Code>
-            </Stepper.Completed>
+            <Stepper.Step label="Title and Details">
+              <CreateJobDetailsForm form={form} />
+            </Stepper.Step>
           </Stepper>
 
           <Group align="flex-end" mt="xl">
-            {active !== 0 && (
+            {activeStep !== 0 && (
               <Button variant="default" onClick={prevStep}>
                 Back
               </Button>
             )}
-            {active !== 3 && <Button onClick={nextStep}>Next step</Button>}
+            {activeStep !== 2 && (
+              <Button onClick={nextStep} disabled={!form.isValid()}>
+                Next step
+              </Button>
+            )}
+            {activeStep === 2 && (
+              <Button onClick={lastStep} disabled={!form.isValid()}>
+                Post job
+              </Button>
+            )}
           </Group>
         </Stack>
       </Paper>

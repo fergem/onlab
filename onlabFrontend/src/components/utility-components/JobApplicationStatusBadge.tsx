@@ -3,18 +3,14 @@ import { JobApplicationStatus } from "../../models/JobApplication";
 
 interface IPropsStatusBadge {
   status: JobApplicationStatus;
-  ml?: string;
 }
 
-export default function JobStatusBadge({
-  status,
-  ml = "10",
-}: IPropsStatusBadge) {
+export default function JobStatusBadge({ status }: IPropsStatusBadge) {
   switch (status) {
     case JobApplicationStatus.Approving:
       return (
         <Tooltip label="Status of application">
-          <Badge color="green" size="sm" variant="filled" ml={ml}>
+          <Badge color="blue" size="sm" variant="filled" w="100px">
             Approving
           </Badge>
         </Tooltip>
@@ -22,15 +18,23 @@ export default function JobStatusBadge({
     case JobApplicationStatus.Approved:
       return (
         <Tooltip label="Status of application">
-          <Badge color="blue" size="sm" variant="filled" ml={ml}>
+          <Badge color="green" size="sm" variant="filled" w="100px">
             Approved
+          </Badge>
+        </Tooltip>
+      );
+    case JobApplicationStatus.NotApproved:
+      return (
+        <Tooltip label="Status of application">
+          <Badge color="red" size="sm" variant="filled" w="100px">
+            Not Approved
           </Badge>
         </Tooltip>
       );
     case JobApplicationStatus.Canceled:
       return (
         <Tooltip label="Status of application">
-          <Badge color="red" size="sm" variant="filled" ml={ml}>
+          <Badge color="gray" size="sm" variant="filled" w="100px">
             Canceled
           </Badge>
         </Tooltip>
