@@ -4,6 +4,7 @@ using Domain.Common.InsertModels;
 using Domain.Common.QueryHelpers;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -83,19 +84,19 @@ namespace DataAccess.Repositories
                     .Include(s => s.OwnerUser)
                     .Include(s => s.Pets)
                     .ThenInclude(s => s.Pet)
-                    .Skip((filter.PageNumber - 1) * filter.PageSize)
                     .Where(s => s.Repeated == filter.Repeated)
-                    .Where(s => s.Status == Status.Available);
+                    .Where(s => s.Status == Status.Available)
+                    .Where(s => s.StartDate >= filter.StartDate)
+                    .OrderBy(s => s.StartDate);
+
+            if(filter.EndDate is not null)
+                query = query.Where(job => job.EndDate != null && job.EndDate <= filter.EndDate);
 
             if(filter.Types is not null && filter.Types.Count > 0)
-            {
-                query = query.Where(job => filter.Types.Contains(job.Type));
-            }
+                query = query.Where(job => filter.Types.Contains(job.Type));    
 
             if (filter.Species is not null && filter.Species.Count > 0) 
-            {
                 query = query.Where(job => job.Pets.Any(petJob => filter.Species.Contains(petJob.Pet.Species)));
-            }
 
             if (filter.Repeated && filter.Days is not null) 
             {
@@ -106,12 +107,12 @@ namespace DataAccess.Repositories
                 query = query.Where(s => filteredDays.Contains(s.ID));
             }
    
-            return PagedList<Job>.ToPagedList(query.OrderBy(s => s.StartDate), filter.PageNumber, filter.PageSize);
+            return await PagedList<Job>.ToPagedList(query, filter.PageNumber, filter.PageSize);
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterPosted filter)
+        public async Task<PagedList<Job>> ListPostedJobs(int userID, JobFilterPosted filter)
         {
-            return await dbcontext.Jobs
+            return await PagedList<Job>.ToPagedList(dbcontext.Jobs
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
                 .Include(s => s.JobApplications)
@@ -120,13 +121,12 @@ namespace DataAccess.Repositories
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
                 .Where(s => filter.Repeated != null ? s.Repeated == filter.Repeated : true)
-                .OrderBy(s => (int)s.Status)
-                .ToListAsync();
+                .OrderBy(s => s.StartDate), filter.PageNumber, filter.PageSize);
         }
 
-        public async Task<IReadOnlyCollection<Job>> ListAppliedJobs(int userID, JobApplicationFilter filter)
+        public async Task<PagedList<Job>> ListAppliedJobs(int userID, JobFilterApplied filter)
         {
-            return await dbcontext.Jobs
+            return await PagedList<Job>.ToPagedList(dbcontext.Jobs
                 .Include(s => s.OwnerUser)
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
@@ -134,7 +134,8 @@ namespace DataAccess.Repositories
                 .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
                 .Where(s => filter.JobStatus != Status.All ? s.Status == filter.JobStatus : true)
                 .Where(s => filter.JobApplicationStatus != JobApplicationStatus.All ? s.JobApplications.FirstOrDefault(k => k.ApplicantUserID == userID)!.Status == filter.JobApplicationStatus : true)
-                .ToListAsync();
+                .OrderBy(s => s.StartDate),
+                filter.PageNumber,filter.PageSize);
         }
 
         public async Task<Job> ProgressJob(int jobID, Status status)
@@ -153,7 +154,7 @@ namespace DataAccess.Repositories
             return jobToProgress;
         }
 
-        public async Task RemoveJobsDependentOnPet(int petID)
+        public async Task CancelJobsDependentOnPet(int petID)
         {
             var dbPet = await dbcontext.Pets.FirstOrDefaultAsync(s=> s.ID == petID);
             if (dbPet is null)
@@ -162,25 +163,16 @@ namespace DataAccess.Repositories
             var jobs = await dbcontext.Jobs
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
-                .Where(s => s.Pets.Count == 1)
                 .Where(s => s.Pets.Any(s => s.PetID == petID)).ToListAsync();
 
-            foreach (var job in jobs)
+            if(jobs.Any())
             {
-                job.Status = Status.Canceled;
+                foreach (var job in jobs)
+                {
+                    job.Status = Status.Canceled;
+                }
+                await dbcontext.SaveChangesAsync();
             }
-
-            await dbcontext.SaveChangesAsync();        
         }
-
-        public async Task<Job> UpdateJob(int jobID)
-        {
-            var jobToUpdate = await dbcontext.Jobs
-              .Include(s => s.OwnerUser)
-              .FirstAsync(s => s.ID == jobID);
-
-            throw new NotImplementedException();
-        }
-
     } 
 }

@@ -40,7 +40,7 @@ export default function useJobFilter({
         setJobFilter({ ...jobFilter, repeated: false, days: [] });
         break;
       case Frequency.Repeat:
-        setJobFilter({ ...jobFilter, repeated: true });
+        setJobFilter({ ...jobFilter, repeated: true, endDate: undefined });
         break;
       default: // should not happen
         break;

@@ -2,10 +2,11 @@ import { Avatar, Paper, Tabs, Text } from "@mantine/core";
 import { JobApplication } from "../../../models/JobApplication";
 import { UserPreview } from "../../../models/User";
 import { baseProfilePicture } from "../../../utility/constants";
+import { ImageFunctions } from "../../../utility/image";
 import JobApplicationComments from "./JobApplicationComments";
 
 export interface IJobPetSitterCommentSection {
-  application?: JobApplication;
+  application: JobApplication;
   ownerUser?: UserPreview;
 }
 
@@ -13,8 +14,6 @@ export default function JobPetSitterCommentSection({
   application,
   ownerUser,
 }: IJobPetSitterCommentSection) {
-  // Should not happen
-  if (!application) return <div />;
   return (
     <Paper p="md" shadow="sm" withBorder w="60%">
       <Tabs defaultValue={application.id.toString()}>
@@ -23,11 +22,10 @@ export default function JobPetSitterCommentSection({
             value={application.id.toString()}
             icon={
               <Avatar
-                src={
+                src={ImageFunctions.toDisplayImage(
+                  baseProfilePicture,
                   ownerUser?.picture
-                    ? `data:image/png;base64,${ownerUser.picture}`
-                    : baseProfilePicture
-                }
+                )}
                 radius="xl"
               />
             }

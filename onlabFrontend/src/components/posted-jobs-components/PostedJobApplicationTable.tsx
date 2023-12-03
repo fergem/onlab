@@ -8,7 +8,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useMemo } from "react";
-import { Status } from "../../models/Job";
 import {
   JobApplicationStatus,
   PostedJobApplication,
@@ -17,15 +16,13 @@ import { baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
 import PostedJobApplicationActions from "./PostedJobApplicationActions";
 
-interface INonRepeatedTableProps {
+export interface IPostedJobApplicationTable {
   jobApplications: PostedJobApplication[];
-  jobStatus: Status;
 }
 
 export default function PostedJobApplicationTable({
   jobApplications,
-  jobStatus,
-}: INonRepeatedTableProps) {
+}: IPostedJobApplicationTable) {
   const approvedApplication = useMemo(() => {
     return jobApplications.find(
       (s) => s.status === JobApplicationStatus.Approved
@@ -63,19 +60,12 @@ export default function PostedJobApplicationTable({
           </thead>
           <tbody>
             {approvedApplication && (
-              <PostedJobApplicationRow
-                application={approvedApplication}
-                jobStatus={jobStatus}
-              />
+              <PostedJobApplicationRow application={approvedApplication} />
             )}
 
             {!approvedApplication &&
               jobApplications.map((s) => (
-                <PostedJobApplicationRow
-                  application={s}
-                  key={s.id}
-                  jobStatus={jobStatus}
-                />
+                <PostedJobApplicationRow application={s} key={s.id} />
               ))}
           </tbody>
         </Table>
@@ -86,12 +76,10 @@ export default function PostedJobApplicationTable({
 
 export interface IPropsPostedJobApplicationRow {
   application: PostedJobApplication;
-  jobStatus: Status;
 }
 
 export function PostedJobApplicationRow({
   application,
-  jobStatus,
 }: IPropsPostedJobApplicationRow) {
   return (
     <tr>

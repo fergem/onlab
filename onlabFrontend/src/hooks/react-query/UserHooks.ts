@@ -9,32 +9,40 @@ import useNotification from "../useNotification";
 export const useGetUser = () => {
   const [userDetails, setUserDetails] = useState<UserDetails>();
   const {
-    isLoading: loadingUserDetials,
+    isLoading: isLoadingUserDetials,
     refetch: getUserDetails,
-    isError: errorUserDetails,
+    isError: isErrorUserDetails,
     data,
   } = useQuery<UserDetails, Error>({
-    queryKey: "query-user-details",
+    queryKey: ["query-user-details", userDetails],
     queryFn: async () => {
       const result = UserService.getUserDetails();
-      console.log(result);
       return result;
     },
+    staleTime: Infinity,
+    cacheTime: 0,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
     if (data) setUserDetails(data);
   }, [data]);
-  console.log(userDetails);
-  return { userDetails, loadingUserDetials, errorUserDetails, getUserDetails };
+  return {
+    userDetails,
+    isLoadingUserDetials,
+    isErrorUserDetails,
+    getUserDetails,
+  };
 };
 
 export const useGetUserPets = () => {
   const [pets, setPets] = useState<Pet[]>([]);
   const {
-    isLoading: loading,
-    refetch: listPets,
-    isError: error,
+    isLoading,
+    refetch: refetchPets,
+    isError,
     data,
   } = useQuery<Pet[], Error>({
     queryKey: "query-pets",
@@ -47,7 +55,7 @@ export const useGetUserPets = () => {
     if (data) setPets(data);
   }, [data]);
 
-  return { pets, error, loading, listPets };
+  return { pets, isError, isLoading, refetchPets };
 };
 
 export const usePostUserPet = () => {
@@ -63,7 +71,7 @@ export const usePostUserPet = () => {
       onSuccess: (result) => {
         queryClient.invalidateQueries("query-pets");
         notifications.success(
-          `Successfully added ${result.name}, the ${result.species}`
+          `Successfully added ${result.name}, the ${result.species} to your profile`
         );
       },
 
@@ -108,9 +116,9 @@ export const useUpdateUser = () => {
       return UserService.updateUser(info);
     },
     {
-      onSuccess: () => {
+      onSuccess: (newUserDetails) => {
         notifications.success("Successfully updated user information");
-        queryClient.invalidateQueries("query-user-details");
+        queryClient.setQueryData("query-user-details", newUserDetails);
       },
       onError: (error: AxiosError) =>
         notifications.error(error.response?.data as string),
@@ -141,7 +149,7 @@ export const useUserProfilePictureUpload = () => {
   const queryClient = useQueryClient();
   const notifications = useNotification();
 
-  const { mutate: postProfilePicture, isError: errorUpload } = useMutation(
+  const { mutate: postProfilePicture } = useMutation(
     async (fileSelected: File) => {
       if (fileSelected) return UserService.uploadProfilePicture(fileSelected);
     },
@@ -154,7 +162,7 @@ export const useUserProfilePictureUpload = () => {
         notifications.error(error.response?.data as string),
     }
   );
-  return { postProfilePicture, errorUpload };
+  return { postProfilePicture };
 };
 
 export const useDeletePet = () => {

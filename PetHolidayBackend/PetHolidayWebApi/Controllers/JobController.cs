@@ -27,48 +27,51 @@ namespace PetHolidayWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> List([FromQuery] JobFilter jobParameters)
+        public async Task<IActionResult> ListJobs([FromQuery] JobFilter jobFilter)
         {
-            /*if (!jobParameters.ValidOnce && jobParameters.ValidOnce)
-                return BadRequest("Filter is not good");
-            else if (!jobParameters.ValidRepeated && jobParameters.ValidRepeated)
-                return BadRequest("Filter is not good");*/
-
-            var result = await jobService.List(jobParameters);
+            var result = await jobService.List(jobFilter);
             var jobPreviewDTOs = result.Select(s => s.ToJobPreviewDTO()).ToList();
             return Ok(new
             {
                 Data = jobPreviewDTOs,
                 result.CurrentPage,
                 result.TotalPages,
-                result.PageSize,
-                result.TotalCount,
-                result.HasPrevious,
-                result.HasNext,
             });
         }
 
         [Authorize(Roles = "Owner")]
         [HttpGet("posted")]
-        public async Task<ActionResult<IReadOnlyCollection<PostedJobDTO>>> ListRepeatablePostedJobs([FromQuery] JobFilterPosted filter)
+        public async Task<IActionResult> ListPostedJobs([FromQuery] JobFilterPosted filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
             var result = await jobService.ListPostedJobs(userID, filter);
-            return Ok(result.Select(s => s.ToPostedJobDTO()));
+            var postedJobDTOs = result.Select(s => s.ToPostedJobDTO());
+            return Ok(new
+            {
+                Data = postedJobDTOs,
+                result.CurrentPage,
+                result.TotalPages,
+            });
         }
 
         [Authorize(Roles = "PetSitter")]
         [HttpGet("applied")]
-        public async Task<ActionResult<IReadOnlyCollection<UndertookJobDTO>>> ListAppliedJobs([FromQuery] JobApplicationFilter filter)
+        public async Task<IActionResult> ListAppliedJobs([FromQuery] JobFilterApplied filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
                 return BadRequest("There is no such user with this Bearer");
 
             var result = await jobService.ListAppliedJobs(userID, filter);
-            return Ok(result.Select(s => s.ToUndertookJobDTO(userID)));
+            var appliedJobsDTO = result.Select(s => s.ToUndertookJobDTO(userID));
+            return Ok(new
+            {
+                Data = appliedJobsDTO,
+                result.CurrentPage,
+                result.TotalPages,
+            });
         }
 
 

@@ -9,34 +9,36 @@ import {
   Title,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/react-query/AuthHooks";
 import { JobPreview } from "../../models/Job";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
+import { ImageFunctions } from "../../utility/image";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
 import { PetCountWithIcon } from "./JobDetail";
 
 export interface IPropsJobList {
   jobs?: JobPreview[];
-  loading: boolean;
-  error: boolean;
+  isLoading: boolean;
+  isError: boolean;
   refetch(): void;
 }
 
 export default function JobList({
   jobs,
-  loading,
-  error,
+  isLoading,
+  isError,
   refetch,
 }: IPropsJobList) {
   return (
     <LoadingBoundary
-      loading={loading}
-      error={error}
+      isLoading={isLoading}
+      isError={isError}
       refetch={refetch}
       isEmpty={jobs && jobs.length === 0}
-      withBorder
+      emptyMessage="No jobs to show. Try changing the job filters."
     >
       {jobs && (
         <Group position="center" align="left">
@@ -69,19 +71,17 @@ export function JobCard({ job }: IPropsJobCard) {
             width={imageSize}
             height={imageSize}
             radius="md"
-            src={
+            src={ImageFunctions.toDisplayImage(
+              basePetPicture,
               job.displayPetPicture
-                ? `data:image/png;base64,${job.displayPetPicture}`
-                : basePetPicture
-            }
+            )}
             alt="Job picture"
           />
           <Avatar
-            src={
+            src={ImageFunctions.toDisplayImage(
+              baseProfilePicture,
               job.ownerUserPicture
-                ? `data:image/png;base64,${job.ownerUserPicture}`
-                : baseProfilePicture
-            }
+            )}
             radius="100%"
             h={avatarSize}
             w={avatarSize}
@@ -98,19 +98,16 @@ export function JobCard({ job }: IPropsJobCard) {
             {job.ownerID === user?.id ? `${job?.title} (Your job)` : job?.title}
           </Title>
 
-          {!job.days && (
-            <Text size="md">
-              {new Date(job?.startDate ?? "").toLocaleString().split(",")[0]}
-              {job?.endDate
-                ? `-${new Date(job?.endDate).toLocaleString().split(",")[0]}`
-                : ""}
+          {!job.isRepeated && (
+            <Text size="sm">
+              {dayjs(job.startDate).format("MMM DD")}-
+              {dayjs(job.endDate).format("MMM DD")}
             </Text>
           )}
-          {job.days && (
+          {job.isRepeated && (
             <>
-              <Text size="md">
-                Starts on{" "}
-                {new Date(job?.startDate ?? "").toLocaleString().split(",")[0]}
+              <Text size="sm">
+                Starts on {dayjs(job.startDate).format("MMM DD")}
               </Text>
               <Text size="sm">{job.days?.length} days/week</Text>
             </>

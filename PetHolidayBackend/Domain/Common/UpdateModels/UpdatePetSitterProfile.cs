@@ -9,6 +9,6 @@ namespace Domain.Common.UpdateModels
     public class UpdatePetSitterProfile
     {
         public string? Description { get; set; }
-        public int AcquiredExperience { get; set; }
+        public int? AcquiredExperience { get; set; }
     }
 }

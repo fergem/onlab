@@ -23,7 +23,7 @@ export default function ApplicationMessagesPetSitter() {
   const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
     useJobAndApplicationFilter();
 
-  const { appliedJobs, error, loading, listAppliedJobs } =
+  const { appliedJobs, isError, isLoading, refetchAppliedJobs } =
     useJobApplicationsUserAppliedTo(filter);
 
   const [selectedApplicationID, setSelectedApplicationID] = useState<
@@ -89,10 +89,9 @@ export default function ApplicationMessagesPetSitter() {
         {!appliedJob && (
           <ScrollArea h="40rem">
             <LoadingBoundary
-              loading={loading}
-              error={error}
-              refetch={listAppliedJobs}
-              withBorder={false}
+              isLoading={isLoading}
+              isError={isError}
+              refetch={refetchAppliedJobs}
             >
               <Stack spacing={0}>
                 {appliedJobs.map((s) => (

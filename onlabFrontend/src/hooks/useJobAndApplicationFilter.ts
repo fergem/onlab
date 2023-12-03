@@ -16,5 +16,14 @@ export default function useJobAndApplicationFilter() {
     }));
   };
 
-  return { filter, handleSetJobStatus, handleSetJobApplicationStatus };
+  const handleSetPageNumber = (page: number) => {
+    setFilter((prev) => ({ ...prev, pageNumber: page }));
+  };
+
+  return {
+    filter,
+    handleSetJobStatus,
+    handleSetPageNumber,
+    handleSetJobApplicationStatus,
+  };
 }

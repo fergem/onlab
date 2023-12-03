@@ -34,22 +34,7 @@ const useNotification = () => {
       }),
     });
 
-  const information = (message: string) =>
-    notifications.show({
-      withCloseButton: true,
-      autoClose: 4000,
-      title: "Information. ",
-      message,
-      loading: false,
-      withBorder: true,
-      styles: () => ({
-        root: {
-          "&::before": { backgroundColor: theme.colors.blue },
-        },
-      }),
-    });
-
-  return { success, error, information };
+  return { success, error };
 };
 
 export default useNotification;

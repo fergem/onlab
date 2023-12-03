@@ -68,7 +68,7 @@ export default function ProfilePicture({ picture }: IPropsProfilePicture) {
             onMouseLeave={handleMouseLeaveFileInput}
             radius="md"
             w="15vw"
-            placeholder="Pick file"
+            placeholder="Change profile picture"
             onChange={saveFileSelected}
             icon={<IconUpload size={rem(14)} />}
           />

@@ -33,7 +33,7 @@ namespace Domain.Services
 
         public async Task DeletePet(int ID)
         {
-            await jobRepository.RemoveJobsDependentOnPet(ID);
+            await jobRepository.CancelJobsDependentOnPet(ID);
             await petRepository.Delete(ID);
         }
     }

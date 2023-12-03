@@ -33,7 +33,7 @@ namespace DataAccess.Repositories
                 .OrderByDescending(s => s.Comments.Max(c => c.CommentDate))
                 .ToListAsync();
         }
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobApplicationFilter filter)
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterApplied filter)
         {
 
             return await dbcontext.JobApplications

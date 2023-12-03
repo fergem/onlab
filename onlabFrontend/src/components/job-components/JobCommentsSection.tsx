@@ -25,7 +25,7 @@ export default function JobCommentsSection({
     () => applications.find((s) => s.applicantUser.id === user?.id),
     [applications, user?.id]
   );
-  const petSitteCommentSectionShown = applications.some(
+  const petSitterCommentSectionShown = applications.some(
     (s) =>
       s.applicantUser.id === user?.id &&
       s.status !== JobApplicationStatus.Canceled
@@ -39,7 +39,8 @@ export default function JobCommentsSection({
           ownerUser={ownerUser}
         />
       ) : (
-        petSitteCommentSectionShown && (
+        petSitterCommentSectionShown &&
+        application && (
           <JobPetSitterCommentSection
             application={application}
             ownerUser={ownerUser}

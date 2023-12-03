@@ -72,23 +72,6 @@ namespace DataAccess.Repositories
                     throw new Exception("Role could not be set to User");
             }
 
-
-            var defaultPetSitterProfile = new PetSitterProfile()
-            {
-                AcquiredExperience = 0,
-                Description = "",
-                User = appUser
-            };
-            var defaultOwnerProfile = new OwnerProfile()
-            {
-                Description = "",
-                User = appUser,
-                MinRequiredExperience = 0,
-                MinWage = 0,
-            };
-
-            await dbContext.AddAsync(defaultPetSitterProfile);
-            await dbContext.AddAsync(defaultOwnerProfile);
             await dbContext.SaveChangesAsync();
         }
 
@@ -151,35 +134,34 @@ namespace DataAccess.Repositories
             {
                 if (user.PetSitterProfile is not null)
                 {
-                    user.PetSitterProfile = new PetSitterProfile
-                    {
-                        AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ,
-                        Description = updateProfileModel.PetSitterProfile.Description
-                    };
+                    user.PetSitterProfile.AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ?? user.PetSitterProfile.AcquiredExperience;
+                    user.PetSitterProfile.Description = updateProfileModel.PetSitterProfile.Description;
                 }
                 else
                 {
-                    user.PetSitterProfile.AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ;
-                    user.PetSitterProfile.Description = updateProfileModel.PetSitterProfile.Description;
+                    user.PetSitterProfile = new PetSitterProfile
+                    {
+                        AcquiredExperience = updateProfileModel.PetSitterProfile.AcquiredExperience ?? 0,
+                        Description = updateProfileModel.PetSitterProfile.Description
+                    };
                 }
             }
 
-           
             if(updateProfileModel?.OwnerProfile is not null)
             {
                 if (user.OwnerProfile is not null)
                 {
                     user.OwnerProfile.Description = updateProfileModel.OwnerProfile.Description;
-                    user.OwnerProfile.MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience;
-                    user.OwnerProfile.MinWage = updateProfileModel.OwnerProfile.MinWage;
+                    user.OwnerProfile.MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience ?? user.OwnerProfile.MinRequiredExperience;
+                    user.OwnerProfile.MinWage = updateProfileModel.OwnerProfile.MinWage ?? user.OwnerProfile.MinWage;
                 }
                 else
                 {
                     user.OwnerProfile = new OwnerProfile
                     {
                         Description = updateProfileModel.OwnerProfile.Description,
-                        MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience,
-                        MinWage = updateProfileModel.OwnerProfile.MinWage
+                        MinRequiredExperience = updateProfileModel.OwnerProfile.MinRequiredExperience ?? 0,
+                        MinWage = updateProfileModel.OwnerProfile.MinWage ?? 0,
                     };
                 }
             }

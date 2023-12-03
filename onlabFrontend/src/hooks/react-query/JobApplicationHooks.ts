@@ -15,8 +15,8 @@ import useNotification from "../useNotification";
 export const useGetApplicationsForJob = (jobID: string | undefined) => {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const {
-    isLoading: loadingApplications,
-    isError: errorApplications,
+    isLoading: isLoadingApplications,
+    isError: isErrorApplications,
     refetch: refetchApplications,
     data,
   } = useQuery({
@@ -34,8 +34,8 @@ export const useGetApplicationsForJob = (jobID: string | undefined) => {
   }, [data]);
 
   return {
-    loadingApplications,
-    errorApplications,
+    isLoadingApplications,
+    isErrorApplications,
     applications,
     refetchApplications,
   };
@@ -54,7 +54,6 @@ export const useJobApplicationCommentHub = (
     hubConnection
       .start()
       .then(() => {
-        console.log("Connected to SignalR hub");
         hubConnection.invoke("SubscribeToCommentSection", applicationID);
       })
       .catch((error: Error) => {
@@ -123,9 +122,6 @@ export const usePostComment = () => {
       return JobApplicationService.insertApplicationCommentForJob(comment);
     },
     {
-      onSuccess: () => {
-        // notifications.success("Successfully commented on job!");
-      },
       onError: (error: AxiosError) => {
         notifications.error(error.response?.data as string);
       },
@@ -187,9 +183,9 @@ export const useJobApplicationsUserAppliedTo = (
 ) => {
   const [appliedJobs, setAppliedJobs] = useState<JobApplicationChat[]>([]);
   const {
-    isLoading: loading,
-    refetch: listAppliedJobs,
-    isError: error,
+    isLoading,
+    refetch: refetchAppliedJobs,
+    isError,
     data,
   } = useQuery({
     queryKey: ["query-usersAppliedTo", filter],
@@ -202,5 +198,5 @@ export const useJobApplicationsUserAppliedTo = (
     if (data) setAppliedJobs(data);
   }, [data]);
 
-  return { appliedJobs, error, loading, listAppliedJobs };
+  return { appliedJobs, isError, isLoading, refetchAppliedJobs };
 };

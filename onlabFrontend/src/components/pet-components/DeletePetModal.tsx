@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import {
   ActionIcon,
   Button,
@@ -39,8 +40,8 @@ export default function DeletePetModal({ pet }: IPropsPetModal) {
       <Modal opened={opened} onClose={close} withCloseButton={false} centered>
         <Stack>
           <Text>
-            Are you sure you want to delete {pet.name}? If you do so this change
-            is not revertable.
+            Are you sure you want to delete {pet.name}? If you do so every job
+            that includes this pet will have it's status set to canceled.
           </Text>
           <Group position="apart">
             <Button size="sm" onClick={close}>

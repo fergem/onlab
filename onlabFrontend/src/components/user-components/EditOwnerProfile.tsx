@@ -52,6 +52,7 @@ export default function EditOwnerProfile({
         placeholder="This the petsitter will see when applying to your job"
         miw="250px"
         onChange={handleSetDescription}
+        value={ownerProfile.description}
       />
       <NumberInput
         label="Your default minimum wage"
@@ -65,12 +66,14 @@ export default function EditOwnerProfile({
         miw="250px"
         min={0}
         onChange={handleSetMinWage}
+        value={ownerProfile.minWage}
       />
       <NumberInput
         label="Min. required years of exp. for petsitter"
         miw="250px"
         min={0}
         onChange={handleSetExperience}
+        value={ownerProfile.minRequiredExperience}
       />
       <Button type="submit" disabled={updateDisabled} onClick={handleUpdate}>
         Update owner profile

@@ -24,6 +24,9 @@ export default function ChangePassword() {
     },
   });
 
+  const updateDisabled =
+    form.values.password.length === 0 ||
+    form.values.confirmPassword.length === 0;
   const handleUpdate = (model: PasswordChangeModel) => {
     updateUser(model.password);
   };
@@ -46,7 +49,9 @@ export default function ChangePassword() {
           {...form.getInputProps("confirmPassword")}
           miw="250px"
         />
-        <Button type="submit">Update profile</Button>
+        <Button type="submit" disabled={updateDisabled}>
+          Update password
+        </Button>
       </Stack>
     </form>
   );

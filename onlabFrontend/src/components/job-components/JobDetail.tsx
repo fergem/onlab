@@ -39,11 +39,11 @@ import JobCommentsSection from "./JobCommentsSection";
 
 function JobDetail() {
   const { id } = useParams();
-  const { job, error, loading, getJob } = useGetJob(id);
+  const { job, isError, isLoading, getJob } = useGetJob(id);
   const { user } = useUser();
   const {
-    loadingApplications,
-    errorApplications,
+    isLoadingApplications,
+    isErrorApplications,
     applications,
     refetchApplications,
   } = useGetApplicationsForJob(id);
@@ -72,12 +72,7 @@ function JobDetail() {
 
   return (
     <Stack justify="center" align="center">
-      <LoadingBoundary
-        loading={loading}
-        error={error}
-        refetch={getJob}
-        withBorder
-      >
+      <LoadingBoundary isLoading={isLoading} isError={isError} refetch={getJob}>
         <Grid w="60%" justify="space-around" gutter="xl">
           <Grid.Col span={4}>
             <Paper p="md" shadow="sm" withBorder>
@@ -180,10 +175,9 @@ function JobDetail() {
         </Grid>
       </LoadingBoundary>
       <LoadingBoundary
-        loading={loadingApplications}
-        error={errorApplications}
+        isLoading={isLoadingApplications}
+        isError={isErrorApplications}
         refetch={refetchApplications}
-        withBorder={false}
       >
         <JobCommentsSection
           ownerUser={ownerUser}

@@ -19,9 +19,9 @@ import useNotification from "../useNotification";
 export const useGetJob = (id?: string) => {
   const [job, setJob] = useState<JobDetails>();
   const {
-    isLoading: loading,
+    isLoading,
     refetch: getJob,
-    isError: error,
+    isError,
     data,
   } = useQuery({
     queryKey: ["query-job", id],
@@ -34,15 +34,15 @@ export const useGetJob = (id?: string) => {
     if (data) setJob(data);
   }, [data]);
 
-  return { job, error, loading, getJob };
+  return { job, isError, isLoading, getJob };
 };
 
 export const useGetJobs = (jobParameters: JobFilter) => {
   const [jobs, setJobs] = useState<PagedList<JobPreview>>();
   const {
-    isLoading: loading,
-    refetch: listJobs,
-    isError: error,
+    isLoading,
+    refetch: refetchJobs,
+    isError,
     data,
   } = useQuery({
     queryKey: ["query-jobs", jobParameters],
@@ -55,14 +55,14 @@ export const useGetJobs = (jobParameters: JobFilter) => {
     if (data) setJobs(data);
   }, [data]);
 
-  return { jobs, error, loading, listJobs };
+  return { jobs, isError, isLoading, refetchJobs };
 };
 
 export const useGetRepeatedPostedJobs = (filter: JobFilterDetails) => {
-  const [repeatableJobs, setJobs] = useState<PostedJob[]>([]);
+  const [repeatableJobs, setJobs] = useState<PagedList<PostedJob>>();
   const {
     isLoading: repeatableLoading,
-    refetch: listRepeatableJobs,
+    refetch: refetchRepeatableJobs,
     isError: repeatableError,
     data,
   } = useQuery({
@@ -80,15 +80,15 @@ export const useGetRepeatedPostedJobs = (filter: JobFilterDetails) => {
     repeatableJobs,
     repeatableError,
     repeatableLoading,
-    listRepeatableJobs,
+    refetchRepeatableJobs,
   };
 };
 export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
-  const [nonRepeatableJobs, setJobs] = useState<PostedJob[]>([]);
+  const [nonRepeatableJobs, setJobs] = useState<PagedList<PostedJob>>();
   const {
     isLoading: nonRepeatedJobsLoading,
-    refetch: listNonRepeatedJobs,
-    isError: errorNonRepeatedJobs,
+    refetch: refetchNonRepeatedJobs,
+    isError: isErrorNonRepeatedJobs,
     data,
   } = useQuery({
     queryKey: ["query-posted-nonrepeated", filter],
@@ -103,9 +103,9 @@ export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
 
   return {
     nonRepeatableJobs,
-    errorNonRepeatedJobs,
+    isErrorNonRepeatedJobs,
     nonRepeatedJobsLoading,
-    listNonRepeatedJobs,
+    refetchNonRepeatedJobs,
   };
 };
 
@@ -187,11 +187,11 @@ export const usePostJob = () => {
 };
 
 export const useGetUserApliedJobs = (filter: JobApplicationFilter) => {
-  const [jobs, setJobs] = useState<AppliedJob[]>([]);
+  const [jobs, setJobs] = useState<PagedList<AppliedJob>>();
   const {
-    isLoading: loading,
-    refetch: listJobs,
-    isError: error,
+    isLoading,
+    refetch: refetchJobs,
+    isError,
     data,
   } = useQuery({
     queryKey: ["query-appliedJobs", filter],
@@ -204,5 +204,5 @@ export const useGetUserApliedJobs = (filter: JobApplicationFilter) => {
     if (data) setJobs(data);
   }, [data]);
 
-  return { jobs, error, loading, listJobs };
+  return { jobs, isError, isLoading, refetchJobs };
 };

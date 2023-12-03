@@ -10,5 +10,8 @@ namespace Domain.Common.QueryHelpers
     {
         public bool? Repeated { get; set; }
         public Status Status { get; set; }
+
+        public int PageSize {get;} = 10;
+        public int PageNumber { get; set; } = 1;
     }
 }

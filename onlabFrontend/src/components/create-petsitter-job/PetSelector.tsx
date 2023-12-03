@@ -1,7 +1,6 @@
 import { Group, Stack, Text } from "@mantine/core";
 import { useGetUserPets } from "../../hooks/react-query/UserHooks";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
-import NavButton from "../utility-components/NavButton";
 import SelectableCardWithImage from "../utility-components/SelectableCardWithImage";
 import { CreateJobDetailsFormType } from "./CreateJobDetailsForm";
 
@@ -9,7 +8,7 @@ interface IProps {
   form: CreateJobDetailsFormType;
 }
 export default function PetSelector({ form }: IProps) {
-  const { pets, error, loading, listPets } = useGetUserPets();
+  const { pets, isError, isLoading, refetchPets } = useGetUserPets();
 
   const handleSelectPet = (id: number) => {
     if (form.values.petIDs.includes(id)) {
@@ -26,19 +25,12 @@ export default function PetSelector({ form }: IProps) {
       )}
       <Group position="center" align="center" w="100%">
         <LoadingBoundary
-          loading={loading}
-          error={error}
-          refetch={listPets}
-          withBorder={false}
+          isLoading={isLoading}
+          isError={isError}
+          refetch={refetchPets}
+          isEmpty={pets.length === 0}
+          emptyMessage="You have got no pets yet. Go to your profile and add one"
         >
-          {pets.length === 0 && (
-            <Stack align="center" justify="center">
-              <Text align="center">
-                You have got no pets yet. Go to your profile and add one
-              </Text>
-              <NavButton name="Profile" to="/profile" />
-            </Stack>
-          )}
           {pets?.map((s) => (
             <SelectableCardWithImage
               key={s.id}

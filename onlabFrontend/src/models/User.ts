@@ -129,3 +129,22 @@ export const UserValidation = {
     return null;
   },
 };
+
+export const UserFunctions = {
+  toRoleDisplay(userRoles?: UserRole[]) {
+    if (!userRoles) return "";
+    if (
+      userRoles.includes(UserRole.Owner) &&
+      userRoles.includes(UserRole.PetSitter)
+    ) {
+      return "Owner and Pet sitter";
+    }
+    if (userRoles.length === 1 && userRoles.includes(UserRole.Owner)) {
+      return "Owner";
+    }
+    if (userRoles.length === 1 && userRoles.includes(UserRole.PetSitter)) {
+      return "Pet sitter";
+    }
+    return "";
+  },
+};

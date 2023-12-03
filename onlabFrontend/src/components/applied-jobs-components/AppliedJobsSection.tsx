@@ -2,12 +2,12 @@ import {
   Accordion,
   Divider,
   Group,
+  Pagination,
   Paper,
   Select,
   Stack,
   Title,
 } from "@mantine/core";
-import { IconMoodSad } from "@tabler/icons-react";
 import { useGetUserApliedJobs as useGetUserAppliedJobs } from "../../hooks/react-query/JobHooks";
 import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
 import { DefaultJobApplicationtData } from "../../models/Filters";
@@ -22,9 +22,14 @@ import ToJobDetailsIcon from "../utility-components/ToJobDetailsIcon";
 import AppliedJobsDetails from "./AppliedJobsDetails";
 
 export default function AppliedJobsSection() {
-  const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
-    useJobAndApplicationFilter();
-  const { jobs, error, loading, listJobs } = useGetUserAppliedJobs(filter);
+  const {
+    filter,
+    handleSetJobStatus,
+    handleSetPageNumber,
+    handleSetJobApplicationStatus,
+  } = useJobAndApplicationFilter();
+  const { jobs, isError, isLoading, refetchJobs } =
+    useGetUserAppliedJobs(filter);
 
   return (
     <Paper p="md" shadow="sm" withBorder>
@@ -50,54 +55,61 @@ export default function AppliedJobsSection() {
         </Group>
       </Group>
       <LoadingBoundary
-        loading={loading}
-        error={error}
-        refetch={listJobs}
-        withBorder={false}
+        isLoading={isLoading}
+        isError={isError}
+        refetch={refetchJobs}
+        isEmpty={jobs && jobs.data && jobs.data.length === 0}
+        emptyMessage="No jobs to show yet. Consider applying to one."
       >
-        {jobs.length === 0 && (
-          <Stack align="center" justify="center" my={20}>
-            <IconMoodSad size={150} />
-            <Title order={3} size={30}>
-              No jobs to show
-            </Title>
-          </Stack>
-        )}
-        <Accordion
-          variant="separated"
-          chevronPosition="left"
-          multiple
-          radius="md"
-          chevronSize={0}
-        >
-          {jobs.map((s) => (
-            <Accordion.Item value={s.id.toString()} key={s.id}>
-              <Accordion.Control>
-                <Group>
-                  <Stack spacing={3}>
-                    {s.applicationStatus !==
-                      JobApplicationStatus.NotApproved && (
-                      <JobStatusBadge status={s.status} />
-                    )}
-                    {s.status !== Status.Canceled && (
-                      <JobApplicationStatusBadge status={s.applicationStatus} />
-                    )}
-                  </Stack>
-                  <Title order={5}>{s.title}</Title>
-                  <Divider />
-                  <Group ml="auto" spacing={10}>
-                    {s.isRepeated && <RepeatedJobIcon />}
-                    <JobChipIcon jobType={s.type} withTooltip />
-                    <ToJobDetailsIcon jobID={s.id} />
-                  </Group>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <AppliedJobsDetails job={s} />
-              </Accordion.Panel>
-            </Accordion.Item>
-          ))}
-        </Accordion>
+        <Stack align="center">
+          <Accordion
+            variant="separated"
+            chevronPosition="left"
+            multiple
+            radius="md"
+            chevronSize={0}
+            w="100%"
+          >
+            {jobs &&
+              jobs.data &&
+              jobs.data.map((s) => (
+                <Accordion.Item value={s.id.toString()} key={s.id}>
+                  <Accordion.Control>
+                    <Group>
+                      <Stack spacing={3}>
+                        {s.applicationStatus !==
+                          JobApplicationStatus.NotApproved && (
+                          <JobStatusBadge status={s.status} />
+                        )}
+                        {s.status !== Status.Canceled && (
+                          <JobApplicationStatusBadge
+                            status={s.applicationStatus}
+                          />
+                        )}
+                      </Stack>
+                      <Title order={5}>{s.title}</Title>
+                      <Divider />
+                      <Group ml="auto" spacing={10}>
+                        {s.isRepeated && <RepeatedJobIcon />}
+                        <JobChipIcon jobType={s.type} withTooltip />
+                        <ToJobDetailsIcon jobID={s.id} />
+                      </Group>
+                    </Group>
+                  </Accordion.Control>
+                  <Accordion.Panel>
+                    <AppliedJobsDetails job={s} />
+                  </Accordion.Panel>
+                </Accordion.Item>
+              ))}
+          </Accordion>
+          {jobs && (
+            <Pagination
+              value={jobs.currentPage}
+              onChange={handleSetPageNumber}
+              total={jobs.totalPages}
+            />
+          )}
+        </Stack>
       </LoadingBoundary>
     </Paper>
   );

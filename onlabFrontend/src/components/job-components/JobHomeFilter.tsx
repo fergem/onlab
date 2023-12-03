@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import useJobFilter, {
   JobFilterLocalStorageKey,
 } from "../../hooks/useJobFilter";
+
 import {
   Day,
   DefaultJobFilter,
@@ -61,14 +62,14 @@ export default function JobHomeFilter() {
     <Paper shadow="sm" p="xl" radius="md">
       <Stack w="100%">
         <Group w="100%">
-          <Title order={4}>I want to have service for: </Title>
+          <Title order={5}>I am looking to care for: </Title>
           <Checkbox.Group
             value={jobFilter.species}
             onChange={handleSelectPetSpecies}
           >
             <Group>
               {Object.values(PetSpecies).map((s) => (
-                <Checkbox value={s} label={s} key={s} />
+                <Checkbox value={s} label={`${s}s`} key={s} />
               ))}
             </Group>
           </Checkbox.Group>
@@ -76,16 +77,10 @@ export default function JobHomeFilter() {
 
         <Divider />
 
-        <Stack spacing={3}>
-          <Group grow>
-            <Text fz="sm" fw={500}>
-              For when you are away
-            </Text>
-            <Text fz="sm" fw={500}>
-              For when you are at home
-            </Text>
-          </Group>
-
+        <Stack spacing={3} align="center">
+          <Text fz="sm" fw={500}>
+            I want to do
+          </Text>
           <Chip.Group
             multiple
             value={jobFilter.types}
@@ -102,13 +97,13 @@ export default function JobHomeFilter() {
           </Chip.Group>
         </Stack>
 
-        <Group position="center" align="flex-end" grow>
+        <Group position="center" align="flex-end" grow={jobFilter.repeated}>
           <ChipFrequency
             handleSetRepeatable={handleSelectRepeatable}
             jobType={jobFilter.types}
             repeated={jobFilter.repeated}
           />
-          <Group position="center" align="center" noWrap>
+          <Group position="center" align="center" noWrap spacing={5}>
             <DatePickerInput
               type="default"
               label="Start date"
@@ -117,18 +112,22 @@ export default function JobHomeFilter() {
               onChange={handleSelectStartDate}
               mx="auto"
               maw={300}
+              valueFormat="MMM DD YYYY"
             />
-            <Text>-</Text>
             {!jobFilter.repeated && (
-              <DatePickerInput
-                type="default"
-                label="End date"
-                placeholder="End date"
-                value={jobFilter.endDate}
-                onChange={handleSelectEndDate}
-                mx="auto"
-                maw={300}
-              />
+              <>
+                <Text mt="lg">-</Text>
+                <DatePickerInput
+                  type="default"
+                  label="End date"
+                  placeholder="End date"
+                  value={jobFilter.endDate}
+                  onChange={handleSelectEndDate}
+                  mx="auto"
+                  maw={300}
+                  valueFormat="MMM DD YYYY"
+                />
+              </>
             )}
           </Group>
         </Group>
@@ -141,7 +140,7 @@ export default function JobHomeFilter() {
 
 export interface IChipFrequencyProps {
   repeated: boolean;
-  jobType: JobType[] | undefined;
+  jobType: JobType[];
   handleSetRepeatable(value: string): void;
 }
 
@@ -150,13 +149,9 @@ export function ChipFrequency({
   jobType,
   handleSetRepeatable,
 }: IChipFrequencyProps) {
-  if (
-    !jobType ||
-    jobType.includes(JobType.Boarding) ||
-    jobType.includes(JobType.Sitting) ||
-    jobType.length === 0
-  )
-    return;
+  const repeatedDisabled =
+    jobType.includes(JobType.Boarding) || jobType.includes(JobType.Sitting);
+
   return (
     <Chip.Group
       value={repeated === false ? Frequency.Once : Frequency.Repeat}
@@ -164,16 +159,21 @@ export function ChipFrequency({
     >
       <Stack spacing={3}>
         <Text fz="sm" fw={500} align="center">
-          How often do you need this service?
+          I want to work
         </Text>
         <Group position="center" align="center">
           <Chip value={Frequency.Once} size="md" radius="sm">
             <IconCalendarEvent />
             <Text ml="sm">Once</Text>
           </Chip>
-          <Chip value={Frequency.Repeat} size="md" radius="sm">
+          <Chip
+            value={Frequency.Repeat}
+            size="md"
+            radius="sm"
+            disabled={repeatedDisabled}
+          >
             <IconCalendarRepeat />
-            <Text ml="sm">Repeat</Text>
+            <Text ml="sm">Frequently</Text>
           </Chip>
         </Group>
       </Stack>
@@ -188,9 +188,9 @@ interface IChipDaysProps {
 export function ChipDays({ handleSetDays }: IChipDaysProps) {
   return (
     <Chip.Group onChange={handleSetDays} multiple>
-      <Stack spacing={3}>
+      <Stack spacing={3} align="center">
         <Text fz="sm" fw={500}>
-          How often do you need this service?
+          I can work on
         </Text>
         <Group position="center" align="center">
           {Object.values(Day).map((s) => (

@@ -1,5 +1,12 @@
-import { Accordion, Group, Paper, Select, Stack, Title } from "@mantine/core";
-import { IconMoodSad } from "@tabler/icons-react";
+import {
+  Accordion,
+  Group,
+  Pagination,
+  Paper,
+  Select,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { useState } from "react";
 import { useGetRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
@@ -23,11 +30,14 @@ export default function RepeatedSection() {
     repeatableJobs,
     repeatableError,
     repeatableLoading,
-    listRepeatableJobs,
+    refetchRepeatableJobs,
   } = useGetRepeatedPostedJobs(filter);
 
   const handleSetStatus = (status: string) => {
     setFilter({ status: status as Status });
+  };
+  const handleSetPageNumber = (page: number) => {
+    setFilter((prev) => ({ ...prev, pageNumber: page }));
   };
 
   return (
@@ -45,70 +55,76 @@ export default function RepeatedSection() {
         />
       </Group>
       <LoadingBoundary
-        withBorder={false}
-        loading={repeatableLoading}
-        error={repeatableError}
-        refetch={listRepeatableJobs}
+        isLoading={repeatableLoading}
+        isError={repeatableError}
+        refetch={refetchRepeatableJobs}
+        isEmpty={repeatableJobs && repeatableJobs.data.length === 0}
+        emptyMessage="No jobs to show yet. Consider adding one."
       >
-        <Accordion
-          variant="separated"
-          chevronPosition="left"
-          multiple
-          radius="md"
-          chevronSize={0}
-        >
-          {repeatableJobs.length === 0 && (
-            <Stack align="center" justify="center" my={20}>
-              <IconMoodSad size={100} />
-              <Title order={3} size={20}>
-                No jobs to show yet. Consider adding one.
-              </Title>
-            </Stack>
-          )}
-          {repeatableJobs.map((s) => {
-            const areApplicationsShown = s.status !== Status.Canceled;
-            const hasApproved = s.jobApplications.some(
-              (k) => k.status === JobApplicationStatus.Approved
-            );
-            return (
-              <Accordion.Item value={s.id.toString()} key={s.id}>
-                <Accordion.Control>
-                  <Group>
-                    <JobStatusBadge status={s.status} />
-                    <Title order={5}>{s.title}</Title>
-                    <Group ml="auto" spacing={10}>
-                      <JobChipIcon jobType={s.type} withTooltip />
-                      <ToJobDetailsIcon jobID={s.id} />
-                    </Group>
-                  </Group>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <Stack>
-                    {areApplicationsShown && (
-                      <PostedJobApplicationTable
-                        jobApplications={s.jobApplications}
-                        jobStatus={s.status}
-                      />
-                    )}
-                    <RepeatedPostedJobDetails job={s} />
+        <Stack align="center">
+          <Accordion
+            variant="separated"
+            chevronPosition="left"
+            multiple
+            radius="md"
+            chevronSize={0}
+            w="100%"
+          >
+            {repeatableJobs &&
+              repeatableJobs.data.map((s) => {
+                const areApplicationsShown = s.status !== Status.Canceled;
+                const hasApproved = s.jobApplications.some(
+                  (k) => k.status === JobApplicationStatus.Approved
+                );
+                return (
+                  <Accordion.Item value={s.id.toString()} key={s.id}>
+                    <Accordion.Control>
+                      <Group>
+                        <JobStatusBadge status={s.status} />
+                        <Title order={5}>{s.title}</Title>
+                        <Group ml="auto" spacing={10}>
+                          <JobChipIcon jobType={s.type} withTooltip />
+                          <ToJobDetailsIcon jobID={s.id} />
+                        </Group>
+                      </Group>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Stack>
+                        {areApplicationsShown && (
+                          <PostedJobApplicationTable
+                            jobApplications={s.jobApplications}
+                          />
+                        )}
+                        <RepeatedPostedJobDetails job={s} />
 
-                    <Group position="center" align="center">
-                      {hasApproved ? (
-                        <FinishJobButton
-                          jobID={s.id}
-                          jobStatus={s.status}
-                          endDate={s.endDate}
-                        />
-                      ) : (
-                        <CanceljobButton jobID={s.id} jobStatus={s.status} />
-                      )}
-                    </Group>
-                  </Stack>
-                </Accordion.Panel>
-              </Accordion.Item>
-            );
-          })}
-        </Accordion>
+                        <Group position="center" align="center">
+                          {hasApproved ? (
+                            <FinishJobButton
+                              jobID={s.id}
+                              jobStatus={s.status}
+                              endDate={s.endDate}
+                            />
+                          ) : (
+                            <CanceljobButton
+                              jobID={s.id}
+                              jobStatus={s.status}
+                            />
+                          )}
+                        </Group>
+                      </Stack>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                );
+              })}
+          </Accordion>
+          {repeatableJobs && (
+            <Pagination
+              value={repeatableJobs.currentPage}
+              onChange={handleSetPageNumber}
+              total={repeatableJobs.totalPages}
+            />
+          )}
+        </Stack>
       </LoadingBoundary>
     </Paper>
   );

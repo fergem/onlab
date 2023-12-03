@@ -1,5 +1,12 @@
-import { Accordion, Group, Paper, Select, Stack, Title } from "@mantine/core";
-import { IconMoodSad } from "@tabler/icons-react";
+import {
+  Accordion,
+  Group,
+  Pagination,
+  Paper,
+  Select,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { useState } from "react";
 import { useGetNonRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
@@ -20,14 +27,19 @@ export default function NonRepeatedSection() {
   const [filter, setFilter] = useState(DefaultJobFilterDetails);
   const {
     nonRepeatableJobs,
-    errorNonRepeatedJobs,
+    isErrorNonRepeatedJobs: errorNonRepeatedJobs,
     nonRepeatedJobsLoading,
-    listNonRepeatedJobs,
+    refetchNonRepeatedJobs,
   } = useGetNonRepeatedPostedJobs(filter);
 
   const handleSetStatus = (status: string) => {
     setFilter({ status: status as Status });
   };
+
+  const handleSetPageNumber = (page: number) => {
+    setFilter((prev) => ({ ...prev, pageNumber: page }));
+  };
+
   return (
     <Paper p="md" shadow="sm" withBorder>
       <Group align="center" position="apart" mb={10}>
@@ -43,64 +55,67 @@ export default function NonRepeatedSection() {
         />
       </Group>
       <LoadingBoundary
-        withBorder={false}
-        loading={nonRepeatedJobsLoading}
-        error={errorNonRepeatedJobs}
-        refetch={listNonRepeatedJobs}
+        isLoading={nonRepeatedJobsLoading}
+        isError={errorNonRepeatedJobs}
+        refetch={refetchNonRepeatedJobs}
+        isEmpty={nonRepeatableJobs && nonRepeatableJobs.data.length === 0}
+        emptyMessage="No jobs to show yet. Consider adding one."
       >
-        <Accordion
-          variant="separated"
-          chevronPosition="left"
-          multiple
-          radius="md"
-          chevronSize={0}
-        >
-          {nonRepeatableJobs.length === 0 && (
-            <Stack align="center" justify="center" my={20}>
-              <IconMoodSad size={100} />
-              <Title order={3} size={20}>
-                No jobs to show yet. Consider adding one.
-              </Title>
-            </Stack>
-          )}
-          {nonRepeatableJobs.map((s) => {
-            const areApplicationsShown = s.status !== Status.Canceled;
-            return (
-              <Accordion.Item value={s.id.toString()} key={s.id}>
-                <Accordion.Control>
-                  <Group>
-                    <JobStatusBadge status={s.status} />
-                    <Title order={5}>{s.title}</Title>
-                    <Group ml="auto" spacing={10}>
-                      <JobChipIcon jobType={s.type} withTooltip />
-                      <ToJobDetailsIcon jobID={s.id} />
-                    </Group>
-                  </Group>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <Stack>
-                    {areApplicationsShown && (
-                      <PostedJobApplicationTable
-                        jobApplications={s.jobApplications}
-                        jobStatus={s.status}
-                      />
-                    )}
-                    <NonRepeatedPostedJobDetails job={s} />
+        <Stack align="center">
+          <Accordion
+            variant="separated"
+            chevronPosition="left"
+            multiple
+            radius="md"
+            chevronSize={0}
+            w="100%"
+          >
+            {nonRepeatableJobs &&
+              nonRepeatableJobs.data.map((s) => {
+                const areApplicationsShown = s.status !== Status.Canceled;
+                return (
+                  <Accordion.Item value={s.id.toString()} key={s.id}>
+                    <Accordion.Control>
+                      <Group>
+                        <JobStatusBadge status={s.status} />
+                        <Title order={5}>{s.title}</Title>
+                        <Group ml="auto" spacing={10}>
+                          <JobChipIcon jobType={s.type} withTooltip />
+                          <ToJobDetailsIcon jobID={s.id} />
+                        </Group>
+                      </Group>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Stack>
+                        {areApplicationsShown && (
+                          <PostedJobApplicationTable
+                            jobApplications={s.jobApplications}
+                          />
+                        )}
+                        <NonRepeatedPostedJobDetails job={s} />
 
-                    <Group position="center" align="center">
-                      <FinishJobButton
-                        jobID={s.id}
-                        jobStatus={s.status}
-                        endDate={s.endDate}
-                      />
-                      <CancelJobButton jobID={s.id} jobStatus={s.status} />
-                    </Group>
-                  </Stack>
-                </Accordion.Panel>
-              </Accordion.Item>
-            );
-          })}
-        </Accordion>
+                        <Group position="center" align="center">
+                          <FinishJobButton
+                            jobID={s.id}
+                            jobStatus={s.status}
+                            endDate={s.endDate}
+                          />
+                          <CancelJobButton jobID={s.id} jobStatus={s.status} />
+                        </Group>
+                      </Stack>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                );
+              })}
+          </Accordion>
+          {nonRepeatableJobs && (
+            <Pagination
+              value={nonRepeatableJobs.currentPage}
+              onChange={handleSetPageNumber}
+              total={nonRepeatableJobs.totalPages}
+            />
+          )}
+        </Stack>
       </LoadingBoundary>
     </Paper>
   );

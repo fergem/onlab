@@ -8,6 +8,7 @@ import {
   User,
 } from "../../models/User";
 import AuthService from "../../services/AuthService";
+import UserService from "../../services/UserService";
 import apiInstance from "../../services/api";
 
 export const useLocalStorage = () => {
@@ -53,6 +54,10 @@ export const useUser = () => {
       setItem("user", JSON.stringify(newUser));
     }
   };
+  const getUserDetails = () => {
+    const result = UserService.getUserDetails();
+    return result;
+  };
 
   const removeUser = () => {
     setUser(null);
@@ -62,6 +67,7 @@ export const useUser = () => {
 
   return {
     user,
+    getUserDetails,
     refreshUserToken,
     addUser,
     removeUser,

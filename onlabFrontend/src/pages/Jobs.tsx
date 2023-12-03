@@ -1,5 +1,5 @@
 import { Group, Pagination, Stack, Title } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
+import { useLocalStorage, useMediaQuery } from "@mantine/hooks";
 import JobList from "../components/job-components/JobList";
 import JobPageFilter from "../components/job-components/JobPageFilter";
 import { useGetJobs } from "../hooks/react-query/JobHooks";
@@ -12,7 +12,8 @@ export default function Jobs() {
     defaultValue: DefaultJobFilter,
     deserialize: JobFunctions.deserializeJobFromStorage,
   });
-  const { jobs, error, loading, listJobs } = useGetJobs(jobFilter);
+  const { jobs, isError, isLoading, refetchJobs } = useGetJobs(jobFilter);
+  const isDesktop = useMediaQuery("(min-width: 56.25em)");
 
   const handleSetJobFilter = (filter: JobFilter) => {
     setJobFilter(filter);
@@ -24,7 +25,7 @@ export default function Jobs() {
 
   return (
     <Stack align="center">
-      <Group align="flex-start" position="center" noWrap w="80%">
+      <Group align="flex-start" position="center" noWrap={isDesktop} w="80%">
         <JobPageFilter
           jobFilter={jobFilter}
           setJobFilter={handleSetJobFilter}
@@ -35,17 +36,17 @@ export default function Jobs() {
           </Title>
           <JobList
             jobs={jobs?.data}
-            loading={loading}
-            error={error}
-            refetch={listJobs}
+            isLoading
+            isError={isError}
+            refetch={refetchJobs}
           />
-          <Group>
+          {jobs && (
             <Pagination
-              value={jobs?.currentPage}
+              value={jobs.currentPage}
               onChange={handleSetPageNumber}
-              total={jobs?.totalPages ?? 0}
+              total={jobs.totalPages}
             />
-          </Group>
+          )}
         </Stack>
       </Group>
     </Stack>

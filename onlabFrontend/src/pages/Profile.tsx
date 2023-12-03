@@ -19,9 +19,13 @@ import {
   UpdateOwnerProfileModel,
   defaultUpdateOwnerProfileModel,
 } from "../models/OwnerProfile";
-import { UpdatePetSitterProfileModel } from "../models/PetSitterProfile";
+import {
+  UpdatePetSitterProfileModel,
+  defaultUpdatePetSitterProfileModel,
+} from "../models/PetSitterProfile";
 import {
   UpdateUserDetailsModel,
+  UserFunctions,
   UserRole,
   defaultUpdateUserDetailsModel,
 } from "../models/User";
@@ -29,8 +33,12 @@ import { ArrayFunctions } from "../utility/array";
 
 export default function Profile() {
   const { user } = useAuth();
-  const { userDetails, loadingUserDetials, errorUserDetails, getUserDetails } =
-    useGetUser();
+  const {
+    userDetails,
+    isLoadingUserDetials,
+    isErrorUserDetails: errorUserDetails,
+    getUserDetails,
+  } = useGetUser();
 
   const { updateUser } = useUpdateUser();
 
@@ -40,16 +48,15 @@ export default function Profile() {
   const handleUpdateOwnerProfile = (ownerProfile: UpdateOwnerProfileModel) =>
     updateUser({ ...userDetails, ownerProfile });
 
-  const handldeUpdatePetSitterProfile = (
+  const handleUpdatePetSitterProfile = (
     petSitterProfile: UpdatePetSitterProfileModel
   ) => updateUser({ ...userDetails, petSitterProfile });
 
   return (
     <LoadingBoundary
-      loading={loadingUserDetials}
-      error={errorUserDetails}
+      isLoading={isLoadingUserDetials}
+      isError={errorUserDetails}
       refetch={getUserDetails}
-      withBorder
     >
       <Tabs defaultValue="profile">
         <Stack justify="center" ml="5%" mr="10%" align="center" spacing={0}>
@@ -82,25 +89,21 @@ export default function Profile() {
           <Tabs.Panel value="profile" w="60%">
             <Paper shadow="sm" p="xl" withBorder>
               <Group ml="lg" position="apart">
-                <Title order={3}>Your profile</Title>
-                <Title order={4}>
-                  Roles: {user?.roles.map((s) => <Text key={s}>{s}</Text>)}
-                </Title>
+                <Stack spacing={1}>
+                  <Title order={3}>Your profile</Title>
+                  <Text fz={14}>
+                    {UserFunctions.toRoleDisplay(user?.roles)}
+                  </Text>
+                </Stack>
               </Group>
               <Divider my="md" />
-              {userDetails ? (
-                <EditUserDetails
-                  profilePicture={userDetails?.picture}
-                  currentUserDetails={userDetails}
-                  updateUserDetails={handleUpdateUserDetails}
-                />
-              ) : (
-                <EditUserDetails
-                  profilePicture={undefined}
-                  currentUserDetails={defaultUpdateUserDetailsModel}
-                  updateUserDetails={handleUpdateUserDetails}
-                />
-              )}
+              <EditUserDetails
+                profilePicture={userDetails?.picture}
+                currentUserDetails={
+                  userDetails ?? defaultUpdateUserDetailsModel
+                }
+                updateUserDetails={handleUpdateUserDetails}
+              />
             </Paper>
           </Tabs.Panel>
           <Tabs.Panel value="password" w="60%">
@@ -129,18 +132,12 @@ export default function Profile() {
                 Edit owner profile
               </Title>
               <Divider my="md" />
-
-              {userDetails?.ownerProfile ? (
-                <EditOwnerProfile
-                  currentOwnerProfile={userDetails?.ownerProfile}
-                  updateOwnerProfile={handleUpdateOwnerProfile}
-                />
-              ) : (
-                <EditOwnerProfile
-                  currentOwnerProfile={defaultUpdateOwnerProfileModel}
-                  updateOwnerProfile={handleUpdateOwnerProfile}
-                />
-              )}
+              <EditOwnerProfile
+                currentOwnerProfile={
+                  userDetails?.ownerProfile ?? defaultUpdateOwnerProfileModel
+                }
+                updateOwnerProfile={handleUpdateOwnerProfile}
+              />
             </Paper>
           </Tabs.Panel>
           <Tabs.Panel value="petsitter" w="60%">
@@ -149,17 +146,13 @@ export default function Profile() {
                 Edit petsitter profile
               </Title>
               <Divider my="md" />
-              {userDetails?.petSitterProfile ? (
-                <EditPetSitterProfile
-                  currentPetSitterProfile={userDetails?.petSitterProfile}
-                  updatePetSitterProfile={handldeUpdatePetSitterProfile}
-                />
-              ) : (
-                <EditPetSitterProfile
-                  currentPetSitterProfile={defaultUpdateOwnerProfileModel}
-                  updatePetSitterProfile={handldeUpdatePetSitterProfile}
-                />
-              )}
+              <EditPetSitterProfile
+                currentPetSitterProfile={
+                  userDetails?.petSitterProfile ??
+                  defaultUpdatePetSitterProfileModel
+                }
+                updatePetSitterProfile={handleUpdatePetSitterProfile}
+              />
             </Paper>
           </Tabs.Panel>
         </Stack>

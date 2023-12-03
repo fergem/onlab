@@ -27,23 +27,26 @@ const list = async (filter: JobFilter) => {
 };
 
 const listNonRepeatedPostedJobs = async (filter: JobFilterDetails) => {
-  const response = await apiInstance.get<PostedJob[]>(`/jobs/posted`, {
+  const response = await apiInstance.get<PagedList<PostedJob>>(`/jobs/posted`, {
     params: { ...filter, repeated: false },
   });
   return response.data;
 };
 
 const listRepeatedPostedJobs = async (filter: JobFilterDetails) => {
-  const response = await apiInstance.get<PostedJob[]>(`/jobs/posted`, {
+  const response = await apiInstance.get<PagedList<PostedJob>>(`/jobs/posted`, {
     params: { ...filter, repeated: true },
   });
   return response.data;
 };
 
 const listAppliedJobs = async (filter: JobApplicationFilter) => {
-  const response = await apiInstance.get<AppliedJob[]>("/jobs/applied", {
-    params: filter,
-  });
+  const response = await apiInstance.get<PagedList<AppliedJob>>(
+    "/jobs/applied",
+    {
+      params: filter,
+    }
+  );
   return response.data;
 };
 

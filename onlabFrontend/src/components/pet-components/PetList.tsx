@@ -1,5 +1,5 @@
-import { Grid, Group, Image, Paper, Stack, Text, Title } from "@mantine/core";
-import { IconCat, IconDog, IconMoodSad } from "@tabler/icons-react";
+import { Grid, Group, Image, Paper, Stack, Text } from "@mantine/core";
+import { IconCat, IconDog } from "@tabler/icons-react";
 import { useGetUserPets } from "../../hooks/react-query/UserHooks";
 import { Pet, PetSpecies } from "../../models/Pet";
 import { basePetPicture } from "../../utility/constants";
@@ -13,23 +13,16 @@ interface IPropsPetListLoadingPets {
 }
 
 export default function ProfilePetList({ editable }: IPropsPetListLoadingPets) {
-  const { pets, error, loading, listPets } = useGetUserPets();
+  const { pets, isError, isLoading, refetchPets } = useGetUserPets();
   return (
     <LoadingBoundary
-      loading={loading}
-      error={error}
-      refetch={listPets}
-      withBorder={false}
+      isLoading={isLoading}
+      isError={isError}
+      refetch={refetchPets}
+      isEmpty={pets.length === 0}
+      emptyMessage="No pets to show yet, consider adding one with the plus icon."
     >
       <PetGrid pets={pets} editable={editable} />
-      {pets.length === 0 && (
-        <Stack align="center" justify="center" my={20}>
-          <IconMoodSad size={130} />
-          <Title order={3} size={20}>
-            No pets yet, consider adding one with the plus icon.
-          </Title>
-        </Stack>
-      )}
     </LoadingBoundary>
   );
 }

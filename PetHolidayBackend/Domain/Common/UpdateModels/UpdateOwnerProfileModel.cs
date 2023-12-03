@@ -9,7 +9,7 @@ namespace Domain.Common.UpdateModels
     public class UpdateOwnerProfileModel
     {
         public string? Description { get; set; }
-        public int MinRequiredExperience { get; set; }
-        public int MinWage { get; set; }
+        public int? MinRequiredExperience { get; set; }
+        public int? MinWage { get; set; }
     }
 }

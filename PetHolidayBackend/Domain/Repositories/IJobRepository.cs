@@ -12,18 +12,13 @@ namespace Domain.Repositories
 {
     public interface IJobRepository
     {
-        Task<PagedList<Job>> List(JobFilter jobParameters);
-        Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterPosted filter);
-
-
-        Task<IReadOnlyCollection<Job>> ListAppliedJobs(int userID, JobApplicationFilter filter);
-
+        Task<PagedList<Job>> List(JobFilter jobFilter);
+        Task<PagedList<Job>> ListPostedJobs(int userID, JobFilterPosted filter);
+        Task<PagedList<Job>> ListAppliedJobs(int userID, JobFilterApplied filter);
         Task<Job> FindById(int jobID);
         Task<Job> Insert(InsertJobModel job, int userID);
         Task<Job> ProgressJob(int jobID, Status status);
         Task CancelJobIfNotAvailable(int jobApplcationID);
-        Task<Job> UpdateJob(int jobID);
-
-        Task RemoveJobsDependentOnPet(int petID);
+        Task CancelJobsDependentOnPet(int petID);
     }
 }

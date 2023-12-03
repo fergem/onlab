@@ -42,7 +42,7 @@ namespace Domain.Services
             await jobRepository.CancelJobIfNotAvailable(applicationID);
         }
         public async Task ApproveApplication(int applicationID) => await jobApplicationRepository.ApproveApplication(applicationID);
-        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobApplicationFilter filter) => await jobApplicationRepository.GetAllForUser(userID, filter);
+        public async Task<IReadOnlyCollection<JobApplication>> GetAllForUser(int userID, JobFilterApplied filter) => await jobApplicationRepository.GetAllForUser(userID, filter);
 
     }
 }

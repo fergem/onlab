@@ -3,49 +3,58 @@ import { IconExclamationCircle, IconMoodSad } from "@tabler/icons-react";
 
 export interface IPropsLoadingBoundary {
   children: React.ReactNode;
-  loading: boolean;
-  error: boolean;
+  isLoading: boolean;
+  isError: boolean;
   isEmpty?: boolean;
   refetch(): void;
-  errorNode?: React.ReactNode;
-  withBorder: boolean;
+  emptyMessage?: string;
 }
 
 export default function LoadingBoundary({
   children,
-  loading,
-  error,
+  isLoading,
+  isError,
   isEmpty,
-  withBorder,
   refetch,
+  emptyMessage,
 }: IPropsLoadingBoundary) {
-  if (loading)
+  if (isLoading)
     return (
-      <Paper shadow="sm" p="xl" withBorder={withBorder}>
-        <Stack align="center" justify="center ">
-          <Loader size="xl" />
-        </Stack>
-      </Paper>
+      <LoadingBoundaryLayout>
+        <Loader size="xl" />
+      </LoadingBoundaryLayout>
     );
-  if (error)
+  if (isError)
     return (
-      <Paper shadow="sm" p="xl" withBorder>
-        <Stack align="center" justify="center ">
-          <IconExclamationCircle size={48} />
-          <Text> Sorry a problem happened</Text>
-          <Button onClick={refetch}>Try again!</Button>
-        </Stack>
-      </Paper>
+      <LoadingBoundaryLayout>
+        <IconExclamationCircle size={48} />
+        <Text>
+          The server encountered an error and could not complete your request.
+        </Text>
+        <Button onClick={refetch}>Try again!</Button>
+      </LoadingBoundaryLayout>
     );
   if (isEmpty)
     return (
-      <Paper shadow="sm" p="xl" withBorder>
-        <Stack align="center" justify="center ">
-          <IconMoodSad size={48} />
-          <Text>No items to show yet.</Text>
-        </Stack>
-      </Paper>
+      <LoadingBoundaryLayout>
+        <IconMoodSad size={48} />
+        <Text>{emptyMessage}</Text>
+      </LoadingBoundaryLayout>
     );
 
   return <> {children}</>;
+}
+
+interface ILoadingBoundaryLayoutProps {
+  children: React.ReactNode;
+}
+
+function LoadingBoundaryLayout({ children }: ILoadingBoundaryLayoutProps) {
+  return (
+    <Paper shadow="sm" p="xl" withBorder>
+      <Stack align="center" justify="center">
+        {children}
+      </Stack>
+    </Paper>
+  );
 }

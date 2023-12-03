@@ -51,36 +51,41 @@ export default function EditUserDetails({
   return (
     <Group grow spacing={0}>
       <ProfilePicture picture={profilePicture} />
-      <Stack justify="center" align="center">
-        <TextInput
-          label="First Name"
-          placeholder="John"
-          miw="250px"
-          onChange={handleSetFirstName}
-        />
-        <TextInput
-          label="Last Name"
-          placeholder="Doh"
-          miw="250px"
-          onChange={handleSetLastName}
-        />
+      <Stack justify="center" miw="250px">
+        <Group miw="250px" noWrap>
+          <TextInput
+            label="First Name"
+            placeholder="John"
+            onChange={handleSetFirstName}
+            value={userDetails.firstName}
+          />
+          <TextInput
+            label="Last Name"
+            placeholder="Doh"
+            onChange={handleSetLastName}
+            value={userDetails.lastName}
+          />
+        </Group>
+
+        <Group miw="250px" noWrap>
+          <TextInput
+            label="Location"
+            placeholder="Budapest"
+            onChange={handleSetLocation}
+            value={userDetails.location}
+          />
+          <TextInput
+            label="Phone number"
+            placeholder="+36709912323"
+            onChange={handleSetPhoneNumber}
+            value={userDetails.phoneNumber}
+          />
+        </Group>
         <TextInput
           label="Email"
           placeholder="your@email.com"
-          miw="250px"
           onChange={handleSetEmail}
-        />
-        <TextInput
-          label="Location"
-          placeholder="Budapest"
-          miw="250px"
-          onChange={handleSetLocation}
-        />
-        <TextInput
-          label="Phone number"
-          placeholder="+36709912323"
-          miw="250px"
-          onChange={handleSetPhoneNumber}
+          value={userDetails.email}
         />
         <Button disabled={updateDisabled} onClick={handleUpdate}>
           Update profile

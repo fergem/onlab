@@ -103,7 +103,7 @@ export default function CreateJobServiceForm({ form }: IProps) {
                 </Chip>
                 <Chip value={Frequency.Repeat} size="md" radius="sm">
                   <IconCalendarRepeat />
-                  <Text ml="sm">Repeat</Text>
+                  <Text ml="sm">Repeated</Text>
                 </Chip>
               </Group>
             </Stack>
@@ -120,6 +120,7 @@ export default function CreateJobServiceForm({ form }: IProps) {
             miw="150px"
             maw="300px"
             minDate={dayjs().toDate()}
+            valueFormat="MMM DD YYYY"
           />
           {!form.values.repeated && (
             <>
@@ -134,6 +135,7 @@ export default function CreateJobServiceForm({ form }: IProps) {
                 miw="150px"
                 maw="300px"
                 minDate={dayjs(form.values.startDate).add(1, "day").toDate()}
+                valueFormat="MMM DD YYYY"
               />
             </>
           )}

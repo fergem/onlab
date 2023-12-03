@@ -23,9 +23,9 @@ namespace Domain.Services
             this.jobRepository = jobRepository;
             this.jobApplicationRepository = jobApplicationRepository;
         }
-        public async Task<PagedList<Job>> List(JobFilter jobParameters) => await jobRepository.List(jobParameters);
-        public async Task<IReadOnlyCollection<Job>> ListPostedJobs(int userID, JobFilterPosted filter) => await jobRepository.ListPostedJobs(userID, filter);
-        public async Task<IReadOnlyCollection<Job>> ListAppliedJobs(int userID, JobApplicationFilter filter) => await jobRepository.ListAppliedJobs(userID, filter);
+        public async Task<PagedList<Job>> List(JobFilter jobFilter) => await jobRepository.List(jobFilter);
+        public async Task<PagedList<Job>> ListPostedJobs(int userID, JobFilterPosted filter) => await jobRepository.ListPostedJobs(userID, filter);
+        public async Task<PagedList<Job>> ListAppliedJobs(int userID, JobFilterApplied filter) => await jobRepository.ListAppliedJobs(userID, filter);
         public async Task<Job> Insert(InsertJobModel job, int userID) => await jobRepository.Insert(job, userID);
         public async Task<Job> FindById(int jobID) => await jobRepository.FindById(jobID);
         public async Task<Job> FinishJob(int jobID) => await jobRepository.ProgressJob(jobID, Status.Done);

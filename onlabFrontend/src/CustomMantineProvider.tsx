@@ -30,11 +30,6 @@ export default function CustomMantineProvider() {
               size: "md",
             }),
           },
-          RangeSlider: {
-            defaultProps: () => ({
-              color: "blue",
-            }),
-          },
         },
       }}
     >

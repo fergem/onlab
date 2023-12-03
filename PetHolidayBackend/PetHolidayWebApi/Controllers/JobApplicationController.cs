@@ -39,7 +39,7 @@ namespace PetHolidayWebApi.Controllers
 
         [Authorize(Roles = "PetSitter")]
         [HttpGet("appliedto")]
-        public async Task<ActionResult<IReadOnlyCollection<JobApplicationChatDTO>>> GetAllForUser([FromQuery] JobApplicationFilter filter)
+        public async Task<ActionResult<IReadOnlyCollection<JobApplicationChatDTO>>> GetAllForUser([FromQuery] JobFilterApplied filter)
         {
             var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
             if (!foundUser)
