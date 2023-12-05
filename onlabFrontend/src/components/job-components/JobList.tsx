@@ -19,7 +19,7 @@ import LoadingBoundary from "../utility-components/LoadingBoundary";
 import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
 import { PetCountWithIcon } from "./JobDetail";
 
-export interface IPropsJobList {
+interface IPropsJobList {
   jobs?: JobPreview[];
   isLoading: boolean;
   isError: boolean;
@@ -49,11 +49,11 @@ export default function JobList({
   );
 }
 
-export interface IPropsJobCard {
+interface IPropsJobCard {
   job: JobPreview;
 }
 
-export function JobCard({ job }: IPropsJobCard) {
+function JobCard({ job }: IPropsJobCard) {
   const navigate = useNavigate();
   const { user } = useUser();
   const navigateToJob = () => {

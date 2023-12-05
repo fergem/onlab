@@ -3,11 +3,7 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { JobApplicationFilter } from "../../models/Filters";
-import {
-  JobApplication,
-  JobApplicationChat,
-} from "../../models/JobApplication";
+import { JobApplication } from "../../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../../models/JobApplicationComment";
 import JobApplicationService from "../../services/JobApplicationService";
 import useNotification from "../useNotification";
@@ -168,7 +164,7 @@ export const useCancelApplicationForJob = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("query-posted-nonrepeated");
         queryClient.invalidateQueries("query-posted-repeated");
-        queryClient.invalidateQueries("query-appliedJobs");
+        queryClient.invalidateQueries("query-appliedJobs-display");
         notifications.success("Succesfully removed application");
       },
       onError: (error: AxiosError) =>
@@ -176,27 +172,4 @@ export const useCancelApplicationForJob = () => {
     }
   );
   return { cancelApplication };
-};
-
-export const useJobApplicationsUserAppliedTo = (
-  filter?: JobApplicationFilter
-) => {
-  const [appliedJobs, setAppliedJobs] = useState<JobApplicationChat[]>([]);
-  const {
-    isLoading,
-    refetch: refetchAppliedJobs,
-    isError,
-    data,
-  } = useQuery({
-    queryKey: ["query-usersAppliedTo", filter],
-    queryFn: async () => {
-      return JobApplicationService.jobApplicationsUserAppliedTo(filter);
-    },
-  });
-
-  useEffect(() => {
-    if (data) setAppliedJobs(data);
-  }, [data]);
-
-  return { appliedJobs, isError, isLoading, refetchAppliedJobs };
 };

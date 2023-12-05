@@ -4,7 +4,7 @@ import { useCancelApplicationForJob } from "../../hooks/react-query/JobApplicati
 import { Status } from "../../models/Job";
 import { JobApplicationStatus } from "../../models/JobApplication";
 
-export interface IRemoveApplicationButtonProps {
+interface IRemoveApplicationButtonProps {
   jobStatus: Status;
   applicationStatus: JobApplicationStatus;
   applicationID: number;

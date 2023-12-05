@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { JobApplicationStatus, PostedJobApplication } from "./JobApplication";
+import { JobApplication, JobApplicationStatus } from "./JobApplication";
 import { Pet, PetSpecies } from "./Pet";
 import { UserPreview } from "./User";
 
@@ -103,19 +103,6 @@ export enum Frequency {
   Repeat = "Repeat",
 }
 
-export interface JobUserAppliedTo {
-  id: number;
-  title: string;
-  startDate: Date;
-  endDate?: Date;
-  type: string;
-  days?: Day[];
-  repeated: boolean;
-  jobApplicationID: number;
-  ownerUserPicture: string;
-  displayPetPicture: string;
-}
-
 export interface CreateJobModel {
   location: string;
   description: string;
@@ -147,7 +134,7 @@ export interface PostedJob {
   status: Status;
   days?: Day[];
   description: string;
-  jobApplications: PostedJobApplication[];
+  jobApplications: JobApplication[];
 }
 
 export interface AppliedJob {
@@ -159,11 +146,11 @@ export interface AppliedJob {
   status: Status;
   days?: Day[];
   description: string;
-  applicationID: number;
-  applicationStatus: JobApplicationStatus;
+  jobApplication: JobApplication;
   catCount: number;
   dogCount: number;
   isRepeated: boolean;
+  ownerUser: UserPreview;
 }
 
 export interface JobDetails {
@@ -199,11 +186,14 @@ export interface JobPreview {
   isRepeated: boolean;
 }
 
-export interface JobFilterDetails {
+export interface JobFilterPostedAndApplied {
   status: Status;
+  jobApplicationStatus: JobApplicationStatus;
 }
-export const DefaultJobFilterDetails = {
+
+export const DefaultJobFilterPostedAndApplied: JobFilterPostedAndApplied = {
   status: Status.All,
+  jobApplicationStatus: JobApplicationStatus.All,
 };
 
 export interface JobFilter {
@@ -225,3 +215,23 @@ export const DefaultJobFilter: JobFilter = {
   days: undefined,
   pageNumber: 1,
 };
+
+export const JobStatusData = [
+  { value: Status.All, label: "All status" },
+  {
+    value: Status.Available,
+    label: Status.Available,
+  },
+  {
+    value: Status.Upcoming,
+    label: Status.Upcoming,
+  },
+  {
+    value: Status.Done,
+    label: Status.Done,
+  },
+  {
+    value: Status.Canceled,
+    label: Status.Canceled,
+  },
+];

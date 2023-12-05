@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useFinishJob } from "../../hooks/react-query/JobHooks";
 import { Status } from "../../models/Job";
 
-export interface IRemoveApplicationButtonProps {
+interface IRemoveApplicationButtonProps {
   jobID: number;
   endDate?: Date;
   jobStatus: Status;

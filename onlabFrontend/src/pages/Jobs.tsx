@@ -36,7 +36,7 @@ export default function Jobs() {
           </Title>
           <JobList
             jobs={jobs?.data}
-            isLoading
+            isLoading={isLoading}
             isError={isError}
             refetch={refetchJobs}
           />

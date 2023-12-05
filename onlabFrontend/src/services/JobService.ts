@@ -1,10 +1,9 @@
-import { JobApplicationFilter } from "../models/Filters";
 import {
   AppliedJob,
   CreateJobModel,
   JobDetails,
   JobFilter,
-  JobFilterDetails,
+  JobFilterPostedAndApplied,
   JobPreview,
   PostedJob,
 } from "../models/Job";
@@ -26,21 +25,28 @@ const list = async (filter: JobFilter) => {
   return response.data;
 };
 
-const listNonRepeatedPostedJobs = async (filter: JobFilterDetails) => {
+const listNonRepeatedPostedJobs = async (filter: JobFilterPostedAndApplied) => {
   const response = await apiInstance.get<PagedList<PostedJob>>(`/jobs/posted`, {
     params: { ...filter, repeated: false },
   });
   return response.data;
 };
 
-const listRepeatedPostedJobs = async (filter: JobFilterDetails) => {
+const listRepeatedPostedJobs = async (filter: JobFilterPostedAndApplied) => {
   const response = await apiInstance.get<PagedList<PostedJob>>(`/jobs/posted`, {
     params: { ...filter, repeated: true },
   });
   return response.data;
 };
 
-const listAppliedJobs = async (filter: JobApplicationFilter) => {
+const listPostedJobs = async (filter: JobFilterPostedAndApplied) => {
+  const response = await apiInstance.get<PagedList<PostedJob>>(`/jobs/posted`, {
+    params: { ...filter },
+  });
+  return response.data;
+};
+
+const listAppliedJobs = async (filter: JobFilterPostedAndApplied) => {
   const response = await apiInstance.get<PagedList<AppliedJob>>(
     "/jobs/applied",
     {
@@ -71,7 +77,7 @@ const JobService = {
   listNonRepeatedPostedJobs,
   listRepeatedPostedJobs,
   listAppliedJobs,
-
+  listPostedJobs,
   finishJob,
   cancelJob,
 };

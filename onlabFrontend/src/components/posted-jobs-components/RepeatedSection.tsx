@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { useGetRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
-  DefaultJobFilterDetails,
+  DefaultJobFilterPostedAndApplied,
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
@@ -25,7 +25,7 @@ import PostedJobApplicationTable from "./PostedJobApplicationTable";
 import RepeatedPostedJobDetails from "./RepeadtedPostedJobDetails";
 
 export default function RepeatedSection() {
-  const [filter, setFilter] = useState(DefaultJobFilterDetails);
+  const [filter, setFilter] = useState(DefaultJobFilterPostedAndApplied);
   const {
     repeatableJobs,
     repeatableError,

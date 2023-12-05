@@ -3,7 +3,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useCancelJob } from "../../hooks/react-query/JobHooks";
 import { Status } from "../../models/Job";
 
-export interface IRemoveApplicationButtonProps {
+interface IRemoveApplicationButtonProps {
   jobID: number;
   jobStatus: Status;
 }

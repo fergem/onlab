@@ -7,7 +7,7 @@ import { User } from "../../models/User";
 import AuthService from "../../services/AuthService";
 import apiInstance from "../../services/api";
 
-export interface IAxiosInterceptor {
+interface IAxiosInterceptor {
   children: JSX.Element;
 }
 

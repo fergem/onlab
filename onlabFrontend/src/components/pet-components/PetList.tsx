@@ -51,7 +51,7 @@ interface IPropsPetCard {
   pet: Pet;
 }
 
-export function PetCard({ pet, editable }: IPropsPetCard) {
+function PetCard({ pet, editable }: IPropsPetCard) {
   return (
     <Stack justify="center" align="center" h="100%">
       <Paper p="md" shadow="sm" radius="5%" withBorder>

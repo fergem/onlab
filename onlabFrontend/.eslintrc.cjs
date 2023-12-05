@@ -35,5 +35,6 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": 0,
     "consistent-return": 0,
     "react/require-default-props": 0,
+    "import/no-unused-modules": [1, { unusedExports: true }],
   },
 };

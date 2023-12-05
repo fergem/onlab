@@ -17,14 +17,14 @@ import { useQueryClient } from "react-query";
 import {
   useJobApplicationCommentHub,
   usePostComment,
-} from "../../../hooks/react-query/JobApplicationHooks";
-import { JobApplication } from "../../../models/JobApplication";
-import { JobApplicationCommentFunctions } from "../../../models/JobApplicationComment";
-import { UserPreview } from "../../../models/User";
-import { ArrayFunctions } from "../../../utility/array";
+} from "../hooks/react-query/JobApplicationHooks";
+import { JobApplication } from "../models/JobApplication";
+import { JobApplicationCommentFunctions } from "../models/JobApplicationComment";
+import { UserPreview } from "../models/User";
+import { ArrayFunctions } from "../utility/array";
 import MessageBubble from "./MessageBubble";
 
-export interface IPropsJobComments {
+interface IPropsJobComments {
   application: JobApplication;
   ownerUser?: UserPreview;
   miw: number;
@@ -46,8 +46,8 @@ export default function JobApplicationComments({
 
   const queryClient = useQueryClient();
   const handleCommentUpdate = () => {
-    queryClient.invalidateQueries("query-applications");
-    queryClient.invalidateQueries("query-usersAppliedTo");
+    queryClient.invalidateQueries("query-posted-messages");
+    queryClient.invalidateQueries("query-appliedJobs-messages");
   };
 
   const { handleInvokeTyping, handleInvokeNotTyping, typing } =
@@ -76,8 +76,7 @@ export default function JobApplicationComments({
 
   useEffect(() => {
     scrollIntoView();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scrollIntoView]);
 
   const noMessageYet = application.comments?.length === 0 && !typing;
   return (

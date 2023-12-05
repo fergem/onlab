@@ -58,11 +58,11 @@ namespace PetHolidayWebApi.ModelExtensions
                 EndDate = job.EndDate,
                 Description = job.Description,
                 Days = job.Days?.Select(d => d.ToString()).ToList(),
-                JobApplications = job.JobApplications.Select(s => s.ToPostedJobApplicationDTO()).ToList(),
+                JobApplications = job.JobApplications.Select(s => s.ToJobApplicationDTO()).ToList(),
             };
 
-        public static UndertookJobDTO ToUndertookJobDTO(this Job job, int userID) =>
-            new UndertookJobDTO
+        public static AppliedJobDTO ToUndertookJobDTO(this Job job, int userID) =>
+            new AppliedJobDTO
             {
                 ID = job.ID,
                 Title = job.Title,
@@ -72,8 +72,8 @@ namespace PetHolidayWebApi.ModelExtensions
                 EndDate = job.EndDate,
                 Description = job.Description,
                 Days = job.Days?.Select(d => d.ToString()).ToList(),
-                ApplicationID = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == userID)?.ID,
-                ApplicationStatus = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == userID)?.Status.ToString(),
+                OwnerUser = job.OwnerUser.ToUserPreviewDTO(),
+                JobApplication = job.JobApplications.FirstOrDefault(s => s.ApplicantUserID == userID)?.ToJobApplicationDTO(),
                 CatCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Cat),
                 DogCount = job.Pets.Count(p => p.Pet.Species == PetSpecies.Dog),
                 IsRepeated = job.Repeated,

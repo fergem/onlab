@@ -18,13 +18,11 @@ namespace PetHolidayWebApi.Controllers
     {
        
         private readonly JobApplicationService jobApplicationService;
-        private readonly AuthService authService;
         private readonly IHubContext<JobApplicationCommentHub> hub;
 
-        public JobApplicationController(JobApplicationService jobApplicationService, AuthService authService, IHubContext<JobApplicationCommentHub> hub)
+        public JobApplicationController(JobApplicationService jobApplicationService, IHubContext<JobApplicationCommentHub> hub)
         {
             this.jobApplicationService = jobApplicationService;
-            this.authService = authService;
             this.hub = hub;
         }
 
@@ -36,20 +34,6 @@ namespace PetHolidayWebApi.Controllers
             var result = await jobApplicationService.GetAllForJob(jobID);
             return Ok(result.Select(s => s.ToJobApplicationDTO()));
         }
-
-        [Authorize(Roles = "PetSitter")]
-        [HttpGet("appliedto")]
-        public async Task<ActionResult<IReadOnlyCollection<JobApplicationChatDTO>>> GetAllForUser([FromQuery] JobFilterApplied filter)
-        {
-            var foundUser = Int32.TryParse(HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == "Id")?.Value, out var userID);
-            if (!foundUser)
-                return BadRequest("There is no such user with this Bearer");
-
-            var result = await jobApplicationService.GetAllForUser(userID, filter);
-            return Ok(result.Select(s => s.ToJobApplicationUserAppliedToDTO()));
-        }
-
-
 
         [Authorize(Roles = "PetSitter")]
         [HttpPost("{jobID}")]
@@ -69,7 +53,6 @@ namespace PetHolidayWebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
        
         [Authorize]
         [HttpPatch("{applicationID}/cancel")]

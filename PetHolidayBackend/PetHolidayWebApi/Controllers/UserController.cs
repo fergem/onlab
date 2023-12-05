@@ -90,11 +90,6 @@ namespace PetHolidayWebApi.Controllers
                 };
 
                 await userService.UpdateRefreshToken(updateRefreshTokenModel);
-                var result = new RefreshBearerTokenDTO()
-                {
-                    AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-                    RefreshToken = newRefreshToken
-                };
 
                 return new ObjectResult(new
                 {

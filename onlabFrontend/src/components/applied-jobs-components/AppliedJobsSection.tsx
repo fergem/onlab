@@ -8,11 +8,13 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
-import { useGetUserApliedJobs as useGetUserAppliedJobs } from "../../hooks/react-query/JobHooks";
+import { useGetAppliedJobs as useGetUserAppliedJobs } from "../../hooks/react-query/JobHooks";
 import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
-import { DefaultJobApplicationtData } from "../../models/Filters";
-import { JobFilterParticipantData, Status } from "../../models/Job";
-import { JobApplicationStatus } from "../../models/JobApplication";
+import { JobStatusData, Status } from "../../models/Job";
+import {
+  JobApplicationStatus,
+  JobApplicationStatusData,
+} from "../../models/JobApplication";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
 import JobApplicationStatusBadge from "../utility-components/JobApplicationStatusBadge";
 import JobStatusBadge from "../utility-components/JobStatusBadge";
@@ -21,6 +23,7 @@ import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
 import ToJobDetailsIcon from "../utility-components/ToJobDetailsIcon";
 import AppliedJobsDetails from "./AppliedJobsDetails";
 
+const appliedJobsKey = "display";
 export default function AppliedJobsSection() {
   const {
     filter,
@@ -28,9 +31,10 @@ export default function AppliedJobsSection() {
     handleSetPageNumber,
     handleSetJobApplicationStatus,
   } = useJobAndApplicationFilter();
-  const { jobs, isError, isLoading, refetchJobs } =
-    useGetUserAppliedJobs(filter);
-
+  const { jobs, isError, isLoading, refetchJobs } = useGetUserAppliedJobs(
+    filter,
+    appliedJobsKey
+  );
   return (
     <Paper p="md" shadow="sm" withBorder>
       <Group align="center" position="apart" mb={10}>
@@ -41,16 +45,16 @@ export default function AppliedJobsSection() {
           <Select
             label="Job status"
             mb={15}
-            value={filter.jobStatus}
+            value={filter.status}
             onChange={handleSetJobStatus}
-            data={JobFilterParticipantData}
+            data={JobStatusData}
           />
           <Select
             label="Application status"
             mb={15}
             value={filter.jobApplicationStatus}
             onChange={handleSetJobApplicationStatus}
-            data={DefaultJobApplicationtData}
+            data={JobApplicationStatusData}
           />
         </Group>
       </Group>
@@ -77,13 +81,13 @@ export default function AppliedJobsSection() {
                   <Accordion.Control>
                     <Group>
                       <Stack spacing={3}>
-                        {s.applicationStatus !==
+                        {s.jobApplication.status !==
                           JobApplicationStatus.NotApproved && (
                           <JobStatusBadge status={s.status} />
                         )}
                         {s.status !== Status.Canceled && (
                           <JobApplicationStatusBadge
-                            status={s.applicationStatus}
+                            status={s.jobApplication.status}
                           />
                         )}
                       </Stack>

@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { useGetNonRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
 import {
-  DefaultJobFilterDetails,
+  DefaultJobFilterPostedAndApplied,
   JobFilterParticipantData,
   Status,
 } from "../../models/Job";
@@ -24,7 +24,7 @@ import NonRepeatedPostedJobDetails from "./NonRepeatedPostedJobDetails";
 import PostedJobApplicationTable from "./PostedJobApplicationTable";
 
 export default function NonRepeatedSection() {
-  const [filter, setFilter] = useState(DefaultJobFilterDetails);
+  const [filter, setFilter] = useState(DefaultJobFilterPostedAndApplied);
   const {
     nonRepeatableJobs,
     isErrorNonRepeatedJobs: errorNonRepeatedJobs,

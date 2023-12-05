@@ -1,20 +1,27 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
 import dayjs from "dayjs";
-import { useAuth } from "../../hooks/react-query/AuthHooks";
-import { JobApplicationChat } from "../../models/JobApplication";
-import { JobApplicationComment } from "../../models/JobApplicationComment";
-import { baseProfilePicture } from "../../utility/constants";
-import { ImageFunctions } from "../../utility/image";
+import { useUser } from "../hooks/react-query/AuthHooks";
+import { JobApplication } from "../models/JobApplication";
+import { JobApplicationComment } from "../models/JobApplicationComment";
+import { User, UserDetails } from "../models/User";
+import { baseProfilePicture } from "../utility/constants";
+import { ImageFunctions } from "../utility/image";
 
 interface IMessagebarProps {
-  appliedJob: JobApplicationChat;
+  jobApplication: JobApplication;
   select(applicationID: number): void;
 }
 
-export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
+export default function MessagebarOwner({
+  jobApplication,
+  select,
+}: IMessagebarProps) {
+  const { user } = useUser();
   const handleOnClick = () => {
-    select(appliedJob.id);
+    select(jobApplication.id);
   };
+  const lastMessage =
+    jobApplication.comments && jobApplication?.comments.slice(-1)[0];
   return (
     <Group
       align="center"
@@ -31,23 +38,15 @@ export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
       py="sm"
     >
       <Avatar
-        src={ImageFunctions.toDisplayImage(
-          baseProfilePicture,
-          appliedJob.ownerUser.picture
-        )}
+        src={ImageFunctions.toDisplayImage(baseProfilePicture, user?.picture)}
         size="lg"
         radius="lg"
       />
       <Stack spacing={0}>
-        <Text fw={500} fz={12} lineClamp={2}>
-          {appliedJob.jobTitle}
-        </Text>
-
-        <LastComment
-          lastComment={
-            appliedJob.comments ? appliedJob.comments.at(0) : undefined
-          }
-          ownerUserName={`${appliedJob.ownerUser?.firstName} ${appliedJob.ownerUser?.lastName}`}
+        <LastCommentOwner
+          lastComment={lastMessage}
+          user={user}
+          senderUser={jobApplication.applicantUser}
         />
       </Stack>
     </Group>
@@ -56,16 +55,21 @@ export default function Messagebar({ appliedJob, select }: IMessagebarProps) {
 
 interface ILastCommentProps {
   lastComment?: JobApplicationComment;
-  ownerUserName: string;
+  user: User | null;
+  senderUser: UserDetails;
 }
-function LastComment({ lastComment, ownerUserName }: ILastCommentProps) {
-  const { user } = useAuth();
-
+function LastCommentOwner({
+  lastComment,
+  user,
+  senderUser,
+}: ILastCommentProps) {
   if (!lastComment) return <div />;
   const isUserLastCommented = lastComment.senderUserID === user?.id;
   const userLastCommentedText = isUserLastCommented
     ? `You: ${lastComment.commentText}`
-    : `${ownerUserName}: ${lastComment.commentText}`;
+    : `${senderUser.firstName ?? "no username"} ${senderUser.lastName}: ${
+        lastComment.commentText
+      }`;
   return (
     <Stack spacing={0}>
       <Text fw={500} fz={13}>

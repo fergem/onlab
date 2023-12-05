@@ -11,9 +11,7 @@ namespace PetHolidayWebApi.DTOs
         public required string Type { get; set; }
         public required string Status { get; set; }
         public required string Description { get; set; }
-        
         public required ICollection<string>? Days { get; set; }
-
-        public required IReadOnlyCollection<PostedJobApplicationDTO> JobApplications {  get; set; } 
+        public required IReadOnlyCollection<JobApplicationDTO> JobApplications {  get; set; } 
     }
 }

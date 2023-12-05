@@ -3,10 +3,10 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc"; // Import the UTC plugin
 import { useMemo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import MessagesDrawer from "./comment-section/MessagesDrawer";
 import AxiosInterceptor from "./components/interceptor/AxiosInterceptor";
 import JobDetail from "./components/job-components/JobDetail";
 import HeaderPetHoliday from "./components/utility-components/HeaderPetHoliday";
-import MessagesDrawer from "./components/utility-components/MessagesDrawer";
 import AuthContext from "./context/AuthContext";
 import MessagesOpenContext from "./context/MessagesContext";
 import { User, UserRole } from "./models/User";

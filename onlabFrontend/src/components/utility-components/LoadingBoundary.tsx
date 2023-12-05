@@ -1,7 +1,7 @@
 import { Button, Loader, Paper, Stack, Text } from "@mantine/core";
 import { IconExclamationCircle, IconMoodSad } from "@tabler/icons-react";
 
-export interface IPropsLoadingBoundary {
+interface IPropsLoadingBoundary {
   children: React.ReactNode;
   isLoading: boolean;
   isError: boolean;

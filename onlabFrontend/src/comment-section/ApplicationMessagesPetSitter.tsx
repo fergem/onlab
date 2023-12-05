@@ -2,8 +2,8 @@
 import {
   ActionIcon,
   Group,
+  Pagination,
   Paper,
-  ScrollArea,
   Select,
   Stack,
   Title,
@@ -11,28 +11,35 @@ import {
 } from "@mantine/core";
 import { IconArrowBack } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import { useJobApplicationsUserAppliedTo } from "../../../hooks/react-query/JobApplicationHooks";
-import useJobAndApplicationFilter from "../../../hooks/useJobAndApplicationFilter";
-import { DefaultJobApplicationtData } from "../../../models/Filters";
-import { JobFilterParticipantData } from "../../../models/Job";
-import LoadingBoundary from "../../utility-components/LoadingBoundary";
-import Messagebar from "../Messagebar";
+import LoadingBoundary from "../components/utility-components/LoadingBoundary";
+import { useGetAppliedJobs } from "../hooks/react-query/JobHooks";
+import useJobAndApplicationFilter from "../hooks/useJobAndApplicationFilter";
+import { JobStatusData } from "../models/Job";
+import { JobApplicationStatusData } from "../models/JobApplication";
 import JobApplicationComments from "./JobApplicationComments";
+import MessagebarPetSitter from "./MessagebarPetSitter";
 
+const appliedJobsMessagesKey = "messages";
 export default function ApplicationMessagesPetSitter() {
-  const { filter, handleSetJobStatus, handleSetJobApplicationStatus } =
-    useJobAndApplicationFilter();
+  const {
+    filter,
+    handleSetPageNumber,
+    handleSetJobStatus,
+    handleSetJobApplicationStatus,
+  } = useJobAndApplicationFilter();
 
-  const { appliedJobs, isError, isLoading, refetchAppliedJobs } =
-    useJobApplicationsUserAppliedTo(filter);
+  const { jobs, isError, isLoading, refetchJobs } = useGetAppliedJobs(
+    filter,
+    appliedJobsMessagesKey
+  );
 
   const [selectedApplicationID, setSelectedApplicationID] = useState<
     number | undefined
   >();
 
   const appliedJob = useMemo(() => {
-    return appliedJobs.find((s) => s.id === selectedApplicationID);
-  }, [appliedJobs, selectedApplicationID]);
+    return jobs?.data.find((s) => s.id === selectedApplicationID);
+  }, [jobs?.data, selectedApplicationID]);
 
   const handleSetSelected = (applicationID: number) =>
     setSelectedApplicationID(applicationID);
@@ -42,21 +49,21 @@ export default function ApplicationMessagesPetSitter() {
   };
 
   return (
-    <Stack align="center" h="100%" justify="center">
-      <Paper p="md" shadow="sm" withBorder>
+    <Paper p="md" shadow="sm" withBorder>
+      <Stack align="center" h="100%" justify="center">
         {!appliedJob && (
           <Group align="center" noWrap mb={15}>
             <Select
               label="Job status"
-              value={filter.jobStatus}
+              value={filter.status}
               onChange={handleSetJobStatus}
-              data={JobFilterParticipantData}
+              data={JobStatusData}
             />
             <Select
               label="Application status"
               value={filter.jobApplicationStatus}
               onChange={handleSetJobApplicationStatus}
-              data={DefaultJobApplicationtData}
+              data={JobApplicationStatusData}
             />
           </Group>
         )}
@@ -76,7 +83,7 @@ export default function ApplicationMessagesPetSitter() {
                 </ActionIcon>
               </Tooltip>
               <Title order={4} align="center">
-                {appliedJob.jobTitle}
+                {appliedJob.title}
               </Title>
             </Group>
           ) : (
@@ -87,28 +94,36 @@ export default function ApplicationMessagesPetSitter() {
         </Group>
 
         {!appliedJob && (
-          <ScrollArea h="40rem">
-            <LoadingBoundary
-              isLoading={isLoading}
-              isError={isError}
-              refetch={refetchAppliedJobs}
-            >
-              <Stack spacing={0}>
-                {appliedJobs.map((s) => (
-                  <Messagebar
-                    appliedJob={s}
-                    key={s.id}
-                    select={handleSetSelected}
-                  />
-                ))}
-              </Stack>
-            </LoadingBoundary>
-          </ScrollArea>
+          <LoadingBoundary
+            isLoading={isLoading}
+            isError={isError}
+            refetch={refetchJobs}
+          >
+            <Stack spacing={0}>
+              {jobs?.data.map((s) => (
+                <MessagebarPetSitter
+                  appliedJob={s}
+                  key={s.id}
+                  select={handleSetSelected}
+                />
+              ))}
+            </Stack>
+          </LoadingBoundary>
         )}
         {appliedJob && (
-          <JobApplicationComments application={appliedJob} miw={300} />
+          <JobApplicationComments
+            application={appliedJob.jobApplication}
+            miw={300}
+          />
         )}
-      </Paper>
-    </Stack>
+        {!appliedJob && jobs && (
+          <Pagination
+            value={jobs.currentPage}
+            onChange={handleSetPageNumber}
+            total={jobs.totalPages}
+          />
+        )}
+      </Stack>
+    </Paper>
   );
 }

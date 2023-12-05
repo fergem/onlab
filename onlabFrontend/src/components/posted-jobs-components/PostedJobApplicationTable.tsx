@@ -9,15 +9,15 @@ import {
 } from "@mantine/core";
 import { useMemo } from "react";
 import {
+  JobApplication,
   JobApplicationStatus,
-  PostedJobApplication,
 } from "../../models/JobApplication";
 import { baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
 import PostedJobApplicationActions from "./PostedJobApplicationActions";
 
-export interface IPostedJobApplicationTable {
-  jobApplications: PostedJobApplication[];
+interface IPostedJobApplicationTable {
+  jobApplications: JobApplication[];
 }
 
 export default function PostedJobApplicationTable({
@@ -74,11 +74,11 @@ export default function PostedJobApplicationTable({
   );
 }
 
-export interface IPropsPostedJobApplicationRow {
-  application: PostedJobApplication;
+interface IPropsPostedJobApplicationRow {
+  application: JobApplication;
 }
 
-export function PostedJobApplicationRow({
+function PostedJobApplicationRow({
   application,
 }: IPropsPostedJobApplicationRow) {
   return (

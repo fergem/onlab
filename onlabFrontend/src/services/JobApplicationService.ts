@@ -1,21 +1,10 @@
-import { JobApplicationFilter } from "../models/Filters";
-import { JobApplication, JobApplicationChat } from "../models/JobApplication";
+import { JobApplication } from "../models/JobApplication";
 import { InsertJobApplicationCommentModel } from "../models/JobApplicationComment";
 import apiInstance from "./api";
 
 const getAllForJob = async (jobID: string | undefined) => {
   const response = await apiInstance.get<JobApplication[]>(
     `/jobapplications/${jobID}`
-  );
-  return response.data;
-};
-
-const jobApplicationsUserAppliedTo = async (filter?: JobApplicationFilter) => {
-  const response = await apiInstance.get<JobApplicationChat[]>(
-    "jobapplications/appliedto",
-    {
-      params: filter,
-    }
   );
   return response.data;
 };
@@ -56,7 +45,6 @@ const JobApplicationService = {
   insertApplicationForJob,
   insertApplicationCommentForJob,
   cancelApplication,
-  jobApplicationsUserAppliedTo,
   approveApplication,
 };
 

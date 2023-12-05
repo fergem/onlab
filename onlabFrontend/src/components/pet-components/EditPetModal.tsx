@@ -5,7 +5,7 @@ import { useUpdateUserPet } from "../../hooks/react-query/UserHooks";
 import { Pet, PetUpdateModel } from "../../models/Pet";
 import PetForm from "./PetForm";
 
-export interface IPropsEditPetModal {
+interface IPropsEditPetModal {
   pet: Pet;
 }
 

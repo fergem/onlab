@@ -42,7 +42,7 @@ namespace DataAccess.Repositories
                  .Include(s => s.Comments)
                  .Include(s => s.ApplicantUser)
                  .Where(s => s.ApplicantUserID == userID)
-                 .Where(s => filter.JobStatus != Status.All ? s.Job.Status == filter.JobStatus : true)
+                 .Where(s => filter.Status != Status.All ? s.Job.Status == filter.Status : true)
                  .Where(s => filter.JobApplicationStatus != JobApplicationStatus.All ? s.Status == filter.JobApplicationStatus : true)
                  .OrderByDescending(s => s.Comments.Max(c => c.CommentDate)) 
                  .ToListAsync();

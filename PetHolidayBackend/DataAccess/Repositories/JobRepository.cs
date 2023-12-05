@@ -118,6 +118,8 @@ namespace DataAccess.Repositories
                 .Include(s => s.JobApplications)
                 .ThenInclude(s => s.ApplicantUser)
                 .ThenInclude(s => s.PetSitterProfile)
+                .Include(s => s.JobApplications)
+                .ThenInclude(s => s.Comments)
                 .Where(s => s.OwnerUserID == userID)
                 .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
                 .Where(s => filter.Repeated != null ? s.Repeated == filter.Repeated : true)
@@ -131,8 +133,11 @@ namespace DataAccess.Repositories
                 .Include(s => s.Pets)
                 .ThenInclude(s => s.Pet)
                 .Include(s => s.JobApplications)
+                .ThenInclude(s => s.Comments)
+                .Include(s => s.JobApplications)
+                .ThenInclude(s => s.ApplicantUser)
                 .Where(s => s.JobApplications.Any(s => s.ApplicantUserID == userID))
-                .Where(s => filter.JobStatus != Status.All ? s.Status == filter.JobStatus : true)
+                .Where(s => filter.Status != Status.All ? s.Status == filter.Status : true)
                 .Where(s => filter.JobApplicationStatus != JobApplicationStatus.All ? s.JobApplications.FirstOrDefault(k => k.ApplicantUserID == userID)!.Status == filter.JobApplicationStatus : true)
                 .OrderBy(s => s.StartDate),
                 filter.PageNumber,filter.PageSize);

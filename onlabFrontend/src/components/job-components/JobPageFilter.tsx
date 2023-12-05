@@ -83,10 +83,7 @@ export default function JobPageFilter({
                 I can work on
               </Text>
               <MultiSelect
-                data={Object.entries(Day).map((s) => ({
-                  value: s[0],
-                  label: s[1],
-                }))}
+                data={Object.values(Day)}
                 value={jobFilter.days}
                 onChange={handleSelectDays}
                 placeholder="Pick type"

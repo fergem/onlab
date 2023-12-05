@@ -1,11 +1,11 @@
 import { Avatar, Paper, Tabs, Text } from "@mantine/core";
-import { JobApplication } from "../../../models/JobApplication";
-import { UserPreview } from "../../../models/User";
-import { baseProfilePicture } from "../../../utility/constants";
-import { ImageFunctions } from "../../../utility/image";
+import { JobApplication } from "../models/JobApplication";
+import { UserPreview } from "../models/User";
+import { baseProfilePicture } from "../utility/constants";
+import { ImageFunctions } from "../utility/image";
 import JobApplicationComments from "./JobApplicationComments";
 
-export interface IJobPetSitterCommentSection {
+interface IJobPetSitterCommentSection {
   application: JobApplication;
   ownerUser?: UserPreview;
 }

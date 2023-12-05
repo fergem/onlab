@@ -1,9 +1,9 @@
 import { Group, Stack, Text } from "@mantine/core";
-import { PostedJob } from "../../models/Job";
+import { PostedJob } from "../models/Job";
 
 interface IMessagebarProps {
   job: PostedJob;
-  select(applicationID: number): void;
+  select(jobID: number): void;
 }
 
 export default function JobMessagebar({ job, select }: IMessagebarProps) {

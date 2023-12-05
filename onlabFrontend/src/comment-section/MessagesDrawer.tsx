@@ -8,10 +8,11 @@ import {
 } from "@mantine/core";
 import { IconHome, IconInfoCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../hooks/react-query/AuthHooks";
-import useDrawer from "../../hooks/useDrawer";
-import { UserRole } from "../../models/User";
-import ApplicationMessagesPetSitter from "../job-components/comment-section/ApplicationMessagesPetSitter";
+import { useAuth } from "../hooks/react-query/AuthHooks";
+import useDrawer from "../hooks/useDrawer";
+import { UserRole } from "../models/User";
+import ApplicationMessagesOwner from "./ApplicationMessagesOwner";
+import ApplicationMessagesPetSitter from "./ApplicationMessagesPetSitter";
 
 export default function MessagesDrawer() {
   const { opened, close } = useDrawer();
@@ -73,6 +74,7 @@ export default function MessagesDrawer() {
           data={UserRoleData}
         />
         {value === UserRole.PetSitter && <ApplicationMessagesPetSitter />}
+        {value === UserRole.Owner && <ApplicationMessagesOwner />}
       </Stack>
     </Drawer>
   );

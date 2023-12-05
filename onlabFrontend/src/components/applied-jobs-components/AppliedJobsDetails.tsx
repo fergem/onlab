@@ -37,8 +37,8 @@ export default function AppliedJobsDetails({ job }: IAppliedJobsPanelProps) {
         <Text>{job.description}</Text>
       </Stack>
       <RemoveApplicationButton
-        applicationID={job.applicationID}
-        applicationStatus={job.applicationStatus}
+        applicationID={job.jobApplication.id}
+        applicationStatus={job.jobApplication.status}
         jobStatus={job.status}
       />
     </Stack>

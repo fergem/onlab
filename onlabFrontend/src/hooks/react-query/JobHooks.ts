@@ -2,13 +2,12 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { JobApplicationFilter } from "../../models/Filters";
 import {
   AppliedJob,
   CreateJobModel,
   JobDetails,
   JobFilter,
-  JobFilterDetails,
+  JobFilterPostedAndApplied,
   JobPreview,
   PostedJob,
 } from "../../models/Job";
@@ -58,7 +57,7 @@ export const useGetJobs = (jobParameters: JobFilter) => {
   return { jobs, isError, isLoading, refetchJobs };
 };
 
-export const useGetRepeatedPostedJobs = (filter: JobFilterDetails) => {
+export const useGetRepeatedPostedJobs = (filter: JobFilterPostedAndApplied) => {
   const [repeatableJobs, setJobs] = useState<PagedList<PostedJob>>();
   const {
     isLoading: repeatableLoading,
@@ -83,7 +82,9 @@ export const useGetRepeatedPostedJobs = (filter: JobFilterDetails) => {
     refetchRepeatableJobs,
   };
 };
-export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
+export const useGetNonRepeatedPostedJobs = (
+  filter: JobFilterPostedAndApplied
+) => {
   const [nonRepeatableJobs, setJobs] = useState<PagedList<PostedJob>>();
   const {
     isLoading: nonRepeatedJobsLoading,
@@ -106,6 +107,32 @@ export const useGetNonRepeatedPostedJobs = (filter: JobFilterDetails) => {
     isErrorNonRepeatedJobs,
     nonRepeatedJobsLoading,
     refetchNonRepeatedJobs,
+  };
+};
+
+export const useGetPostedJobs = (filter: JobFilterPostedAndApplied) => {
+  const [postedJobs, setPostedJobs] = useState<PagedList<PostedJob>>();
+  const {
+    isLoading: isLoadingPostedJobs,
+    refetch: refetchPostedJobs,
+    isError: isErrorPosted,
+    data,
+  } = useQuery({
+    queryKey: ["query-posted-messages", filter],
+    queryFn: async () => {
+      return JobService.listPostedJobs(filter);
+    },
+  });
+
+  useEffect(() => {
+    if (data) setPostedJobs(data);
+  }, [data]);
+
+  return {
+    postedJobs,
+    isLoadingPostedJobs,
+    isErrorPosted,
+    refetchPostedJobs,
   };
 };
 
@@ -186,7 +213,10 @@ export const usePostJob = () => {
   return { postJob };
 };
 
-export const useGetUserApliedJobs = (filter: JobApplicationFilter) => {
+export const useGetAppliedJobs = (
+  filter: JobFilterPostedAndApplied,
+  key: string
+) => {
   const [jobs, setJobs] = useState<PagedList<AppliedJob>>();
   const {
     isLoading,
@@ -194,7 +224,7 @@ export const useGetUserApliedJobs = (filter: JobApplicationFilter) => {
     isError,
     data,
   } = useQuery({
-    queryKey: ["query-appliedJobs", filter],
+    queryKey: [`query-appliedJobs-${key}`, filter],
     queryFn: async () => {
       return JobService.listAppliedJobs(filter);
     },

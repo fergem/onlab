@@ -8,7 +8,7 @@ namespace Domain.Common.QueryHelpers
 {
     public class JobFilterApplied
     {
-        public Status JobStatus { get; set; }
+        public Status Status { get; set; }
         public JobApplicationStatus JobApplicationStatus { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; } = 10;
