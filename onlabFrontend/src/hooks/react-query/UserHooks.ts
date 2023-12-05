@@ -2,7 +2,11 @@ import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Pet, PetInsertModel, PetUpdateModel } from "../../models/Pet";
-import { UpdateUserModel, UserDetails } from "../../models/User";
+import {
+  UpdatePasswordModel,
+  UpdateUserModel,
+  UserDetails,
+} from "../../models/User";
 import UserService from "../../services/UserService";
 import useNotification from "../useNotification";
 
@@ -116,9 +120,9 @@ export const useUpdateUser = () => {
       return UserService.updateUser(info);
     },
     {
-      onSuccess: (newUserDetails) => {
+      onSuccess: () => {
         notifications.success("Successfully updated user information");
-        queryClient.setQueryData("query-user-details", newUserDetails);
+        queryClient.invalidateQueries("query-user-details");
       },
       onError: (error: AxiosError) =>
         notifications.error(error.response?.data as string),
@@ -128,15 +132,18 @@ export const useUpdateUser = () => {
 };
 
 export const useUpdateUserPassword = () => {
+  const queryClient = useQueryClient();
+
   const notifications = useNotification();
   const { mutate: updateUser } = useMutation(
     "mutate-updateUser",
-    async (password: string) => {
-      return UserService.updatePassword(password);
+    async (model: UpdatePasswordModel) => {
+      return UserService.updatePassword(model);
     },
     {
       onSuccess: () => {
         notifications.success("Successfully updated password");
+        queryClient.invalidateQueries("query-user-details");
       },
       onError: (error: AxiosError) =>
         notifications.error(error.response?.data as string),

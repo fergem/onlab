@@ -180,7 +180,7 @@ namespace DataAccess.Repositories
 
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-            await userManager.ResetPasswordAsync(user, token, password.Password ?? user.Password);
+            await userManager.ResetPasswordAsync(user, token, password.Password);
 
             await signInManager.RefreshSignInAsync(user);
             await dbContext.SaveChangesAsync();

@@ -2,12 +2,8 @@ import { Button, PasswordInput, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { useUpdateUserPassword } from "../../hooks/react-query/UserHooks";
-import { UserValidation } from "../../models/User";
+import { UpdatePasswordModel, UserValidation } from "../../models/User";
 
-interface PasswordChangeModel {
-  password: string;
-  confirmPassword: string;
-}
 export default function ChangePassword() {
   const { updateUser } = useUpdateUserPassword();
   const [visible, { toggle }] = useDisclosure(false);
@@ -27,9 +23,11 @@ export default function ChangePassword() {
   const updateDisabled =
     form.values.password.length === 0 ||
     form.values.confirmPassword.length === 0;
-  const handleUpdate = (model: PasswordChangeModel) => {
-    updateUser(model.password);
+  const handleUpdate = (model: UpdatePasswordModel) => {
+    updateUser(model);
+    form.reset();
   };
+
   return (
     <form onSubmit={form.onSubmit(handleUpdate)}>
       <Stack justify="center" align="center">

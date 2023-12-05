@@ -5,7 +5,9 @@ interface IPropsStatusBadge {
   status: JobApplicationStatus;
 }
 
-export default function JobStatusBadge({ status }: IPropsStatusBadge) {
+export default function JobApplicationStatusBadge({
+  status,
+}: IPropsStatusBadge) {
   switch (status) {
     case JobApplicationStatus.Approving:
       return (

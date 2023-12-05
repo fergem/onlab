@@ -6,6 +6,7 @@ import {
   IconPaw,
   IconUser,
 } from "@tabler/icons-react";
+import { useState } from "react";
 import AddPet from "../components/pet-components/AddPet";
 import ChangePassword from "../components/user-components/ChangePassword";
 import EditOwnerProfile from "../components/user-components/EditOwnerProfile";
@@ -40,6 +41,7 @@ export default function Profile() {
     getUserDetails,
   } = useGetUser();
 
+  const [openedTab, setOpenedTab] = useState<string | null>("profile");
   const { updateUser } = useUpdateUser();
 
   const handleUpdateUserDetails = (newDetails: UpdateUserDetailsModel) =>
@@ -58,7 +60,7 @@ export default function Profile() {
       isError={errorUserDetails}
       refetch={getUserDetails}
     >
-      <Tabs defaultValue="profile">
+      <Tabs value={openedTab} onTabChange={setOpenedTab}>
         <Stack justify="center" ml="5%" mr="10%" align="center" spacing={0}>
           <Stack align="center">
             <Tabs.List>

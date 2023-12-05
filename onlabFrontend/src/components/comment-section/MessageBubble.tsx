@@ -1,9 +1,9 @@
 import { Avatar, Badge, Group, Stack, Text } from "@mantine/core";
 import { format, formatRelative } from "date-fns";
-import { useUser } from "../hooks/react-query/AuthHooks";
-import { JobApplicationComment } from "../models/JobApplicationComment";
-import { baseProfilePicture } from "../utility/constants";
-import { ImageFunctions } from "../utility/image";
+import { useUser } from "../../hooks/react-query/AuthHooks";
+import { JobApplicationComment } from "../../models/JobApplicationComment";
+import { baseProfilePicture } from "../../utility/constants";
+import { ImageFunctions } from "../../utility/image";
 
 interface IPropsMessageBubble {
   comment: JobApplicationComment;

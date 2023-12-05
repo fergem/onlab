@@ -6,16 +6,17 @@ import {
   Paper,
   Select,
   Stack,
+  Text,
   Title,
   Tooltip,
 } from "@mantine/core";
-import { IconArrowBack } from "@tabler/icons-react";
+import { IconArrowBack, IconMoodSad } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import LoadingBoundary from "../components/utility-components/LoadingBoundary";
-import { useGetPostedJobs } from "../hooks/react-query/JobHooks";
-import useJobAndApplicationFilter from "../hooks/useJobAndApplicationFilter";
-import { JobStatusData } from "../models/Job";
-import { JobApplicationStatusData } from "../models/JobApplication";
+import { useGetPostedJobs } from "../../hooks/react-query/JobHooks";
+import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
+import { JobStatusData } from "../../models/Job";
+import { JobApplicationStatusData } from "../../models/JobApplication";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
 import JobApplicationComments from "./JobApplicationComments";
 import JobMessagebar from "./JobMessagebar";
 import MessagebarOwner from "./MessagebarOwner";
@@ -58,9 +59,18 @@ export default function ApplicationMessagesOwner() {
     setSelectedApplicationID(undefined);
   };
 
+  const hasSelectedJobButNotApplicationWithData =
+    selectedPostedJob &&
+    !selectedPostedApplication &&
+    selectedPostedJob.jobApplications.length > 0;
+  const hasSelectedJobButNotApplicationWithoutData =
+    selectedPostedJob &&
+    !selectedPostedApplication &&
+    selectedPostedJob.jobApplications.length === 0;
+
   return (
     <Paper p="md" shadow="sm" withBorder>
-      <Stack align="center" h="100%" justify="center">
+      <Stack h="100%" justify="center">
         {!selectedPostedJob && (
           <Group align="center" noWrap mb={15}>
             <Select
@@ -79,7 +89,7 @@ export default function ApplicationMessagesOwner() {
         )}
         <Group>
           {selectedPostedJob ? (
-            <Group align="center" mb={5}>
+            <Group align="center" mb={5} noWrap>
               <Tooltip label="Back">
                 <ActionIcon
                   variant="subtle"
@@ -87,7 +97,6 @@ export default function ApplicationMessagesOwner() {
                   onClick={handleBack}
                   radius="md"
                   size="lg"
-                  m="sm"
                 >
                   <IconArrowBack />
                 </ActionIcon>
@@ -97,9 +106,9 @@ export default function ApplicationMessagesOwner() {
               </Title>
             </Group>
           ) : (
-            <Title order={4} align="center" mb={20}>
-              Chat with the people, who's job you applied to
-            </Title>
+            <Text fw={1000} fz={17} lineClamp={2} align="center">
+              Choose a job so that you can see all the messages related to it.
+            </Text>
           )}
         </Group>
 
@@ -120,8 +129,7 @@ export default function ApplicationMessagesOwner() {
             </Stack>
           </LoadingBoundary>
         )}
-        {selectedPostedJob &&
-          !selectedPostedApplication &&
+        {hasSelectedJobButNotApplicationWithData &&
           selectedPostedJob.jobApplications.map((s) => (
             <Stack spacing={0} key={s.id}>
               <MessagebarOwner
@@ -130,6 +138,16 @@ export default function ApplicationMessagesOwner() {
               />
             </Stack>
           ))}
+        {hasSelectedJobButNotApplicationWithoutData && (
+          <Paper p="md" shadow="sm" withBorder>
+            <Stack align="center" justify="center" my={20}>
+              <IconMoodSad size={130} />
+              <Title order={3} size={20}>
+                No applications to this job yet.
+              </Title>
+            </Stack>
+          </Paper>
+        )}
         {selectedPostedApplication && (
           <JobApplicationComments
             application={selectedPostedApplication}
@@ -137,11 +155,14 @@ export default function ApplicationMessagesOwner() {
           />
         )}
         {!selectedPostedJob && postedJobs && (
-          <Pagination
-            value={postedJobs.currentPage}
-            onChange={handleSetPageNumber}
-            total={postedJobs.totalPages}
-          />
+          <Stack align="center">
+            <Pagination
+              value={postedJobs.currentPage}
+              onChange={handleSetPageNumber}
+              total={postedJobs.totalPages}
+              align="center"
+            />
+          </Stack>
         )}
       </Stack>
     </Paper>

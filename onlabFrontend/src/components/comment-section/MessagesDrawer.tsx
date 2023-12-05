@@ -8,9 +8,9 @@ import {
 } from "@mantine/core";
 import { IconHome, IconInfoCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "../hooks/react-query/AuthHooks";
-import useDrawer from "../hooks/useDrawer";
-import { UserRole } from "../models/User";
+import { useAuth } from "../../hooks/react-query/AuthHooks";
+import useDrawer from "../../hooks/useDrawer";
+import { UserRole } from "../../models/User";
 import ApplicationMessagesOwner from "./ApplicationMessagesOwner";
 import ApplicationMessagesPetSitter from "./ApplicationMessagesPetSitter";
 

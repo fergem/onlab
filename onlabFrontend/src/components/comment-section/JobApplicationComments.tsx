@@ -17,11 +17,11 @@ import { useQueryClient } from "react-query";
 import {
   useJobApplicationCommentHub,
   usePostComment,
-} from "../hooks/react-query/JobApplicationHooks";
-import { JobApplication } from "../models/JobApplication";
-import { JobApplicationCommentFunctions } from "../models/JobApplicationComment";
-import { UserPreview } from "../models/User";
-import { ArrayFunctions } from "../utility/array";
+} from "../../hooks/react-query/JobApplicationHooks";
+import { JobApplication } from "../../models/JobApplication";
+import { JobApplicationCommentFunctions } from "../../models/JobApplicationComment";
+import { UserPreview } from "../../models/User";
+import { ArrayFunctions } from "../../utility/array";
 import MessageBubble from "./MessageBubble";
 
 interface IPropsJobComments {

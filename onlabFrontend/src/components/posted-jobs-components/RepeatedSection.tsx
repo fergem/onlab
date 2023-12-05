@@ -7,13 +7,9 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
-import { useState } from "react";
 import { useGetRepeatedPostedJobs } from "../../hooks/react-query/JobHooks";
-import {
-  DefaultJobFilterPostedAndApplied,
-  JobFilterParticipantData,
-  Status,
-} from "../../models/Job";
+import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
+import { JobFilterParticipantData, Status } from "../../models/Job";
 import { JobApplicationStatus } from "../../models/JobApplication";
 import { JobChipIcon } from "../job-components/JobHomeFilter";
 import JobStatusBadge from "../utility-components/JobStatusBadge";
@@ -25,20 +21,15 @@ import PostedJobApplicationTable from "./PostedJobApplicationTable";
 import RepeatedPostedJobDetails from "./RepeadtedPostedJobDetails";
 
 export default function RepeatedSection() {
-  const [filter, setFilter] = useState(DefaultJobFilterPostedAndApplied);
+  const { filter, handleSetJobStatus, handleSetPageNumber } =
+    useJobAndApplicationFilter();
+
   const {
     repeatableJobs,
     repeatableError,
     repeatableLoading,
     refetchRepeatableJobs,
   } = useGetRepeatedPostedJobs(filter);
-
-  const handleSetStatus = (status: string) => {
-    setFilter({ status: status as Status });
-  };
-  const handleSetPageNumber = (page: number) => {
-    setFilter((prev) => ({ ...prev, pageNumber: page }));
-  };
 
   return (
     <Paper p="md" shadow="sm" withBorder>
@@ -50,7 +41,7 @@ export default function RepeatedSection() {
           mb={15}
           label="Job status"
           value={filter.status}
-          onChange={handleSetStatus}
+          onChange={handleSetJobStatus}
           data={JobFilterParticipantData}
         />
       </Group>

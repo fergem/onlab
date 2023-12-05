@@ -6,16 +6,17 @@ import {
   Paper,
   Select,
   Stack,
+  Text,
   Title,
   Tooltip,
 } from "@mantine/core";
 import { IconArrowBack } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
-import LoadingBoundary from "../components/utility-components/LoadingBoundary";
-import { useGetAppliedJobs } from "../hooks/react-query/JobHooks";
-import useJobAndApplicationFilter from "../hooks/useJobAndApplicationFilter";
-import { JobStatusData } from "../models/Job";
-import { JobApplicationStatusData } from "../models/JobApplication";
+import { useGetAppliedJobs } from "../../hooks/react-query/JobHooks";
+import useJobAndApplicationFilter from "../../hooks/useJobAndApplicationFilter";
+import { JobStatusData } from "../../models/Job";
+import { JobApplicationStatusData } from "../../models/JobApplication";
+import LoadingBoundary from "../utility-components/LoadingBoundary";
 import JobApplicationComments from "./JobApplicationComments";
 import MessagebarPetSitter from "./MessagebarPetSitter";
 
@@ -50,7 +51,7 @@ export default function ApplicationMessagesPetSitter() {
 
   return (
     <Paper p="md" shadow="sm" withBorder>
-      <Stack align="center" h="100%" justify="center">
+      <Stack h="100%" justify="center">
         {!appliedJob && (
           <Group align="center" noWrap mb={15}>
             <Select
@@ -69,7 +70,7 @@ export default function ApplicationMessagesPetSitter() {
         )}
         <Group>
           {appliedJob ? (
-            <Group align="center" mb={5}>
+            <Group align="center" mb={5} noWrap>
               <Tooltip label="Back">
                 <ActionIcon
                   variant="subtle"
@@ -77,7 +78,6 @@ export default function ApplicationMessagesPetSitter() {
                   onClick={handleBack}
                   radius="md"
                   size="lg"
-                  m="sm"
                 >
                   <IconArrowBack />
                 </ActionIcon>
@@ -87,9 +87,9 @@ export default function ApplicationMessagesPetSitter() {
               </Title>
             </Group>
           ) : (
-            <Title order={4} align="center" mb={20}>
-              Chat with the people, who's job you applied to
-            </Title>
+            <Text fw={1000} fz={17} lineClamp={2} align="center">
+              Chat with the people, who's job you applied to.
+            </Text>
           )}
         </Group>
 
@@ -117,11 +117,13 @@ export default function ApplicationMessagesPetSitter() {
           />
         )}
         {!appliedJob && jobs && (
-          <Pagination
-            value={jobs.currentPage}
-            onChange={handleSetPageNumber}
-            total={jobs.totalPages}
-          />
+          <Stack align="center">
+            <Pagination
+              value={jobs.currentPage}
+              onChange={handleSetPageNumber}
+              total={jobs.totalPages}
+            />
+          </Stack>
         )}
       </Stack>
     </Paper>

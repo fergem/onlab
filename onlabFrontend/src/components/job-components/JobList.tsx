@@ -15,9 +15,9 @@ import { useUser } from "../../hooks/react-query/AuthHooks";
 import { JobPreview } from "../../models/Job";
 import { basePetPicture, baseProfilePicture } from "../../utility/constants";
 import { ImageFunctions } from "../../utility/image";
+import PetCountWithIcon from "../pet-components/PetCountWithIcon";
 import LoadingBoundary from "../utility-components/LoadingBoundary";
 import RepeatedJobIcon from "../utility-components/RepeatedJobIcon";
-import { PetCountWithIcon } from "./JobDetail";
 
 interface IPropsJobList {
   jobs?: JobPreview[];

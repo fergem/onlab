@@ -1,12 +1,12 @@
 import { Fragment, useMemo } from "react";
-import JobOwnerCommentsSection from "../../comment-section/JobOwnerCommentsSection";
-import JobPetSitterCommentSection from "../../comment-section/JobPetSitterCommentSection";
 import { useUser } from "../../hooks/react-query/AuthHooks";
 import {
   JobApplication,
   JobApplicationStatus,
 } from "../../models/JobApplication";
 import { UserPreview } from "../../models/User";
+import JobOwnerCommentsSection from "../comment-section/JobOwnerCommentsSection";
+import JobPetSitterCommentSection from "../comment-section/JobPetSitterCommentSection";
 
 interface IPropsJobCommentsSection {
   ownerUser: UserPreview | undefined;

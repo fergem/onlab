@@ -83,6 +83,11 @@ export interface LoginModel {
   password: string;
 }
 
+export interface UpdatePasswordModel {
+  password: string;
+  confirmPassword: string;
+}
+
 export const UserValidation = {
   userNameValidation(val: string) {
     if (!val) return "Username is required.";

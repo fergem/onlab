@@ -1,5 +1,9 @@
 import { Pet, PetInsertModel, PetUpdateModel } from "../models/Pet";
-import { UpdateUserModel, UserDetails } from "../models/User";
+import {
+  UpdatePasswordModel,
+  UpdateUserModel,
+  UserDetails,
+} from "../models/User";
 import apiInstance from "./api";
 
 const getUserDetails = async () => {
@@ -21,10 +25,8 @@ const updateUser = async (info: UpdateUserModel) => {
   return response.data;
 };
 
-const updatePassword = async (password: string) => {
-  const response = await apiInstance.patch("/users/changepassword", {
-    Password: password,
-  });
+const updatePassword = async (model: UpdatePasswordModel) => {
+  const response = await apiInstance.patch("/users/changepassword", model);
   return response.data;
 };
 
